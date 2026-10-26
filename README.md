@@ -36,6 +36,13 @@ npm run dev -- export ./path/to/project --output .concentrate/export
 npm run dev -- mcp
 ```
 
+## MCP Tools
+
+`npm run dev -- mcp` starts a stdio MCP server exposing: `graph_stats`,
+`find_definitions`, `find_callers`, `list_exports`, `trace_import_chain`,
+`list_routes`, `list_entrypoints`, `list_env_config`, `list_data_access`.
+See [docs/mcp-server.md](docs/mcp-server.md).
+
 ## Architecture
 
 ```
@@ -46,6 +53,7 @@ src/
     kuzu/           — KuzuDB writer, schema, retry
     mcp/            — MCP server adapter
   commands/         — Commander-wired CLI command definitions
+  composition/      — Default registry + orchestrator wiring (core ← integrations)
   core/
     contracts/      — Language-agnostic interfaces
     graph/          — Graph model (GraphNode, GraphRelationship, GraphBuilder)

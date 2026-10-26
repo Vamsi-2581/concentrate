@@ -1,4 +1,3 @@
-import { GraphBuilder } from "../../../core/graph/builder.js";
 import { addDataAccessRelationships } from "./resolution/data-access.js";
 import type { ISemanticContributor } from "../../../core/contracts/semantic-contributor.js";
 
@@ -9,6 +8,6 @@ import type { ISemanticContributor } from "../../../core/contracts/semantic-cont
 // corresponding DataModel nodes.
 export const dataAccessContributor: ISemanticContributor = {
   contribute(graph) {
-    addDataAccessRelationships(graph as unknown as GraphBuilder);
+    addDataAccessRelationships(graph);
   },
 };

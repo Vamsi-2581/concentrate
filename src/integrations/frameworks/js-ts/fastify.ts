@@ -1,7 +1,6 @@
 import type Parser from "tree-sitter";
 import type { GraphNode, GraphRelationship } from "../../../core/graph/model.js";
 import { createFastifyRouteGraph } from "../../languages/js-ts/routes.js";
-import { GraphBuilder } from "../../../core/graph/builder.js";
 import { resolveRouteFullPaths } from "./resolution/route-paths.js";
 import type { ISemanticContributor } from "../../../core/contracts/semantic-contributor.js";
 
@@ -23,6 +22,6 @@ export function applyFastifyParseSemantics(
 // constants). Applies to all HTTP frameworks including Fastify.
 export const routePathContributor: ISemanticContributor = {
   contribute(graph) {
-    resolveRouteFullPaths(graph as unknown as GraphBuilder);
+    resolveRouteFullPaths(graph);
   },
 };

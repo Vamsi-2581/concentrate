@@ -1,6 +1,5 @@
 import type { GraphNode, GraphRelationship } from "../../../core/graph/model.js";
 import { createNestJsRouteGraph } from "../../languages/js-ts/routes.js";
-import { GraphBuilder } from "../../../core/graph/builder.js";
 import { addNestJsModuleRelationships } from "./resolution/nestjs-modules.js";
 import { addInjectionRelationships } from "./resolution/injections.js";
 import { addInstanceMethodResolutionRelationships } from "./resolution/instances.js";
@@ -25,7 +24,7 @@ export function applyNestJsParseSemantics(
 // MODULE_CONTROLS / MODULE_EXPORTS relationships.
 export const nestjsModulesContributor: ISemanticContributor = {
   contribute(graph) {
-    addNestJsModuleRelationships(graph as unknown as GraphBuilder);
+    addNestJsModuleRelationships(graph);
   },
 };
 
@@ -33,7 +32,7 @@ export const nestjsModulesContributor: ISemanticContributor = {
 // the services they inject via constructor parameter properties.
 export const nestjsInjectionContributor: ISemanticContributor = {
   contribute(graph) {
-    addInjectionRelationships(graph as unknown as GraphBuilder);
+    addInjectionRelationships(graph);
   },
 };
 
@@ -41,6 +40,6 @@ export const nestjsInjectionContributor: ISemanticContributor = {
 // through variables initialized with `new ClassName()`.
 export const instanceMethodContributor: ISemanticContributor = {
   contribute(graph) {
-    addInstanceMethodResolutionRelationships(graph as unknown as GraphBuilder);
+    addInstanceMethodResolutionRelationships(graph);
   },
 };

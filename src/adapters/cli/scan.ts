@@ -4,7 +4,8 @@ import { SCHEMA_VERSION } from "../kuzu/schema.js";
 import { printScanReport } from "./report.js";
 import { ProgressReporter } from "./progress.js";
 import type { BuildCodeGraphResult, IncrementalEligibility, IncrementalMode } from "../../core/scan/index.js";
-import { didFailFast, didPartiallySucceed, scanOrchestrator } from "../../core/scan/index.js";
+import { didFailFast, didPartiallySucceed } from "../../core/scan/index.js";
+import { scanOrchestrator } from "../../composition/orchestrator.js";
 import { KuzuGraphWriter, type KuzuWriteMode } from "../kuzu/index.js";
 
 export type ScanAdapterOptions = {

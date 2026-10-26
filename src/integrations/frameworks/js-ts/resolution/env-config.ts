@@ -1,12 +1,12 @@
 import type { GraphNode, GraphRelationship, ImportBinding } from "../../../../core/graph/model.js";
-import { GraphBuilder } from "../../../../core/graph/builder.js";
+import type { IGraphContributor } from "../../../../core/contracts/graph-contributor.js";
 
-export function addEnvAndConfigRelationships(graph: GraphBuilder): void {
+export function addEnvAndConfigRelationships(graph: IGraphContributor): void {
   addRouteEnvRelationships(graph);
   addConfigConsumerRelationships(graph);
 }
 
-function addRouteEnvRelationships(graph: GraphBuilder): void {
+function addRouteEnvRelationships(graph: IGraphContributor): void {
   const envRelationshipsByFunctionId = new Map<string, GraphRelationship[]>();
   const handledFunctionIdsByRouteId = new Map<string, string[]>();
 
@@ -41,7 +41,7 @@ function addRouteEnvRelationships(graph: GraphBuilder): void {
   }
 }
 
-function addConfigConsumerRelationships(graph: GraphBuilder): void {
+function addConfigConsumerRelationships(graph: IGraphContributor): void {
   const nodeById = new Map(graph.nodes.map((node) => [node.id, node]));
   const fileIdByImportId = new Map<string, string>();
   const resolvedFileIdByImportId = new Map<string, string>();

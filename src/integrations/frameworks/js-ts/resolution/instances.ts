@@ -1,4 +1,4 @@
-import { GraphBuilder } from "../../../../core/graph/builder.js";
+import type { IGraphContributor } from "../../../../core/contracts/graph-contributor.js";
 import type { GraphNode, GraphRelationship } from "../../../../core/graph/model.js";
 import {
   createResolutionRelationshipIndex,
@@ -6,7 +6,7 @@ import {
   indexNodesByFileAndName,
 } from "../../../../core/scan/resolution/indexes.js";
 
-export function addInstanceMethodResolutionRelationships(graph: GraphBuilder): void {
+export function addInstanceMethodResolutionRelationships(graph: IGraphContributor): void {
   const relationshipIndex = createResolutionRelationshipIndex(graph.relationships);
   const classesByFileAndName = indexNodesByFileAndName(graph.nodes, relationshipIndex.fileByClassId, "Class");
   const methodsByClassAndName = indexMethodsByClassAndName(graph.nodes, graph.relationships);

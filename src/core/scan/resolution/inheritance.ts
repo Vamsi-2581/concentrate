@@ -1,4 +1,4 @@
-import { GraphBuilder } from "../../graph/builder.js";
+import type { IGraphContributor } from "../../contracts/graph-contributor.js";
 import type { GraphNode } from "../../graph/model.js";
 import {
   createResolutionRelationshipIndex,
@@ -6,7 +6,7 @@ import {
   indexNodesByFileAndName,
 } from "./indexes.js";
 
-export function addInheritanceRelationships(graph: GraphBuilder): void {
+export function addInheritanceRelationships(graph: IGraphContributor): void {
   const relationshipIndex = createResolutionRelationshipIndex(graph.relationships);
   const classesByFileAndName = indexNodesByFileAndName(graph.nodes, relationshipIndex.fileByClassId, "Class");
   const interfacesByFileAndName = indexNodesByFileAndName(graph.nodes, relationshipIndex.fileByInterfaceId, "Interface");

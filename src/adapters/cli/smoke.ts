@@ -5,7 +5,7 @@ import path from "node:path";
 import { KuzuGraphWriter } from "../kuzu/index.js";
 import { SCHEMA_VERSION } from "../kuzu/schema.js";
 import type { FileClassificationCounts, ScanReport, ScanStatus } from "../../core/scan/index.js";
-import { scanOrchestrator } from "../../core/scan/index.js";
+import { scanOrchestrator } from "../../composition/orchestrator.js";
 
 export type SmokeSuite = "standing" | "internet";
 

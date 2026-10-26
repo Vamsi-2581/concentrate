@@ -20,6 +20,10 @@
  *     ✗ src/integrations/           (language/framework integrations)
  *     ✗ src/adapters/               (platform adapter layer)
  *
+ *   src/core/ (all subdirectories)
+ *     ✗ src/composition/            (default wiring; depends on integrations)
+ *     ✗ src/integrations/
+ *
  *   src/integrations/languages/
  *     → src/core/                   (contracts and core types)
  *     → each other (cross-language)
@@ -138,10 +142,12 @@ describe("Architecture dependency guardrails", () => {
     );
   });
 
-  it("src/core/ does not depend on platform adapters, command modules, or legacy directories", async () => {
+  it("src/core/ does not depend on composition, integrations, platform adapters, command modules, or legacy directories", async () => {
     const violations = await checkFiles(
       path.join(srcRoot, "core"),
       [
+        "composition/",
+        "integrations/",
         "adapters/cli/",
         "adapters/kuzu/",
         "adapters/mcp/",

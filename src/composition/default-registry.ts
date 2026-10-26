@@ -21,7 +21,6 @@ import {
 import { routePathContributor } from "../integrations/frameworks/js-ts/fastify.js";
 import { envConfigContributor } from "../integrations/frameworks/js-ts/env-config.js";
 import { dataAccessContributor } from "../integrations/frameworks/js-ts/data-access.js";
-import { GraphBuilder } from "../core/graph/builder.js";
 import type { ILanguageResolver } from "../core/contracts/language-resolver.js";
 import { CoreIntegrationRegistry } from "../core/integrations/registry.js";
 
@@ -65,11 +64,7 @@ export function createDefaultCoreIntegrationRegistry(): CoreIntegrationRegistry 
 function createDefaultLanguageResolvers(): ILanguageResolver[] {
   const importResolver: ILanguageResolver = {
     async resolve(graph, rootPath, report) {
-      const counts = await addImportResolutionRelationships(
-        graph as unknown as GraphBuilder,
-        rootPath,
-        report,
-      );
+      const counts = await addImportResolutionRelationships(graph, rootPath, report);
       report.resolvedImports = counts.resolved;
       report.unresolvedRelativeImports = counts.unresolved;
     },
@@ -77,19 +72,19 @@ function createDefaultLanguageResolvers(): ILanguageResolver[] {
 
   const packageImportResolver: ILanguageResolver = {
     resolve(graph) {
-      addImportPackageRelationships(graph as unknown as GraphBuilder);
+      addImportPackageRelationships(graph);
     },
   };
 
   const inheritanceResolver: ILanguageResolver = {
     resolve(graph) {
-      addInheritanceRelationships(graph as unknown as GraphBuilder);
+      addInheritanceRelationships(graph);
     },
   };
 
   const callResolver: ILanguageResolver = {
     resolve(graph) {
-      addCallResolutionRelationships(graph as unknown as GraphBuilder);
+      addCallResolutionRelationships(graph);
     },
   };
 

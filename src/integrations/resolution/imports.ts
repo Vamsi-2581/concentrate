@@ -1,4 +1,4 @@
-import { GraphBuilder } from "../../core/graph/builder.js";
+import type { IGraphContributor } from "../../core/contracts/graph-contributor.js";
 import {
   createJsTsConfiguredImportBasePaths,
   readJsTsResolutionConfigWithWarnings,
@@ -17,7 +17,7 @@ import path from "node:path";
 import { addUniqueScanWarning, type ScanReport } from "../../core/scan/report.js";
 
 export async function addImportResolutionRelationships(
-  graph: GraphBuilder,
+  graph: IGraphContributor,
   rootPath: string,
   report?: ScanReport,
 ): Promise<{

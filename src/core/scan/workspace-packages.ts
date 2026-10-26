@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import fg from "fast-glob";
-import { GraphBuilder } from "../graph/builder.js";
+import type { IGraphContributor } from "../contracts/graph-contributor.js";
 import type { GraphNode } from "../graph/model.js";
 import { addScanWarning, type ScanReport } from "./report.js";
 
@@ -39,7 +39,7 @@ const commonWorkspacePatterns = [
 ];
 
 export async function addWorkspacePackageGraph(
-  graph: GraphBuilder,
+  graph: IGraphContributor,
   repoNodeId: string,
   rootPath: string,
   report: ScanReport,
@@ -66,7 +66,7 @@ export async function addWorkspacePackageGraph(
   addPackageDependencyRelationships(graph, packages);
 }
 
-export function addImportPackageRelationships(graph: GraphBuilder): void {
+export function addImportPackageRelationships(graph: IGraphContributor): void {
   const packageIdByFileId = packageFileIndex(graph);
   const packageIdByImportId = new Map<string, string>();
 
@@ -291,7 +291,7 @@ function createPackageNode(workspacePackage: WorkspacePackage): GraphNode {
 }
 
 function addPackageConfigNodes(
-  graph: GraphBuilder,
+  graph: IGraphContributor,
   packageNode: GraphNode,
   workspacePackage: WorkspacePackage,
 ): void {
@@ -327,7 +327,7 @@ function addPackageConfigNodes(
   }
 }
 
-function addPackageFileRelationships(graph: GraphBuilder, packages: WorkspacePackage[]): void {
+function addPackageFileRelationships(graph: IGraphContributor, packages: WorkspacePackage[]): void {
   const packagesBySpecificity = [...packages].sort(
     (a, b) => pathDepth(b.relativePath) - pathDepth(a.relativePath),
   );
@@ -356,7 +356,7 @@ function addPackageFileRelationships(graph: GraphBuilder, packages: WorkspacePac
   }
 }
 
-function addPackageDependencyRelationships(graph: GraphBuilder, packages: WorkspacePackage[]): void {
+function addPackageDependencyRelationships(graph: IGraphContributor, packages: WorkspacePackage[]): void {
   const packageIdByName = new Map<string, string>();
   for (const workspacePackage of packages) {
     if (workspacePackage.name) {
@@ -384,7 +384,7 @@ function addPackageDependencyRelationships(graph: GraphBuilder, packages: Worksp
   }
 }
 
-function packageFileIndex(graph: GraphBuilder): Map<string, string> {
+function packageFileIndex(graph: IGraphContributor): Map<string, string> {
   const packageIdByFileId = new Map<string, string>();
   for (const relationship of graph.relationships) {
     if (relationship.type === "PACKAGE_CONTAINS_FILE") {

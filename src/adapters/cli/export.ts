@@ -4,7 +4,8 @@ import { printScanReport } from "./report.js";
 import { ProgressReporter } from "./progress.js";
 import type { GraphNode, GraphRelationship } from "../../core/graph/model.js";
 import type { IncrementalMode } from "../../core/scan/index.js";
-import { didFailFast, didPartiallySucceed, scanOrchestrator } from "../../core/scan/index.js";
+import { didFailFast, didPartiallySucceed } from "../../core/scan/index.js";
+import { scanOrchestrator } from "../../composition/orchestrator.js";
 import type { CliAdapterResult } from "./scan.js";
 
 export type ExportAdapterOptions = {

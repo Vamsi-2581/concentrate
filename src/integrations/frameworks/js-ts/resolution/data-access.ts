@@ -1,5 +1,5 @@
 import type { GraphNode, GraphRelationship } from "../../../../core/graph/model.js";
-import { GraphBuilder } from "../../../../core/graph/builder.js";
+import type { IGraphContributor } from "../../../../core/contracts/graph-contributor.js";
 
 type DataAccess = {
   modelName: string;
@@ -41,7 +41,7 @@ const operationByMethod = new Map<string, string>([
   ["upsert", "upsert"],
 ]);
 
-export function addDataAccessRelationships(graph: GraphBuilder): void {
+export function addDataAccessRelationships(graph: IGraphContributor): void {
   const context = createDataAccessContext(graph.nodes, graph.relationships);
   const directAccesses: Array<{ from: string; to: string; dataAccess: DataAccess }> = [];
 
@@ -276,7 +276,7 @@ function classifyDataAccessCall(
 }
 
 function propagateDataAccessThroughResolvedCalls(
-  graph: GraphBuilder,
+  graph: IGraphContributor,
   context: ReturnType<typeof createDataAccessContext>,
   directAccesses: Array<{ from: string; to: string; dataAccess: DataAccess }>,
 ): void {
@@ -321,7 +321,7 @@ function propagateDataAccessThroughResolvedCalls(
 }
 
 function addDataAccessRelationship(
-  graph: GraphBuilder,
+  graph: IGraphContributor,
   from: string,
   to: string,
   dataAccess: DataAccess,

@@ -1,5 +1,5 @@
 import type { GraphNode, GraphRelationship, ImportBinding } from "../../../../core/graph/model.js";
-import { GraphBuilder } from "../../../../core/graph/builder.js";
+import type { IGraphContributor } from "../../../../core/contracts/graph-contributor.js";
 
 type RoutePathContext = {
   fileIdByRouteId: Map<string, string>;
@@ -9,7 +9,7 @@ type RoutePathContext = {
   incomingMountsByTargetId: Map<string, GraphRelationship[]>;
 };
 
-export function resolveRouteFullPaths(graph: GraphBuilder): void {
+export function resolveRouteFullPaths(graph: IGraphContributor): void {
   const context = createRoutePathContext(graph.nodes, graph.relationships);
 
   resolveImportedStringConstants(graph.nodes, graph.relationships, context.constantsByFileId);

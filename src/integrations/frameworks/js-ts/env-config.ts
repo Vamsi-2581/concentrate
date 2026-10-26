@@ -5,7 +5,6 @@ import {
   createFileEnvUsageGraph,
   createFunctionEnvUsageGraph,
 } from "../../languages/js-ts/env-config.js";
-import { GraphBuilder } from "../../../core/graph/builder.js";
 import { addEnvAndConfigRelationships } from "./resolution/env-config.js";
 import type { ISemanticContributor } from "../../../core/contracts/semantic-contributor.js";
 
@@ -48,6 +47,6 @@ export function applyEnvConfigParseSemantics(
 // across files (e.g. imported config modules to their consumers).
 export const envConfigContributor: ISemanticContributor = {
   contribute(graph) {
-    addEnvAndConfigRelationships(graph as unknown as GraphBuilder);
+    addEnvAndConfigRelationships(graph);
   },
 };

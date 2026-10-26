@@ -1,4 +1,4 @@
-import { GraphBuilder } from "../../graph/builder.js";
+import type { IGraphContributor } from "../../contracts/graph-contributor.js";
 import { resolveCall } from "./call-targets.js";
 import {
   createResolutionRelationshipIndex,
@@ -6,7 +6,7 @@ import {
   indexNodesByFileAndName,
 } from "./indexes.js";
 
-export function addCallResolutionRelationships(graph: GraphBuilder): {
+export function addCallResolutionRelationships(graph: IGraphContributor): {
   resolved: number;
   unresolved: number;
 } {

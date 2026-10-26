@@ -126,11 +126,11 @@ Enforced by `tests/guardrails.test.ts`:
 | Module | May import from | Must not import from |
 | --- | --- | --- |
 | `src/core/contracts/` | `src/core/graph`, `src/core/scan`, each other | `src/scanner/`, `src/graph/`, `src/integrations/`, `src/parsers/`, `src/adapters/`, `src/commands/` |
-| `src/core/` | core modules, temporary scanner/parser/legacy graph shims where documented | `src/adapters/cli/`, `src/adapters/kuzu/`, `src/adapters/mcp/`, `src/commands/` |
+| `src/core/` | core modules only | `src/composition/`, `src/integrations/`, `src/adapters/cli/`, `src/adapters/kuzu/`, `src/adapters/mcp/`, `src/commands/` |
 | `src/integrations/languages/` | `src/core/`, `src/parsers/` | `src/integrations/frameworks/`, `src/commands/` |
 | `src/integrations/frameworks/` | `src/core/`, `src/integrations/languages/`, `src/parsers/` | `src/commands/`, `src/adapters/` |
 | `src/commands/` | `src/adapters/cli/` | `src/core/`, `src/scanner/`, `src/graph/`, `src/parsers/`, `src/integrations/` |
-| `src/core/adapters/` | core compatibility wiring | platform adapters and commands |
+| `src/composition/` | `src/core/`, `src/integrations/` — default registry and orchestrator wiring | `src/adapters/`, `src/commands/` |
 | `src/adapters/` | anything — this is the platform adapter layer | — |
 
 ## Proposed Directory Shape
@@ -276,9 +276,8 @@ migrate to core-owned paths. Remove each alias only after verifying that no
 
 **Adapters and wiring shims:**
 
-7. `src/core/adapters/` — compatibility re-exports kept for older wiring paths.
-   - Remove once downstream callers use the direct core or platform adapter
-     paths.
+7. ~~`src/core/adapters/`~~ — removed. Its wiring re-exports now live in
+   `src/composition/adapters.ts`, so core no longer imports composition.
 
 8. `src/core/scan/report.ts` and `src/core/scan/parse-plan.ts` import
    `createUncheckedIncrementalEligibility` and types from

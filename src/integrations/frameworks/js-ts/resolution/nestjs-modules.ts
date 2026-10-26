@@ -1,4 +1,4 @@
-import { GraphBuilder } from "../../../../core/graph/builder.js";
+import type { IGraphContributor } from "../../../../core/contracts/graph-contributor.js";
 import type { GraphNode, GraphRelationshipType, ImportBinding } from "../../../../core/graph/model.js";
 import {
   createResolutionRelationshipIndex,
@@ -15,7 +15,7 @@ const relationshipByMetadataKey: Record<ModuleMetadataKey, GraphRelationshipType
   exports: "MODULE_EXPORTS",
 };
 
-export function addNestJsModuleRelationships(graph: GraphBuilder): void {
+export function addNestJsModuleRelationships(graph: IGraphContributor): void {
   const relationshipIndex = createResolutionRelationshipIndex(graph.relationships);
   const classesByFileAndName = indexNodesByFileAndName(graph.nodes, relationshipIndex.fileByClassId, "Class");
   const importsByFile = indexImportNodesByFile(graph.nodes, relationshipIndex.fileByImportId);

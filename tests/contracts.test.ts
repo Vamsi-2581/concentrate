@@ -5,7 +5,7 @@ import type { IGraphContributor } from "../src/core/contracts/graph-contributor.
 import type { ILanguageParser } from "../src/core/contracts/language-parser.js";
 import type { GraphNode as CoreGraphNode, ParsedSourceFile as CoreParsedSourceFile } from "../src/core/graph/model.js";
 import type { BuildCodeGraphResult, IncrementalMode, ScanManifest, ScanReport } from "../src/core/scan/index.js";
-import { buildCodeGraph as coreBuildCodeGraph, createScanReport, scanOrchestrator as coreScanOrchestrator } from "../src/core/scan/index.js";
+import { coreBuildCodeGraph, createScanOrchestrator, createScanReport } from "../src/core/scan/index.js";
 import { CoreIntegrationRegistry } from "../src/core/integrations/index.js";
 import { GraphBuilder } from "../src/core/graph/builder.js";
 import type { LanguageParser } from "../src/core/contracts/language-parser.js";
@@ -15,7 +15,7 @@ import {
   languageResolvers,
   scanOrchestrator,
   semanticContributors,
-} from "../src/core/adapters/index.js";
+} from "../src/composition/adapters.js";
 import {
   javascriptLanguageParser,
   typescriptLanguageParser,
@@ -114,7 +114,8 @@ describe("Core contract conformance", () => {
 
   it("core scan module owns the scan orchestrator surface", () => {
     assert.equal(typeof coreBuildCodeGraph, "function");
-    assert.equal(typeof coreScanOrchestrator.buildGraph, "function");
+    const orchestrator = createScanOrchestrator({ getParser: getParserAdapter, resolvers: [], contributors: [] });
+    assert.equal(typeof orchestrator.buildGraph, "function");
   });
 
   it("core integration registry accepts new integrations without scanner edits", async () => {

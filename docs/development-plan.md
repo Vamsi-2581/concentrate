@@ -1126,8 +1126,16 @@ graph writing. The guardrail test suite enforces direction at every step.
 
 ## Current Priority
 
-Milestones 8, 9, 10, 11, and 12 are complete. Incremental Scanning tasks 79
-through 83 are complete. MCP Server tasks 84 through 86 are complete. Layered
-Core Architecture tasks 87 through 94 are complete. Core Independence tasks 95
-through 104 are complete. Continue with the Architecture Completion phase
-starting at task 105.
+All tasks 1–120 are complete, including the Architecture Completion phase.
+Core no longer imports `src/composition/` (guarded by `tests/guardrails.test.ts`),
+and resolvers/contributors take `IGraphContributor` instead of casting to
+`GraphBuilder`.
+
+Open follow-ups:
+
+- Move HTTP route framework knowledge (Express/Koa/Fastify/NestJS) out of
+  `src/integrations/languages/js-ts/routes.ts` and `entrypoints.ts` into
+  `src/integrations/frameworks/js-ts/`, then collapse the dual scan/integration
+  parser registration in `src/composition/default-registry.ts`.
+- Implement real changed-file-only parsing; `createParsePlan` still always
+  returns `effectiveMode: "full"`.
