@@ -1131,6 +1131,10 @@ Core no longer imports `src/composition/` (guarded by `tests/guardrails.test.ts`
 and resolvers/contributors take `IGraphContributor` instead of casting to
 `GraphBuilder`.
 
+The next phase is the zero-runtime-dependency roadmap in
+[ROADMAP.md](ROADMAP.md) (milestones M1–M7, tracked in GitHub issue #1).
+It supersedes the follow-ups below, which are folded into its phases 4 and 5.
+
 Open follow-ups:
 
 - Move HTTP route framework knowledge (Express/Koa/Fastify/NestJS) out of

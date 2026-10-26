@@ -66,6 +66,11 @@ src/
   types/            — Ambient type declarations for tree-sitter bindings
 ```
 
+## Roadmap
+
+Concentrate is moving to zero runtime dependencies (own parsers and graph engine). See
+[docs/ROADMAP.md](docs/ROADMAP.md) and the tracking issue [#1](https://github.com/fatihserhatturan/concentrate/issues/1).
+
 ## Development
 
 ```bash
