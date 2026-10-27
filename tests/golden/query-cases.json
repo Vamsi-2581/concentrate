@@ -99,6 +99,12 @@
         "args": {
           "file": "service.ts"
         }
+      },
+      {
+        "tool": "list_entrypoints",
+        "args": {
+          "file": "missing.ts"
+        }
       }
     ],
     "config-env": [
@@ -166,6 +172,18 @@
         "tool": "list_routes",
         "args": {
           "file": "routes.ts"
+        }
+      },
+      {
+        "tool": "list_routes",
+        "args": {
+          "file": "paths.ts"
+        }
+      },
+      {
+        "tool": "list_routes",
+        "args": {
+          "framework": "fastify"
         }
       }
     ],

@@ -357,10 +357,10 @@ async function listRoutes(
   const frameworkFilter = framework ? `AND route.framework = ${quote(framework)}` : "";
   const rows = await engine.query(`
     MATCH (file:File)-[:DECLARES_ROUTE]->(route:Route)
-    OPTIONAL MATCH (route)-[:ROUTE_HANDLED_BY]->(handler:Function)
     WHERE true
       ${fileFilter}
       ${frameworkFilter}
+    OPTIONAL MATCH (route)-[:ROUTE_HANDLED_BY]->(handler:Function)
     RETURN file.relativePath AS file,
       route.line AS line,
       route.method AS method,
@@ -387,10 +387,10 @@ async function listEntrypoints(
   const fileFilter = file ? `AND file.relativePath = ${quote(file)}` : "";
   const rows = await engine.query(`
     MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(entrypoint:EntryPoint)
-    OPTIONAL MATCH (entrypoint)-[:ENTRYPOINT_HANDLED_BY]->(handler:Function)
     WHERE true
       ${kindFilter}
       ${fileFilter}
+    OPTIONAL MATCH (entrypoint)-[:ENTRYPOINT_HANDLED_BY]->(handler:Function)
     RETURN file.relativePath AS file,
       entrypoint.line AS line,
       entrypoint.kind AS kind,
