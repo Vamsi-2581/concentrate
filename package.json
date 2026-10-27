@@ -23,7 +23,6 @@
     "test:samples": "REQUIRE_SAMPLES=1 tsx --test tests/golden-samples.test.ts tests/golden-queries.test.ts"
   },
   "dependencies": {
-    "commander": "^14.0.1",
     "fast-glob": "^3.3.3",
     "ignore": "^7.0.5",
     "kuzu": "^0.11.2",

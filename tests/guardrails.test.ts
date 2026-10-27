@@ -114,7 +114,6 @@ const legacyDirs = ["scanner/", "parsers/", "graph/"];
  * empty at the end of milestone M4.
  */
 const RUNTIME_DEPENDENCY_ALLOWLIST: readonly string[] = [
-  "commander", // Phase 1
   "fast-glob", // Phase 1
   "ignore", // Phase 1
   "kuzu", // Phase 2
