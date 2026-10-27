@@ -165,11 +165,11 @@ describe("concentrate program spec", () => {
     assert.deepEqual(parseCommandArgs(scan, ["."]), {
       positionals: ["."],
       options: {
-        database: ".concentrate/graph.kuzu",
+        database: ".concentrate/graph",
         continueOnError: false,
         include: [],
         exclude: [],
-        kuzuWriteMode: "transaction",
+        retryLock: true,
         manifest: ".concentrate/scan-manifest.json",
         incremental: "full",
       },

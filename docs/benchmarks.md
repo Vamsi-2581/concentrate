@@ -24,3 +24,29 @@ Apple M4, Node v24.13.0, macOS. Recorded 2026-10-27.
 Write time is dominated by one `CREATE` statement per node and relationship;
 even the 68-node sample pays ~650 ms of schema creation. Phase 2's acceptance
 criterion is MCP tool latency equal to or better than this table.
+
+## Built-in store (Phase 2)
+
+Same machine and samples, recorded 2026-10-27 with `--runs 100`. Write is
+`reset()` + `write()` including the snapshot commit (gzip segments, atomic HEAD
+rename). Tool calls include the per-call HEAD check that lets a running MCP
+server pick up a new scan.
+
+| Sample | Nodes | Rels | Write | graph_stats | find_definitions | list_exports | list_routes | list_entrypoints | list_env_config | list_data_access |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| express | 3281 | 4130 | 12.02 / 17.33 | 1.1 / 1.58 | 1.66 / 2.52 | 1.61 / 3.56 | 0.48 / 0.73 | 0.1 / 0.12 | 0.32 / 0.36 | 0.3 / 0.61 |
+| fastify | 339 | 392 | 1.36 / 3.06 | 0.35 / 0.42 | 0.41 / 0.61 | 0.56 / 0.66 | 0.09 / 0.11 | 0.08 / 0.09 | 0.23 / 0.27 | 0.22 / 0.25 |
+| nestjs-starter | 68 | 95 | 0.53 / 0.63 | 0.23 / 0.26 | 0.3 / 0.37 | 0.44 / 0.52 | 0.09 / 0.11 | 0.09 / 0.11 | 0.24 / 0.27 | 0.21 / 0.24 |
+| ky | 5494 | 6926 | 20.73 / 28.33 | 2.11 / 2.35 | 1.31 / 2.09 | 1.03 / 2.53 | 0.09 / 0.1 | 0.09 / 0.1 | 0.26 / 0.3 | 0.23 / 0.28 |
+
+Compared with the Kuzu baseline:
+
+- **Write** is 140–1250× faster (express 2956 → 12 ms, ky 4729 → 21 ms); there
+  is no schema to create and no statement per record.
+- **Every MCP tool** is faster at p50 and p95 on every sample: 1.3–3× on the
+  scan-heavy tools (`graph_stats`, `find_definitions`, `list_exports`) and
+  2–10× on the others.
+- With `--runs 20`, p95 is effectively the second-slowest call, and a single
+  garbage-collection pause can put it above the baseline (seen up to 5 ms for
+  express `graph_stats`); use 100 runs to compare tails.
+- `node_modules` went from 653 MB to 114 MB; the `kuzu` package alone was 531 MB.

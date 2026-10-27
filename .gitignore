@@ -1,7 +1,5 @@
 node_modules/
 dist/
 .concentrate/
-*.kuzu/
-*.kuzu
 .DS_Store
 coverage/

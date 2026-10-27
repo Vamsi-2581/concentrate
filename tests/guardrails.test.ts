@@ -114,7 +114,6 @@ const legacyDirs = ["scanner/", "parsers/", "graph/"];
  * empty at the end of milestone M4.
  */
 const RUNTIME_DEPENDENCY_ALLOWLIST: readonly string[] = [
-  "kuzu", // Phase 2
   "tree-sitter", // Phase 3
   "tree-sitter-go", // Phase 3
   "tree-sitter-javascript", // Phase 3
@@ -186,7 +185,7 @@ describe("Architecture dependency guardrails", () => {
         "composition/",
         "integrations/",
         "adapters/cli/",
-        "adapters/kuzu/",
+        "adapters/store/",
         "adapters/mcp/",
         "commands/",
         ...legacyDirs,
@@ -314,8 +313,8 @@ describe("Architecture dependency guardrails", () => {
 
   it("CLI and MCP adapters reach the graph store only through contracts and composition", async () => {
     const violations = [
-      ...await checkFiles(path.join(srcRoot, "adapters/cli"), ["adapters/kuzu/"]),
-      ...await checkFiles(path.join(srcRoot, "adapters/mcp"), ["adapters/kuzu/"]),
+      ...await checkFiles(path.join(srcRoot, "adapters/cli"), ["adapters/store/"]),
+      ...await checkFiles(path.join(srcRoot, "adapters/mcp"), ["adapters/store/"]),
     ];
 
     assert.deepEqual(

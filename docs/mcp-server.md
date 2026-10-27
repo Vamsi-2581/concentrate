@@ -1,6 +1,6 @@
 # MCP Server
 
-Concentrate can expose a scanned Kuzu graph as a read-only Model Context
+Concentrate can expose a scanned graph as a read-only Model Context
 Protocol server over stdio.
 
 ## Run
@@ -8,13 +8,13 @@ Protocol server over stdio.
 Scan a project first:
 
 ```bash
-npm run scan -- /path/to/project --database .concentrate/graph.kuzu
+npm run scan -- /path/to/project --database .concentrate/graph
 ```
 
 Start the MCP server:
 
 ```bash
-npm run mcp -- --database .concentrate/graph.kuzu
+npm run mcp -- --database .concentrate/graph
 ```
 
 Example MCP client command configuration:
@@ -27,7 +27,7 @@ Example MCP client command configuration:
     "mcp",
     "--",
     "--database",
-    "/absolute/path/to/.concentrate/graph.kuzu"
+    "/absolute/path/to/.concentrate/graph"
   ]
 }
 ```
@@ -45,7 +45,7 @@ After scanning a graph, verify the stdio protocol with:
 printf '%s\n%s\n' \
   '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{}}' \
   '{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}' \
-  | npm run mcp -- --database /absolute/path/to/.concentrate/graph.kuzu
+  | npm run mcp -- --database /absolute/path/to/.concentrate/graph
 ```
 
 Expected behavior:
@@ -105,8 +105,9 @@ Example `tools/call` request:
   --database <path>` first and point MCP to the same database path.
 - If a client starts MCP from another working directory, use an absolute
   `--database` path.
-- If Kuzu reports a transient lock error, retry after active scans or query
-  commands finish. The MCP command uses the same lock retry behavior as
-  `query` and `stats`.
+- The server never locks the store, so it can stay running while you scan. A
+  finished scan is picked up on the next tool call; no restart is needed.
+- If the path is an old `.kuzu` database, the server reports it. Delete it and
+  scan again (the default store is now the `.concentrate/graph/` directory).
 - If a tool returns fewer semantic rows than expected, verify the graph with
   `npm run smoke:samples` and review known parser/resolver limitations.

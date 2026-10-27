@@ -6,7 +6,7 @@ import type { BuildCodeGraphResult, IncrementalEligibility, IncrementalMode } fr
 import { didFailFast, didPartiallySucceed } from "../../core/scan/index.js";
 import { scanOrchestrator } from "../../composition/orchestrator.js";
 import { GRAPH_SCHEMA_VERSION, openGraphStore } from "../../composition/graph-store.js";
-import type { GraphWriteMode, IGraphStore } from "../../core/contracts/graph-store.js";
+import type { IGraphStore } from "../../core/contracts/graph-store.js";
 
 export type ScanAdapterOptions = {
   database: string;
@@ -15,7 +15,7 @@ export type ScanAdapterOptions = {
   maxFiles?: number;
   include: string[];
   exclude: string[];
-  kuzuWriteMode: string;
+  retryLock: boolean;
   manifest: string;
   previousManifest?: string;
   incremental: string;
@@ -29,7 +29,6 @@ export async function runScanAdapter(projectPath: string, options: ScanAdapterOp
   const databasePath = path.resolve(options.database);
   const manifestPath = path.resolve(options.manifest);
   const incrementalMode = parseIncrementalMode(options.incremental);
-  const kuzuWriteMode = parseGraphWriteMode(options.kuzuWriteMode);
   const progress = new ProgressReporter();
 
   const result = await scanOrchestrator.buildGraph(projectPath, {
@@ -54,9 +53,9 @@ export async function runScanAdapter(projectPath: string, options: ScanAdapterOp
     return { exitCode: 1 };
   }
 
-  const writer = await openGraphStore(databasePath);
+  const writer = await openGraphStore(databasePath, { retryLock: options.retryLock !== false });
   try {
-    await writeGraph(writer, result, incrementalMode, kuzuWriteMode);
+    await writeGraph(writer, result, incrementalMode);
   } finally {
     await writer.close();
   }
@@ -71,7 +70,6 @@ async function writeGraph(
   writer: IGraphStore,
   result: BuildCodeGraphResult,
   incrementalMode: IncrementalMode,
-  kuzuWriteMode: GraphWriteMode,
 ): Promise<void> {
   const requestedPatch = incrementalMode === "changed-files";
   result.report.graphPatch = {
@@ -80,7 +78,7 @@ async function writeGraph(
   };
 
   if (!requestedPatch) {
-    await resetAndWriteGraph(writer, result, kuzuWriteMode);
+    await resetAndWriteGraph(writer, result);
     return;
   }
 
@@ -90,7 +88,7 @@ async function writeGraph(
       effectiveMode: "reset",
       reason: result.report.incremental.reason ?? "Previous manifest is not compatible",
     };
-    await resetAndWriteGraph(writer, result, kuzuWriteMode);
+    await resetAndWriteGraph(writer, result);
     return;
   }
 
@@ -103,14 +101,13 @@ async function writeGraph(
         ? "Previous graph schema is missing"
         : `Previous graph schema mismatch: previous ${schemaVersion}, current ${GRAPH_SCHEMA_VERSION}`,
     };
-    await resetAndWriteGraph(writer, result, kuzuWriteMode);
+    await resetAndWriteGraph(writer, result);
     return;
   }
 
   const affectedFiles = affectedFilesFromManifestDiff(result.report.incremental);
   const patchSummary = await writer.patch(result.nodes, result.relationships, {
     affectedFiles,
-    mode: kuzuWriteMode,
   });
   result.report.graphPatch = {
     requested: true,
@@ -125,12 +122,9 @@ async function writeGraph(
 async function resetAndWriteGraph(
   writer: IGraphStore,
   result: BuildCodeGraphResult,
-  kuzuWriteMode: GraphWriteMode,
 ): Promise<void> {
   await writer.reset();
-  await writer.write(result.nodes, result.relationships, {
-    mode: kuzuWriteMode,
-  });
+  await writer.write(result.nodes, result.relationships);
   result.report.graphPatch = {
     ...result.report.graphPatch,
     nodesWritten: result.nodes.length,
@@ -162,12 +156,4 @@ function parseIncrementalMode(value: string): IncrementalMode {
   }
 
   throw new Error(`Unsupported incremental mode: ${value}`);
-}
-
-function parseGraphWriteMode(value: string): GraphWriteMode {
-  if (value === "transaction" || value === "individual") {
-    return value;
-  }
-
-  throw new Error(`Unsupported Kuzu write mode: ${value}`);
 }

@@ -10,13 +10,13 @@ import {
   resolveSamples,
   samplesDirectory,
 } from "../src/adapters/cli/smoke.js";
-import { SCHEMA_VERSION } from "../src/adapters/kuzu/schema.js";
+import { SCHEMA_VERSION } from "../src/adapters/store/schema.js";
 
 describe("smoke validation", () => {
-  it("runs scan, writes Kuzu, checks expected counts, and writes a report", async () => {
+  it("runs scan, writes the graph store, checks expected counts, and writes a report", async () => {
     const root = await mkdtemp(path.join(os.tmpdir(), "concentrate-smoke-"));
     const projectPath = path.join(root, "project");
-    const databasePath = path.join(root, "graph.kuzu");
+    const databasePath = path.join(root, "graph");
     const reportPath = path.join(root, "smoke-report.json");
     await mkdir(projectPath, { recursive: true });
     await writeFile(

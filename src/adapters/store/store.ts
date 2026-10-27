@@ -1,4 +1,4 @@
-import { mkdir } from "node:fs/promises";
+import { readdir, stat } from "node:fs/promises";
 import type { GraphNode, GraphRelationship } from "../../core/graph/model.js";
 import type { GraphPatchOptions, GraphPatchSummary, IGraphStore } from "../../core/contracts/graph-store.js";
 import type { GraphStatsOptions, GraphStatsRow } from "../../core/contracts/query-engine.js";
@@ -29,8 +29,9 @@ export class GraphStore implements IGraphStore {
     private readonly retryLock: boolean,
   ) {}
 
+  /** Open (or, on first write, create) the store at `directory`. Reading never creates it. */
   static async open(directory: string, options: GraphStoreOpenOptions = {}): Promise<GraphStore> {
-    await mkdir(directory, { recursive: true });
+    await assertStoreDirectory(directory);
     const { head, graph } = await loadSnapshot(directory);
     return new GraphStore(directory, graph, head, options.retryLock ?? false);
   }
@@ -119,4 +120,28 @@ export class GraphStore implements IGraphStore {
     if (latest?.generation === this.head?.generation) return;
     ({ head: this.head, graph: this.graph } = await loadSnapshot(this.directory));
   }
+}
+
+const STORE_ENTRIES = new Set(["HEAD.json", "LOCK", "segments"]);
+
+/** Refuse a path that holds something else, most likely a Kuzu database from before the built-in store. */
+async function assertStoreDirectory(directory: string): Promise<void> {
+  let entries: string[];
+  try {
+    if (!(await stat(directory)).isDirectory()) throw kuzuDatabaseError(directory);
+    entries = await readdir(directory);
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") return;
+    throw error;
+  }
+  if (entries.includes("HEAD.json")) return;
+  const foreign = entries.filter((entry) => !STORE_ENTRIES.has(entry) && !entry.endsWith(".tmp"));
+  if (foreign.some((entry) => entry.endsWith(".kz") || entry === ".lock" || entry.endsWith(".wal"))) throw kuzuDatabaseError(directory);
+  if (foreign.length > 0) {
+    throw new Error(`${directory} is not a Concentrate graph store (found ${foreign.slice(0, 3).join(", ")}); choose an empty or new directory`);
+  }
+}
+
+function kuzuDatabaseError(directory: string): Error {
+  return new Error(`${directory} is a Kuzu database from an older version of Concentrate; delete it and run concentrate scan again`);
 }

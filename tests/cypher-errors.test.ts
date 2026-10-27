@@ -74,6 +74,11 @@ describe("Cypher semantics outside the Kuzu corpus", () => {
     });
   });
 
+  it("returns null for a property an unlabeled node's inferred tables lack, like Kuzu", () => {
+    assert.deepEqual(run("MATCH (x)-[:DEFINES_FUNCTION]->(fn:Function {name: 'run'}) RETURN x.name AS name"), [{ name: null }]);
+    assertError("MATCH (x:File) RETURN x.name AS name", "binder", /Cannot find property name for x/);
+  });
+
   it("starts from an indexed equality and still applies the rest of WHERE", () => {
     assert.deepEqual(run("MATCH (fn:Function) WHERE fn.name = $name AND fn.line > 5 RETURN fn.name AS name", { name: "stop" }), [{ name: "stop" }]);
     assert.deepEqual(run("MATCH (fn:Function) WHERE fn.name = $name AND fn.line > 5 RETURN fn.name AS name", { name: "run" }), []);

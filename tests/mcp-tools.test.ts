@@ -4,7 +4,8 @@ import os from "node:os";
 import path from "node:path";
 import { describe, it } from "node:test";
 import { buildCodeGraph } from "../src/composition/orchestrator.js";
-import { KuzuGraphWriter } from "../src/adapters/kuzu/kuzu-writer.js";
+import { SCHEMA_VERSION } from "../src/adapters/store/schema.js";
+import { GraphStore } from "../src/adapters/store/store.js";
 import { callMcpTool } from "../src/adapters/mcp/tools.js";
 import { handleMcpRequest } from "../src/adapters/mcp/server.js";
 
@@ -53,7 +54,7 @@ describe("MCP tools", () => {
         },
       }, engineFactory) as { content?: Array<{ type?: string; text?: string }> };
       assert.equal(call.content?.[0]?.type, "text");
-      assert.equal(JSON.parse(call.content?.[0]?.text ?? "{}").schemaVersion, 34);
+      assert.equal(JSON.parse(call.content?.[0]?.text ?? "{}").schemaVersion, SCHEMA_VERSION);
       assert.equal(opened, 1, "tools/call should open the graph database lazily");
 
       await assert.rejects(
@@ -75,7 +76,7 @@ describe("MCP tools", () => {
     try {
       const stats = await callJsonTool(writer, "graph_stats", {});
       assert.ok(Array.isArray(stats.stats));
-      assert.equal(stats.schemaVersion, 34);
+      assert.equal(stats.schemaVersion, SCHEMA_VERSION);
 
       const definitions = await callJsonTool(writer, "find_definitions", {
         name: "target",
@@ -135,13 +136,13 @@ describe("MCP tools", () => {
       await writer.close();
     }
 
-    assert.ok(databasePath.endsWith("graph.kuzu"));
+    assert.ok(databasePath.endsWith("graph"));
   });
 
   it("find_callers includes callers that are class methods", async () => {
     const root = await mkdtemp(path.join(os.tmpdir(), "concentrate-mcp-methods-"));
     const graph = await buildCodeGraph(path.resolve("fixtures/nestjs-injection"), { continueOnError: false });
-    const writer = await KuzuGraphWriter.open(path.join(root, "graph.kuzu"));
+    const writer = await GraphStore.open(path.join(root, "graph"));
     try {
       await writer.reset();
       await writer.write(graph.nodes, graph.relationships);
@@ -160,7 +161,7 @@ describe("MCP tools", () => {
 });
 
 async function callJsonTool(
-  writer: KuzuGraphWriter,
+  writer: GraphStore,
   name: string,
   args: Record<string, unknown>,
 ): Promise<Record<string, any>> {
@@ -168,10 +169,10 @@ async function callJsonTool(
   return JSON.parse(result.content[0]?.text ?? "{}") as Record<string, any>;
 }
 
-async function createMcpFixture(): Promise<{ databasePath: string; writer: KuzuGraphWriter }> {
+async function createMcpFixture(): Promise<{ databasePath: string; writer: GraphStore }> {
   const root = await mkdtemp(path.join(os.tmpdir(), "concentrate-mcp-"));
   const projectPath = path.join(root, "project");
-  const databasePath = path.join(root, "graph.kuzu");
+  const databasePath = path.join(root, "graph");
   await mkdir(path.join(projectPath, "src"), { recursive: true });
   await writeFile(
     path.join(projectPath, "src", "index.ts"),
@@ -223,7 +224,7 @@ async function createMcpFixture(): Promise<{ databasePath: string; writer: KuzuG
   const graph = await buildCodeGraph(projectPath, {
     continueOnError: false,
   });
-  const writer = await KuzuGraphWriter.open(databasePath);
+  const writer = await GraphStore.open(databasePath);
   await writer.reset();
   await writer.write(graph.nodes, graph.relationships);
   return { databasePath, writer };

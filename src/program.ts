@@ -14,16 +14,16 @@ export const program: ProgramSpec = {
   commands: [
     {
       name: "scan",
-      description: "Scan a project and write its graph into a Kuzu database.",
+      description: "Scan a project and write its graph into the graph store.",
       args: [{ name: "path", description: "Project path to scan" }],
       options: [
-        { flags: "-d, --database <path>", description: "Kuzu database path", default: ".concentrate/graph.kuzu" },
+        { flags: "-d, --database <path>", description: "Graph store directory", default: ".concentrate/graph" },
         { flags: "--continue-on-error", description: "Continue scanning when a supported file fails to parse", type: "boolean" },
         { flags: "--concurrency <n>", description: "Files to parse in parallel (default: CPU count)", type: "number" },
         { flags: "--max-files <n>", description: "Maximum number of files to parse", type: "number" },
         { flags: "--include <pattern>", description: "Include glob pattern, repeatable", multiple: true },
         { flags: "--exclude <pattern>", description: "Exclude glob pattern, repeatable", multiple: true },
-        { flags: "--kuzu-write-mode <mode>", description: "Kuzu write mode: transaction or individual", default: "transaction" },
+        { flags: "--no-retry-lock", description: "Fail at once if another scan is writing the store instead of waiting for it" },
         { flags: "--manifest <path>", description: "Incremental scan manifest output path", default: ".concentrate/scan-manifest.json" },
         { flags: "--previous-manifest <path>", description: "Previous scan manifest used only for incremental eligibility reporting" },
         { flags: "--incremental <mode>", description: "Incremental mode: full or changed-files", default: "full" },
@@ -34,9 +34,8 @@ export const program: ProgramSpec = {
       name: "stats",
       description: "Show basic graph statistics.",
       options: [
-        { flags: "-d, --database <path>", description: "Kuzu database path", default: ".concentrate/graph.kuzu" },
+        { flags: "-d, --database <path>", description: "Graph store directory", default: ".concentrate/graph" },
         { flags: "--package <name>", description: "Filter file-owned stats to one package name or relative path" },
-        { flags: "--no-retry-lock", description: "Disable retry/backoff for transient Kuzu database lock errors" },
       ],
       action: statsCommand,
     },
@@ -45,9 +44,9 @@ export const program: ProgramSpec = {
       description: "Run a Cypher query against the graph.",
       args: [{ name: "cypher", description: "Cypher query to execute" }],
       options: [
-        { flags: "-d, --database <path>", description: "Kuzu database path", default: ".concentrate/graph.kuzu" },
+        { flags: "-d, --database <path>", description: "Graph store directory", default: ".concentrate/graph" },
         { flags: "-f, --format <format>", description: "Output format: json, table, csv", default: "json" },
-        { flags: "--no-retry-lock", description: "Disable retry/backoff for transient Kuzu database lock errors" },
+        { flags: "-p, --param <name=value>", description: "Query parameter for $name, repeatable; JSON values are parsed", multiple: true },
       ],
       action: queryCommand,
     },
@@ -82,10 +81,9 @@ export const program: ProgramSpec = {
     },
     {
       name: "mcp",
-      description: "Run a read-only MCP server over a Kuzu graph database.",
+      description: "Run a read-only MCP server over the graph store.",
       options: [
-        { flags: "-d, --database <path>", description: "Kuzu database path", default: ".concentrate/graph.kuzu" },
-        { flags: "--no-retry-lock", description: "Disable retry/backoff for transient Kuzu database lock errors" },
+        { flags: "-d, --database <path>", description: "Graph store directory", default: ".concentrate/graph" },
       ],
       action: mcpCommand,
     },

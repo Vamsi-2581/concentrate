@@ -1,4 +1,4 @@
-import { nodeLabels, nodeTableByLabel, relationshipTableByType, relationshipTables } from "../schema.js";
+import { nodeLabels, nodeTableByLabel, nodeTables, relationshipTableByType, relationshipTables } from "../schema.js";
 import type { Clause, Expression, MatchClause, NodePattern, ProjectionClause, Query, RelationshipPattern } from "./ast.js";
 import { CypherError } from "./errors.js";
 import { AGGREGATE_FUNCTIONS, SCALAR_FUNCTIONS } from "./functions.js";
@@ -14,7 +14,8 @@ import { AGGREGATE_FUNCTIONS, SCALAR_FUNCTIONS } from "./functions.js";
 export type StaticType = "INT" | "FLOAT" | "STRING" | "BOOL" | "LIST" | "NODE" | "REL" | "NULL" | "ANY";
 
 export type VariableInfo =
-  | { kind: "node"; labels: readonly string[] }
+  /** `labeled`: some pattern gave the node a label; otherwise its labels were inferred from relationships. */
+  | { kind: "node"; labels: readonly string[]; labeled: boolean }
   | { kind: "rel"; types: readonly string[]; list: boolean }
   | { kind: "value"; type: StaticType };
 
@@ -118,14 +119,14 @@ function declareNode(node: NodePattern, scope: Scope, bound: BoundQuery, anonymo
   const existing = scope.get(name);
   const labels = node.labels.length > 0 ? node.labels : nodeLabels;
   if (!existing) {
-    scope.set(name, { kind: "node", labels: [...labels] });
+    scope.set(name, { kind: "node", labels: [...labels], labeled: node.labels.length > 0 });
     return;
   }
   if (existing.kind !== "node") {
     throw new CypherError("binder", `${name} is not a node variable.`);
   }
   if (node.labels.length > 0) {
-    scope.set(name, { kind: "node", labels: existing.labels.filter((label) => node.labels.includes(label)) });
+    scope.set(name, { kind: "node", labels: existing.labels.filter((label) => node.labels.includes(label)), labeled: true });
   }
 }
 
@@ -156,7 +157,7 @@ function narrow(scope: Scope, name: string, allowed: ReadonlySet<string>): void 
   const info = scope.get(name);
   if (info?.kind !== "node") return;
   const narrowed = info.labels.filter((label) => allowed.has(label));
-  scope.set(name, { kind: "node", labels: narrowed });
+  scope.set(name, { ...info, labels: narrowed });
 }
 
 function bindProjection(
@@ -328,6 +329,8 @@ function checkProperty(info: VariableInfo, property: string, variable: string): 
   if (tables.length === 0) return "ANY";
   const types = new Set(tables.map((properties) => properties[property]).filter((type) => type !== undefined));
   if (types.size === 0) {
+    // Kuzu checks an unlabeled node against every node table, not just the ones its relationships allow.
+    if (info.kind === "node" && !info.labeled && nodeTables.some((table) => property in table.properties)) return "ANY";
     throw new CypherError("binder", `Cannot find property ${property} for ${variable}.`);
   }
   if (types.size > 1) return "ANY";
