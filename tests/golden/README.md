@@ -25,3 +25,26 @@ npm run golden:update
 
 Only update goldens for an intended behavior change, and explain the diff in the
 PR description. A golden diff that nobody can explain is a regression.
+
+## Query recordings
+
+`queries/<fixture>.json` (and `queries/samples/<sample>.json.gz`) hold one entry
+per case in [`query-cases.json`](query-cases.json):
+
+```json
+{ "tool": "find_callers", "args": { "name": "add" },
+  "calls": [ { "method": "query", "cypher": "MATCH ...", "rows": [ ... ] } ],
+  "output": { ... } }
+```
+
+- `calls` lists every `IQueryEngine` call the tool made, in issue order:
+  `query` (whitespace-collapsed Cypher and the rows Kuzu returned), `stats`, or
+  `schemaVersion`. The Phase 2 engine must return the same rows when it replays
+  each `cypher`.
+- `output` is the parsed JSON text the MCP tool returned to the client.
+- `templates.json` pins the distinct query shapes (literals replaced by `$str` /
+  `$num`). A new tool or filter that the cases do not cover shows up as a diff
+  here.
+
+The recordings pin current behavior, including known gaps: `find_callers`
+currently misses callers that are class methods (`DEFINES_METHOD`).

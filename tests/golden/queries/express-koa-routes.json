@@ -1,0 +1,1175 @@
+[
+  {
+    "tool": "graph_stats",
+    "args": {},
+    "calls": [
+      {
+        "method": "schemaVersion",
+        "result": 34
+      },
+      {
+        "method": "stats",
+        "options": {},
+        "rows": [
+          {
+            "table": "Repo",
+            "count": 1
+          },
+          {
+            "table": "Package",
+            "count": 0
+          },
+          {
+            "table": "Directory",
+            "count": 1
+          },
+          {
+            "table": "File",
+            "count": 2
+          },
+          {
+            "table": "Import",
+            "count": 2
+          },
+          {
+            "table": "Function",
+            "count": 6
+          },
+          {
+            "table": "Class",
+            "count": 0
+          },
+          {
+            "table": "Field",
+            "count": 0
+          },
+          {
+            "table": "Variable",
+            "count": 7
+          },
+          {
+            "table": "Decorator",
+            "count": 0
+          },
+          {
+            "table": "Interface",
+            "count": 0
+          },
+          {
+            "table": "TypeAlias",
+            "count": 0
+          },
+          {
+            "table": "Enum",
+            "count": 0
+          },
+          {
+            "table": "Call",
+            "count": 21
+          },
+          {
+            "table": "Route",
+            "count": 8
+          },
+          {
+            "table": "EntryPoint",
+            "count": 0
+          },
+          {
+            "table": "EnvVar",
+            "count": 0
+          },
+          {
+            "table": "ConfigValue",
+            "count": 2
+          },
+          {
+            "table": "DataModel",
+            "count": 0
+          }
+        ]
+      }
+    ],
+    "output": {
+      "schemaVersion": 34,
+      "stats": [
+        {
+          "table": "Repo",
+          "count": 1
+        },
+        {
+          "table": "Package",
+          "count": 0
+        },
+        {
+          "table": "Directory",
+          "count": 1
+        },
+        {
+          "table": "File",
+          "count": 2
+        },
+        {
+          "table": "Import",
+          "count": 2
+        },
+        {
+          "table": "Function",
+          "count": 6
+        },
+        {
+          "table": "Class",
+          "count": 0
+        },
+        {
+          "table": "Field",
+          "count": 0
+        },
+        {
+          "table": "Variable",
+          "count": 7
+        },
+        {
+          "table": "Decorator",
+          "count": 0
+        },
+        {
+          "table": "Interface",
+          "count": 0
+        },
+        {
+          "table": "TypeAlias",
+          "count": 0
+        },
+        {
+          "table": "Enum",
+          "count": 0
+        },
+        {
+          "table": "Call",
+          "count": 21
+        },
+        {
+          "table": "Route",
+          "count": 8
+        },
+        {
+          "table": "EntryPoint",
+          "count": 0
+        },
+        {
+          "table": "EnvVar",
+          "count": 0
+        },
+        {
+          "table": "ConfigValue",
+          "count": 2
+        },
+        {
+          "table": "DataModel",
+          "count": 0
+        }
+      ]
+    }
+  },
+  {
+    "tool": "find_definitions",
+    "args": {
+      "name": "e"
+    },
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_FUNCTION]->(n:Function) WHERE contains(lower(n.name), lower(\"e\")) RETURN n.name AS name, 'Function' AS kind, file.relativePath AS file, n.line AS line, n.isExported AS isExported, 'DEFINES_FUNCTION' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 20",
+        "rows": [
+          {
+            "name": "listUsers",
+            "kind": "Function",
+            "file": "routes.ts",
+            "line": 10,
+            "isExported": false,
+            "relationship": "DEFINES_FUNCTION"
+          },
+          {
+            "name": "createUser",
+            "kind": "Function",
+            "file": "routes.ts",
+            "line": 14,
+            "isExported": false,
+            "relationship": "DEFINES_FUNCTION"
+          },
+          {
+            "name": "authenticate",
+            "kind": "Function",
+            "file": "routes.ts",
+            "line": 18,
+            "isExported": false,
+            "relationship": "DEFINES_FUNCTION"
+          },
+          {
+            "name": "validateUser",
+            "kind": "Function",
+            "file": "routes.ts",
+            "line": 22,
+            "isExported": false,
+            "relationship": "DEFINES_FUNCTION"
+          },
+          {
+            "name": "<router.delete:/users/:id:arg1>",
+            "kind": "Function",
+            "file": "routes.ts",
+            "line": 29,
+            "isExported": false,
+            "relationship": "DEFINES_FUNCTION"
+          },
+          {
+            "name": "<adminRouter.get:/dashboard:arg1>",
+            "kind": "Function",
+            "file": "routes.ts",
+            "line": 34,
+            "isExported": false,
+            "relationship": "DEFINES_FUNCTION"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(n:Class) WHERE contains(lower(n.name), lower(\"e\")) RETURN n.name AS name, 'Class' AS kind, file.relativePath AS file, n.line AS line, n.isExported AS isExported, 'DEFINES_CLASS' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 20",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_VARIABLE]->(n:Variable) WHERE contains(lower(n.name), lower(\"e\")) RETURN n.name AS name, 'Variable' AS kind, file.relativePath AS file, n.line AS line, n.isExported AS isExported, 'DEFINES_VARIABLE' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 20",
+        "rows": [
+          {
+            "name": "USERS_PATH",
+            "kind": "Variable",
+            "file": "paths.ts",
+            "line": 1,
+            "isExported": true,
+            "relationship": "DEFINES_VARIABLE"
+          },
+          {
+            "name": "API_PREFIX",
+            "kind": "Variable",
+            "file": "routes.ts",
+            "line": 4,
+            "isExported": false,
+            "relationship": "DEFINES_VARIABLE"
+          },
+          {
+            "name": "router",
+            "kind": "Variable",
+            "file": "routes.ts",
+            "line": 6,
+            "isExported": false,
+            "relationship": "DEFINES_VARIABLE"
+          },
+          {
+            "name": "adminRouter",
+            "kind": "Variable",
+            "file": "routes.ts",
+            "line": 7,
+            "isExported": false,
+            "relationship": "DEFINES_VARIABLE"
+          },
+          {
+            "name": "cache",
+            "kind": "Variable",
+            "file": "routes.ts",
+            "line": 8,
+            "isExported": false,
+            "relationship": "DEFINES_VARIABLE"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_INTERFACE]->(n:Interface) WHERE contains(lower(n.name), lower(\"e\")) RETURN n.name AS name, 'Interface' AS kind, file.relativePath AS file, n.line AS line, n.isExported AS isExported, 'DEFINES_INTERFACE' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 20",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_TYPE_ALIAS]->(n:TypeAlias) WHERE contains(lower(n.name), lower(\"e\")) RETURN n.name AS name, 'TypeAlias' AS kind, file.relativePath AS file, n.line AS line, n.isExported AS isExported, 'DEFINES_TYPE_ALIAS' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 20",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_ENUM]->(n:Enum) WHERE contains(lower(n.name), lower(\"e\")) RETURN n.name AS name, 'Enum' AS kind, file.relativePath AS file, n.line AS line, n.isExported AS isExported, 'DEFINES_ENUM' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 20",
+        "rows": []
+      }
+    ],
+    "output": {
+      "query": {
+        "name": "e",
+        "exact": false,
+        "limit": 20
+      },
+      "definitions": [
+        {
+          "name": "listUsers",
+          "kind": "Function",
+          "file": "routes.ts",
+          "line": 10,
+          "isExported": false,
+          "relationship": "DEFINES_FUNCTION"
+        },
+        {
+          "name": "createUser",
+          "kind": "Function",
+          "file": "routes.ts",
+          "line": 14,
+          "isExported": false,
+          "relationship": "DEFINES_FUNCTION"
+        },
+        {
+          "name": "authenticate",
+          "kind": "Function",
+          "file": "routes.ts",
+          "line": 18,
+          "isExported": false,
+          "relationship": "DEFINES_FUNCTION"
+        },
+        {
+          "name": "validateUser",
+          "kind": "Function",
+          "file": "routes.ts",
+          "line": 22,
+          "isExported": false,
+          "relationship": "DEFINES_FUNCTION"
+        },
+        {
+          "name": "<router.delete:/users/:id:arg1>",
+          "kind": "Function",
+          "file": "routes.ts",
+          "line": 29,
+          "isExported": false,
+          "relationship": "DEFINES_FUNCTION"
+        },
+        {
+          "name": "<adminRouter.get:/dashboard:arg1>",
+          "kind": "Function",
+          "file": "routes.ts",
+          "line": 34,
+          "isExported": false,
+          "relationship": "DEFINES_FUNCTION"
+        },
+        {
+          "name": "USERS_PATH",
+          "kind": "Variable",
+          "file": "paths.ts",
+          "line": 1,
+          "isExported": true,
+          "relationship": "DEFINES_VARIABLE"
+        },
+        {
+          "name": "API_PREFIX",
+          "kind": "Variable",
+          "file": "routes.ts",
+          "line": 4,
+          "isExported": false,
+          "relationship": "DEFINES_VARIABLE"
+        },
+        {
+          "name": "router",
+          "kind": "Variable",
+          "file": "routes.ts",
+          "line": 6,
+          "isExported": false,
+          "relationship": "DEFINES_VARIABLE"
+        },
+        {
+          "name": "adminRouter",
+          "kind": "Variable",
+          "file": "routes.ts",
+          "line": 7,
+          "isExported": false,
+          "relationship": "DEFINES_VARIABLE"
+        },
+        {
+          "name": "cache",
+          "kind": "Variable",
+          "file": "routes.ts",
+          "line": 8,
+          "isExported": false,
+          "relationship": "DEFINES_VARIABLE"
+        }
+      ]
+    }
+  },
+  {
+    "tool": "list_exports",
+    "args": {},
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_FUNCTION]->(n:Function) WHERE n.isExported = true RETURN file.relativePath AS file, n.name AS name, 'Function' AS kind, n.line AS line, 'DEFINES_FUNCTION' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(n:Class) WHERE n.isExported = true RETURN file.relativePath AS file, n.name AS name, 'Class' AS kind, n.line AS line, 'DEFINES_CLASS' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_VARIABLE]->(n:Variable) WHERE n.isExported = true RETURN file.relativePath AS file, n.name AS name, 'Variable' AS kind, n.line AS line, 'DEFINES_VARIABLE' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 50",
+        "rows": [
+          {
+            "file": "paths.ts",
+            "name": "USERS_PATH",
+            "kind": "Variable",
+            "line": 1,
+            "relationship": "DEFINES_VARIABLE"
+          },
+          {
+            "file": "paths.ts",
+            "name": "ADMIN_PATH",
+            "kind": "Variable",
+            "line": 2,
+            "relationship": "DEFINES_VARIABLE"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_INTERFACE]->(n:Interface) WHERE n.isExported = true RETURN file.relativePath AS file, n.name AS name, 'Interface' AS kind, n.line AS line, 'DEFINES_INTERFACE' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_TYPE_ALIAS]->(n:TypeAlias) WHERE n.isExported = true RETURN file.relativePath AS file, n.name AS name, 'TypeAlias' AS kind, n.line AS line, 'DEFINES_TYPE_ALIAS' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_ENUM]->(n:Enum) WHERE n.isExported = true RETURN file.relativePath AS file, n.name AS name, 'Enum' AS kind, n.line AS line, 'DEFINES_ENUM' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:RE_EXPORTS]->(target:Import) WHERE true RETURN file.relativePath AS file, target.source AS name, 'Import' AS kind, target.line AS line, 'RE_EXPORTS' AS relationship ORDER BY file.relativePath, target.line, target.source LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:RE_EXPORTS_FUNCTION]->(target:Function) WHERE true RETURN file.relativePath AS file, target.name AS name, 'Function' AS kind, target.line AS line, 'RE_EXPORTS_FUNCTION' AS relationship ORDER BY file.relativePath, target.line, target.name LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:RE_EXPORTS_CLASS]->(target:Class) WHERE true RETURN file.relativePath AS file, target.name AS name, 'Class' AS kind, target.line AS line, 'RE_EXPORTS_CLASS' AS relationship ORDER BY file.relativePath, target.line, target.name LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:RE_EXPORTS_VARIABLE]->(target:Variable) WHERE true RETURN file.relativePath AS file, target.name AS name, 'Variable' AS kind, target.line AS line, 'RE_EXPORTS_VARIABLE' AS relationship ORDER BY file.relativePath, target.line, target.name LIMIT 50",
+        "rows": []
+      }
+    ],
+    "output": {
+      "query": {
+        "limit": 50
+      },
+      "exports": [
+        {
+          "file": "paths.ts",
+          "name": "USERS_PATH",
+          "kind": "Variable",
+          "line": 1,
+          "relationship": "DEFINES_VARIABLE"
+        },
+        {
+          "file": "paths.ts",
+          "name": "ADMIN_PATH",
+          "kind": "Variable",
+          "line": 2,
+          "relationship": "DEFINES_VARIABLE"
+        }
+      ]
+    }
+  },
+  {
+    "tool": "list_routes",
+    "args": {},
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_ROUTE]->(route:Route) OPTIONAL MATCH (route)-[:ROUTE_HANDLED_BY]->(handler:Function) WHERE true RETURN file.relativePath AS file, route.line AS line, route.method AS method, route.path AS path, route.fullPath AS fullPath, route.framework AS framework, route.handlerName AS handlerName, handler.name AS handler ORDER BY file.relativePath, route.line LIMIT 50",
+        "rows": [
+          {
+            "file": "routes.ts",
+            "line": 26,
+            "method": "GET",
+            "path": "/users",
+            "fullPath": "/api/users",
+            "framework": "express-koa",
+            "handlerName": "listUsers",
+            "handler": "listUsers"
+          },
+          {
+            "file": "routes.ts",
+            "line": 27,
+            "method": "POST",
+            "path": "/users",
+            "fullPath": "/api/users",
+            "framework": "express-koa",
+            "handlerName": "authenticate",
+            "handler": "validateUser"
+          },
+          {
+            "file": "routes.ts",
+            "line": 27,
+            "method": "POST",
+            "path": "/users",
+            "fullPath": "/api/users",
+            "framework": "express-koa",
+            "handlerName": "authenticate",
+            "handler": "authenticate"
+          },
+          {
+            "file": "routes.ts",
+            "line": 27,
+            "method": "POST",
+            "path": "/users",
+            "fullPath": "/api/users",
+            "framework": "express-koa",
+            "handlerName": "authenticate",
+            "handler": "createUser"
+          },
+          {
+            "file": "routes.ts",
+            "line": 28,
+            "method": "PUT",
+            "path": "/users/:id",
+            "fullPath": "/api/users/:id",
+            "framework": "express-koa",
+            "handlerName": "createUser",
+            "handler": "createUser"
+          },
+          {
+            "file": "routes.ts",
+            "line": 29,
+            "method": "DELETE",
+            "path": "/users/:id",
+            "fullPath": "/api/users/:id",
+            "framework": "express-koa",
+            "handlerName": null,
+            "handler": "<router.delete:/users/:id:arg1>"
+          },
+          {
+            "file": "routes.ts",
+            "line": 32,
+            "method": "USE",
+            "path": "/admin",
+            "fullPath": "/api/admin",
+            "framework": "express-koa",
+            "handlerName": "authenticate",
+            "handler": "authenticate"
+          },
+          {
+            "file": "routes.ts",
+            "line": 33,
+            "method": "USE",
+            "path": null,
+            "fullPath": null,
+            "framework": "express-koa",
+            "handlerName": "authenticate",
+            "handler": "authenticate"
+          },
+          {
+            "file": "routes.ts",
+            "line": 34,
+            "method": "GET",
+            "path": "/dashboard",
+            "fullPath": "/api/admin/dashboard",
+            "framework": "express-koa",
+            "handlerName": null,
+            "handler": "<adminRouter.get:/dashboard:arg1>"
+          },
+          {
+            "file": "routes.ts",
+            "line": 39,
+            "method": "USE",
+            "path": "/api",
+            "fullPath": "/api",
+            "framework": "express-koa",
+            "handlerName": "router",
+            "handler": null
+          }
+        ]
+      }
+    ],
+    "output": {
+      "query": {
+        "limit": 50
+      },
+      "routes": [
+        {
+          "file": "routes.ts",
+          "line": 26,
+          "method": "GET",
+          "path": "/users",
+          "fullPath": "/api/users",
+          "framework": "express-koa",
+          "handlerName": "listUsers",
+          "handler": "listUsers"
+        },
+        {
+          "file": "routes.ts",
+          "line": 27,
+          "method": "POST",
+          "path": "/users",
+          "fullPath": "/api/users",
+          "framework": "express-koa",
+          "handlerName": "authenticate",
+          "handler": "validateUser"
+        },
+        {
+          "file": "routes.ts",
+          "line": 27,
+          "method": "POST",
+          "path": "/users",
+          "fullPath": "/api/users",
+          "framework": "express-koa",
+          "handlerName": "authenticate",
+          "handler": "authenticate"
+        },
+        {
+          "file": "routes.ts",
+          "line": 27,
+          "method": "POST",
+          "path": "/users",
+          "fullPath": "/api/users",
+          "framework": "express-koa",
+          "handlerName": "authenticate",
+          "handler": "createUser"
+        },
+        {
+          "file": "routes.ts",
+          "line": 28,
+          "method": "PUT",
+          "path": "/users/:id",
+          "fullPath": "/api/users/:id",
+          "framework": "express-koa",
+          "handlerName": "createUser",
+          "handler": "createUser"
+        },
+        {
+          "file": "routes.ts",
+          "line": 29,
+          "method": "DELETE",
+          "path": "/users/:id",
+          "fullPath": "/api/users/:id",
+          "framework": "express-koa",
+          "handlerName": null,
+          "handler": "<router.delete:/users/:id:arg1>"
+        },
+        {
+          "file": "routes.ts",
+          "line": 32,
+          "method": "USE",
+          "path": "/admin",
+          "fullPath": "/api/admin",
+          "framework": "express-koa",
+          "handlerName": "authenticate",
+          "handler": "authenticate"
+        },
+        {
+          "file": "routes.ts",
+          "line": 33,
+          "method": "USE",
+          "path": null,
+          "fullPath": null,
+          "framework": "express-koa",
+          "handlerName": "authenticate",
+          "handler": "authenticate"
+        },
+        {
+          "file": "routes.ts",
+          "line": 34,
+          "method": "GET",
+          "path": "/dashboard",
+          "fullPath": "/api/admin/dashboard",
+          "framework": "express-koa",
+          "handlerName": null,
+          "handler": "<adminRouter.get:/dashboard:arg1>"
+        },
+        {
+          "file": "routes.ts",
+          "line": 39,
+          "method": "USE",
+          "path": "/api",
+          "fullPath": "/api",
+          "framework": "express-koa",
+          "handlerName": "router",
+          "handler": null
+        }
+      ]
+    }
+  },
+  {
+    "tool": "list_entrypoints",
+    "args": {},
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(entrypoint:EntryPoint) OPTIONAL MATCH (entrypoint)-[:ENTRYPOINT_HANDLED_BY]->(handler:Function) WHERE true RETURN file.relativePath AS file, entrypoint.line AS line, entrypoint.kind AS kind, entrypoint.trigger AS trigger, entrypoint.library AS library, entrypoint.handlerName AS handlerName, handler.name AS handler ORDER BY file.relativePath, entrypoint.line LIMIT 50",
+        "rows": []
+      }
+    ],
+    "output": {
+      "query": {
+        "limit": 50
+      },
+      "entrypoints": []
+    }
+  },
+  {
+    "tool": "list_env_config",
+    "args": {},
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[rel:USES_ENV_FILE]->(env:EnvVar) WHERE true RETURN 'env' AS kind, file.relativePath AS file, rel.line AS line, env.name AS name, rel.access AS value, NULL AS valueType, file.relativePath AS consumer, 'File' AS consumerKind ORDER BY file.relativePath, rel.line LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_CONFIG_FILE]->(config:ConfigValue) WHERE true RETURN 'config' AS kind, file.relativePath AS file, config.line AS line, config.name AS name, config.value AS value, config.valueType AS valueType, file.relativePath AS consumer, 'File' AS consumerKind ORDER BY file.relativePath, config.line LIMIT 50",
+        "rows": [
+          {
+            "kind": "config",
+            "file": "paths.ts",
+            "line": 1,
+            "name": "USERS_PATH",
+            "value": "/users",
+            "valueType": "string",
+            "consumer": "paths.ts",
+            "consumerKind": "File"
+          },
+          {
+            "kind": "config",
+            "file": "paths.ts",
+            "line": 2,
+            "name": "ADMIN_PATH",
+            "value": "/admin",
+            "valueType": "string",
+            "consumer": "paths.ts",
+            "consumerKind": "File"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[rel:CONSUMES_CONFIG_FILE]->(config:ConfigValue) WHERE true RETURN 'config-consumer' AS kind, file.relativePath AS file, config.line AS line, config.name AS name, config.value AS value, config.valueType AS valueType, rel.localName AS consumer, 'File' AS consumerKind ORDER BY file.relativePath, config.line LIMIT 50",
+        "rows": [
+          {
+            "kind": "config-consumer",
+            "file": "routes.ts",
+            "line": 1,
+            "name": "USERS_PATH",
+            "value": "/users",
+            "valueType": "string",
+            "consumer": "USERS_PATH",
+            "consumerKind": "File"
+          },
+          {
+            "kind": "config-consumer",
+            "file": "routes.ts",
+            "line": 2,
+            "name": "ADMIN_PATH",
+            "value": "/admin",
+            "valueType": "string",
+            "consumer": "ADMIN_PATH",
+            "consumerKind": "File"
+          }
+        ]
+      }
+    ],
+    "output": {
+      "query": {
+        "limit": 50
+      },
+      "envConfig": [
+        {
+          "kind": "config",
+          "file": "paths.ts",
+          "line": 1,
+          "name": "USERS_PATH",
+          "value": "/users",
+          "valueType": "string",
+          "consumer": "paths.ts",
+          "consumerKind": "File"
+        },
+        {
+          "kind": "config",
+          "file": "paths.ts",
+          "line": 2,
+          "name": "ADMIN_PATH",
+          "value": "/admin",
+          "valueType": "string",
+          "consumer": "paths.ts",
+          "consumerKind": "File"
+        },
+        {
+          "kind": "config-consumer",
+          "file": "routes.ts",
+          "line": 1,
+          "name": "USERS_PATH",
+          "value": "/users",
+          "valueType": "string",
+          "consumer": "USERS_PATH",
+          "consumerKind": "File"
+        },
+        {
+          "kind": "config-consumer",
+          "file": "routes.ts",
+          "line": 2,
+          "name": "ADMIN_PATH",
+          "value": "/admin",
+          "valueType": "string",
+          "consumer": "ADMIN_PATH",
+          "consumerKind": "File"
+        }
+      ]
+    }
+  },
+  {
+    "tool": "list_data_access",
+    "args": {},
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (source:File)-[rel:ACCESSES_DATA_FILE]->(model:DataModel) WHERE true WITH source AS file, source, rel, model RETURN 'File' AS sourceKind, source.relativePath AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (source:Function)-[rel:ACCESSES_DATA_FUNCTION]->(model:DataModel) WHERE true OPTIONAL MATCH (file:File)-[:DEFINES_FUNCTION]->(source) RETURN 'Function' AS sourceKind, source.name AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (source:Route)-[rel:ACCESSES_DATA_ROUTE]->(model:DataModel) WHERE true OPTIONAL MATCH (file:File)-[:DECLARES_ROUTE]->(source) RETURN 'Route' AS sourceKind, source.path AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (source:EntryPoint)-[rel:ACCESSES_DATA_ENTRYPOINT]->(model:DataModel) WHERE true OPTIONAL MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(source) RETURN 'EntryPoint' AS sourceKind, source.trigger AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 50",
+        "rows": []
+      }
+    ],
+    "output": {
+      "query": {
+        "limit": 50
+      },
+      "dataAccess": []
+    }
+  },
+  {
+    "tool": "list_routes",
+    "args": {
+      "framework": "express-koa",
+      "limit": 3
+    },
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_ROUTE]->(route:Route) OPTIONAL MATCH (route)-[:ROUTE_HANDLED_BY]->(handler:Function) WHERE true AND route.framework = \"express-koa\" RETURN file.relativePath AS file, route.line AS line, route.method AS method, route.path AS path, route.fullPath AS fullPath, route.framework AS framework, route.handlerName AS handlerName, handler.name AS handler ORDER BY file.relativePath, route.line LIMIT 3",
+        "rows": [
+          {
+            "file": "routes.ts",
+            "line": 26,
+            "method": "GET",
+            "path": "/users",
+            "fullPath": "/api/users",
+            "framework": "express-koa",
+            "handlerName": "listUsers",
+            "handler": "listUsers"
+          },
+          {
+            "file": "routes.ts",
+            "line": 27,
+            "method": "POST",
+            "path": "/users",
+            "fullPath": "/api/users",
+            "framework": "express-koa",
+            "handlerName": "authenticate",
+            "handler": "validateUser"
+          },
+          {
+            "file": "routes.ts",
+            "line": 27,
+            "method": "POST",
+            "path": "/users",
+            "fullPath": "/api/users",
+            "framework": "express-koa",
+            "handlerName": "authenticate",
+            "handler": "authenticate"
+          }
+        ]
+      }
+    ],
+    "output": {
+      "query": {
+        "framework": "express-koa",
+        "limit": 3
+      },
+      "routes": [
+        {
+          "file": "routes.ts",
+          "line": 26,
+          "method": "GET",
+          "path": "/users",
+          "fullPath": "/api/users",
+          "framework": "express-koa",
+          "handlerName": "listUsers",
+          "handler": "listUsers"
+        },
+        {
+          "file": "routes.ts",
+          "line": 27,
+          "method": "POST",
+          "path": "/users",
+          "fullPath": "/api/users",
+          "framework": "express-koa",
+          "handlerName": "authenticate",
+          "handler": "validateUser"
+        },
+        {
+          "file": "routes.ts",
+          "line": 27,
+          "method": "POST",
+          "path": "/users",
+          "fullPath": "/api/users",
+          "framework": "express-koa",
+          "handlerName": "authenticate",
+          "handler": "authenticate"
+        }
+      ]
+    }
+  },
+  {
+    "tool": "list_routes",
+    "args": {
+      "file": "routes.ts"
+    },
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_ROUTE]->(route:Route) OPTIONAL MATCH (route)-[:ROUTE_HANDLED_BY]->(handler:Function) WHERE true AND file.relativePath = \"routes.ts\" RETURN file.relativePath AS file, route.line AS line, route.method AS method, route.path AS path, route.fullPath AS fullPath, route.framework AS framework, route.handlerName AS handlerName, handler.name AS handler ORDER BY file.relativePath, route.line LIMIT 50",
+        "rows": [
+          {
+            "file": "routes.ts",
+            "line": 26,
+            "method": "GET",
+            "path": "/users",
+            "fullPath": "/api/users",
+            "framework": "express-koa",
+            "handlerName": "listUsers",
+            "handler": "listUsers"
+          },
+          {
+            "file": "routes.ts",
+            "line": 27,
+            "method": "POST",
+            "path": "/users",
+            "fullPath": "/api/users",
+            "framework": "express-koa",
+            "handlerName": "authenticate",
+            "handler": "validateUser"
+          },
+          {
+            "file": "routes.ts",
+            "line": 27,
+            "method": "POST",
+            "path": "/users",
+            "fullPath": "/api/users",
+            "framework": "express-koa",
+            "handlerName": "authenticate",
+            "handler": "authenticate"
+          },
+          {
+            "file": "routes.ts",
+            "line": 27,
+            "method": "POST",
+            "path": "/users",
+            "fullPath": "/api/users",
+            "framework": "express-koa",
+            "handlerName": "authenticate",
+            "handler": "createUser"
+          },
+          {
+            "file": "routes.ts",
+            "line": 28,
+            "method": "PUT",
+            "path": "/users/:id",
+            "fullPath": "/api/users/:id",
+            "framework": "express-koa",
+            "handlerName": "createUser",
+            "handler": "createUser"
+          },
+          {
+            "file": "routes.ts",
+            "line": 29,
+            "method": "DELETE",
+            "path": "/users/:id",
+            "fullPath": "/api/users/:id",
+            "framework": "express-koa",
+            "handlerName": null,
+            "handler": "<router.delete:/users/:id:arg1>"
+          },
+          {
+            "file": "routes.ts",
+            "line": 32,
+            "method": "USE",
+            "path": "/admin",
+            "fullPath": "/api/admin",
+            "framework": "express-koa",
+            "handlerName": "authenticate",
+            "handler": "authenticate"
+          },
+          {
+            "file": "routes.ts",
+            "line": 33,
+            "method": "USE",
+            "path": null,
+            "fullPath": null,
+            "framework": "express-koa",
+            "handlerName": "authenticate",
+            "handler": "authenticate"
+          },
+          {
+            "file": "routes.ts",
+            "line": 34,
+            "method": "GET",
+            "path": "/dashboard",
+            "fullPath": "/api/admin/dashboard",
+            "framework": "express-koa",
+            "handlerName": null,
+            "handler": "<adminRouter.get:/dashboard:arg1>"
+          },
+          {
+            "file": "routes.ts",
+            "line": 39,
+            "method": "USE",
+            "path": "/api",
+            "fullPath": "/api",
+            "framework": "express-koa",
+            "handlerName": "router",
+            "handler": null
+          }
+        ]
+      }
+    ],
+    "output": {
+      "query": {
+        "file": "routes.ts",
+        "limit": 50
+      },
+      "routes": [
+        {
+          "file": "routes.ts",
+          "line": 26,
+          "method": "GET",
+          "path": "/users",
+          "fullPath": "/api/users",
+          "framework": "express-koa",
+          "handlerName": "listUsers",
+          "handler": "listUsers"
+        },
+        {
+          "file": "routes.ts",
+          "line": 27,
+          "method": "POST",
+          "path": "/users",
+          "fullPath": "/api/users",
+          "framework": "express-koa",
+          "handlerName": "authenticate",
+          "handler": "validateUser"
+        },
+        {
+          "file": "routes.ts",
+          "line": 27,
+          "method": "POST",
+          "path": "/users",
+          "fullPath": "/api/users",
+          "framework": "express-koa",
+          "handlerName": "authenticate",
+          "handler": "authenticate"
+        },
+        {
+          "file": "routes.ts",
+          "line": 27,
+          "method": "POST",
+          "path": "/users",
+          "fullPath": "/api/users",
+          "framework": "express-koa",
+          "handlerName": "authenticate",
+          "handler": "createUser"
+        },
+        {
+          "file": "routes.ts",
+          "line": 28,
+          "method": "PUT",
+          "path": "/users/:id",
+          "fullPath": "/api/users/:id",
+          "framework": "express-koa",
+          "handlerName": "createUser",
+          "handler": "createUser"
+        },
+        {
+          "file": "routes.ts",
+          "line": 29,
+          "method": "DELETE",
+          "path": "/users/:id",
+          "fullPath": "/api/users/:id",
+          "framework": "express-koa",
+          "handlerName": null,
+          "handler": "<router.delete:/users/:id:arg1>"
+        },
+        {
+          "file": "routes.ts",
+          "line": 32,
+          "method": "USE",
+          "path": "/admin",
+          "fullPath": "/api/admin",
+          "framework": "express-koa",
+          "handlerName": "authenticate",
+          "handler": "authenticate"
+        },
+        {
+          "file": "routes.ts",
+          "line": 33,
+          "method": "USE",
+          "path": null,
+          "fullPath": null,
+          "framework": "express-koa",
+          "handlerName": "authenticate",
+          "handler": "authenticate"
+        },
+        {
+          "file": "routes.ts",
+          "line": 34,
+          "method": "GET",
+          "path": "/dashboard",
+          "fullPath": "/api/admin/dashboard",
+          "framework": "express-koa",
+          "handlerName": null,
+          "handler": "<adminRouter.get:/dashboard:arg1>"
+        },
+        {
+          "file": "routes.ts",
+          "line": 39,
+          "method": "USE",
+          "path": "/api",
+          "fullPath": "/api",
+          "framework": "express-koa",
+          "handlerName": "router",
+          "handler": null
+        }
+      ]
+    }
+  }
+]

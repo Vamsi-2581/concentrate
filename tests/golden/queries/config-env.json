@@ -1,0 +1,1037 @@
+[
+  {
+    "tool": "graph_stats",
+    "args": {},
+    "calls": [
+      {
+        "method": "schemaVersion",
+        "result": 34
+      },
+      {
+        "method": "stats",
+        "options": {},
+        "rows": [
+          {
+            "table": "Repo",
+            "count": 1
+          },
+          {
+            "table": "Package",
+            "count": 1
+          },
+          {
+            "table": "Directory",
+            "count": 1
+          },
+          {
+            "table": "File",
+            "count": 2
+          },
+          {
+            "table": "Import",
+            "count": 1
+          },
+          {
+            "table": "Function",
+            "count": 2
+          },
+          {
+            "table": "Class",
+            "count": 0
+          },
+          {
+            "table": "Field",
+            "count": 0
+          },
+          {
+            "table": "Variable",
+            "count": 6
+          },
+          {
+            "table": "Decorator",
+            "count": 0
+          },
+          {
+            "table": "Interface",
+            "count": 0
+          },
+          {
+            "table": "TypeAlias",
+            "count": 0
+          },
+          {
+            "table": "Enum",
+            "count": 0
+          },
+          {
+            "table": "Call",
+            "count": 4
+          },
+          {
+            "table": "Route",
+            "count": 1
+          },
+          {
+            "table": "EntryPoint",
+            "count": 0
+          },
+          {
+            "table": "EnvVar",
+            "count": 3
+          },
+          {
+            "table": "ConfigValue",
+            "count": 13
+          },
+          {
+            "table": "DataModel",
+            "count": 0
+          }
+        ]
+      }
+    ],
+    "output": {
+      "schemaVersion": 34,
+      "stats": [
+        {
+          "table": "Repo",
+          "count": 1
+        },
+        {
+          "table": "Package",
+          "count": 1
+        },
+        {
+          "table": "Directory",
+          "count": 1
+        },
+        {
+          "table": "File",
+          "count": 2
+        },
+        {
+          "table": "Import",
+          "count": 1
+        },
+        {
+          "table": "Function",
+          "count": 2
+        },
+        {
+          "table": "Class",
+          "count": 0
+        },
+        {
+          "table": "Field",
+          "count": 0
+        },
+        {
+          "table": "Variable",
+          "count": 6
+        },
+        {
+          "table": "Decorator",
+          "count": 0
+        },
+        {
+          "table": "Interface",
+          "count": 0
+        },
+        {
+          "table": "TypeAlias",
+          "count": 0
+        },
+        {
+          "table": "Enum",
+          "count": 0
+        },
+        {
+          "table": "Call",
+          "count": 4
+        },
+        {
+          "table": "Route",
+          "count": 1
+        },
+        {
+          "table": "EntryPoint",
+          "count": 0
+        },
+        {
+          "table": "EnvVar",
+          "count": 3
+        },
+        {
+          "table": "ConfigValue",
+          "count": 13
+        },
+        {
+          "table": "DataModel",
+          "count": 0
+        }
+      ]
+    }
+  },
+  {
+    "tool": "find_definitions",
+    "args": {
+      "name": "e"
+    },
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_FUNCTION]->(n:Function) WHERE contains(lower(n.name), lower(\"e\")) RETURN n.name AS name, 'Function' AS kind, file.relativePath AS file, n.line AS line, n.isExported AS isExported, 'DEFINES_FUNCTION' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 20",
+        "rows": [
+          {
+            "name": "readInternal",
+            "kind": "Function",
+            "file": "config.ts",
+            "line": 7,
+            "isExported": true,
+            "relationship": "DEFINES_FUNCTION"
+          },
+          {
+            "name": "listUsers",
+            "kind": "Function",
+            "file": "server.ts",
+            "line": 6,
+            "isExported": false,
+            "relationship": "DEFINES_FUNCTION"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(n:Class) WHERE contains(lower(n.name), lower(\"e\")) RETURN n.name AS name, 'Class' AS kind, file.relativePath AS file, n.line AS line, n.isExported AS isExported, 'DEFINES_CLASS' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 20",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_VARIABLE]->(n:Variable) WHERE contains(lower(n.name), lower(\"e\")) RETURN n.name AS name, 'Variable' AS kind, file.relativePath AS file, n.line AS line, n.isExported AS isExported, 'DEFINES_VARIABLE' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 20",
+        "rows": [
+          {
+            "name": "FEATURE_FLAG",
+            "kind": "Variable",
+            "file": "config.ts",
+            "line": 1,
+            "isExported": true,
+            "relationship": "DEFINES_VARIABLE"
+          },
+          {
+            "name": "RETRY_LIMIT",
+            "kind": "Variable",
+            "file": "config.ts",
+            "line": 2,
+            "isExported": true,
+            "relationship": "DEFINES_VARIABLE"
+          },
+          {
+            "name": "ENABLE_CACHE",
+            "kind": "Variable",
+            "file": "config.ts",
+            "line": 3,
+            "isExported": true,
+            "relationship": "DEFINES_VARIABLE"
+          },
+          {
+            "name": "INTERNAL_ONLY",
+            "kind": "Variable",
+            "file": "config.ts",
+            "line": 5,
+            "isExported": false,
+            "relationship": "DEFINES_VARIABLE"
+          },
+          {
+            "name": "token",
+            "kind": "Variable",
+            "file": "server.ts",
+            "line": 4,
+            "isExported": false,
+            "relationship": "DEFINES_VARIABLE"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_INTERFACE]->(n:Interface) WHERE contains(lower(n.name), lower(\"e\")) RETURN n.name AS name, 'Interface' AS kind, file.relativePath AS file, n.line AS line, n.isExported AS isExported, 'DEFINES_INTERFACE' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 20",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_TYPE_ALIAS]->(n:TypeAlias) WHERE contains(lower(n.name), lower(\"e\")) RETURN n.name AS name, 'TypeAlias' AS kind, file.relativePath AS file, n.line AS line, n.isExported AS isExported, 'DEFINES_TYPE_ALIAS' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 20",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_ENUM]->(n:Enum) WHERE contains(lower(n.name), lower(\"e\")) RETURN n.name AS name, 'Enum' AS kind, file.relativePath AS file, n.line AS line, n.isExported AS isExported, 'DEFINES_ENUM' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 20",
+        "rows": []
+      }
+    ],
+    "output": {
+      "query": {
+        "name": "e",
+        "exact": false,
+        "limit": 20
+      },
+      "definitions": [
+        {
+          "name": "readInternal",
+          "kind": "Function",
+          "file": "config.ts",
+          "line": 7,
+          "isExported": true,
+          "relationship": "DEFINES_FUNCTION"
+        },
+        {
+          "name": "listUsers",
+          "kind": "Function",
+          "file": "server.ts",
+          "line": 6,
+          "isExported": false,
+          "relationship": "DEFINES_FUNCTION"
+        },
+        {
+          "name": "FEATURE_FLAG",
+          "kind": "Variable",
+          "file": "config.ts",
+          "line": 1,
+          "isExported": true,
+          "relationship": "DEFINES_VARIABLE"
+        },
+        {
+          "name": "RETRY_LIMIT",
+          "kind": "Variable",
+          "file": "config.ts",
+          "line": 2,
+          "isExported": true,
+          "relationship": "DEFINES_VARIABLE"
+        },
+        {
+          "name": "ENABLE_CACHE",
+          "kind": "Variable",
+          "file": "config.ts",
+          "line": 3,
+          "isExported": true,
+          "relationship": "DEFINES_VARIABLE"
+        },
+        {
+          "name": "INTERNAL_ONLY",
+          "kind": "Variable",
+          "file": "config.ts",
+          "line": 5,
+          "isExported": false,
+          "relationship": "DEFINES_VARIABLE"
+        },
+        {
+          "name": "token",
+          "kind": "Variable",
+          "file": "server.ts",
+          "line": 4,
+          "isExported": false,
+          "relationship": "DEFINES_VARIABLE"
+        }
+      ]
+    }
+  },
+  {
+    "tool": "list_exports",
+    "args": {},
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_FUNCTION]->(n:Function) WHERE n.isExported = true RETURN file.relativePath AS file, n.name AS name, 'Function' AS kind, n.line AS line, 'DEFINES_FUNCTION' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 50",
+        "rows": [
+          {
+            "file": "config.ts",
+            "name": "readInternal",
+            "kind": "Function",
+            "line": 7,
+            "relationship": "DEFINES_FUNCTION"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(n:Class) WHERE n.isExported = true RETURN file.relativePath AS file, n.name AS name, 'Class' AS kind, n.line AS line, 'DEFINES_CLASS' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_VARIABLE]->(n:Variable) WHERE n.isExported = true RETURN file.relativePath AS file, n.name AS name, 'Variable' AS kind, n.line AS line, 'DEFINES_VARIABLE' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 50",
+        "rows": [
+          {
+            "file": "config.ts",
+            "name": "FEATURE_FLAG",
+            "kind": "Variable",
+            "line": 1,
+            "relationship": "DEFINES_VARIABLE"
+          },
+          {
+            "file": "config.ts",
+            "name": "RETRY_LIMIT",
+            "kind": "Variable",
+            "line": 2,
+            "relationship": "DEFINES_VARIABLE"
+          },
+          {
+            "file": "config.ts",
+            "name": "ENABLE_CACHE",
+            "kind": "Variable",
+            "line": 3,
+            "relationship": "DEFINES_VARIABLE"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_INTERFACE]->(n:Interface) WHERE n.isExported = true RETURN file.relativePath AS file, n.name AS name, 'Interface' AS kind, n.line AS line, 'DEFINES_INTERFACE' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_TYPE_ALIAS]->(n:TypeAlias) WHERE n.isExported = true RETURN file.relativePath AS file, n.name AS name, 'TypeAlias' AS kind, n.line AS line, 'DEFINES_TYPE_ALIAS' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_ENUM]->(n:Enum) WHERE n.isExported = true RETURN file.relativePath AS file, n.name AS name, 'Enum' AS kind, n.line AS line, 'DEFINES_ENUM' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:RE_EXPORTS]->(target:Import) WHERE true RETURN file.relativePath AS file, target.source AS name, 'Import' AS kind, target.line AS line, 'RE_EXPORTS' AS relationship ORDER BY file.relativePath, target.line, target.source LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:RE_EXPORTS_FUNCTION]->(target:Function) WHERE true RETURN file.relativePath AS file, target.name AS name, 'Function' AS kind, target.line AS line, 'RE_EXPORTS_FUNCTION' AS relationship ORDER BY file.relativePath, target.line, target.name LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:RE_EXPORTS_CLASS]->(target:Class) WHERE true RETURN file.relativePath AS file, target.name AS name, 'Class' AS kind, target.line AS line, 'RE_EXPORTS_CLASS' AS relationship ORDER BY file.relativePath, target.line, target.name LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:RE_EXPORTS_VARIABLE]->(target:Variable) WHERE true RETURN file.relativePath AS file, target.name AS name, 'Variable' AS kind, target.line AS line, 'RE_EXPORTS_VARIABLE' AS relationship ORDER BY file.relativePath, target.line, target.name LIMIT 50",
+        "rows": []
+      }
+    ],
+    "output": {
+      "query": {
+        "limit": 50
+      },
+      "exports": [
+        {
+          "file": "config.ts",
+          "name": "readInternal",
+          "kind": "Function",
+          "line": 7,
+          "relationship": "DEFINES_FUNCTION"
+        },
+        {
+          "file": "config.ts",
+          "name": "FEATURE_FLAG",
+          "kind": "Variable",
+          "line": 1,
+          "relationship": "DEFINES_VARIABLE"
+        },
+        {
+          "file": "config.ts",
+          "name": "RETRY_LIMIT",
+          "kind": "Variable",
+          "line": 2,
+          "relationship": "DEFINES_VARIABLE"
+        },
+        {
+          "file": "config.ts",
+          "name": "ENABLE_CACHE",
+          "kind": "Variable",
+          "line": 3,
+          "relationship": "DEFINES_VARIABLE"
+        }
+      ]
+    }
+  },
+  {
+    "tool": "list_routes",
+    "args": {},
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_ROUTE]->(route:Route) OPTIONAL MATCH (route)-[:ROUTE_HANDLED_BY]->(handler:Function) WHERE true RETURN file.relativePath AS file, route.line AS line, route.method AS method, route.path AS path, route.fullPath AS fullPath, route.framework AS framework, route.handlerName AS handlerName, handler.name AS handler ORDER BY file.relativePath, route.line LIMIT 50",
+        "rows": [
+          {
+            "file": "server.ts",
+            "line": 14,
+            "method": "GET",
+            "path": "/users",
+            "fullPath": "/users",
+            "framework": "express-koa",
+            "handlerName": "listUsers",
+            "handler": "listUsers"
+          }
+        ]
+      }
+    ],
+    "output": {
+      "query": {
+        "limit": 50
+      },
+      "routes": [
+        {
+          "file": "server.ts",
+          "line": 14,
+          "method": "GET",
+          "path": "/users",
+          "fullPath": "/users",
+          "framework": "express-koa",
+          "handlerName": "listUsers",
+          "handler": "listUsers"
+        }
+      ]
+    }
+  },
+  {
+    "tool": "list_entrypoints",
+    "args": {},
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(entrypoint:EntryPoint) OPTIONAL MATCH (entrypoint)-[:ENTRYPOINT_HANDLED_BY]->(handler:Function) WHERE true RETURN file.relativePath AS file, entrypoint.line AS line, entrypoint.kind AS kind, entrypoint.trigger AS trigger, entrypoint.library AS library, entrypoint.handlerName AS handlerName, handler.name AS handler ORDER BY file.relativePath, entrypoint.line LIMIT 50",
+        "rows": []
+      }
+    ],
+    "output": {
+      "query": {
+        "limit": 50
+      },
+      "entrypoints": []
+    }
+  },
+  {
+    "tool": "list_env_config",
+    "args": {},
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[rel:USES_ENV_FILE]->(env:EnvVar) WHERE true RETURN 'env' AS kind, file.relativePath AS file, rel.line AS line, env.name AS name, rel.access AS value, NULL AS valueType, file.relativePath AS consumer, 'File' AS consumerKind ORDER BY file.relativePath, rel.line LIMIT 50",
+        "rows": [
+          {
+            "kind": "env",
+            "file": "server.ts",
+            "line": 4,
+            "name": "API_TOKEN",
+            "value": "member",
+            "valueType": null,
+            "consumer": "server.ts",
+            "consumerKind": "File"
+          },
+          {
+            "kind": "env",
+            "file": "server.ts",
+            "line": 7,
+            "name": "DATABASE_URL",
+            "value": "subscript",
+            "valueType": null,
+            "consumer": "server.ts",
+            "consumerKind": "File"
+          },
+          {
+            "kind": "env",
+            "file": "server.ts",
+            "line": 8,
+            "name": "NODE_ENV",
+            "value": "member",
+            "valueType": null,
+            "consumer": "server.ts",
+            "consumerKind": "File"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_CONFIG_FILE]->(config:ConfigValue) WHERE true RETURN 'config' AS kind, file.relativePath AS file, config.line AS line, config.name AS name, config.value AS value, config.valueType AS valueType, file.relativePath AS consumer, 'File' AS consumerKind ORDER BY file.relativePath, config.line LIMIT 50",
+        "rows": [
+          {
+            "kind": "config",
+            "file": "config.ts",
+            "line": 1,
+            "name": "FEATURE_FLAG",
+            "value": "FEATURE_USERS",
+            "valueType": "string",
+            "consumer": "config.ts",
+            "consumerKind": "File"
+          },
+          {
+            "kind": "config",
+            "file": "config.ts",
+            "line": 2,
+            "name": "RETRY_LIMIT",
+            "value": "3",
+            "valueType": "number",
+            "consumer": "config.ts",
+            "consumerKind": "File"
+          },
+          {
+            "kind": "config",
+            "file": "config.ts",
+            "line": 3,
+            "name": "ENABLE_CACHE",
+            "value": "true",
+            "valueType": "boolean",
+            "consumer": "config.ts",
+            "consumerKind": "File"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[rel:CONSUMES_CONFIG_FILE]->(config:ConfigValue) WHERE true RETURN 'config-consumer' AS kind, file.relativePath AS file, config.line AS line, config.name AS name, config.value AS value, config.valueType AS valueType, rel.localName AS consumer, 'File' AS consumerKind ORDER BY file.relativePath, config.line LIMIT 50",
+        "rows": [
+          {
+            "kind": "config-consumer",
+            "file": "server.ts",
+            "line": 1,
+            "name": "FEATURE_FLAG",
+            "value": "FEATURE_USERS",
+            "valueType": "string",
+            "consumer": "FEATURE_FLAG",
+            "consumerKind": "File"
+          },
+          {
+            "kind": "config-consumer",
+            "file": "server.ts",
+            "line": 2,
+            "name": "RETRY_LIMIT",
+            "value": "3",
+            "valueType": "number",
+            "consumer": "RETRY_LIMIT",
+            "consumerKind": "File"
+          }
+        ]
+      }
+    ],
+    "output": {
+      "query": {
+        "limit": 50
+      },
+      "envConfig": [
+        {
+          "kind": "env",
+          "file": "server.ts",
+          "line": 4,
+          "name": "API_TOKEN",
+          "value": "member",
+          "valueType": null,
+          "consumer": "server.ts",
+          "consumerKind": "File"
+        },
+        {
+          "kind": "env",
+          "file": "server.ts",
+          "line": 7,
+          "name": "DATABASE_URL",
+          "value": "subscript",
+          "valueType": null,
+          "consumer": "server.ts",
+          "consumerKind": "File"
+        },
+        {
+          "kind": "env",
+          "file": "server.ts",
+          "line": 8,
+          "name": "NODE_ENV",
+          "value": "member",
+          "valueType": null,
+          "consumer": "server.ts",
+          "consumerKind": "File"
+        },
+        {
+          "kind": "config",
+          "file": "config.ts",
+          "line": 1,
+          "name": "FEATURE_FLAG",
+          "value": "FEATURE_USERS",
+          "valueType": "string",
+          "consumer": "config.ts",
+          "consumerKind": "File"
+        },
+        {
+          "kind": "config",
+          "file": "config.ts",
+          "line": 2,
+          "name": "RETRY_LIMIT",
+          "value": "3",
+          "valueType": "number",
+          "consumer": "config.ts",
+          "consumerKind": "File"
+        },
+        {
+          "kind": "config",
+          "file": "config.ts",
+          "line": 3,
+          "name": "ENABLE_CACHE",
+          "value": "true",
+          "valueType": "boolean",
+          "consumer": "config.ts",
+          "consumerKind": "File"
+        },
+        {
+          "kind": "config-consumer",
+          "file": "server.ts",
+          "line": 1,
+          "name": "FEATURE_FLAG",
+          "value": "FEATURE_USERS",
+          "valueType": "string",
+          "consumer": "FEATURE_FLAG",
+          "consumerKind": "File"
+        },
+        {
+          "kind": "config-consumer",
+          "file": "server.ts",
+          "line": 2,
+          "name": "RETRY_LIMIT",
+          "value": "3",
+          "valueType": "number",
+          "consumer": "RETRY_LIMIT",
+          "consumerKind": "File"
+        }
+      ]
+    }
+  },
+  {
+    "tool": "list_data_access",
+    "args": {},
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (source:File)-[rel:ACCESSES_DATA_FILE]->(model:DataModel) WHERE true WITH source AS file, source, rel, model RETURN 'File' AS sourceKind, source.relativePath AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (source:Function)-[rel:ACCESSES_DATA_FUNCTION]->(model:DataModel) WHERE true OPTIONAL MATCH (file:File)-[:DEFINES_FUNCTION]->(source) RETURN 'Function' AS sourceKind, source.name AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (source:Route)-[rel:ACCESSES_DATA_ROUTE]->(model:DataModel) WHERE true OPTIONAL MATCH (file:File)-[:DECLARES_ROUTE]->(source) RETURN 'Route' AS sourceKind, source.path AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (source:EntryPoint)-[rel:ACCESSES_DATA_ENTRYPOINT]->(model:DataModel) WHERE true OPTIONAL MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(source) RETURN 'EntryPoint' AS sourceKind, source.trigger AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 50",
+        "rows": []
+      }
+    ],
+    "output": {
+      "query": {
+        "limit": 50
+      },
+      "dataAccess": []
+    }
+  },
+  {
+    "tool": "list_env_config",
+    "args": {
+      "name": "DATABASE_URL"
+    },
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[rel:USES_ENV_FILE]->(env:EnvVar) WHERE true AND contains(lower(env.name), lower(\"DATABASE_URL\")) RETURN 'env' AS kind, file.relativePath AS file, rel.line AS line, env.name AS name, rel.access AS value, NULL AS valueType, file.relativePath AS consumer, 'File' AS consumerKind ORDER BY file.relativePath, rel.line LIMIT 50",
+        "rows": [
+          {
+            "kind": "env",
+            "file": "server.ts",
+            "line": 7,
+            "name": "DATABASE_URL",
+            "value": "subscript",
+            "valueType": null,
+            "consumer": "server.ts",
+            "consumerKind": "File"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_CONFIG_FILE]->(config:ConfigValue) WHERE true AND contains(lower(config.name), lower(\"DATABASE_URL\")) RETURN 'config' AS kind, file.relativePath AS file, config.line AS line, config.name AS name, config.value AS value, config.valueType AS valueType, file.relativePath AS consumer, 'File' AS consumerKind ORDER BY file.relativePath, config.line LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[rel:CONSUMES_CONFIG_FILE]->(config:ConfigValue) WHERE true AND contains(lower(config.name), lower(\"DATABASE_URL\")) RETURN 'config-consumer' AS kind, file.relativePath AS file, config.line AS line, config.name AS name, config.value AS value, config.valueType AS valueType, rel.localName AS consumer, 'File' AS consumerKind ORDER BY file.relativePath, config.line LIMIT 50",
+        "rows": []
+      }
+    ],
+    "output": {
+      "query": {
+        "name": "DATABASE_URL",
+        "limit": 50
+      },
+      "envConfig": [
+        {
+          "kind": "env",
+          "file": "server.ts",
+          "line": 7,
+          "name": "DATABASE_URL",
+          "value": "subscript",
+          "valueType": null,
+          "consumer": "server.ts",
+          "consumerKind": "File"
+        }
+      ]
+    }
+  },
+  {
+    "tool": "list_env_config",
+    "args": {
+      "file": "server.ts"
+    },
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[rel:USES_ENV_FILE]->(env:EnvVar) WHERE true AND file.relativePath = \"server.ts\" RETURN 'env' AS kind, file.relativePath AS file, rel.line AS line, env.name AS name, rel.access AS value, NULL AS valueType, file.relativePath AS consumer, 'File' AS consumerKind ORDER BY file.relativePath, rel.line LIMIT 50",
+        "rows": [
+          {
+            "kind": "env",
+            "file": "server.ts",
+            "line": 4,
+            "name": "API_TOKEN",
+            "value": "member",
+            "valueType": null,
+            "consumer": "server.ts",
+            "consumerKind": "File"
+          },
+          {
+            "kind": "env",
+            "file": "server.ts",
+            "line": 7,
+            "name": "DATABASE_URL",
+            "value": "subscript",
+            "valueType": null,
+            "consumer": "server.ts",
+            "consumerKind": "File"
+          },
+          {
+            "kind": "env",
+            "file": "server.ts",
+            "line": 8,
+            "name": "NODE_ENV",
+            "value": "member",
+            "valueType": null,
+            "consumer": "server.ts",
+            "consumerKind": "File"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_CONFIG_FILE]->(config:ConfigValue) WHERE true AND file.relativePath = \"server.ts\" RETURN 'config' AS kind, file.relativePath AS file, config.line AS line, config.name AS name, config.value AS value, config.valueType AS valueType, file.relativePath AS consumer, 'File' AS consumerKind ORDER BY file.relativePath, config.line LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[rel:CONSUMES_CONFIG_FILE]->(config:ConfigValue) WHERE true AND file.relativePath = \"server.ts\" RETURN 'config-consumer' AS kind, file.relativePath AS file, config.line AS line, config.name AS name, config.value AS value, config.valueType AS valueType, rel.localName AS consumer, 'File' AS consumerKind ORDER BY file.relativePath, config.line LIMIT 50",
+        "rows": [
+          {
+            "kind": "config-consumer",
+            "file": "server.ts",
+            "line": 1,
+            "name": "FEATURE_FLAG",
+            "value": "FEATURE_USERS",
+            "valueType": "string",
+            "consumer": "FEATURE_FLAG",
+            "consumerKind": "File"
+          },
+          {
+            "kind": "config-consumer",
+            "file": "server.ts",
+            "line": 2,
+            "name": "RETRY_LIMIT",
+            "value": "3",
+            "valueType": "number",
+            "consumer": "RETRY_LIMIT",
+            "consumerKind": "File"
+          }
+        ]
+      }
+    ],
+    "output": {
+      "query": {
+        "file": "server.ts",
+        "limit": 50
+      },
+      "envConfig": [
+        {
+          "kind": "env",
+          "file": "server.ts",
+          "line": 4,
+          "name": "API_TOKEN",
+          "value": "member",
+          "valueType": null,
+          "consumer": "server.ts",
+          "consumerKind": "File"
+        },
+        {
+          "kind": "env",
+          "file": "server.ts",
+          "line": 7,
+          "name": "DATABASE_URL",
+          "value": "subscript",
+          "valueType": null,
+          "consumer": "server.ts",
+          "consumerKind": "File"
+        },
+        {
+          "kind": "env",
+          "file": "server.ts",
+          "line": 8,
+          "name": "NODE_ENV",
+          "value": "member",
+          "valueType": null,
+          "consumer": "server.ts",
+          "consumerKind": "File"
+        },
+        {
+          "kind": "config-consumer",
+          "file": "server.ts",
+          "line": 1,
+          "name": "FEATURE_FLAG",
+          "value": "FEATURE_USERS",
+          "valueType": "string",
+          "consumer": "FEATURE_FLAG",
+          "consumerKind": "File"
+        },
+        {
+          "kind": "config-consumer",
+          "file": "server.ts",
+          "line": 2,
+          "name": "RETRY_LIMIT",
+          "value": "3",
+          "valueType": "number",
+          "consumer": "RETRY_LIMIT",
+          "consumerKind": "File"
+        }
+      ]
+    }
+  },
+  {
+    "tool": "list_routes",
+    "args": {
+      "framework": "express-koa"
+    },
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_ROUTE]->(route:Route) OPTIONAL MATCH (route)-[:ROUTE_HANDLED_BY]->(handler:Function) WHERE true AND route.framework = \"express-koa\" RETURN file.relativePath AS file, route.line AS line, route.method AS method, route.path AS path, route.fullPath AS fullPath, route.framework AS framework, route.handlerName AS handlerName, handler.name AS handler ORDER BY file.relativePath, route.line LIMIT 50",
+        "rows": [
+          {
+            "file": "server.ts",
+            "line": 14,
+            "method": "GET",
+            "path": "/users",
+            "fullPath": "/users",
+            "framework": "express-koa",
+            "handlerName": "listUsers",
+            "handler": "listUsers"
+          }
+        ]
+      }
+    ],
+    "output": {
+      "query": {
+        "framework": "express-koa",
+        "limit": 50
+      },
+      "routes": [
+        {
+          "file": "server.ts",
+          "line": 14,
+          "method": "GET",
+          "path": "/users",
+          "fullPath": "/users",
+          "framework": "express-koa",
+          "handlerName": "listUsers",
+          "handler": "listUsers"
+        }
+      ]
+    }
+  },
+  {
+    "tool": "graph_stats",
+    "args": {
+      "packageName": "config-env-fixture"
+    },
+    "calls": [
+      {
+        "method": "schemaVersion",
+        "result": 34
+      },
+      {
+        "method": "stats",
+        "options": {
+          "packageName": "config-env-fixture"
+        },
+        "rows": [
+          {
+            "table": "Package",
+            "count": 1
+          },
+          {
+            "table": "File",
+            "count": 2
+          },
+          {
+            "table": "Import",
+            "count": 1
+          },
+          {
+            "table": "Function",
+            "count": 2
+          },
+          {
+            "table": "Class",
+            "count": 0
+          },
+          {
+            "table": "Route",
+            "count": 1
+          }
+        ]
+      }
+    ],
+    "output": {
+      "schemaVersion": 34,
+      "packageName": "config-env-fixture",
+      "stats": [
+        {
+          "table": "Package",
+          "count": 1
+        },
+        {
+          "table": "File",
+          "count": 2
+        },
+        {
+          "table": "Import",
+          "count": 1
+        },
+        {
+          "table": "Function",
+          "count": 2
+        },
+        {
+          "table": "Class",
+          "count": 0
+        },
+        {
+          "table": "Route",
+          "count": 1
+        }
+      ]
+    }
+  }
+]

@@ -20,7 +20,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "golden:update": "UPDATE_GOLDEN=1 tsx --test tests/golden*.test.ts",
     "samples:fetch": "node scripts/fetch-samples.mjs",
-    "test:samples": "REQUIRE_SAMPLES=1 tsx --test tests/golden-samples.test.ts"
+    "test:samples": "REQUIRE_SAMPLES=1 tsx --test tests/golden-samples.test.ts tests/golden-queries.test.ts"
   },
   "dependencies": {
     "commander": "^14.0.1",

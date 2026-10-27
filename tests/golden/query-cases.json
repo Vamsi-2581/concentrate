@@ -1,0 +1,223 @@
+{
+  "$comment": "MCP tool calls recorded against Kuzu as the reference for the Phase 2 graph engine. `common` runs on every listed fixture; `fixtures.<name>` adds fixture-specific calls with real symbols.",
+  "common": [
+    {
+      "tool": "graph_stats",
+      "args": {}
+    },
+    {
+      "tool": "find_definitions",
+      "args": {
+        "name": "e"
+      }
+    },
+    {
+      "tool": "list_exports",
+      "args": {}
+    },
+    {
+      "tool": "list_routes",
+      "args": {}
+    },
+    {
+      "tool": "list_entrypoints",
+      "args": {}
+    },
+    {
+      "tool": "list_env_config",
+      "args": {}
+    },
+    {
+      "tool": "list_data_access",
+      "args": {}
+    }
+  ],
+  "fixtures": {
+    "call-resolution": [
+      {
+        "tool": "find_definitions",
+        "args": {
+          "name": "add",
+          "exact": true
+        }
+      },
+      {
+        "tool": "find_callers",
+        "args": {
+          "name": "add"
+        }
+      },
+      {
+        "tool": "find_callers",
+        "args": {
+          "name": "ULT",
+          "exact": false
+        }
+      },
+      {
+        "tool": "list_exports",
+        "args": {
+          "file": "utils.ts"
+        }
+      },
+      {
+        "tool": "trace_import_chain",
+        "args": {
+          "from": "main.ts",
+          "to": "utils.ts"
+        }
+      },
+      {
+        "tool": "trace_import_chain",
+        "args": {
+          "from": "utils.ts",
+          "to": "main.ts"
+        }
+      }
+    ],
+    "backend-entrypoints": [
+      {
+        "tool": "find_callers",
+        "args": {
+          "name": "handleJob"
+        }
+      },
+      {
+        "tool": "list_entrypoints",
+        "args": {
+          "kind": "queue"
+        }
+      },
+      {
+        "tool": "list_entrypoints",
+        "args": {
+          "limit": 2
+        }
+      },
+      {
+        "tool": "list_entrypoints",
+        "args": {
+          "file": "service.ts"
+        }
+      }
+    ],
+    "config-env": [
+      {
+        "tool": "list_env_config",
+        "args": {
+          "name": "DATABASE_URL"
+        }
+      },
+      {
+        "tool": "list_env_config",
+        "args": {
+          "file": "server.ts"
+        }
+      },
+      {
+        "tool": "list_routes",
+        "args": {
+          "framework": "express-koa"
+        }
+      },
+      {
+        "tool": "graph_stats",
+        "args": {
+          "packageName": "config-env-fixture"
+        }
+      }
+    ],
+    "data-access": [
+      {
+        "tool": "list_data_access",
+        "args": {
+          "model": "user"
+        }
+      },
+      {
+        "tool": "list_data_access",
+        "args": {
+          "operation": "create"
+        }
+      },
+      {
+        "tool": "list_data_access",
+        "args": {
+          "library": "mongoose",
+          "limit": 5
+        }
+      },
+      {
+        "tool": "find_callers",
+        "args": {
+          "name": "findUsers"
+        }
+      }
+    ],
+    "express-koa-routes": [
+      {
+        "tool": "list_routes",
+        "args": {
+          "framework": "express-koa",
+          "limit": 3
+        }
+      },
+      {
+        "tool": "list_routes",
+        "args": {
+          "file": "routes.ts"
+        }
+      }
+    ],
+    "fastify-routes": [
+      {
+        "tool": "list_routes",
+        "args": {
+          "framework": "fastify"
+        }
+      }
+    ],
+    "inline-handlers": [],
+    "module-calls": [],
+    "nestjs-injection": [
+      {
+        "tool": "find_callers",
+        "args": {
+          "name": "findAll"
+        }
+      },
+      {
+        "tool": "list_routes",
+        "args": {
+          "framework": "nestjs"
+        }
+      }
+    ],
+    "nestjs-modules": [],
+    "re-exports": [],
+    "local-re-exports": [
+      {
+        "tool": "find_definitions",
+        "args": {
+          "name": "createClient",
+          "exact": true
+        }
+      }
+    ],
+    "workspace-monorepo": [
+      {
+        "tool": "graph_stats",
+        "args": {
+          "packageName": "@sample/core"
+        }
+      },
+      {
+        "tool": "trace_import_chain",
+        "args": {
+          "from": "apps/api/src/server.ts",
+          "to": "packages/core/src/index.ts"
+        }
+      }
+    ]
+  }
+}
