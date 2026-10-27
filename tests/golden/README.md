@@ -62,6 +62,9 @@ from Kuzu 0.11.3: `{ "rows": [...] }`, or `{ "error": "parser" | "binder" | "run
 - Cases with `expectError` are not run against Kuzu. They are writes and
   features outside the read-only subset (`unsupported`), or places where we
   deliberately report an error that Kuzu does not (explained in `note`).
+- The built-in engine (`src/adapters/store/`, see [docs/cypher.md](../../docs/cypher.md))
+  replays both this corpus and the MCP recordings in `queries/` against the
+  same files. `golden:update` records from Kuzu only and skips the replay.
 - Kuzu is removed in Phase 2. After that these files are the reference, and
   they must not be regenerated from our own engine.
 

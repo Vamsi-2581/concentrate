@@ -369,7 +369,7 @@ async function listRoutes(
       route.framework AS framework,
       route.handlerName AS handlerName,
       handler.name AS handler
-    ORDER BY file.relativePath, route.line
+    ORDER BY file.relativePath, route.line, route.method, route.path, handler.name
     LIMIT ${limit}
   `);
 
@@ -398,7 +398,7 @@ async function listEntrypoints(
       entrypoint.library AS library,
       entrypoint.handlerName AS handlerName,
       handler.name AS handler
-    ORDER BY file.relativePath, entrypoint.line
+    ORDER BY file.relativePath, entrypoint.line, entrypoint.kind, entrypoint.trigger, handler.name
     LIMIT ${limit}
   `);
 

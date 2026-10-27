@@ -495,7 +495,7 @@
     "calls": [
       {
         "method": "query",
-        "cypher": "MATCH (file:File)-[:DECLARES_ROUTE]->(route:Route) OPTIONAL MATCH (route)-[:ROUTE_HANDLED_BY]->(handler:Function) WHERE true RETURN file.relativePath AS file, route.line AS line, route.method AS method, route.path AS path, route.fullPath AS fullPath, route.framework AS framework, route.handlerName AS handlerName, handler.name AS handler ORDER BY file.relativePath, route.line LIMIT 50",
+        "cypher": "MATCH (file:File)-[:DECLARES_ROUTE]->(route:Route) OPTIONAL MATCH (route)-[:ROUTE_HANDLED_BY]->(handler:Function) WHERE true RETURN file.relativePath AS file, route.line AS line, route.method AS method, route.path AS path, route.fullPath AS fullPath, route.framework AS framework, route.handlerName AS handlerName, handler.name AS handler ORDER BY file.relativePath, route.line, route.method, route.path, handler.name LIMIT 50",
         "rows": [
           {
             "file": "routes.ts",
@@ -506,16 +506,6 @@
             "framework": "express-koa",
             "handlerName": "listUsers",
             "handler": "listUsers"
-          },
-          {
-            "file": "routes.ts",
-            "line": 27,
-            "method": "POST",
-            "path": "/users",
-            "fullPath": "/api/users",
-            "framework": "express-koa",
-            "handlerName": "authenticate",
-            "handler": "validateUser"
           },
           {
             "file": "routes.ts",
@@ -536,6 +526,16 @@
             "framework": "express-koa",
             "handlerName": "authenticate",
             "handler": "createUser"
+          },
+          {
+            "file": "routes.ts",
+            "line": 27,
+            "method": "POST",
+            "path": "/users",
+            "fullPath": "/api/users",
+            "framework": "express-koa",
+            "handlerName": "authenticate",
+            "handler": "validateUser"
           },
           {
             "file": "routes.ts",
@@ -623,16 +623,6 @@
           "fullPath": "/api/users",
           "framework": "express-koa",
           "handlerName": "authenticate",
-          "handler": "validateUser"
-        },
-        {
-          "file": "routes.ts",
-          "line": 27,
-          "method": "POST",
-          "path": "/users",
-          "fullPath": "/api/users",
-          "framework": "express-koa",
-          "handlerName": "authenticate",
           "handler": "authenticate"
         },
         {
@@ -644,6 +634,16 @@
           "framework": "express-koa",
           "handlerName": "authenticate",
           "handler": "createUser"
+        },
+        {
+          "file": "routes.ts",
+          "line": 27,
+          "method": "POST",
+          "path": "/users",
+          "fullPath": "/api/users",
+          "framework": "express-koa",
+          "handlerName": "authenticate",
+          "handler": "validateUser"
         },
         {
           "file": "routes.ts",
@@ -714,7 +714,7 @@
     "calls": [
       {
         "method": "query",
-        "cypher": "MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(entrypoint:EntryPoint) OPTIONAL MATCH (entrypoint)-[:ENTRYPOINT_HANDLED_BY]->(handler:Function) WHERE true RETURN file.relativePath AS file, entrypoint.line AS line, entrypoint.kind AS kind, entrypoint.trigger AS trigger, entrypoint.library AS library, entrypoint.handlerName AS handlerName, handler.name AS handler ORDER BY file.relativePath, entrypoint.line LIMIT 50",
+        "cypher": "MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(entrypoint:EntryPoint) OPTIONAL MATCH (entrypoint)-[:ENTRYPOINT_HANDLED_BY]->(handler:Function) WHERE true RETURN file.relativePath AS file, entrypoint.line AS line, entrypoint.kind AS kind, entrypoint.trigger AS trigger, entrypoint.library AS library, entrypoint.handlerName AS handlerName, handler.name AS handler ORDER BY file.relativePath, entrypoint.line, entrypoint.kind, entrypoint.trigger, handler.name LIMIT 50",
         "rows": []
       }
     ],
@@ -876,7 +876,7 @@
     "calls": [
       {
         "method": "query",
-        "cypher": "MATCH (file:File)-[:DECLARES_ROUTE]->(route:Route) OPTIONAL MATCH (route)-[:ROUTE_HANDLED_BY]->(handler:Function) WHERE true AND route.framework = \"express-koa\" RETURN file.relativePath AS file, route.line AS line, route.method AS method, route.path AS path, route.fullPath AS fullPath, route.framework AS framework, route.handlerName AS handlerName, handler.name AS handler ORDER BY file.relativePath, route.line LIMIT 3",
+        "cypher": "MATCH (file:File)-[:DECLARES_ROUTE]->(route:Route) OPTIONAL MATCH (route)-[:ROUTE_HANDLED_BY]->(handler:Function) WHERE true AND route.framework = \"express-koa\" RETURN file.relativePath AS file, route.line AS line, route.method AS method, route.path AS path, route.fullPath AS fullPath, route.framework AS framework, route.handlerName AS handlerName, handler.name AS handler ORDER BY file.relativePath, route.line, route.method, route.path, handler.name LIMIT 3",
         "rows": [
           {
             "file": "routes.ts",
@@ -896,7 +896,7 @@
             "fullPath": "/api/users",
             "framework": "express-koa",
             "handlerName": "authenticate",
-            "handler": "validateUser"
+            "handler": "authenticate"
           },
           {
             "file": "routes.ts",
@@ -906,7 +906,7 @@
             "fullPath": "/api/users",
             "framework": "express-koa",
             "handlerName": "authenticate",
-            "handler": "authenticate"
+            "handler": "createUser"
           }
         ]
       }
@@ -935,7 +935,7 @@
           "fullPath": "/api/users",
           "framework": "express-koa",
           "handlerName": "authenticate",
-          "handler": "validateUser"
+          "handler": "authenticate"
         },
         {
           "file": "routes.ts",
@@ -945,7 +945,7 @@
           "fullPath": "/api/users",
           "framework": "express-koa",
           "handlerName": "authenticate",
-          "handler": "authenticate"
+          "handler": "createUser"
         }
       ]
     }
@@ -958,7 +958,7 @@
     "calls": [
       {
         "method": "query",
-        "cypher": "MATCH (file:File)-[:DECLARES_ROUTE]->(route:Route) OPTIONAL MATCH (route)-[:ROUTE_HANDLED_BY]->(handler:Function) WHERE true AND file.relativePath = \"routes.ts\" RETURN file.relativePath AS file, route.line AS line, route.method AS method, route.path AS path, route.fullPath AS fullPath, route.framework AS framework, route.handlerName AS handlerName, handler.name AS handler ORDER BY file.relativePath, route.line LIMIT 50",
+        "cypher": "MATCH (file:File)-[:DECLARES_ROUTE]->(route:Route) OPTIONAL MATCH (route)-[:ROUTE_HANDLED_BY]->(handler:Function) WHERE true AND file.relativePath = \"routes.ts\" RETURN file.relativePath AS file, route.line AS line, route.method AS method, route.path AS path, route.fullPath AS fullPath, route.framework AS framework, route.handlerName AS handlerName, handler.name AS handler ORDER BY file.relativePath, route.line, route.method, route.path, handler.name LIMIT 50",
         "rows": [
           {
             "file": "routes.ts",
@@ -969,16 +969,6 @@
             "framework": "express-koa",
             "handlerName": "listUsers",
             "handler": "listUsers"
-          },
-          {
-            "file": "routes.ts",
-            "line": 27,
-            "method": "POST",
-            "path": "/users",
-            "fullPath": "/api/users",
-            "framework": "express-koa",
-            "handlerName": "authenticate",
-            "handler": "validateUser"
           },
           {
             "file": "routes.ts",
@@ -999,6 +989,16 @@
             "framework": "express-koa",
             "handlerName": "authenticate",
             "handler": "createUser"
+          },
+          {
+            "file": "routes.ts",
+            "line": 27,
+            "method": "POST",
+            "path": "/users",
+            "fullPath": "/api/users",
+            "framework": "express-koa",
+            "handlerName": "authenticate",
+            "handler": "validateUser"
           },
           {
             "file": "routes.ts",
@@ -1087,16 +1087,6 @@
           "fullPath": "/api/users",
           "framework": "express-koa",
           "handlerName": "authenticate",
-          "handler": "validateUser"
-        },
-        {
-          "file": "routes.ts",
-          "line": 27,
-          "method": "POST",
-          "path": "/users",
-          "fullPath": "/api/users",
-          "framework": "express-koa",
-          "handlerName": "authenticate",
           "handler": "authenticate"
         },
         {
@@ -1108,6 +1098,16 @@
           "framework": "express-koa",
           "handlerName": "authenticate",
           "handler": "createUser"
+        },
+        {
+          "file": "routes.ts",
+          "line": 27,
+          "method": "POST",
+          "path": "/users",
+          "fullPath": "/api/users",
+          "framework": "express-koa",
+          "handlerName": "authenticate",
+          "handler": "validateUser"
         },
         {
           "file": "routes.ts",
