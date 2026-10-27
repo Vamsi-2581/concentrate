@@ -64,6 +64,7 @@ program
   .option("--exclude <pattern>", "Exclude glob pattern, repeatable", collect, [] as string[])
   .option("--previous-manifest <path>", "Previous scan manifest used only for incremental eligibility reporting")
   .option("--incremental <mode>", "Incremental mode: full or changed-files", "full")
+  .option("--normalized", "Also write graph.normalized.jsonl: machine-independent, deterministically ordered", false)
   .action(exportCommand);
 
 program
