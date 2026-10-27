@@ -1,6 +1,6 @@
 import path from "node:path";
 import { readFile } from "node:fs/promises";
-import fg from "fast-glob";
+import { findWorkspacePackageJsons } from "../../../../core/scan/glob.js";
 import { extractPackageExportTargets } from "./package-json-exports.js";
 
 export type JsTsPackageJsonResolutionConfig = {
@@ -81,16 +81,7 @@ export async function readJsTsWorkspacePackageResolutionConfigs(
   const packageJsonPaths = new Set<string>();
 
   for (const pattern of effectivePatterns) {
-    const packageJsonPattern = pattern.endsWith("package.json")
-      ? pattern
-      : path.posix.join(pattern, "package.json");
-    for (const packageJsonPath of await fg(packageJsonPattern, {
-      cwd: rootPath,
-      dot: true,
-      onlyFiles: true,
-      absolute: false,
-      ignore: ["**/node_modules/**"],
-    })) {
+    for (const packageJsonPath of await findWorkspacePackageJsons(rootPath, pattern)) {
       packageJsonPaths.add(packageJsonPath);
     }
   }

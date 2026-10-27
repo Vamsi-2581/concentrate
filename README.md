@@ -48,11 +48,12 @@ See [docs/mcp-server.md](docs/mcp-server.md).
 ```
 src/
   index.ts          — CLI binary entry point
+  program.ts        — Command, argument and flag definitions
   adapters/
-    cli/            — Command adapters (scan, stats, query, export, smoke, mcp)
+    cli/            — Command adapters (scan, stats, query, export, smoke, mcp) and the parseArgs router
     kuzu/           — KuzuDB writer, schema, retry
     mcp/            — MCP server adapter
-  commands/         — Commander-wired CLI command definitions
+  commands/         — CLI command entry points
   composition/      — Default registry + orchestrator wiring (core ← integrations)
   core/
     contracts/      — Language-agnostic interfaces

@@ -433,7 +433,7 @@ src/
     cli/        — CLI command adapters (scan, stats, query, export, smoke, mcp)
     kuzu/       — Kuzu database adapter (writer, schema, retry, format)
     mcp/        — MCP server adapter
-  commands/     — Commander-wired CLI command entry points
+  commands/     — CLI command entry points (wired in `src/program.ts`)
   core/
     contracts/  — Language-agnostic interfaces (ILanguageParser, ISemanticContributor, …)
     graph/      — Graph model (GraphNode, GraphRelationship, GraphBuilder)

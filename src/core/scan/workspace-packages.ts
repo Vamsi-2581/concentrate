@@ -1,8 +1,8 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import fg from "fast-glob";
 import type { IGraphContributor } from "../contracts/graph-contributor.js";
 import type { GraphNode } from "../graph/model.js";
+import { findWorkspacePackageJsons } from "./glob.js";
 import { addScanWarning, type ScanReport } from "./report.js";
 
 type PackageMetadata = {
@@ -127,7 +127,7 @@ async function detectWorkspacePackages(rootPath: string, report: ScanReport): Pr
   }
 
   for (const pattern of effectivePatterns) {
-    for (const packageJsonPath of await findPackageJsons(rootPath, pattern)) {
+    for (const packageJsonPath of await findWorkspacePackageJsons(rootPath, pattern)) {
       packageJsonPaths.add(packageJsonPath);
     }
   }
@@ -241,20 +241,6 @@ async function readPnpmWorkspacePatterns(rootPath: string, report: ScanReport): 
   }
 
   return patterns;
-}
-
-async function findPackageJsons(rootPath: string, pattern: string): Promise<string[]> {
-  const packageJsonPattern = pattern.endsWith("package.json")
-    ? pattern
-    : path.posix.join(pattern, "package.json");
-
-  return fg(packageJsonPattern, {
-    cwd: rootPath,
-    dot: true,
-    onlyFiles: true,
-    absolute: false,
-    ignore: ["**/node_modules/**"],
-  });
 }
 
 function readPackageDependencies(parsed: Record<string, unknown>): PackageDependency[] {
