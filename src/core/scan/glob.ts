@@ -203,8 +203,8 @@ function splitSegments(pattern: string): string[] | null {
 export type WalkOptions = {
   /** Directories (relative, POSIX) to start from; defaults to the root. Missing ones are skipped. */
   start?: string[];
-  /** Called once per directory before its entries are filtered, e.g. to load a nested `.gitignore`. */
-  enterDirectory?: (relativeDirectory: string) => Promise<void> | void;
+  /** Called once per directory, with its entry names, before the entries are filtered (e.g. to load a nested `.gitignore`). */
+  enterDirectory?: (relativeDirectory: string, entryNames: string[]) => Promise<void> | void;
   /** Return false to skip a directory (with its whole subtree) or a file. */
   accept?: (relativePath: string, isDirectory: boolean) => boolean;
 };
@@ -227,7 +227,7 @@ export async function walkFiles(rootPath: string, options: WalkOptions = {}): Pr
       if (code === "ENOENT" || code === "ENOTDIR") return;
       throw error;
     }
-    await options.enterDirectory?.(relativeDirectory);
+    await options.enterDirectory?.(relativeDirectory, entries.map((entry) => entry.name));
 
     const subdirectories: string[] = [];
     for (const entry of entries) {
