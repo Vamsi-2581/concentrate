@@ -1,4 +1,4 @@
-import type Parser from "tree-sitter";
+import type { SyntaxNode } from "../../languages/syntax/tree-sitter.js";
 import type { GraphNode, GraphRelationship } from "../../../core/graph/model.js";
 import { createFastifyRouteGraph } from "../../languages/js-ts/routes.js";
 import { resolveRouteFullPaths } from "./resolution/route-paths.js";
@@ -9,7 +9,7 @@ import type { ISemanticContributor } from "../../../core/contracts/semantic-cont
 // object-form declarations through the Fastify-specific route graph function.
 export function applyFastifyParseSemantics(
   fileNodeId: string,
-  programNode: Parser.SyntaxNode,
+  programNode: SyntaxNode,
   nodes: GraphNode[],
   relationships: GraphRelationship[],
 ): void {

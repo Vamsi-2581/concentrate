@@ -108,6 +108,20 @@ filtered MCP queries.
 
 Blocks or informs: future query server design.
 
+## Parsing
+
+- Grammars are pinned to the versions the native binding used: javascript
+  0.23.1, typescript 0.23.2, python 0.21.0, go 0.21.2, rust 0.21.0 (see
+  `vendor/grammars/manifest.json`). Newer syntax that only later grammar
+  releases understand produces `ERROR` nodes.
+- `.tsx` files are parsed with the TypeScript grammar, not the TSX grammar, so
+  JSX inside them can produce syntax errors.
+- A file whose tree contains an `ERROR` node is reported as a failed file
+  instead of producing a partial graph (`--continue-on-error` keeps the rest of
+  the scan).
+
+Blocks or informs: ROADMAP Phase 3b (grammar upgrades, TSX, error tolerance).
+
 ## Review Process
 
 - Smoke reports include empty `falsePositiveFindings`,

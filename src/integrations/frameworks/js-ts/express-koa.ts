@@ -1,4 +1,4 @@
-import type Parser from "tree-sitter";
+import type { SyntaxNode } from "../../languages/syntax/tree-sitter.js";
 import type { GraphNode, GraphRelationship } from "../../../core/graph/model.js";
 import { createExpressKoaRouteGraph } from "../../languages/js-ts/routes.js";
 
@@ -8,7 +8,7 @@ import { createExpressKoaRouteGraph } from "../../languages/js-ts/routes.js";
 // See fastify.ts for the Fastify-specific entry point.
 export function applyExpressKoaParseSemantics(
   fileNodeId: string,
-  programNode: Parser.SyntaxNode,
+  programNode: SyntaxNode,
   nodes: GraphNode[],
   relationships: GraphRelationship[],
 ): void {

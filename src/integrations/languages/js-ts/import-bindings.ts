@@ -1,7 +1,7 @@
-import type Parser from "tree-sitter";
+import type { SyntaxNode } from "../syntax/tree-sitter.js";
 import type { ImportBinding } from "../../../core/graph/model.js";
 
-export function extractCjsBindings(requireCall: Parser.SyntaxNode): string | null {
+export function extractCjsBindings(requireCall: SyntaxNode): string | null {
   const memberProperty = requireCall.parent?.type === "member_expression"
     ? requireCall.parent.childForFieldName("property")
     : null;
@@ -31,7 +31,7 @@ export function extractCjsBindings(requireCall: Parser.SyntaxNode): string | nul
   return null;
 }
 
-export function serializeImportBindings(node: Parser.SyntaxNode): string | null {
+export function serializeImportBindings(node: SyntaxNode): string | null {
   const importClause = node.namedChildren.find((c) => c.type === "import_clause");
   if (!importClause) {
     return null;
@@ -41,7 +41,7 @@ export function serializeImportBindings(node: Parser.SyntaxNode): string | null 
   return bindings.length > 0 ? JSON.stringify(bindings) : null;
 }
 
-function extractObjectPatternBindings(nameNode: Parser.SyntaxNode): ImportBinding[] {
+function extractObjectPatternBindings(nameNode: SyntaxNode): ImportBinding[] {
   const bindings: ImportBinding[] = [];
   for (const child of nameNode.namedChildren) {
     if (child.type === "shorthand_property_identifier_pattern") {
@@ -57,7 +57,7 @@ function extractObjectPatternBindings(nameNode: Parser.SyntaxNode): ImportBindin
   return bindings;
 }
 
-function extractImportClauseBindings(child: Parser.SyntaxNode): ImportBinding[] {
+function extractImportClauseBindings(child: SyntaxNode): ImportBinding[] {
   if (child.type === "identifier") {
     return [{ imported: "default", local: child.text, kind: "default" }];
   }
@@ -76,7 +76,7 @@ function extractImportClauseBindings(child: Parser.SyntaxNode): ImportBinding[] 
     .flatMap(extractNamedImportBinding);
 }
 
-function extractNamedImportBinding(specifier: Parser.SyntaxNode): ImportBinding[] {
+function extractNamedImportBinding(specifier: SyntaxNode): ImportBinding[] {
   const nameNode = specifier.childForFieldName("name");
   const aliasNode = specifier.childForFieldName("alias");
   return nameNode

@@ -71,12 +71,15 @@ src/
   integrations/
     frameworks/js-ts/   — Express, Fastify, NestJS, env-config, data-access semantics
     languages/          — Go, Python, Rust, JS/TS parsers and resolution
-  types/            — Ambient type declarations for tree-sitter bindings
+      syntax/           — tree-sitter on WebAssembly (the only web-tree-sitter importer)
+vendor/grammars/    — Prebuilt tree-sitter grammars (.wasm) and their manifest
 ```
 
 ## Roadmap
 
-Concentrate is moving to zero runtime dependencies (own parsers and graph engine). See
+Concentrate has a single runtime dependency, `web-tree-sitter` (plain JS and WebAssembly, no
+install scripts), so `npm install` never compiles native code. The graph store, Cypher engine,
+CLI and file discovery are built in. See
 [docs/ROADMAP.md](docs/ROADMAP.md) and the tracking issue [#1](https://github.com/fatihserhatturan/concentrate/issues/1).
 
 ## Development
@@ -89,7 +92,13 @@ npm run verify:rc         # typecheck + tests + build + standing smoke
 npm run samples:fetch     # fetch pinned sample repos into .concentrate/samples
 npm run test:samples      # golden graph + query tests on the samples (required, not skipped)
 npm run golden:update     # rewrite golden files after an intended behavior change
+npm run grammars:build    # rebuild vendor/grammars/*.wasm from the pinned grammar versions
 ```
+
+Grammars are built from pinned npm versions with the pinned `tree-sitter-cli` and committed with
+a sha256 manifest (`vendor/grammars/manifest.json`, checked by `tests/grammars.test.ts`). To
+upgrade one, change its version in `scripts/build-grammars.mjs`, run `npm run grammars:build`, and
+review the golden diffs.
 
 Golden tests (`tests/golden*.test.ts`) pin graph output and MCP query results;
 see [tests/golden/README.md](tests/golden/README.md).

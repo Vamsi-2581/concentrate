@@ -21,18 +21,19 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "golden:update": "UPDATE_GOLDEN=1 tsx --test tests/golden*.test.ts",
     "samples:fetch": "node scripts/fetch-samples.mjs",
+    "grammars:build": "node scripts/build-grammars.mjs",
     "test:samples": "REQUIRE_SAMPLES=1 tsx --test tests/golden-samples.test.ts tests/golden-queries.test.ts"
   },
+  "files": [
+    "dist",
+    "vendor/grammars"
+  ],
   "dependencies": {
-    "tree-sitter": "^0.21.1",
-    "tree-sitter-go": "^0.21.2",
-    "tree-sitter-javascript": "^0.23.1",
-    "tree-sitter-python": "^0.21.0",
-    "tree-sitter-rust": "^0.21.0",
-    "tree-sitter-typescript": "^0.23.2"
+    "web-tree-sitter": "0.27.1"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
+    "tree-sitter-cli": "0.27.1",
     "tsx": "^4.20.0",
     "typescript": "^5.9.0"
   },

@@ -3,6 +3,7 @@ import { readFile } from "node:fs/promises";
 import type { ParsedSourceFile } from "../../../core/graph/model.js";
 import type { SupportedLanguage } from "../../../core/scan/language.js";
 import type { ILanguageParser } from "../../../core/contracts/language-parser.js";
+import type { SyntaxTree } from "../../languages/syntax/tree-sitter.js";
 import {
   walkJsTsNodes,
   finalizeLanguageLevel,
@@ -30,7 +31,7 @@ export const typescriptParser: ILanguageParser = {
 
 function applyFrameworkSemantics(
   fileNodeId: string,
-  tree: ReturnType<typeof parseTree>,
+  tree: SyntaxTree,
   parsed: ParsedSourceFile,
   state: ReturnType<typeof walkJsTsNodes>,
 ): void {
@@ -64,16 +65,20 @@ async function parseJavaScriptLikeFile(
     properties: { path: filePath, relativePath, language },
   };
 
-  const tree = parseTree(source, language);
-  if (tree.rootNode.hasError) {
-    throw new Error("Syntax error");
+  const tree = await parseTree(source, language);
+  try {
+    if (tree.rootNode.hasError) {
+      throw new Error("Syntax error");
+    }
+
+    const state = walkJsTsNodes(fileNodeId, tree, language);
+    state.nodes.unshift(fileNode);
+
+    const parsed = finalizeLanguageLevel(fileNodeId, tree, state);
+    applyFrameworkSemantics(fileNodeId, tree, parsed, state);
+
+    return parsed;
+  } finally {
+    tree.delete();
   }
-
-  const state = walkJsTsNodes(fileNodeId, tree, language);
-  state.nodes.unshift(fileNode);
-
-  const parsed = finalizeLanguageLevel(fileNodeId, tree, state);
-  applyFrameworkSemantics(fileNodeId, tree, parsed, state);
-
-  return parsed;
 }

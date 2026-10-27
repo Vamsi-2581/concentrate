@@ -1,12 +1,9 @@
 import path from "node:path";
 import { readFile } from "node:fs/promises";
-import Parser from "tree-sitter";
-import JavaScript from "tree-sitter-javascript";
-import TypeScript from "tree-sitter-typescript";
+import { parseSyntaxTree, type SyntaxNode, type SyntaxTree } from "../syntax/tree-sitter.js";
 import type { GraphNode, GraphRelationship, ParsedSourceFile } from "../../../core/graph/model.js";
 import type { SupportedLanguage } from "../../../core/scan/language.js";
 import {
-  createTreeSitterInput,
   walk,
 } from "../tree-sitter-utils.js";
 import {
@@ -49,12 +46,6 @@ import {
   isObjectLiteralHandlerFunction,
 } from "./declarations.js";
 
-const jsParser = new Parser();
-jsParser.setLanguage(JavaScript);
-
-const tsParser = new Parser();
-tsParser.setLanguage(TypeScript.typescript);
-
 // ─── Walk state ──────────────────────────────────────────────────────────────
 
 export type WalkState = {
@@ -62,23 +53,23 @@ export type WalkState = {
   relationships: GraphRelationship[];
   cjsExportBindings: CjsExportBinding[];
   localReExportNames: string[];
-  functionAstPairs: Array<{ functionNodeId: string; astNode: Parser.SyntaxNode }>;
-  variableDeclaratorAstNodes: Parser.SyntaxNode[];
+  functionAstPairs: Array<{ functionNodeId: string; astNode: SyntaxNode }>;
+  variableDeclaratorAstNodes: SyntaxNode[];
 };
 
 // ─── Language-level walk ──────────────────────────────────────────────────────
 
 export function walkJsTsNodes(
   fileNodeId: string,
-  tree: Parser.Tree,
+  tree: SyntaxTree,
   language: SupportedLanguage,
 ): WalkState {
   const nodes: GraphNode[] = [];
   const relationships: GraphRelationship[] = [];
   const cjsExportBindings: CjsExportBinding[] = [];
   const localReExportNames: string[] = [];
-  const functionAstPairs: Array<{ functionNodeId: string; astNode: Parser.SyntaxNode }> = [];
-  const variableDeclaratorAstNodes: Parser.SyntaxNode[] = [];
+  const functionAstPairs: Array<{ functionNodeId: string; astNode: SyntaxNode }> = [];
+  const variableDeclaratorAstNodes: SyntaxNode[] = [];
 
   walk(tree.rootNode, (node) => {
     if (node.type === "import_statement") {
@@ -240,7 +231,7 @@ export function walkJsTsNodes(
 
 export function finalizeLanguageLevel(
   fileNodeId: string,
-  tree: Parser.Tree,
+  tree: SyntaxTree,
   state: WalkState,
 ): ParsedSourceFile {
   const { nodes, relationships, cjsExportBindings, localReExportNames } = state;
@@ -257,8 +248,9 @@ export function finalizeLanguageLevel(
 
 // ─── Public helpers ───────────────────────────────────────────────────────────
 
-export function parseTree(source: string, language: SupportedLanguage): Parser.Tree {
-  return (language === "typescript" ? tsParser : jsParser).parse(createTreeSitterInput(source));
+// The caller owns the tree and must delete() it.
+export function parseTree(source: string, language: SupportedLanguage): Promise<SyntaxTree> {
+  return parseSyntaxTree(language === "typescript" ? "typescript" : "javascript", source);
 }
 
 // Language-only parse — no framework semantic nodes (routes, entrypoints, env/config).
@@ -277,15 +269,19 @@ export async function parseJsTsLanguageOnly(
     properties: { path: filePath, relativePath, language },
   };
 
-  const tree = parseTree(source, language);
-  if (tree.rootNode.hasError) {
-    throw new Error("Syntax error");
+  const tree = await parseTree(source, language);
+  try {
+    if (tree.rootNode.hasError) {
+      throw new Error("Syntax error");
+    }
+
+    const state = walkJsTsNodes(fileNodeId, tree, language);
+    state.nodes.unshift(fileNode);
+
+    return finalizeLanguageLevel(fileNodeId, tree, state);
+  } finally {
+    tree.delete();
   }
-
-  const state = walkJsTsNodes(fileNodeId, tree, language);
-  state.nodes.unshift(fileNode);
-
-  return finalizeLanguageLevel(fileNodeId, tree, state);
 }
 
 // Language-only parse that also returns the tree root node for framework
@@ -294,7 +290,7 @@ export async function parseJsTsWithRootNode(
   rootPath: string,
   filePath: string,
   language: SupportedLanguage,
-): Promise<{ parsed: ParsedSourceFile; rootNode: Parser.SyntaxNode }> {
+): Promise<{ parsed: ParsedSourceFile; rootNode: SyntaxNode }> {
   const source = await readFile(filePath, "utf8");
   const relativePath = path.relative(rootPath, filePath);
   const fileNodeId = `file:${relativePath}`;
@@ -305,8 +301,10 @@ export async function parseJsTsWithRootNode(
     properties: { path: filePath, relativePath, language },
   };
 
-  const tree = parseTree(source, language);
+  // The tree stays alive for the caller's root node; this helper is for tests.
+  const tree = await parseTree(source, language);
   if (tree.rootNode.hasError) {
+    tree.delete();
     throw new Error("Syntax error");
   }
 
@@ -316,7 +314,7 @@ export async function parseJsTsWithRootNode(
   return { parsed: finalizeLanguageLevel(fileNodeId, tree, state), rootNode: tree.rootNode };
 }
 
-function isConditionalRequire(node: Parser.SyntaxNode): boolean {
+function isConditionalRequire(node: SyntaxNode): boolean {
   let current = node.parent;
   while (current && current.type !== "program") {
     if (

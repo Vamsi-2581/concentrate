@@ -1,6 +1,6 @@
-import type Parser from "tree-sitter";
+import type { SyntaxNode } from "../syntax/tree-sitter.js";
 
-export function extractMethodKind(node: Parser.SyntaxNode): string | null {
+export function extractMethodKind(node: SyntaxNode): string | null {
   if (node.type !== "method_definition" && node.type !== "abstract_method_signature") {
     return null;
   }
@@ -16,7 +16,7 @@ export function extractMethodKind(node: Parser.SyntaxNode): string | null {
   return "method";
 }
 
-export function extractFunctionParameters(functionNode: Parser.SyntaxNode): string {
+export function extractFunctionParameters(functionNode: SyntaxNode): string {
   const paramsNode = functionNode.childForFieldName("parameters");
   if (!paramsNode) {
     return "[]";
@@ -32,12 +32,12 @@ export function extractFunctionParameters(functionNode: Parser.SyntaxNode): stri
   return JSON.stringify(params);
 }
 
-export function extractReturnType(functionNode: Parser.SyntaxNode): string | null {
+export function extractReturnType(functionNode: SyntaxNode): string | null {
   const returnTypeNode = functionNode.childForFieldName("return_type");
   return returnTypeNode ? returnTypeNode.text.replace(/^:\s*/, "") : null;
 }
 
-function extractSingleParameter(node: Parser.SyntaxNode): { name: string; type: string | null } | null {
+function extractSingleParameter(node: SyntaxNode): { name: string; type: string | null } | null {
   if (node.type === "identifier") {
     return { name: node.text, type: null };
   }
@@ -50,7 +50,7 @@ function extractSingleParameter(node: Parser.SyntaxNode): { name: string; type: 
   return extractTypedParameter(node);
 }
 
-function extractTypedParameter(node: Parser.SyntaxNode): { name: string; type: string | null } | null {
+function extractTypedParameter(node: SyntaxNode): { name: string; type: string | null } | null {
   if (node.type !== "required_parameter" && node.type !== "optional_parameter" && node.type !== "rest_parameter") {
     return null;
   }

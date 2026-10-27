@@ -1,4 +1,4 @@
-import type Parser from "tree-sitter";
+import type { SyntaxNode } from "../syntax/tree-sitter.js";
 import type { GraphNode, GraphRelationship } from "../../../core/graph/model.js";
 import {
   extractName,
@@ -11,8 +11,8 @@ import { createFunctionNode } from "./functions.js";
 
 export function createVariableClassNode(
   fileNodeId: string,
-  declarator: Parser.SyntaxNode,
-  valueNode: Parser.SyntaxNode,
+  declarator: SyntaxNode,
+  valueNode: SyntaxNode,
 ): GraphNode | null {
   const nameNode = declarator.childForFieldName("name");
   if (!nameNode || nameNode.type !== "identifier") {
@@ -28,7 +28,7 @@ export function createVariableClassNode(
 
 export function createClassNode(
   fileNodeId: string,
-  node: Parser.SyntaxNode,
+  node: SyntaxNode,
   options: { name?: string; line?: number; isExported?: boolean } = {},
 ): GraphNode | null {
   const name = options.name ?? extractName(node);
@@ -56,7 +56,7 @@ export function createClassNode(
 export function appendClassMembers(
   fileNodeId: string,
   classNode: GraphNode,
-  classSyntaxNode: Parser.SyntaxNode,
+  classSyntaxNode: SyntaxNode,
   nodes: GraphNode[],
   relationships: GraphRelationship[],
 ): void {
@@ -76,7 +76,7 @@ export function appendClassMembers(
     return;
   }
 
-  let pendingDecorators: Parser.SyntaxNode[] = [];
+  let pendingDecorators: SyntaxNode[] = [];
   for (const child of classBody.namedChildren) {
     if (child.type === "decorator") {
       pendingDecorators.push(child);
@@ -146,7 +146,7 @@ export function appendClassMembers(
 
 function createConstructorParameterFieldNodes(
   classNodeId: string,
-  methodNode: Parser.SyntaxNode,
+  methodNode: SyntaxNode,
 ): GraphNode[] {
   if (extractName(methodNode) !== "constructor") {
     return [];
@@ -164,7 +164,7 @@ function createConstructorParameterFieldNodes(
 
 function createConstructorParameterFieldNode(
   classNodeId: string,
-  paramNode: Parser.SyntaxNode,
+  paramNode: SyntaxNode,
 ): GraphNode | null {
   const hasAccessibilityModifier = paramNode.children.some((child) => child.type === "accessibility_modifier");
   const isReadonly = paramNode.children.some((child) => child.type === "readonly");
@@ -200,8 +200,8 @@ function createConstructorParameterFieldNode(
 
 function createFieldNode(
   classNodeId: string,
-  node: Parser.SyntaxNode,
-  precedingDecorators: Parser.SyntaxNode[],
+  node: SyntaxNode,
+  precedingDecorators: SyntaxNode[],
 ): GraphNode | null {
   const nameNode = node.childForFieldName("name")
     ?? node.namedChildren.find((child) => child.type === "property_identifier" || child.type === "private_property_identifier");
@@ -239,13 +239,13 @@ function createFieldNode(
 }
 
 // Property injection: @Inject(), @InjectRepository(User), @InjectModel(Cat), ...
-function isInjectionDecorator(node: Parser.SyntaxNode): boolean {
+function isInjectionDecorator(node: SyntaxNode): boolean {
   const inner = node.namedChildren[0];
   const name = inner?.type === "call_expression" ? inner.childForFieldName("function")?.text : inner?.text;
   return name !== undefined && /^Inject(?:[A-Z]\w*)?$/.test(name);
 }
 
-function createDecoratorNode(targetId: string, node: Parser.SyntaxNode): GraphNode {
+function createDecoratorNode(targetId: string, node: SyntaxNode): GraphNode {
   const inner = node.namedChildren[0];
   let name: string;
   let args = "[]";
@@ -271,7 +271,7 @@ function createDecoratorNode(targetId: string, node: Parser.SyntaxNode): GraphNo
   };
 }
 
-function extractTypeScriptExtendsNames(node: Parser.SyntaxNode): string[] {
+function extractTypeScriptExtendsNames(node: SyntaxNode): string[] {
   const heritage = node.namedChildren.find((child) => child.type === "class_heritage");
   const extendsClause = heritage?.namedChildren.find((child) => child.type === "extends_clause");
   if (extendsClause) {
@@ -280,13 +280,13 @@ function extractTypeScriptExtendsNames(node: Parser.SyntaxNode): string[] {
   return heritage ? extractTypeNames(heritage) : [];
 }
 
-function extractTypeScriptImplementsNames(node: Parser.SyntaxNode): string[] {
+function extractTypeScriptImplementsNames(node: SyntaxNode): string[] {
   const heritage = node.namedChildren.find((child) => child.type === "class_heritage");
   const implementsClause = heritage?.namedChildren.find((child) => child.type === "implements_clause");
   return implementsClause ? extractTypeNames(implementsClause) : [];
 }
 
-function extractTypeNames(node: Parser.SyntaxNode): string[] {
+function extractTypeNames(node: SyntaxNode): string[] {
   return node.namedChildren
     .filter((child) => (
       child.type === "identifier"

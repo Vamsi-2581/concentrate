@@ -1,10 +1,10 @@
-import type Parser from "tree-sitter";
+import type { SyntaxNode } from "../syntax/tree-sitter.js";
 import type { GraphNode, GraphRelationship } from "../../../core/graph/model.js";
 import { extractName } from "./common.js";
 
 export function createTypeScriptDeclarationNode(
   fileNodeId: string,
-  node: Parser.SyntaxNode,
+  node: SyntaxNode,
 ): { node: GraphNode; relationshipType: GraphRelationship["type"] } | null {
   const declaration = typeScriptDeclarationMetadata(node.type);
   if (!declaration) {

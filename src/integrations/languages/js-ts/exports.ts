@@ -1,4 +1,4 @@
-import type Parser from "tree-sitter";
+import type { SyntaxNode } from "../syntax/tree-sitter.js";
 import type { GraphNode, GraphRelationship } from "../../../core/graph/model.js";
 import { extractStringSource } from "./common.js";
 
@@ -8,7 +8,7 @@ export type CjsExportBinding = {
   line: number;
 };
 
-export function createDefaultExportExpressionNode(fileNodeId: string, node: Parser.SyntaxNode): GraphNode | null {
+export function createDefaultExportExpressionNode(fileNodeId: string, node: SyntaxNode): GraphNode | null {
   if (node.type !== "export_statement" || !node.children.some((child) => child.type === "default")) {
     return null;
   }
@@ -30,7 +30,7 @@ export function createDefaultExportExpressionNode(fileNodeId: string, node: Pars
   };
 }
 
-export function extractLocalReExportNames(node: Parser.SyntaxNode): string[] {
+export function extractLocalReExportNames(node: SyntaxNode): string[] {
   if (extractStringSource(node)) {
     return [];
   }
@@ -73,7 +73,7 @@ export function createLocalReExportRelationships(
   });
 }
 
-export function extractCjsExportBindings(node: Parser.SyntaxNode): CjsExportBinding[] {
+export function extractCjsExportBindings(node: SyntaxNode): CjsExportBinding[] {
   const left = node.childForFieldName("left");
   const right = node.childForFieldName("right");
   if (!left || !right) {
@@ -100,7 +100,7 @@ export function extractCjsExportBindings(node: Parser.SyntaxNode): CjsExportBind
   }];
 }
 
-export function extractCjsObjectAssignExportBindings(node: Parser.SyntaxNode): CjsExportBinding[] {
+export function extractCjsObjectAssignExportBindings(node: SyntaxNode): CjsExportBinding[] {
   if (node.type !== "call_expression") return [];
 
   const fn = node.childForFieldName("function");
@@ -190,7 +190,7 @@ function indexLocalDefinitions(
   return definitions;
 }
 
-function extractCjsObjectExportBinding(node: Parser.SyntaxNode): CjsExportBinding[] {
+function extractCjsObjectExportBinding(node: SyntaxNode): CjsExportBinding[] {
   if (node.type === "shorthand_property_identifier") {
     return [{
       exportedName: node.text,
@@ -237,14 +237,14 @@ function createCjsExportVariableId(fileNodeId: string, binding: CjsExportBinding
   return `${fileNodeId}:variable:${binding.line}:${binding.exportedName}`;
 }
 
-function isNamedDefaultDeclaration(node: Parser.SyntaxNode): boolean {
+function isNamedDefaultDeclaration(node: SyntaxNode): boolean {
   return node.type === "function_declaration"
     || node.type === "generator_function_declaration"
     || node.type === "class_declaration"
     || node.type === "abstract_class_declaration";
 }
 
-function extractModuleExportsPropertyName(node: Parser.SyntaxNode): string | null {
+function extractModuleExportsPropertyName(node: SyntaxNode): string | null {
   if (node.type !== "member_expression") {
     return null;
   }
@@ -258,7 +258,7 @@ function extractModuleExportsPropertyName(node: Parser.SyntaxNode): string | nul
   return property?.type === "property_identifier" ? property.text : null;
 }
 
-function isModuleExportsMember(node: Parser.SyntaxNode): boolean {
+function isModuleExportsMember(node: SyntaxNode): boolean {
   if (node.type !== "member_expression") {
     return false;
   }
@@ -269,15 +269,15 @@ function isModuleExportsMember(node: Parser.SyntaxNode): boolean {
     && property?.type === "property_identifier" && property.text === "exports";
 }
 
-function isExportsIdentifier(node: Parser.SyntaxNode): boolean {
+function isExportsIdentifier(node: SyntaxNode): boolean {
   return node.type === "identifier" && node.text === "exports";
 }
 
-function isCjsExportTarget(node: Parser.SyntaxNode): boolean {
+function isCjsExportTarget(node: SyntaxNode): boolean {
   return isModuleExportsMember(node) || isExportsIdentifier(node);
 }
 
-function normalizeObjectPropertyName(node: Parser.SyntaxNode): string | null {
+function normalizeObjectPropertyName(node: SyntaxNode): string | null {
   if (
     node.type === "property_identifier"
     || node.type === "identifier"

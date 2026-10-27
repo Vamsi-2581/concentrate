@@ -109,17 +109,12 @@ async function checkFiles(
 const legacyDirs = ["scanner/", "parsers/", "graph/"];
 
 /**
- * Runtime packages src/ may still import. Concentrate is moving to zero runtime
- * dependencies (docs/ROADMAP.md): this list may only shrink, and it must be
- * empty at the end of milestone M4.
+ * Runtime packages src/ may import (docs/ROADMAP.md). The only one is
+ * web-tree-sitter: plain JS and WebAssembly, pinned, with no dependencies and
+ * no install scripts. Grammars are vendored WebAssembly, not packages.
  */
 const RUNTIME_DEPENDENCY_ALLOWLIST: readonly string[] = [
-  "tree-sitter", // Phase 3
-  "tree-sitter-go", // Phase 3
-  "tree-sitter-javascript", // Phase 3
-  "tree-sitter-python", // Phase 3
-  "tree-sitter-rust", // Phase 3
-  "tree-sitter-typescript", // Phase 3
+  "web-tree-sitter",
 ];
 
 function packageNameOf(specifier: string): string {
@@ -309,6 +304,34 @@ describe("Architecture dependency guardrails", () => {
     const stale = RUNTIME_DEPENDENCY_ALLOWLIST.filter((name) => !used.has(name));
 
     assert.deepEqual(stale, [], `Allow-listed but no longer imported; remove from RUNTIME_DEPENDENCY_ALLOWLIST and package.json: ${stale.join(", ")}`);
+  });
+
+  it("runtime dependencies are pinned and install without scripts or dependencies of their own", async () => {
+    const packageJson = JSON.parse(await readFile(path.join(srcRoot, "../package.json"), "utf8")) as {
+      dependencies?: Record<string, string>;
+    };
+    const problems: string[] = [];
+    for (const [name, version] of Object.entries(packageJson.dependencies ?? {})) {
+      if (!/^\d+\.\d+\.\d+$/.test(version)) problems.push(`${name}: ${version} is not an exact version`);
+      const installed = JSON.parse(await readFile(path.join(srcRoot, "../node_modules", name, "package.json"), "utf8")) as {
+        scripts?: Record<string, string>;
+        dependencies?: Record<string, string>;
+      };
+      for (const hook of ["preinstall", "install", "postinstall"]) {
+        if (installed.scripts?.[hook]) problems.push(`${name}: has a ${hook} script`);
+      }
+      if (Object.keys(installed.dependencies ?? {}).length > 0) problems.push(`${name}: has dependencies`);
+    }
+
+    assert.deepEqual(problems, []);
+  });
+
+  it("only the syntax module imports web-tree-sitter", async () => {
+    const importers = [...(await bareImportsBySourceFile())]
+      .filter(([, packages]) => packages.has("web-tree-sitter"))
+      .map(([file]) => file);
+
+    assert.deepEqual(importers, [path.normalize("integrations/languages/syntax/tree-sitter.ts")]);
   });
 
   it("CLI and MCP adapters reach the graph store only through contracts and composition", async () => {

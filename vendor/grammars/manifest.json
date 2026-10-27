@@ -1,0 +1,35 @@
+{
+  "cli": "tree-sitter 0.27.1",
+  "grammars": {
+    "javascript": {
+      "package": "tree-sitter-javascript",
+      "version": "0.23.1",
+      "sha256": "f490c0ad5d72d4351e9c69aa8918373f95e9398f40c70405732b938885d75717",
+      "bytes": 360215
+    },
+    "typescript": {
+      "package": "tree-sitter-typescript",
+      "version": "0.23.2",
+      "sha256": "d24392183c75c103feafb827c9c086de00c30198e27f362cc971fbca6e91a87f",
+      "bytes": 1415400
+    },
+    "python": {
+      "package": "tree-sitter-python",
+      "version": "0.21.0",
+      "sha256": "bbf740d0a067a72432bd564df78f56595163a894257207e873bf4f08f9b3d42c",
+      "bytes": 475404
+    },
+    "go": {
+      "package": "tree-sitter-go",
+      "version": "0.21.2",
+      "sha256": "db1fb2a2a45f549e5909ddf5b264685c51e9458f43e6de235ee550f9b3f04b5f",
+      "bytes": 207175
+    },
+    "rust": {
+      "package": "tree-sitter-rust",
+      "version": "0.21.0",
+      "sha256": "0454347cda990e2fbff14736a9ceae942c74b2e2f912c058b7cc6a4c1147484b",
+      "bytes": 1077497
+    }
+  }
+}

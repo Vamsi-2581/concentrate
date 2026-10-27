@@ -50,3 +50,35 @@ Compared with the Kuzu baseline:
   garbage-collection pause can put it above the baseline (seen up to 5 ms for
   express `graph_stats`); use 100 runs to compare tails.
 - `node_modules` went from 653 MB to 114 MB; the `kuzu` package alone was 531 MB.
+
+## Parser: native vs WASM
+
+Phase 3a moved parsing from the native `tree-sitter` binding (0.21.1) to
+`web-tree-sitter` 0.27.1 with the same grammar versions built to WebAssembly.
+Apple M4, Node v24.13.0, macOS, recorded 2026-10-27. Each cell is the median
+of 5 full `scan` runs (wall time / peak RSS from `/usr/bin/time -l`), with the
+two builds alternating so neither always runs on a warm file cache.
+
+| Sample | Native ms | Native MB | WASM ms | WASM MB | WASM / native |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| express | 954 | 184 | 481 | 226 | 0.50 |
+| fastify | 115 | 102 | 98 | 122 | 0.85 |
+| nestjs-starter | 88 | 90 | 81 | 125 | 0.92 |
+| ky | 714 | 170 | 354 | 211 | 0.50 |
+| internet-node-express-firebase-mongodb | 139 | 104 | 111 | 130 | 0.80 |
+| internet-node-express-realworld | 159 | 106 | 120 | 121 | 0.75 |
+| internet-nest | 3351 | 287 | 1327 | 305 | 0.40 |
+
+- **Parsing alone is slower on WASM** (all 2091 files of the samples, 4.4 MB:
+  native 257 ms, WASM 453 ms). Full scans are still faster because extractors
+  read many node properties, and each read is an N-API call on the native
+  binding but a plain WebAssembly memory read on web-tree-sitter.
+- **Memory** is 15–40 MB higher (the WebAssembly heap). Six scans of
+  `internet-nest` in one process level off at about 370 MB RSS; trees are freed
+  with `delete()` and do not accumulate.
+- **Output is identical**: golden graph, golden query and smoke tests pass
+  unchanged, and `internet-nest` gives the same 40488 nodes and 41360
+  relationships on both builds.
+- **Install**: `npm ci --omit=dev --ignore-scripts` gives a 4.5 MB
+  `node_modules` (only `web-tree-sitter`, was 67 MB with the native binding and
+  five grammar packages). The vendored grammars add 3.5 MB.
