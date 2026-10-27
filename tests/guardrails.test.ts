@@ -241,4 +241,17 @@ describe("Architecture dependency guardrails", () => {
       `Boundary violations in commands:\n${violations.map((v) => `  ${v.file}: ${v.violation}`).join("\n")}`,
     );
   });
+
+  it("CLI and MCP adapters reach the graph store only through contracts and composition", async () => {
+    const violations = [
+      ...await checkFiles(path.join(srcRoot, "adapters/cli"), ["adapters/kuzu/"]),
+      ...await checkFiles(path.join(srcRoot, "adapters/mcp"), ["adapters/kuzu/"]),
+    ];
+
+    assert.deepEqual(
+      violations,
+      [],
+      `Storage engine leaks into CLI/MCP:\n${violations.map((v) => `  ${v.file}: ${v.violation}`).join("\n")}`,
+    );
+  });
 });

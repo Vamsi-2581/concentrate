@@ -9,32 +9,30 @@ import { closeResults } from "./kuzu-results.js";
 import { readKuzuSchemaVersion, resetKuzuSchema } from "./kuzu-schema-management.js";
 import { nodeLabels } from "./schema.js";
 import type { GraphNode, GraphRelationship } from "../../core/graph/model.js";
+import type {
+  GraphPatchOptions,
+  GraphPatchSummary,
+  GraphWriteMode,
+  GraphWriteOptions,
+  IGraphStore,
+} from "../../core/contracts/graph-store.js";
+import type { GraphStatsOptions } from "../../core/contracts/query-engine.js";
 
-export type KuzuWriteMode = "transaction" | "individual";
+export type KuzuWriteMode = GraphWriteMode;
 
-export type KuzuWriteOptions = {
-  mode?: KuzuWriteMode;
-};
+export type KuzuWriteOptions = GraphWriteOptions;
 
 export type KuzuOpenOptions = {
   retry?: KuzuRetryOptions | false;
 };
 
-export type KuzuStatsOptions = {
-  packageName?: string;
-};
+export type KuzuStatsOptions = GraphStatsOptions;
 
-export type KuzuPatchOptions = KuzuWriteOptions & {
-  affectedFiles: string[];
-};
+export type KuzuPatchOptions = GraphPatchOptions;
 
-export type KuzuPatchSummary = {
-  affectedFiles: number;
-  nodesWritten: number;
-  relationshipsWritten: number;
-};
+export type KuzuPatchSummary = GraphPatchSummary;
 
-export class KuzuGraphWriter {
+export class KuzuGraphWriter implements IGraphStore {
   private constructor(
     private readonly database: KuzuDatabase,
     private readonly connection: KuzuConnection,

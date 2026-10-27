@@ -2,8 +2,8 @@ import { access, mkdir, writeFile } from "node:fs/promises";
 import { performance } from "node:perf_hooks";
 import os from "node:os";
 import path from "node:path";
-import { KuzuGraphWriter } from "../kuzu/index.js";
-import { SCHEMA_VERSION } from "../kuzu/schema.js";
+import { GRAPH_SCHEMA_VERSION, openGraphStore } from "../../composition/graph-store.js";
+import type { IQueryEngine } from "../../core/contracts/query-engine.js";
 import type { FileClassificationCounts, ScanReport, ScanStatus } from "../../core/scan/index.js";
 import { scanOrchestrator } from "../../composition/orchestrator.js";
 
@@ -160,7 +160,7 @@ const defaultSamples: SmokeSample[] = [
       relationships: 4130,
       fileClassifications: { production: 50, test: 91, fixture: 0, support: 0, generated: 0 },
       graph: {
-        schemaVersion: SCHEMA_VERSION,
+        schemaVersion: GRAPH_SCHEMA_VERSION,
         routes: 91,
         routesWithFullPath: 57,
         routeHandledBy: 65,
@@ -189,7 +189,7 @@ const defaultSamples: SmokeSample[] = [
       relationships: 392,
       fileClassifications: { production: 11, test: 7, fixture: 0, support: 0, generated: 0 },
       graph: {
-        schemaVersion: SCHEMA_VERSION,
+        schemaVersion: GRAPH_SCHEMA_VERSION,
         routes: 1,
         routesWithFullPath: 1,
         routeHandledBy: 1,
@@ -218,7 +218,7 @@ const defaultSamples: SmokeSample[] = [
       relationships: 95,
       fileClassifications: { production: 5, test: 2, fixture: 0, support: 0, generated: 0 },
       graph: {
-        schemaVersion: SCHEMA_VERSION,
+        schemaVersion: GRAPH_SCHEMA_VERSION,
         routes: 1,
         routesWithFullPath: 1,
         moduleControls: 1,
@@ -248,7 +248,7 @@ const defaultSamples: SmokeSample[] = [
       relationships: 6926,
       fileClassifications: { production: 29, test: 23, fixture: 0, support: 0, generated: 0 },
       graph: {
-        schemaVersion: SCHEMA_VERSION,
+        schemaVersion: GRAPH_SCHEMA_VERSION,
         routes: 0,
         routesWithFullPath: 0,
         envVars: 2,
@@ -274,7 +274,7 @@ const defaultSamples: SmokeSample[] = [
       relationships: 536,
       fileClassifications: { production: 20, test: 3, fixture: 0, support: 0, generated: 1 },
       graph: {
-        schemaVersion: SCHEMA_VERSION,
+        schemaVersion: GRAPH_SCHEMA_VERSION,
         routes: 7,
         envVars: 2,
         configValues: 14,
@@ -298,7 +298,7 @@ const defaultSamples: SmokeSample[] = [
       relationships: 862,
       fileClassifications: { production: 29, test: 7, fixture: 0, support: 3, generated: 0 },
       graph: {
-        schemaVersion: SCHEMA_VERSION,
+        schemaVersion: GRAPH_SCHEMA_VERSION,
         routes: 26,
         envVars: 4,
         configValues: 9,
@@ -324,7 +324,7 @@ const defaultSamples: SmokeSample[] = [
       relationships: 42953,
       fileClassifications: { production: 985, test: 351, fixture: 376, support: 0, generated: 0 },
       graph: {
-        schemaVersion: SCHEMA_VERSION,
+        schemaVersion: GRAPH_SCHEMA_VERSION,
         routes: 309,
         entrypoints: 3,
         envVars: 9,
@@ -412,7 +412,7 @@ async function runSmokeSample(
   });
   const fullScanMs = elapsedMs(fullScanStartedAt);
 
-  const writer = await KuzuGraphWriter.open(databasePath);
+  const writer = await openGraphStore(databasePath);
   const fullWriteStartedAt = performance.now();
   try {
     await writer.reset();
@@ -471,10 +471,10 @@ async function runIncrementalBenchmark(
   });
   const incrementalScanMs = elapsedMs(incrementalScanStartedAt);
 
-  const writer = await KuzuGraphWriter.open(databasePath);
+  const writer = await openGraphStore(databasePath);
   const incrementalWriteStartedAt = performance.now();
   try {
-    if (await writer.schemaVersion() === SCHEMA_VERSION && incrementalGraph.report.incremental.compatible) {
+    if (await writer.schemaVersion() === GRAPH_SCHEMA_VERSION && incrementalGraph.report.incremental.compatible) {
       const affectedFiles = [
         ...incrementalGraph.report.parsePlan.addedFiles,
         ...incrementalGraph.report.parsePlan.changedFiles,
@@ -527,7 +527,7 @@ async function runIncrementalBenchmark(
 }
 
 async function readSemanticSamples(databasePath: string, limit: number): Promise<SemanticSamples> {
-  const writer = await KuzuGraphWriter.open(databasePath);
+  const writer = await openGraphStore(databasePath);
   try {
     const routes = await readRouteSamples(writer, limit);
     const entrypoints = await readEntrypointSamples(writer, limit);
@@ -550,7 +550,7 @@ async function readSemanticSamples(databasePath: string, limit: number): Promise
   }
 }
 
-async function readRouteSamples(writer: KuzuGraphWriter, limit: number): Promise<SemanticRouteSample[]> {
+async function readRouteSamples(writer: IQueryEngine, limit: number): Promise<SemanticRouteSample[]> {
   const rows = await writer.query(`
     MATCH (file:File)-[:DECLARES_ROUTE]->(route:Route)
     OPTIONAL MATCH (route)-[:ROUTE_HANDLED_BY]->(handler:Function)
@@ -576,7 +576,7 @@ async function readRouteSamples(writer: KuzuGraphWriter, limit: number): Promise
   }));
 }
 
-async function readEntrypointSamples(writer: KuzuGraphWriter, limit: number): Promise<SemanticEntrypointSample[]> {
+async function readEntrypointSamples(writer: IQueryEngine, limit: number): Promise<SemanticEntrypointSample[]> {
   const rows = await writer.query(`
     MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(entrypoint:EntryPoint)
     OPTIONAL MATCH (entrypoint)-[:ENTRYPOINT_HANDLED_BY]->(handler:Function)
@@ -600,7 +600,7 @@ async function readEntrypointSamples(writer: KuzuGraphWriter, limit: number): Pr
   }));
 }
 
-async function readEnvConfigSamples(writer: KuzuGraphWriter, limit: number): Promise<SemanticEnvConfigSample[]> {
+async function readEnvConfigSamples(writer: IQueryEngine, limit: number): Promise<SemanticEnvConfigSample[]> {
   const configLimit = Math.ceil(limit / 2);
   const envLimit = Math.floor(limit / 2);
   const configRows = await writer.query(`
@@ -648,7 +648,7 @@ async function readEnvConfigSamples(writer: KuzuGraphWriter, limit: number): Pro
   ];
 }
 
-async function readDataAccessSamples(writer: KuzuGraphWriter, limit: number): Promise<SemanticDataAccessSample[]> {
+async function readDataAccessSamples(writer: IQueryEngine, limit: number): Promise<SemanticDataAccessSample[]> {
   const functionLimit = Math.ceil(limit / 2);
   const methodLimit = Math.floor(limit / 2);
   const functionRows = await writer.query(`
@@ -705,7 +705,7 @@ async function readGraphMetrics(
   databasePath: string,
   expected: Partial<Record<SmokeMetricName, number>>,
 ): Promise<Partial<Record<SmokeMetricName, number>>> {
-  const writer = await KuzuGraphWriter.open(databasePath);
+  const writer = await openGraphStore(databasePath);
   try {
     const metrics: Partial<Record<SmokeMetricName, number>> = {};
     if ("schemaVersion" in expected) metrics.schemaVersion = await writer.schemaVersion() ?? -1;
@@ -742,7 +742,7 @@ async function readGraphMetrics(
   }
 }
 
-async function queryCount(writer: KuzuGraphWriter, cypher: string): Promise<number> {
+async function queryCount(writer: IQueryEngine, cypher: string): Promise<number> {
   const rows = await writer.query(cypher) as Array<{ count?: unknown }>;
   const count = rows[0]?.count;
   return typeof count === "number" ? count : -1;

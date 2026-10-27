@@ -1,6 +1,5 @@
 import path from "node:path";
-import { defaultKuzuRetryOptions } from "../kuzu/kuzu-retry.js";
-import { KuzuGraphWriter } from "../kuzu/index.js";
+import { openGraphStore } from "../../composition/graph-store.js";
 
 export type StatsAdapterOptions = {
   database: string;
@@ -9,8 +8,8 @@ export type StatsAdapterOptions = {
 };
 
 export async function runStatsAdapter(options: StatsAdapterOptions): Promise<void> {
-  const writer = await KuzuGraphWriter.open(path.resolve(options.database), {
-    retry: options.retryLock !== false ? defaultKuzuRetryOptions : false,
+  const writer = await openGraphStore(path.resolve(options.database), {
+    retryLock: options.retryLock !== false,
   });
   let version: number | null;
   let stats: Array<{ table: string; count: unknown }>;
