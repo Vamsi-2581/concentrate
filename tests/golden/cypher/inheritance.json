@@ -1,0 +1,947 @@
+{
+  "match/all-files": {
+    "rows": [
+      {
+        "path": "base.ts",
+        "language": "typescript",
+        "isTest": false
+      },
+      {
+        "path": "client.ts",
+        "language": "typescript",
+        "isTest": false
+      },
+      {
+        "path": "service.py",
+        "language": "python",
+        "isTest": false
+      }
+    ]
+  },
+  "match/label-count": {
+    "rows": [
+      {
+        "count": 2
+      }
+    ]
+  },
+  "match/count-star": {
+    "rows": [
+      {
+        "count": 0
+      }
+    ]
+  },
+  "match/two-hop": {
+    "rows": []
+  },
+  "match/comma-patterns": {
+    "rows": [
+      {
+        "file": "base.ts",
+        "repo": "inheritance"
+      },
+      {
+        "file": "client.ts",
+        "repo": "inheritance"
+      },
+      {
+        "file": "service.py",
+        "repo": "inheritance"
+      }
+    ]
+  },
+  "match/shared-variable": {
+    "rows": []
+  },
+  "match/repeated-match": {
+    "rows": []
+  },
+  "match/inline-properties": {
+    "rows": []
+  },
+  "match/inline-properties-string": {
+    "rows": []
+  },
+  "match/anonymous-node": {
+    "rows": [
+      {
+        "source": "client.ts",
+        "target": "base.ts"
+      }
+    ]
+  },
+  "match/anonymous-rel": {
+    "rows": [
+      {
+        "file": "client.ts",
+        "source": "./base.js"
+      }
+    ]
+  },
+  "match/unlabeled-start": {
+    "rows": []
+  },
+  "match/unlabeled-end": {
+    "rows": []
+  },
+  "match/unlabeled-both": {
+    "rows": []
+  },
+  "match/incoming": {
+    "rows": []
+  },
+  "match/undirected": {
+    "rows": []
+  },
+  "match/rel-alternatives": {
+    "rows": []
+  },
+  "match/rel-variable-properties": {
+    "rows": []
+  },
+  "match/rel-inline-properties": {
+    "rows": []
+  },
+  "match/self-join-distinct-rels": {
+    "rows": []
+  },
+  "match/same-rel-twice": {
+    "rows": [
+      {
+        "a": "base.ts",
+        "b": "base.ts"
+      },
+      {
+        "a": "base.ts",
+        "b": "client.ts"
+      },
+      {
+        "a": "base.ts",
+        "b": "service.py"
+      },
+      {
+        "a": "client.ts",
+        "b": "base.ts"
+      },
+      {
+        "a": "client.ts",
+        "b": "client.ts"
+      },
+      {
+        "a": "client.ts",
+        "b": "service.py"
+      },
+      {
+        "a": "service.py",
+        "b": "base.ts"
+      },
+      {
+        "a": "service.py",
+        "b": "client.ts"
+      },
+      {
+        "a": "service.py",
+        "b": "service.py"
+      }
+    ]
+  },
+  "match/cycle-back": {
+    "rows": [
+      {
+        "c": "HttpClient",
+        "p": "BaseClient",
+        "s": "HttpClient"
+      },
+      {
+        "c": "UserService",
+        "p": "BaseService",
+        "s": "UserService"
+      }
+    ]
+  },
+  "match/package-hierarchy": {
+    "rows": []
+  },
+  "match/physical-rel-types": {
+    "rows": []
+  },
+  "match/physical-rel-types-function": {
+    "rows": []
+  },
+  "match/mounts": {
+    "rows": []
+  },
+  "varlen/directories-1-3": {
+    "rows": []
+  },
+  "varlen/directories-exact-2": {
+    "rows": []
+  },
+  "varlen/directories-unbounded": {
+    "rows": []
+  },
+  "varlen/directories-upper-only": {
+    "rows": []
+  },
+  "varlen/root-to-file": {
+    "rows": [
+      {
+        "repo": "inheritance",
+        "dir": ".",
+        "file": "base.ts"
+      },
+      {
+        "repo": "inheritance",
+        "dir": ".",
+        "file": "client.ts"
+      },
+      {
+        "repo": "inheritance",
+        "dir": ".",
+        "file": "service.py"
+      }
+    ]
+  },
+  "varlen/zero-length": {
+    "rows": [
+      {
+        "a": ".",
+        "b": "."
+      }
+    ]
+  },
+  "varlen/incoming": {
+    "rows": []
+  },
+  "varlen/undirected": {
+    "rows": []
+  },
+  "varlen/extends-chain": {
+    "rows": [
+      {
+        "c": "HttpClient",
+        "p": "BaseClient"
+      },
+      {
+        "c": "UserService",
+        "p": "BaseService"
+      }
+    ]
+  },
+  "varlen/call-chain": {
+    "rows": []
+  },
+  "varlen/import-chain": {
+    "rows": [
+      {
+        "a": "client.ts",
+        "b": "base.ts"
+      }
+    ]
+  },
+  "varlen/count-paths": {
+    "rows": [
+      {
+        "paths": 0
+      }
+    ]
+  },
+  "varlen/distinct-targets": {
+    "rows": []
+  },
+  "varlen/no-type": {
+    "rows": [
+      {
+        "repo": "inheritance",
+        "dir": "."
+      }
+    ]
+  },
+  "optional/no-match-null": {
+    "rows": [
+      {
+        "file": "base.ts",
+        "route": null
+      },
+      {
+        "file": "client.ts",
+        "route": null
+      },
+      {
+        "file": "service.py",
+        "route": null
+      }
+    ]
+  },
+  "optional/count-optional": {
+    "rows": [
+      {
+        "file": "base.ts",
+        "routes": 0
+      },
+      {
+        "file": "client.ts",
+        "routes": 0
+      },
+      {
+        "file": "service.py",
+        "routes": 0
+      }
+    ]
+  },
+  "optional/where-on-optional": {
+    "rows": [
+      {
+        "file": "base.ts",
+        "route": null
+      },
+      {
+        "file": "client.ts",
+        "route": null
+      },
+      {
+        "file": "service.py",
+        "route": null
+      }
+    ]
+  },
+  "optional/where-on-outer-var": {
+    "rows": []
+  },
+  "optional/where-false": {
+    "rows": [
+      {
+        "file": "base.ts",
+        "fn": null
+      },
+      {
+        "file": "client.ts",
+        "fn": null
+      },
+      {
+        "file": "service.py",
+        "fn": null
+      }
+    ]
+  },
+  "optional/chain": {
+    "rows": []
+  },
+  "optional/two-optionals": {
+    "rows": [
+      {
+        "file": "base.ts",
+        "fn": null,
+        "cls": "BaseClient"
+      },
+      {
+        "file": "client.ts",
+        "fn": null,
+        "cls": "HttpClient"
+      },
+      {
+        "file": "service.py",
+        "fn": null,
+        "cls": "BaseService"
+      },
+      {
+        "file": "service.py",
+        "fn": null,
+        "cls": "UserService"
+      }
+    ]
+  },
+  "optional/first-clause": {
+    "rows": [
+      {
+        "path": null
+      }
+    ]
+  },
+  "optional/then-match": {
+    "rows": []
+  },
+  "optional/is-null-filter": {
+    "rows": [
+      {
+        "fn": "request"
+      },
+      {
+        "fn": "retry"
+      }
+    ]
+  },
+  "where/equality-string": {
+    "rows": []
+  },
+  "where/inequality": {
+    "rows": [
+      {
+        "name": "request"
+      },
+      {
+        "name": "retry"
+      }
+    ]
+  },
+  "where/int-compare": {
+    "rows": []
+  },
+  "where/bool-compare": {
+    "rows": [
+      {
+        "name": "request"
+      },
+      {
+        "name": "retry"
+      }
+    ]
+  },
+  "where/bool-bare": {
+    "rows": []
+  },
+  "where/not": {
+    "rows": [
+      {
+        "name": "request"
+      },
+      {
+        "name": "retry"
+      }
+    ]
+  },
+  "where/or": {
+    "rows": []
+  },
+  "where/xor": {
+    "rows": []
+  },
+  "where/precedence": {
+    "rows": []
+  },
+  "where/parentheses": {
+    "rows": []
+  },
+  "where/contains-op": {
+    "rows": []
+  },
+  "where/contains-fn": {
+    "rows": []
+  },
+  "where/starts-with": {
+    "rows": []
+  },
+  "where/ends-with": {
+    "rows": [
+      {
+        "path": "base.ts"
+      },
+      {
+        "path": "client.ts"
+      }
+    ]
+  },
+  "where/in-list": {
+    "rows": []
+  },
+  "where/in-empty-list": {
+    "rows": []
+  },
+  "where/not-in": {
+    "rows": []
+  },
+  "where/is-null": {
+    "rows": []
+  },
+  "where/is-not-null": {
+    "rows": [
+      {
+        "name": "request",
+        "className": "BaseClient"
+      },
+      {
+        "name": "retry",
+        "className": "HttpClient"
+      }
+    ]
+  },
+  "where/null-equality": {
+    "rows": []
+  },
+  "where/null-in-or": {
+    "rows": [
+      {
+        "name": "request"
+      },
+      {
+        "name": "retry"
+      }
+    ]
+  },
+  "where/null-not": {
+    "rows": [
+      {
+        "name": "request"
+      },
+      {
+        "name": "retry"
+      }
+    ]
+  },
+  "where/string-compare": {
+    "rows": [
+      {
+        "name": "request"
+      },
+      {
+        "name": "retry"
+      }
+    ]
+  },
+  "where/case-sensitive": {
+    "rows": []
+  },
+  "where/to-lower": {
+    "rows": []
+  },
+  "where/upper": {
+    "rows": []
+  },
+  "where/cross-variable": {
+    "rows": []
+  },
+  "where/after-multi-match": {
+    "rows": []
+  },
+  "where/arithmetic": {
+    "rows": [
+      {
+        "name": "request",
+        "span": 2
+      }
+    ]
+  },
+  "where/param-string": {
+    "rows": []
+  },
+  "where/param-int": {
+    "rows": []
+  },
+  "where/param-in-return": {
+    "rows": []
+  },
+  "return/literals": {
+    "rows": [
+      {
+        "one": 1,
+        "two": "two",
+        "yes": true,
+        "nothing": null,
+        "half": 1.5
+      }
+    ]
+  },
+  "return/arithmetic": {
+    "rows": [
+      {
+        "div": 3,
+        "mod": 1,
+        "expr": 14,
+        "neg": -5,
+        "fdiv": 3.5
+      }
+    ]
+  },
+  "return/string-concat": {
+    "rows": []
+  },
+  "return/list-literal": {
+    "rows": [
+      {
+        "list": [
+          1,
+          2,
+          3
+        ],
+        "n": 2
+      }
+    ]
+  },
+  "return/string-functions": {
+    "rows": [
+      {
+        "name": "request",
+        "lower": "request",
+        "upper": "REQUEST",
+        "length": 7
+      },
+      {
+        "name": "retry",
+        "lower": "retry",
+        "upper": "RETRY",
+        "length": 5
+      }
+    ]
+  },
+  "return/coalesce": {
+    "rows": [
+      {
+        "name": "request",
+        "cls": "BaseClient"
+      },
+      {
+        "name": "retry",
+        "cls": "HttpClient"
+      }
+    ]
+  },
+  "return/case": {
+    "rows": [
+      {
+        "name": "request",
+        "visibility": "private"
+      },
+      {
+        "name": "retry",
+        "visibility": "private"
+      }
+    ]
+  },
+  "return/case-simple": {
+    "rows": []
+  },
+  "return/label-function": {
+    "rows": []
+  },
+  "return/missing-property-null": {
+    "rows": []
+  },
+  "return/distinct": {
+    "rows": []
+  },
+  "return/distinct-multi": {
+    "rows": []
+  },
+  "return/unaliased": {
+    "rows": []
+  },
+  "return/property-unlabeled-mixed": {
+    "rows": []
+  },
+  "agg/count-group": {
+    "rows": []
+  },
+  "agg/count-distinct": {
+    "rows": [
+      {
+        "methods": 0,
+        "total": 0
+      }
+    ]
+  },
+  "agg/count-nulls": {
+    "rows": [
+      {
+        "withClass": 2,
+        "total": 2
+      }
+    ]
+  },
+  "agg/min-max": {
+    "rows": [
+      {
+        "first": null,
+        "last": null
+      }
+    ]
+  },
+  "agg/min-max-string": {
+    "rows": [
+      {
+        "first": "request",
+        "last": "retry"
+      }
+    ]
+  },
+  "agg/sum-avg": {
+    "rows": [
+      {
+        "total": null,
+        "mean": null
+      }
+    ]
+  },
+  "agg/collect-sorted": {
+    "rows": [
+      {
+        "paths": null
+      }
+    ]
+  },
+  "agg/collect-size": {
+    "rows": []
+  },
+  "agg/collect-skips-null": {
+    "rows": [
+      {
+        "n": 2
+      }
+    ]
+  },
+  "agg/empty-input": {
+    "rows": [
+      {
+        "count": 0,
+        "first": null,
+        "names": null
+      }
+    ]
+  },
+  "agg/empty-input-grouped": {
+    "rows": []
+  },
+  "agg/expression-of-aggregates": {
+    "rows": [
+      {
+        "span": null
+      }
+    ]
+  },
+  "agg/order-by-aggregate": {
+    "rows": []
+  },
+  "with/projection": {
+    "rows": [
+      {
+        "name": "request",
+        "line": 2
+      },
+      {
+        "name": "retry",
+        "line": 4
+      }
+    ]
+  },
+  "with/rename-node": {
+    "rows": []
+  },
+  "with/where-after": {
+    "rows": []
+  },
+  "with/distinct": {
+    "rows": []
+  },
+  "with/order-limit": {
+    "rows": []
+  },
+  "with/chain": {
+    "rows": []
+  },
+  "with/then-match": {
+    "rows": []
+  },
+  "order/single-asc": {
+    "rows": []
+  },
+  "order/desc": {
+    "rows": []
+  },
+  "order/by-alias": {
+    "rows": [
+      {
+        "name": "request"
+      },
+      {
+        "name": "retry"
+      }
+    ]
+  },
+  "order/nulls-asc": {
+    "rows": [
+      {
+        "name": "request",
+        "cls": "BaseClient"
+      },
+      {
+        "name": "retry",
+        "cls": "HttpClient"
+      }
+    ]
+  },
+  "order/nulls-desc": {
+    "rows": [
+      {
+        "name": "retry",
+        "cls": "HttpClient"
+      },
+      {
+        "name": "request",
+        "cls": "BaseClient"
+      }
+    ]
+  },
+  "order/booleans": {
+    "rows": [
+      {
+        "name": "request",
+        "e": false
+      },
+      {
+        "name": "retry",
+        "e": false
+      }
+    ]
+  },
+  "order/string-case": {
+    "rows": [
+      {
+        "name": "BaseClient"
+      },
+      {
+        "name": "BaseService"
+      },
+      {
+        "name": "HttpClient"
+      },
+      {
+        "name": "Retryable"
+      },
+      {
+        "name": "UserService"
+      },
+      {
+        "name": "inheritance"
+      },
+      {
+        "name": "request"
+      },
+      {
+        "name": "retry"
+      }
+    ]
+  },
+  "order/skip-limit": {
+    "rows": []
+  },
+  "order/limit-zero": {
+    "rows": []
+  },
+  "order/skip-past-end": {
+    "rows": []
+  },
+  "order/expression": {
+    "rows": [
+      {
+        "name": "request"
+      },
+      {
+        "name": "retry"
+      }
+    ]
+  },
+  "order/not-in-return": {
+    "rows": [
+      {
+        "name": "request"
+      },
+      {
+        "name": "retry"
+      }
+    ]
+  },
+  "syntax/case-insensitive-keywords": {
+    "rows": [
+      {
+        "path": "base.ts"
+      },
+      {
+        "path": "client.ts"
+      }
+    ]
+  },
+  "syntax/double-quoted-string": {
+    "rows": []
+  },
+  "syntax/escaped-string": {
+    "rows": [
+      {
+        "a": "it's",
+        "b": "say \"hi\"",
+        "c": "tabtnewlinen"
+      }
+    ]
+  },
+  "syntax/backtick-identifier": {
+    "rows": [
+      {
+        "the path": "base.ts"
+      },
+      {
+        "the path": "client.ts"
+      },
+      {
+        "the path": "service.py"
+      }
+    ]
+  },
+  "syntax/comments": {
+    "rows": [
+      {
+        "n": 3
+      }
+    ]
+  },
+  "syntax/trailing-semicolon": {
+    "rows": [
+      {
+        "n": 3
+      }
+    ]
+  },
+  "error/unknown-label": {
+    "error": "binder"
+  },
+  "error/unknown-rel-type": {
+    "error": "binder"
+  },
+  "error/unknown-property": {
+    "error": "binder"
+  },
+  "error/unbound-variable": {
+    "error": "binder"
+  },
+  "error/syntax": {
+    "error": "parser"
+  },
+  "error/missing-return": {
+    "error": "parser"
+  },
+  "error/wrong-endpoint-labels": {
+    "rows": []
+  },
+  "error/aggregate-in-where": {
+    "error": "binder"
+  },
+  "error/missing-param": {
+    "error": "binder"
+  },
+  "error/create": {
+    "error": "unsupported"
+  },
+  "error/delete": {
+    "error": "unsupported"
+  },
+  "error/set": {
+    "error": "unsupported"
+  },
+  "error/merge": {
+    "error": "unsupported"
+  },
+  "error/unwind": {
+    "error": "unsupported"
+  },
+  "error/union": {
+    "error": "unsupported"
+  }
+}

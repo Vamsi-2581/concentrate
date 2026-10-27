@@ -8,6 +8,7 @@ storage engine in Phase 2, the parsers in Phase 3) can be checked mechanically.
 | `fixtures/` | One normalized graph per directory under `fixtures/` | `tests/golden.test.ts` |
 | `samples/` | Normalized graphs of the pinned sample repositories (`.jsonl.gz`) | `tests/golden-samples.test.ts` |
 | `queries/` | Cypher statements issued by the MCP tools and the rows they returned | `tests/golden-queries.test.ts` |
+| `cypher/` | Cypher conformance corpus: hand-written queries and the rows (or error class) Kuzu returned | `tests/golden-cypher.test.ts` |
 
 ## Format
 
@@ -48,3 +49,19 @@ per case in [`query-cases.json`](query-cases.json):
 
 The recordings pin current behavior. A tool fix that changes results must show
 up as a golden diff and be explained in the PR.
+
+## Cypher conformance corpus
+
+[`cypher/cases.json`](cypher/cases.json) lists hand-written queries that cover
+the Cypher subset Concentrate supports: patterns, variable-length paths,
+`OPTIONAL MATCH`, `WHERE`, `WITH`, aggregation, ordering and error cases.
+`cypher/<fixture>.json` holds the result of every case on that fixture, recorded
+from Kuzu 0.11.3: `{ "rows": [...] }`, or `{ "error": "parser" | "binder" | "runtime" | "unsupported" }`.
+
+- Rows are compared as a sorted multiset unless the case sets `"ordered": true`.
+- Cases with `expectError` are not run against Kuzu. They are writes and
+  features outside the read-only subset (`unsupported`), or places where we
+  deliberately report an error that Kuzu does not (explained in `note`).
+- Kuzu is removed in Phase 2. After that these files are the reference, and
+  they must not be regenerated from our own engine.
+

@@ -1,0 +1,3064 @@
+{
+  "match/all-files": {
+    "rows": [
+      {
+        "path": "paths.ts",
+        "language": "typescript",
+        "isTest": false
+      },
+      {
+        "path": "routes.ts",
+        "language": "typescript",
+        "isTest": false
+      }
+    ]
+  },
+  "match/label-count": {
+    "rows": [
+      {
+        "count": 6
+      }
+    ]
+  },
+  "match/count-star": {
+    "rows": [
+      {
+        "count": 21
+      }
+    ]
+  },
+  "match/two-hop": {
+    "rows": [
+      {
+        "file": "routes.ts",
+        "fn": "<router.delete:/users/:id:arg1>",
+        "call": "res.status",
+        "line": 30
+      },
+      {
+        "file": "routes.ts",
+        "fn": "<router.delete:/users/:id:arg1>",
+        "call": "res.status(204).end",
+        "line": 30
+      },
+      {
+        "file": "routes.ts",
+        "fn": "authenticate",
+        "call": "next",
+        "line": 19
+      },
+      {
+        "file": "routes.ts",
+        "fn": "createUser",
+        "call": "res.status",
+        "line": 15
+      },
+      {
+        "file": "routes.ts",
+        "fn": "createUser",
+        "call": "res.status(201).json",
+        "line": 15
+      },
+      {
+        "file": "routes.ts",
+        "fn": "listUsers",
+        "call": "res.json",
+        "line": 11
+      },
+      {
+        "file": "routes.ts",
+        "fn": "validateUser",
+        "call": "next",
+        "line": 23
+      }
+    ]
+  },
+  "match/comma-patterns": {
+    "rows": [
+      {
+        "file": "paths.ts",
+        "repo": "express-koa-routes"
+      },
+      {
+        "file": "routes.ts",
+        "repo": "express-koa-routes"
+      }
+    ]
+  },
+  "match/shared-variable": {
+    "rows": [
+      {
+        "file": "routes.ts",
+        "fn": "<adminRouter.get:/dashboard:arg1>",
+        "source": "./paths"
+      },
+      {
+        "file": "routes.ts",
+        "fn": "<adminRouter.get:/dashboard:arg1>",
+        "source": "express"
+      },
+      {
+        "file": "routes.ts",
+        "fn": "<router.delete:/users/:id:arg1>",
+        "source": "./paths"
+      },
+      {
+        "file": "routes.ts",
+        "fn": "<router.delete:/users/:id:arg1>",
+        "source": "express"
+      },
+      {
+        "file": "routes.ts",
+        "fn": "authenticate",
+        "source": "./paths"
+      },
+      {
+        "file": "routes.ts",
+        "fn": "authenticate",
+        "source": "express"
+      },
+      {
+        "file": "routes.ts",
+        "fn": "createUser",
+        "source": "./paths"
+      },
+      {
+        "file": "routes.ts",
+        "fn": "createUser",
+        "source": "express"
+      },
+      {
+        "file": "routes.ts",
+        "fn": "listUsers",
+        "source": "./paths"
+      },
+      {
+        "file": "routes.ts",
+        "fn": "listUsers",
+        "source": "express"
+      },
+      {
+        "file": "routes.ts",
+        "fn": "validateUser",
+        "source": "./paths"
+      },
+      {
+        "file": "routes.ts",
+        "fn": "validateUser",
+        "source": "express"
+      }
+    ]
+  },
+  "match/repeated-match": {
+    "rows": [
+      {
+        "fn": "<router.delete:/users/:id:arg1>",
+        "calls": 2
+      },
+      {
+        "fn": "authenticate",
+        "calls": 1
+      },
+      {
+        "fn": "createUser",
+        "calls": 2
+      },
+      {
+        "fn": "listUsers",
+        "calls": 1
+      },
+      {
+        "fn": "validateUser",
+        "calls": 1
+      }
+    ]
+  },
+  "match/inline-properties": {
+    "rows": []
+  },
+  "match/inline-properties-string": {
+    "rows": [
+      {
+        "path": "/dashboard",
+        "framework": "express-koa"
+      },
+      {
+        "path": "/users",
+        "framework": "express-koa"
+      }
+    ]
+  },
+  "match/anonymous-node": {
+    "rows": [
+      {
+        "source": "routes.ts",
+        "target": "paths.ts"
+      }
+    ]
+  },
+  "match/anonymous-rel": {
+    "rows": [
+      {
+        "file": "routes.ts",
+        "source": "./paths"
+      },
+      {
+        "file": "routes.ts",
+        "source": "express"
+      }
+    ]
+  },
+  "match/unlabeled-start": {
+    "rows": [
+      {
+        "caller": "<router.delete:/users/:id:arg1>",
+        "callee": "res.status"
+      },
+      {
+        "caller": "<router.delete:/users/:id:arg1>",
+        "callee": "res.status(204).end"
+      },
+      {
+        "caller": "authenticate",
+        "callee": "next"
+      },
+      {
+        "caller": "createUser",
+        "callee": "res.status"
+      },
+      {
+        "caller": "createUser",
+        "callee": "res.status(201).json"
+      },
+      {
+        "caller": "listUsers",
+        "callee": "res.json"
+      },
+      {
+        "caller": "validateUser",
+        "callee": "next"
+      }
+    ]
+  },
+  "match/unlabeled-end": {
+    "rows": [
+      {
+        "file": "paths.ts",
+        "name": "ADMIN_PATH",
+        "kind": "const"
+      },
+      {
+        "file": "paths.ts",
+        "name": "USERS_PATH",
+        "kind": "const"
+      },
+      {
+        "file": "routes.ts",
+        "name": "API_PREFIX",
+        "kind": "const"
+      },
+      {
+        "file": "routes.ts",
+        "name": "adminRouter",
+        "kind": "const"
+      },
+      {
+        "file": "routes.ts",
+        "name": "app",
+        "kind": "const"
+      },
+      {
+        "file": "routes.ts",
+        "name": "cache",
+        "kind": "const"
+      },
+      {
+        "file": "routes.ts",
+        "name": "router",
+        "kind": "const"
+      }
+    ]
+  },
+  "match/unlabeled-both": {
+    "rows": [
+      {
+        "path": "/admin",
+        "handler": "authenticate"
+      },
+      {
+        "path": "/dashboard",
+        "handler": "<adminRouter.get:/dashboard:arg1>"
+      },
+      {
+        "path": "/users",
+        "handler": "authenticate"
+      },
+      {
+        "path": "/users",
+        "handler": "createUser"
+      },
+      {
+        "path": "/users",
+        "handler": "listUsers"
+      },
+      {
+        "path": "/users",
+        "handler": "validateUser"
+      },
+      {
+        "path": "/users/:id",
+        "handler": "<router.delete:/users/:id:arg1>"
+      },
+      {
+        "path": "/users/:id",
+        "handler": "createUser"
+      },
+      {
+        "path": null,
+        "handler": "authenticate"
+      }
+    ]
+  },
+  "match/incoming": {
+    "rows": [
+      {
+        "fn": "<adminRouter.get:/dashboard:arg1>",
+        "file": "routes.ts"
+      },
+      {
+        "fn": "<router.delete:/users/:id:arg1>",
+        "file": "routes.ts"
+      },
+      {
+        "fn": "authenticate",
+        "file": "routes.ts"
+      },
+      {
+        "fn": "createUser",
+        "file": "routes.ts"
+      },
+      {
+        "fn": "listUsers",
+        "file": "routes.ts"
+      },
+      {
+        "fn": "validateUser",
+        "file": "routes.ts"
+      }
+    ]
+  },
+  "match/undirected": {
+    "rows": [
+      {
+        "fn": "<adminRouter.get:/dashboard:arg1>",
+        "file": "routes.ts"
+      },
+      {
+        "fn": "<router.delete:/users/:id:arg1>",
+        "file": "routes.ts"
+      },
+      {
+        "fn": "authenticate",
+        "file": "routes.ts"
+      },
+      {
+        "fn": "createUser",
+        "file": "routes.ts"
+      },
+      {
+        "fn": "listUsers",
+        "file": "routes.ts"
+      },
+      {
+        "fn": "validateUser",
+        "file": "routes.ts"
+      }
+    ]
+  },
+  "match/rel-alternatives": {
+    "rows": [
+      {
+        "file": "paths.ts",
+        "name": "ADMIN_PATH"
+      },
+      {
+        "file": "paths.ts",
+        "name": "USERS_PATH"
+      },
+      {
+        "file": "routes.ts",
+        "name": "<adminRouter.get:/dashboard:arg1>"
+      },
+      {
+        "file": "routes.ts",
+        "name": "<router.delete:/users/:id:arg1>"
+      },
+      {
+        "file": "routes.ts",
+        "name": "API_PREFIX"
+      },
+      {
+        "file": "routes.ts",
+        "name": "adminRouter"
+      },
+      {
+        "file": "routes.ts",
+        "name": "app"
+      },
+      {
+        "file": "routes.ts",
+        "name": "authenticate"
+      },
+      {
+        "file": "routes.ts",
+        "name": "cache"
+      },
+      {
+        "file": "routes.ts",
+        "name": "createUser"
+      },
+      {
+        "file": "routes.ts",
+        "name": "listUsers"
+      },
+      {
+        "file": "routes.ts",
+        "name": "router"
+      },
+      {
+        "file": "routes.ts",
+        "name": "validateUser"
+      }
+    ]
+  },
+  "match/rel-variable-properties": {
+    "rows": [
+      {
+        "path": "/admin",
+        "fn": "authenticate",
+        "role": "middleware",
+        "scope": "router",
+        "hook": null,
+        "orderIndex": 0
+      },
+      {
+        "path": "/dashboard",
+        "fn": "<adminRouter.get:/dashboard:arg1>",
+        "role": "handler",
+        "scope": "route",
+        "hook": "handler",
+        "orderIndex": 0
+      },
+      {
+        "path": "/users",
+        "fn": "authenticate",
+        "role": "middleware",
+        "scope": "route",
+        "hook": null,
+        "orderIndex": 0
+      },
+      {
+        "path": "/users",
+        "fn": "createUser",
+        "role": "handler",
+        "scope": "route",
+        "hook": "handler",
+        "orderIndex": 2
+      },
+      {
+        "path": "/users",
+        "fn": "listUsers",
+        "role": "handler",
+        "scope": "route",
+        "hook": "handler",
+        "orderIndex": 0
+      },
+      {
+        "path": "/users",
+        "fn": "validateUser",
+        "role": "middleware",
+        "scope": "route",
+        "hook": null,
+        "orderIndex": 1
+      },
+      {
+        "path": "/users/:id",
+        "fn": "<router.delete:/users/:id:arg1>",
+        "role": "handler",
+        "scope": "route",
+        "hook": "handler",
+        "orderIndex": 0
+      },
+      {
+        "path": "/users/:id",
+        "fn": "authenticate",
+        "role": "middleware",
+        "scope": "route",
+        "hook": null,
+        "orderIndex": 0
+      },
+      {
+        "path": "/users/:id",
+        "fn": "createUser",
+        "role": "handler",
+        "scope": "route",
+        "hook": "handler",
+        "orderIndex": 2
+      },
+      {
+        "path": "/users/:id",
+        "fn": "validateUser",
+        "role": "middleware",
+        "scope": "route",
+        "hook": null,
+        "orderIndex": 1
+      },
+      {
+        "path": null,
+        "fn": "authenticate",
+        "role": "middleware",
+        "scope": "router",
+        "hook": null,
+        "orderIndex": 0
+      }
+    ]
+  },
+  "match/rel-inline-properties": {
+    "rows": [
+      {
+        "path": "/admin",
+        "fn": "authenticate"
+      },
+      {
+        "path": "/users",
+        "fn": "authenticate"
+      },
+      {
+        "path": "/users",
+        "fn": "validateUser"
+      },
+      {
+        "path": "/users/:id",
+        "fn": "authenticate"
+      },
+      {
+        "path": "/users/:id",
+        "fn": "validateUser"
+      },
+      {
+        "path": null,
+        "fn": "authenticate"
+      }
+    ]
+  },
+  "match/self-join-distinct-rels": {
+    "rows": [
+      {
+        "a": "<adminRouter.get:/dashboard:arg1>",
+        "b": "<adminRouter.get:/dashboard:arg1>"
+      },
+      {
+        "a": "<adminRouter.get:/dashboard:arg1>",
+        "b": "<router.delete:/users/:id:arg1>"
+      },
+      {
+        "a": "<adminRouter.get:/dashboard:arg1>",
+        "b": "authenticate"
+      },
+      {
+        "a": "<adminRouter.get:/dashboard:arg1>",
+        "b": "createUser"
+      },
+      {
+        "a": "<adminRouter.get:/dashboard:arg1>",
+        "b": "listUsers"
+      },
+      {
+        "a": "<adminRouter.get:/dashboard:arg1>",
+        "b": "validateUser"
+      },
+      {
+        "a": "<router.delete:/users/:id:arg1>",
+        "b": "<adminRouter.get:/dashboard:arg1>"
+      },
+      {
+        "a": "<router.delete:/users/:id:arg1>",
+        "b": "<router.delete:/users/:id:arg1>"
+      },
+      {
+        "a": "<router.delete:/users/:id:arg1>",
+        "b": "authenticate"
+      },
+      {
+        "a": "<router.delete:/users/:id:arg1>",
+        "b": "createUser"
+      },
+      {
+        "a": "<router.delete:/users/:id:arg1>",
+        "b": "listUsers"
+      },
+      {
+        "a": "<router.delete:/users/:id:arg1>",
+        "b": "validateUser"
+      },
+      {
+        "a": "authenticate",
+        "b": "<adminRouter.get:/dashboard:arg1>"
+      },
+      {
+        "a": "authenticate",
+        "b": "<router.delete:/users/:id:arg1>"
+      },
+      {
+        "a": "authenticate",
+        "b": "authenticate"
+      },
+      {
+        "a": "authenticate",
+        "b": "createUser"
+      },
+      {
+        "a": "authenticate",
+        "b": "listUsers"
+      },
+      {
+        "a": "authenticate",
+        "b": "validateUser"
+      },
+      {
+        "a": "createUser",
+        "b": "<adminRouter.get:/dashboard:arg1>"
+      },
+      {
+        "a": "createUser",
+        "b": "<router.delete:/users/:id:arg1>"
+      },
+      {
+        "a": "createUser",
+        "b": "authenticate"
+      },
+      {
+        "a": "createUser",
+        "b": "createUser"
+      },
+      {
+        "a": "createUser",
+        "b": "listUsers"
+      },
+      {
+        "a": "createUser",
+        "b": "validateUser"
+      },
+      {
+        "a": "listUsers",
+        "b": "<adminRouter.get:/dashboard:arg1>"
+      },
+      {
+        "a": "listUsers",
+        "b": "<router.delete:/users/:id:arg1>"
+      },
+      {
+        "a": "listUsers",
+        "b": "authenticate"
+      },
+      {
+        "a": "listUsers",
+        "b": "createUser"
+      },
+      {
+        "a": "listUsers",
+        "b": "listUsers"
+      },
+      {
+        "a": "listUsers",
+        "b": "validateUser"
+      },
+      {
+        "a": "validateUser",
+        "b": "<adminRouter.get:/dashboard:arg1>"
+      },
+      {
+        "a": "validateUser",
+        "b": "<router.delete:/users/:id:arg1>"
+      },
+      {
+        "a": "validateUser",
+        "b": "authenticate"
+      },
+      {
+        "a": "validateUser",
+        "b": "createUser"
+      },
+      {
+        "a": "validateUser",
+        "b": "listUsers"
+      },
+      {
+        "a": "validateUser",
+        "b": "validateUser"
+      }
+    ]
+  },
+  "match/same-rel-twice": {
+    "rows": [
+      {
+        "a": "paths.ts",
+        "b": "paths.ts"
+      },
+      {
+        "a": "paths.ts",
+        "b": "routes.ts"
+      },
+      {
+        "a": "routes.ts",
+        "b": "paths.ts"
+      },
+      {
+        "a": "routes.ts",
+        "b": "routes.ts"
+      }
+    ]
+  },
+  "match/cycle-back": {
+    "rows": []
+  },
+  "match/package-hierarchy": {
+    "rows": []
+  },
+  "match/physical-rel-types": {
+    "rows": [
+      {
+        "file": "paths.ts",
+        "name": "ADMIN_PATH",
+        "value": "/admin",
+        "valueType": "string"
+      },
+      {
+        "file": "paths.ts",
+        "name": "USERS_PATH",
+        "value": "/users",
+        "valueType": "string"
+      }
+    ]
+  },
+  "match/physical-rel-types-function": {
+    "rows": []
+  },
+  "match/mounts": {
+    "rows": [
+      {
+        "a": "app",
+        "b": "router",
+        "path": "/api",
+        "pathExpression": "API_PREFIX",
+        "line": 39
+      },
+      {
+        "a": "router",
+        "b": "adminRouter",
+        "path": "/admin",
+        "pathExpression": "ADMIN_PATH",
+        "line": 32
+      }
+    ]
+  },
+  "varlen/directories-1-3": {
+    "rows": []
+  },
+  "varlen/directories-exact-2": {
+    "rows": []
+  },
+  "varlen/directories-unbounded": {
+    "rows": []
+  },
+  "varlen/directories-upper-only": {
+    "rows": []
+  },
+  "varlen/root-to-file": {
+    "rows": [
+      {
+        "repo": "express-koa-routes",
+        "dir": ".",
+        "file": "paths.ts"
+      },
+      {
+        "repo": "express-koa-routes",
+        "dir": ".",
+        "file": "routes.ts"
+      }
+    ]
+  },
+  "varlen/zero-length": {
+    "rows": [
+      {
+        "a": ".",
+        "b": "."
+      }
+    ]
+  },
+  "varlen/incoming": {
+    "rows": []
+  },
+  "varlen/undirected": {
+    "rows": []
+  },
+  "varlen/extends-chain": {
+    "rows": []
+  },
+  "varlen/call-chain": {
+    "rows": []
+  },
+  "varlen/import-chain": {
+    "rows": [
+      {
+        "a": "routes.ts",
+        "b": "paths.ts"
+      }
+    ]
+  },
+  "varlen/count-paths": {
+    "rows": [
+      {
+        "paths": 0
+      }
+    ]
+  },
+  "varlen/distinct-targets": {
+    "rows": []
+  },
+  "varlen/no-type": {
+    "rows": [
+      {
+        "repo": "express-koa-routes",
+        "dir": "."
+      }
+    ]
+  },
+  "optional/no-match-null": {
+    "rows": [
+      {
+        "file": "paths.ts",
+        "route": null
+      },
+      {
+        "file": "routes.ts",
+        "route": "/admin"
+      },
+      {
+        "file": "routes.ts",
+        "route": "/api"
+      },
+      {
+        "file": "routes.ts",
+        "route": "/dashboard"
+      },
+      {
+        "file": "routes.ts",
+        "route": "/users"
+      },
+      {
+        "file": "routes.ts",
+        "route": "/users"
+      },
+      {
+        "file": "routes.ts",
+        "route": "/users/:id"
+      },
+      {
+        "file": "routes.ts",
+        "route": "/users/:id"
+      },
+      {
+        "file": "routes.ts",
+        "route": null
+      }
+    ]
+  },
+  "optional/count-optional": {
+    "rows": [
+      {
+        "file": "paths.ts",
+        "routes": 0
+      },
+      {
+        "file": "routes.ts",
+        "routes": 8
+      }
+    ]
+  },
+  "optional/where-on-optional": {
+    "rows": [
+      {
+        "file": "paths.ts",
+        "route": null
+      },
+      {
+        "file": "routes.ts",
+        "route": "/dashboard"
+      },
+      {
+        "file": "routes.ts",
+        "route": "/users"
+      }
+    ]
+  },
+  "optional/where-on-outer-var": {
+    "rows": [
+      {
+        "path": "/admin",
+        "method": "USE",
+        "handler": null
+      },
+      {
+        "path": "/api",
+        "method": "USE",
+        "handler": null
+      },
+      {
+        "path": "/dashboard",
+        "method": "GET",
+        "handler": null
+      },
+      {
+        "path": "/users",
+        "method": "GET",
+        "handler": null
+      },
+      {
+        "path": "/users",
+        "method": "POST",
+        "handler": "authenticate"
+      },
+      {
+        "path": "/users",
+        "method": "POST",
+        "handler": "createUser"
+      },
+      {
+        "path": "/users",
+        "method": "POST",
+        "handler": "validateUser"
+      },
+      {
+        "path": "/users/:id",
+        "method": "DELETE",
+        "handler": null
+      },
+      {
+        "path": "/users/:id",
+        "method": "PUT",
+        "handler": null
+      },
+      {
+        "path": null,
+        "method": "USE",
+        "handler": null
+      }
+    ]
+  },
+  "optional/where-false": {
+    "rows": [
+      {
+        "file": "paths.ts",
+        "fn": null
+      },
+      {
+        "file": "routes.ts",
+        "fn": null
+      }
+    ]
+  },
+  "optional/chain": {
+    "rows": [
+      {
+        "path": "/admin",
+        "handler": "authenticate",
+        "call": "next"
+      },
+      {
+        "path": "/api",
+        "handler": null,
+        "call": null
+      },
+      {
+        "path": "/dashboard",
+        "handler": null,
+        "call": null
+      },
+      {
+        "path": "/users",
+        "handler": "authenticate",
+        "call": "next"
+      },
+      {
+        "path": "/users",
+        "handler": "createUser",
+        "call": "res.status"
+      },
+      {
+        "path": "/users",
+        "handler": "createUser",
+        "call": "res.status(201).json"
+      },
+      {
+        "path": "/users",
+        "handler": "listUsers",
+        "call": "res.json"
+      },
+      {
+        "path": "/users",
+        "handler": "validateUser",
+        "call": "next"
+      },
+      {
+        "path": "/users/:id",
+        "handler": "<router.delete:/users/:id:arg1>",
+        "call": "res.status"
+      },
+      {
+        "path": "/users/:id",
+        "handler": "<router.delete:/users/:id:arg1>",
+        "call": "res.status(204).end"
+      },
+      {
+        "path": "/users/:id",
+        "handler": "createUser",
+        "call": "res.status"
+      },
+      {
+        "path": "/users/:id",
+        "handler": "createUser",
+        "call": "res.status(201).json"
+      },
+      {
+        "path": null,
+        "handler": "authenticate",
+        "call": "next"
+      }
+    ]
+  },
+  "optional/two-optionals": {
+    "rows": [
+      {
+        "file": "paths.ts",
+        "fn": null,
+        "cls": null
+      },
+      {
+        "file": "routes.ts",
+        "fn": "<adminRouter.get:/dashboard:arg1>",
+        "cls": null
+      },
+      {
+        "file": "routes.ts",
+        "fn": "<router.delete:/users/:id:arg1>",
+        "cls": null
+      },
+      {
+        "file": "routes.ts",
+        "fn": "authenticate",
+        "cls": null
+      },
+      {
+        "file": "routes.ts",
+        "fn": "createUser",
+        "cls": null
+      },
+      {
+        "file": "routes.ts",
+        "fn": "listUsers",
+        "cls": null
+      },
+      {
+        "file": "routes.ts",
+        "fn": "validateUser",
+        "cls": null
+      }
+    ]
+  },
+  "optional/first-clause": {
+    "rows": [
+      {
+        "path": "/admin"
+      },
+      {
+        "path": "/api"
+      },
+      {
+        "path": "/dashboard"
+      },
+      {
+        "path": "/users"
+      },
+      {
+        "path": "/users"
+      },
+      {
+        "path": "/users/:id"
+      },
+      {
+        "path": "/users/:id"
+      },
+      {
+        "path": null
+      }
+    ]
+  },
+  "optional/then-match": {
+    "rows": [
+      {
+        "file": "paths.ts",
+        "route": null,
+        "variable": "ADMIN_PATH"
+      },
+      {
+        "file": "paths.ts",
+        "route": null,
+        "variable": "USERS_PATH"
+      },
+      {
+        "file": "routes.ts",
+        "route": "/admin",
+        "variable": "API_PREFIX"
+      },
+      {
+        "file": "routes.ts",
+        "route": "/admin",
+        "variable": "adminRouter"
+      },
+      {
+        "file": "routes.ts",
+        "route": "/admin",
+        "variable": "app"
+      },
+      {
+        "file": "routes.ts",
+        "route": "/admin",
+        "variable": "cache"
+      },
+      {
+        "file": "routes.ts",
+        "route": "/admin",
+        "variable": "router"
+      },
+      {
+        "file": "routes.ts",
+        "route": "/api",
+        "variable": "API_PREFIX"
+      },
+      {
+        "file": "routes.ts",
+        "route": "/api",
+        "variable": "adminRouter"
+      },
+      {
+        "file": "routes.ts",
+        "route": "/api",
+        "variable": "app"
+      },
+      {
+        "file": "routes.ts",
+        "route": "/api",
+        "variable": "cache"
+      },
+      {
+        "file": "routes.ts",
+        "route": "/api",
+        "variable": "router"
+      },
+      {
+        "file": "routes.ts",
+        "route": "/dashboard",
+        "variable": "API_PREFIX"
+      },
+      {
+        "file": "routes.ts",
+        "route": "/dashboard",
+        "variable": "adminRouter"
+      },
+      {
+        "file": "routes.ts",
+        "route": "/dashboard",
+        "variable": "app"
+      },
+      {
+        "file": "routes.ts",
+        "route": "/dashboard",
+        "variable": "cache"
+      },
+      {
+        "file": "routes.ts",
+        "route": "/dashboard",
+        "variable": "router"
+      },
+      {
+        "file": "routes.ts",
+        "route": "/users",
+        "variable": "API_PREFIX"
+      },
+      {
+        "file": "routes.ts",
+        "route": "/users",
+        "variable": "API_PREFIX"
+      },
+      {
+        "file": "routes.ts",
+        "route": "/users",
+        "variable": "adminRouter"
+      },
+      {
+        "file": "routes.ts",
+        "route": "/users",
+        "variable": "adminRouter"
+      },
+      {
+        "file": "routes.ts",
+        "route": "/users",
+        "variable": "app"
+      },
+      {
+        "file": "routes.ts",
+        "route": "/users",
+        "variable": "app"
+      },
+      {
+        "file": "routes.ts",
+        "route": "/users",
+        "variable": "cache"
+      },
+      {
+        "file": "routes.ts",
+        "route": "/users",
+        "variable": "cache"
+      },
+      {
+        "file": "routes.ts",
+        "route": "/users",
+        "variable": "router"
+      },
+      {
+        "file": "routes.ts",
+        "route": "/users",
+        "variable": "router"
+      },
+      {
+        "file": "routes.ts",
+        "route": "/users/:id",
+        "variable": "API_PREFIX"
+      },
+      {
+        "file": "routes.ts",
+        "route": "/users/:id",
+        "variable": "API_PREFIX"
+      },
+      {
+        "file": "routes.ts",
+        "route": "/users/:id",
+        "variable": "adminRouter"
+      },
+      {
+        "file": "routes.ts",
+        "route": "/users/:id",
+        "variable": "adminRouter"
+      },
+      {
+        "file": "routes.ts",
+        "route": "/users/:id",
+        "variable": "app"
+      },
+      {
+        "file": "routes.ts",
+        "route": "/users/:id",
+        "variable": "app"
+      },
+      {
+        "file": "routes.ts",
+        "route": "/users/:id",
+        "variable": "cache"
+      },
+      {
+        "file": "routes.ts",
+        "route": "/users/:id",
+        "variable": "cache"
+      },
+      {
+        "file": "routes.ts",
+        "route": "/users/:id",
+        "variable": "router"
+      },
+      {
+        "file": "routes.ts",
+        "route": "/users/:id",
+        "variable": "router"
+      },
+      {
+        "file": "routes.ts",
+        "route": null,
+        "variable": "API_PREFIX"
+      },
+      {
+        "file": "routes.ts",
+        "route": null,
+        "variable": "adminRouter"
+      },
+      {
+        "file": "routes.ts",
+        "route": null,
+        "variable": "app"
+      },
+      {
+        "file": "routes.ts",
+        "route": null,
+        "variable": "cache"
+      },
+      {
+        "file": "routes.ts",
+        "route": null,
+        "variable": "router"
+      }
+    ]
+  },
+  "optional/is-null-filter": {
+    "rows": [
+      {
+        "fn": "<adminRouter.get:/dashboard:arg1>"
+      }
+    ]
+  },
+  "where/equality-string": {
+    "rows": [
+      {
+        "name": "listUsers",
+        "line": 10
+      }
+    ]
+  },
+  "where/inequality": {
+    "rows": [
+      {
+        "name": "<adminRouter.get:/dashboard:arg1>"
+      },
+      {
+        "name": "<router.delete:/users/:id:arg1>"
+      },
+      {
+        "name": "authenticate"
+      },
+      {
+        "name": "createUser"
+      },
+      {
+        "name": "validateUser"
+      }
+    ]
+  },
+  "where/int-compare": {
+    "rows": [
+      {
+        "name": "express",
+        "line": 5
+      },
+      {
+        "name": "express.Router",
+        "line": 6
+      },
+      {
+        "name": "express.Router",
+        "line": 7
+      },
+      {
+        "name": "new Map",
+        "line": 8
+      },
+      {
+        "name": "next",
+        "line": 19
+      },
+      {
+        "name": "res.json",
+        "line": 11
+      },
+      {
+        "name": "res.status",
+        "line": 15
+      },
+      {
+        "name": "res.status(201).json",
+        "line": 15
+      }
+    ]
+  },
+  "where/bool-compare": {
+    "rows": [
+      {
+        "name": "<adminRouter.get:/dashboard:arg1>"
+      },
+      {
+        "name": "<router.delete:/users/:id:arg1>"
+      },
+      {
+        "name": "authenticate"
+      },
+      {
+        "name": "createUser"
+      },
+      {
+        "name": "listUsers"
+      },
+      {
+        "name": "validateUser"
+      }
+    ]
+  },
+  "where/bool-bare": {
+    "rows": [
+      {
+        "name": "<router.delete:/users/:id:arg1>"
+      }
+    ]
+  },
+  "where/not": {
+    "rows": [
+      {
+        "name": "<adminRouter.get:/dashboard:arg1>"
+      },
+      {
+        "name": "<router.delete:/users/:id:arg1>"
+      },
+      {
+        "name": "authenticate"
+      },
+      {
+        "name": "createUser"
+      },
+      {
+        "name": "listUsers"
+      },
+      {
+        "name": "validateUser"
+      }
+    ]
+  },
+  "where/or": {
+    "rows": [
+      {
+        "name": "<router.delete:/users/:id:arg1>"
+      }
+    ]
+  },
+  "where/xor": {
+    "rows": [
+      {
+        "name": "<router.delete:/users/:id:arg1>"
+      }
+    ]
+  },
+  "where/precedence": {
+    "rows": [
+      {
+        "name": "<router.delete:/users/:id:arg1>"
+      }
+    ]
+  },
+  "where/parentheses": {
+    "rows": [
+      {
+        "name": "<router.delete:/users/:id:arg1>"
+      }
+    ]
+  },
+  "where/contains-op": {
+    "rows": [
+      {
+        "name": "createUser"
+      },
+      {
+        "name": "listUsers"
+      },
+      {
+        "name": "validateUser"
+      }
+    ]
+  },
+  "where/contains-fn": {
+    "rows": [
+      {
+        "name": "<router.delete:/users/:id:arg1>"
+      },
+      {
+        "name": "createUser"
+      },
+      {
+        "name": "listUsers"
+      },
+      {
+        "name": "validateUser"
+      }
+    ]
+  },
+  "where/starts-with": {
+    "rows": []
+  },
+  "where/ends-with": {
+    "rows": [
+      {
+        "path": "paths.ts"
+      },
+      {
+        "path": "routes.ts"
+      }
+    ]
+  },
+  "where/in-list": {
+    "rows": [
+      {
+        "method": "DELETE",
+        "path": "/users/:id"
+      },
+      {
+        "method": "GET",
+        "path": "/dashboard"
+      },
+      {
+        "method": "GET",
+        "path": "/users"
+      }
+    ]
+  },
+  "where/in-empty-list": {
+    "rows": []
+  },
+  "where/not-in": {
+    "rows": [
+      {
+        "method": "DELETE",
+        "path": "/users/:id"
+      },
+      {
+        "method": "POST",
+        "path": "/users"
+      },
+      {
+        "method": "PUT",
+        "path": "/users/:id"
+      },
+      {
+        "method": "USE",
+        "path": "/admin"
+      },
+      {
+        "method": "USE",
+        "path": "/api"
+      },
+      {
+        "method": "USE",
+        "path": null
+      }
+    ]
+  },
+  "where/is-null": {
+    "rows": [
+      {
+        "name": "<adminRouter.get:/dashboard:arg1>"
+      },
+      {
+        "name": "<router.delete:/users/:id:arg1>"
+      },
+      {
+        "name": "authenticate"
+      },
+      {
+        "name": "createUser"
+      },
+      {
+        "name": "listUsers"
+      },
+      {
+        "name": "validateUser"
+      }
+    ]
+  },
+  "where/is-not-null": {
+    "rows": []
+  },
+  "where/null-equality": {
+    "rows": []
+  },
+  "where/null-in-or": {
+    "rows": [
+      {
+        "name": "<adminRouter.get:/dashboard:arg1>"
+      },
+      {
+        "name": "<router.delete:/users/:id:arg1>"
+      },
+      {
+        "name": "authenticate"
+      },
+      {
+        "name": "createUser"
+      },
+      {
+        "name": "listUsers"
+      },
+      {
+        "name": "validateUser"
+      }
+    ]
+  },
+  "where/null-not": {
+    "rows": []
+  },
+  "where/string-compare": {
+    "rows": [
+      {
+        "name": "validateUser"
+      }
+    ]
+  },
+  "where/case-sensitive": {
+    "rows": []
+  },
+  "where/to-lower": {
+    "rows": [
+      {
+        "name": "listUsers"
+      }
+    ]
+  },
+  "where/upper": {
+    "rows": [
+      {
+        "name": "listUsers"
+      }
+    ]
+  },
+  "where/cross-variable": {
+    "rows": [
+      {
+        "fn": "<router.delete:/users/:id:arg1>",
+        "call": "res.status"
+      },
+      {
+        "fn": "<router.delete:/users/:id:arg1>",
+        "call": "res.status(204).end"
+      },
+      {
+        "fn": "authenticate",
+        "call": "next"
+      },
+      {
+        "fn": "createUser",
+        "call": "res.status"
+      },
+      {
+        "fn": "createUser",
+        "call": "res.status(201).json"
+      },
+      {
+        "fn": "listUsers",
+        "call": "res.json"
+      },
+      {
+        "fn": "validateUser",
+        "call": "next"
+      }
+    ]
+  },
+  "where/after-multi-match": {
+    "rows": []
+  },
+  "where/arithmetic": {
+    "rows": [
+      {
+        "name": "<adminRouter.get:/dashboard:arg1>",
+        "span": 2
+      },
+      {
+        "name": "<router.delete:/users/:id:arg1>",
+        "span": 2
+      },
+      {
+        "name": "authenticate",
+        "span": 2
+      },
+      {
+        "name": "createUser",
+        "span": 2
+      },
+      {
+        "name": "listUsers",
+        "span": 2
+      },
+      {
+        "name": "validateUser",
+        "span": 2
+      }
+    ]
+  },
+  "where/param-string": {
+    "rows": [
+      {
+        "name": "listUsers"
+      }
+    ]
+  },
+  "where/param-int": {
+    "rows": [
+      {
+        "name": "adminRouter.get",
+        "line": 34
+      },
+      {
+        "name": "app.listen",
+        "line": 40
+      },
+      {
+        "name": "app.use",
+        "line": 39
+      },
+      {
+        "name": "cache.get",
+        "line": 38
+      },
+      {
+        "name": "next",
+        "line": 19
+      },
+      {
+        "name": "next",
+        "line": 23
+      },
+      {
+        "name": "res.json",
+        "line": 11
+      },
+      {
+        "name": "res.status",
+        "line": 15
+      },
+      {
+        "name": "res.status",
+        "line": 30
+      },
+      {
+        "name": "res.status(201).json",
+        "line": 15
+      },
+      {
+        "name": "res.status(204).end",
+        "line": 30
+      },
+      {
+        "name": "router.delete",
+        "line": 29
+      },
+      {
+        "name": "router.get",
+        "line": 26
+      },
+      {
+        "name": "router.post",
+        "line": 27
+      },
+      {
+        "name": "router.put",
+        "line": 28
+      },
+      {
+        "name": "router.use",
+        "line": 32
+      },
+      {
+        "name": "router.use",
+        "line": 33
+      }
+    ]
+  },
+  "where/param-in-return": {
+    "rows": [
+      {
+        "kind": "route",
+        "path": "/admin"
+      },
+      {
+        "kind": "route",
+        "path": "/api"
+      },
+      {
+        "kind": "route",
+        "path": "/dashboard"
+      },
+      {
+        "kind": "route",
+        "path": "/users"
+      },
+      {
+        "kind": "route",
+        "path": "/users"
+      },
+      {
+        "kind": "route",
+        "path": "/users/:id"
+      },
+      {
+        "kind": "route",
+        "path": "/users/:id"
+      },
+      {
+        "kind": "route",
+        "path": null
+      }
+    ]
+  },
+  "return/literals": {
+    "rows": [
+      {
+        "one": 1,
+        "two": "two",
+        "yes": true,
+        "nothing": null,
+        "half": 1.5
+      }
+    ]
+  },
+  "return/arithmetic": {
+    "rows": [
+      {
+        "div": 3,
+        "mod": 1,
+        "expr": 14,
+        "neg": -5,
+        "fdiv": 3.5
+      }
+    ]
+  },
+  "return/string-concat": {
+    "rows": [
+      {
+        "route": "DELETE /users/:id"
+      },
+      {
+        "route": "GET /dashboard"
+      },
+      {
+        "route": "GET /users"
+      },
+      {
+        "route": "POST /users"
+      },
+      {
+        "route": "PUT /users/:id"
+      },
+      {
+        "route": "USE "
+      },
+      {
+        "route": "USE /admin"
+      },
+      {
+        "route": "USE /api"
+      }
+    ]
+  },
+  "return/list-literal": {
+    "rows": [
+      {
+        "list": [
+          1,
+          2,
+          3
+        ],
+        "n": 2
+      }
+    ]
+  },
+  "return/string-functions": {
+    "rows": [
+      {
+        "name": "<adminRouter.get:/dashboard:arg1>",
+        "lower": "<adminrouter.get:/dashboard:arg1>",
+        "upper": "<ADMINROUTER.GET:/DASHBOARD:ARG1>",
+        "length": 33
+      },
+      {
+        "name": "<router.delete:/users/:id:arg1>",
+        "lower": "<router.delete:/users/:id:arg1>",
+        "upper": "<ROUTER.DELETE:/USERS/:ID:ARG1>",
+        "length": 31
+      },
+      {
+        "name": "authenticate",
+        "lower": "authenticate",
+        "upper": "AUTHENTICATE",
+        "length": 12
+      },
+      {
+        "name": "createUser",
+        "lower": "createuser",
+        "upper": "CREATEUSER",
+        "length": 10
+      },
+      {
+        "name": "listUsers",
+        "lower": "listusers",
+        "upper": "LISTUSERS",
+        "length": 9
+      },
+      {
+        "name": "validateUser",
+        "lower": "validateuser",
+        "upper": "VALIDATEUSER",
+        "length": 12
+      }
+    ]
+  },
+  "return/coalesce": {
+    "rows": [
+      {
+        "name": "<adminRouter.get:/dashboard:arg1>",
+        "cls": "none"
+      },
+      {
+        "name": "<router.delete:/users/:id:arg1>",
+        "cls": "none"
+      },
+      {
+        "name": "authenticate",
+        "cls": "none"
+      },
+      {
+        "name": "createUser",
+        "cls": "none"
+      },
+      {
+        "name": "listUsers",
+        "cls": "none"
+      },
+      {
+        "name": "validateUser",
+        "cls": "none"
+      }
+    ]
+  },
+  "return/case": {
+    "rows": [
+      {
+        "name": "<adminRouter.get:/dashboard:arg1>",
+        "visibility": "private"
+      },
+      {
+        "name": "<router.delete:/users/:id:arg1>",
+        "visibility": "private"
+      },
+      {
+        "name": "authenticate",
+        "visibility": "private"
+      },
+      {
+        "name": "createUser",
+        "visibility": "private"
+      },
+      {
+        "name": "listUsers",
+        "visibility": "private"
+      },
+      {
+        "name": "validateUser",
+        "visibility": "private"
+      }
+    ]
+  },
+  "return/case-simple": {
+    "rows": [
+      {
+        "path": "/admin",
+        "kind": "other"
+      },
+      {
+        "path": "/api",
+        "kind": "other"
+      },
+      {
+        "path": "/dashboard",
+        "kind": "read"
+      },
+      {
+        "path": "/users",
+        "kind": "read"
+      },
+      {
+        "path": "/users",
+        "kind": "write"
+      },
+      {
+        "path": "/users/:id",
+        "kind": "other"
+      },
+      {
+        "path": "/users/:id",
+        "kind": "other"
+      },
+      {
+        "path": null,
+        "kind": "other"
+      }
+    ]
+  },
+  "return/label-function": {
+    "rows": [
+      {
+        "name": "<adminRouter.get:/dashboard:arg1>",
+        "label": "Function"
+      },
+      {
+        "name": "<router.delete:/users/:id:arg1>",
+        "label": "Function"
+      },
+      {
+        "name": "ADMIN_PATH",
+        "label": "Variable"
+      },
+      {
+        "name": "API_PREFIX",
+        "label": "Variable"
+      },
+      {
+        "name": "USERS_PATH",
+        "label": "Variable"
+      },
+      {
+        "name": "adminRouter",
+        "label": "Variable"
+      },
+      {
+        "name": "app",
+        "label": "Variable"
+      },
+      {
+        "name": "authenticate",
+        "label": "Function"
+      },
+      {
+        "name": "cache",
+        "label": "Variable"
+      },
+      {
+        "name": "createUser",
+        "label": "Function"
+      },
+      {
+        "name": "listUsers",
+        "label": "Function"
+      },
+      {
+        "name": "router",
+        "label": "Variable"
+      },
+      {
+        "name": "validateUser",
+        "label": "Function"
+      }
+    ]
+  },
+  "return/missing-property-null": {
+    "rows": [
+      {
+        "fn": "<adminRouter.get:/dashboard:arg1>",
+        "hook": "handler"
+      },
+      {
+        "fn": "<router.delete:/users/:id:arg1>",
+        "hook": "handler"
+      },
+      {
+        "fn": "authenticate",
+        "hook": null
+      },
+      {
+        "fn": "authenticate",
+        "hook": null
+      },
+      {
+        "fn": "authenticate",
+        "hook": null
+      },
+      {
+        "fn": "authenticate",
+        "hook": null
+      },
+      {
+        "fn": "createUser",
+        "hook": "handler"
+      },
+      {
+        "fn": "createUser",
+        "hook": "handler"
+      },
+      {
+        "fn": "listUsers",
+        "hook": "handler"
+      },
+      {
+        "fn": "validateUser",
+        "hook": null
+      },
+      {
+        "fn": "validateUser",
+        "hook": null
+      }
+    ]
+  },
+  "return/distinct": {
+    "rows": [
+      {
+        "method": "DELETE"
+      },
+      {
+        "method": "GET"
+      },
+      {
+        "method": "POST"
+      },
+      {
+        "method": "PUT"
+      },
+      {
+        "method": "USE"
+      }
+    ]
+  },
+  "return/distinct-multi": {
+    "rows": [
+      {
+        "file": "routes.ts",
+        "exported": false
+      }
+    ]
+  },
+  "return/unaliased": {
+    "rows": [
+      {
+        "r.path": "/admin",
+        "r.method": "USE"
+      },
+      {
+        "r.path": "/api",
+        "r.method": "USE"
+      },
+      {
+        "r.path": "/dashboard",
+        "r.method": "GET"
+      },
+      {
+        "r.path": "/users",
+        "r.method": "GET"
+      },
+      {
+        "r.path": "/users",
+        "r.method": "POST"
+      },
+      {
+        "r.path": "/users/:id",
+        "r.method": "DELETE"
+      },
+      {
+        "r.path": "/users/:id",
+        "r.method": "PUT"
+      },
+      {
+        "r.path": null,
+        "r.method": "USE"
+      }
+    ]
+  },
+  "return/property-unlabeled-mixed": {
+    "rows": [
+      {
+        "name": "<adminRouter.get:/dashboard:arg1>",
+        "kind": "arrow_function"
+      },
+      {
+        "name": "<router.delete:/users/:id:arg1>",
+        "kind": "arrow_function"
+      },
+      {
+        "name": "ADMIN_PATH",
+        "kind": "const"
+      },
+      {
+        "name": "API_PREFIX",
+        "kind": "const"
+      },
+      {
+        "name": "USERS_PATH",
+        "kind": "const"
+      },
+      {
+        "name": "adminRouter",
+        "kind": "const"
+      },
+      {
+        "name": "app",
+        "kind": "const"
+      },
+      {
+        "name": "authenticate",
+        "kind": "function_declaration"
+      },
+      {
+        "name": "cache",
+        "kind": "const"
+      },
+      {
+        "name": "createUser",
+        "kind": "function_declaration"
+      },
+      {
+        "name": "listUsers",
+        "kind": "function_declaration"
+      },
+      {
+        "name": "router",
+        "kind": "const"
+      },
+      {
+        "name": "validateUser",
+        "kind": "function_declaration"
+      }
+    ]
+  },
+  "agg/count-group": {
+    "rows": [
+      {
+        "file": "routes.ts",
+        "functions": 6
+      }
+    ]
+  },
+  "agg/count-distinct": {
+    "rows": [
+      {
+        "methods": 5,
+        "total": 8
+      }
+    ]
+  },
+  "agg/count-nulls": {
+    "rows": [
+      {
+        "withClass": 0,
+        "total": 6
+      }
+    ]
+  },
+  "agg/min-max": {
+    "rows": [
+      {
+        "first": 5,
+        "last": 40
+      }
+    ]
+  },
+  "agg/min-max-string": {
+    "rows": [
+      {
+        "first": "<adminRouter.get:/dashboard:arg1>",
+        "last": "validateUser"
+      }
+    ]
+  },
+  "agg/sum-avg": {
+    "rows": [
+      {
+        "total": 495,
+        "mean": 23.571428571428573
+      }
+    ]
+  },
+  "agg/collect-sorted": {
+    "rows": [
+      {
+        "paths": [
+          "/admin",
+          "/api",
+          "/dashboard",
+          "/users",
+          "/users",
+          "/users/:id",
+          "/users/:id"
+        ]
+      }
+    ]
+  },
+  "agg/collect-size": {
+    "rows": [
+      {
+        "file": "routes.ts",
+        "n": 6
+      }
+    ]
+  },
+  "agg/collect-skips-null": {
+    "rows": [
+      {
+        "n": null
+      }
+    ]
+  },
+  "agg/empty-input": {
+    "rows": [
+      {
+        "count": 0,
+        "first": null,
+        "names": null
+      }
+    ]
+  },
+  "agg/empty-input-grouped": {
+    "rows": []
+  },
+  "agg/expression-of-aggregates": {
+    "rows": [
+      {
+        "span": 35
+      }
+    ]
+  },
+  "agg/order-by-aggregate": {
+    "rows": [
+      {
+        "file": "routes.ts",
+        "n": 5
+      },
+      {
+        "file": "paths.ts",
+        "n": 2
+      }
+    ]
+  },
+  "with/projection": {
+    "rows": [
+      {
+        "name": "<adminRouter.get:/dashboard:arg1>",
+        "line": 34
+      },
+      {
+        "name": "<router.delete:/users/:id:arg1>",
+        "line": 29
+      },
+      {
+        "name": "authenticate",
+        "line": 18
+      },
+      {
+        "name": "createUser",
+        "line": 14
+      },
+      {
+        "name": "listUsers",
+        "line": 10
+      },
+      {
+        "name": "validateUser",
+        "line": 22
+      }
+    ]
+  },
+  "with/rename-node": {
+    "rows": [
+      {
+        "file": "routes.ts",
+        "source": "routes.ts",
+        "fn": "<adminRouter.get:/dashboard:arg1>"
+      },
+      {
+        "file": "routes.ts",
+        "source": "routes.ts",
+        "fn": "<router.delete:/users/:id:arg1>"
+      },
+      {
+        "file": "routes.ts",
+        "source": "routes.ts",
+        "fn": "authenticate"
+      },
+      {
+        "file": "routes.ts",
+        "source": "routes.ts",
+        "fn": "createUser"
+      },
+      {
+        "file": "routes.ts",
+        "source": "routes.ts",
+        "fn": "listUsers"
+      },
+      {
+        "file": "routes.ts",
+        "source": "routes.ts",
+        "fn": "validateUser"
+      }
+    ]
+  },
+  "with/where-after": {
+    "rows": [
+      {
+        "file": "routes.ts",
+        "n": 6
+      }
+    ]
+  },
+  "with/distinct": {
+    "rows": [
+      {
+        "method": "DELETE"
+      },
+      {
+        "method": "GET"
+      },
+      {
+        "method": "POST"
+      },
+      {
+        "method": "PUT"
+      },
+      {
+        "method": "USE"
+      }
+    ]
+  },
+  "with/order-limit": {
+    "rows": [
+      {
+        "name": "app.listen",
+        "line": 40
+      },
+      {
+        "name": "app.use",
+        "line": 39
+      },
+      {
+        "name": "cache.get",
+        "line": 38
+      }
+    ]
+  },
+  "with/chain": {
+    "rows": []
+  },
+  "with/then-match": {
+    "rows": [
+      {
+        "file": "routes.ts",
+        "fn": "<adminRouter.get:/dashboard:arg1>"
+      },
+      {
+        "file": "routes.ts",
+        "fn": "<router.delete:/users/:id:arg1>"
+      },
+      {
+        "file": "routes.ts",
+        "fn": "authenticate"
+      },
+      {
+        "file": "routes.ts",
+        "fn": "createUser"
+      },
+      {
+        "file": "routes.ts",
+        "fn": "listUsers"
+      },
+      {
+        "file": "routes.ts",
+        "fn": "validateUser"
+      }
+    ]
+  },
+  "order/single-asc": {
+    "rows": [
+      {
+        "name": "express",
+        "line": 5,
+        "col": 12
+      },
+      {
+        "name": "express.Router",
+        "line": 6,
+        "col": 15
+      },
+      {
+        "name": "express.Router",
+        "line": 7,
+        "col": 20
+      },
+      {
+        "name": "new Map",
+        "line": 8,
+        "col": 14
+      },
+      {
+        "name": "res.json",
+        "line": 11,
+        "col": 2
+      },
+      {
+        "name": "res.status",
+        "line": 15,
+        "col": 2
+      },
+      {
+        "name": "res.status(201).json",
+        "line": 15,
+        "col": 2
+      },
+      {
+        "name": "next",
+        "line": 19,
+        "col": 2
+      },
+      {
+        "name": "next",
+        "line": 23,
+        "col": 2
+      },
+      {
+        "name": "router.get",
+        "line": 26,
+        "col": 0
+      },
+      {
+        "name": "router.post",
+        "line": 27,
+        "col": 0
+      },
+      {
+        "name": "router.put",
+        "line": 28,
+        "col": 0
+      },
+      {
+        "name": "router.delete",
+        "line": 29,
+        "col": 0
+      },
+      {
+        "name": "res.status",
+        "line": 30,
+        "col": 2
+      },
+      {
+        "name": "res.status(204).end",
+        "line": 30,
+        "col": 2
+      },
+      {
+        "name": "router.use",
+        "line": 32,
+        "col": 0
+      },
+      {
+        "name": "router.use",
+        "line": 33,
+        "col": 0
+      },
+      {
+        "name": "adminRouter.get",
+        "line": 34,
+        "col": 0
+      },
+      {
+        "name": "cache.get",
+        "line": 38,
+        "col": 0
+      },
+      {
+        "name": "app.use",
+        "line": 39,
+        "col": 0
+      },
+      {
+        "name": "app.listen",
+        "line": 40,
+        "col": 0
+      }
+    ]
+  },
+  "order/desc": {
+    "rows": [
+      {
+        "name": "app.listen",
+        "line": 40,
+        "col": 0
+      },
+      {
+        "name": "app.use",
+        "line": 39,
+        "col": 0
+      },
+      {
+        "name": "cache.get",
+        "line": 38,
+        "col": 0
+      },
+      {
+        "name": "adminRouter.get",
+        "line": 34,
+        "col": 0
+      },
+      {
+        "name": "router.use",
+        "line": 33,
+        "col": 0
+      },
+      {
+        "name": "router.use",
+        "line": 32,
+        "col": 0
+      },
+      {
+        "name": "res.status(204).end",
+        "line": 30,
+        "col": 2
+      },
+      {
+        "name": "res.status",
+        "line": 30,
+        "col": 2
+      },
+      {
+        "name": "router.delete",
+        "line": 29,
+        "col": 0
+      },
+      {
+        "name": "router.put",
+        "line": 28,
+        "col": 0
+      },
+      {
+        "name": "router.post",
+        "line": 27,
+        "col": 0
+      },
+      {
+        "name": "router.get",
+        "line": 26,
+        "col": 0
+      },
+      {
+        "name": "next",
+        "line": 23,
+        "col": 2
+      },
+      {
+        "name": "next",
+        "line": 19,
+        "col": 2
+      },
+      {
+        "name": "res.status(201).json",
+        "line": 15,
+        "col": 2
+      },
+      {
+        "name": "res.status",
+        "line": 15,
+        "col": 2
+      },
+      {
+        "name": "res.json",
+        "line": 11,
+        "col": 2
+      },
+      {
+        "name": "new Map",
+        "line": 8,
+        "col": 14
+      },
+      {
+        "name": "express.Router",
+        "line": 7,
+        "col": 20
+      },
+      {
+        "name": "express.Router",
+        "line": 6,
+        "col": 15
+      },
+      {
+        "name": "express",
+        "line": 5,
+        "col": 12
+      }
+    ]
+  },
+  "order/by-alias": {
+    "rows": [
+      {
+        "name": "<adminRouter.get:/dashboard:arg1>"
+      },
+      {
+        "name": "<router.delete:/users/:id:arg1>"
+      },
+      {
+        "name": "authenticate"
+      },
+      {
+        "name": "createUser"
+      },
+      {
+        "name": "listUsers"
+      },
+      {
+        "name": "validateUser"
+      }
+    ]
+  },
+  "order/nulls-asc": {
+    "rows": [
+      {
+        "name": "<adminRouter.get:/dashboard:arg1>",
+        "cls": null
+      },
+      {
+        "name": "<router.delete:/users/:id:arg1>",
+        "cls": null
+      },
+      {
+        "name": "authenticate",
+        "cls": null
+      },
+      {
+        "name": "createUser",
+        "cls": null
+      },
+      {
+        "name": "listUsers",
+        "cls": null
+      },
+      {
+        "name": "validateUser",
+        "cls": null
+      }
+    ]
+  },
+  "order/nulls-desc": {
+    "rows": [
+      {
+        "name": "<adminRouter.get:/dashboard:arg1>",
+        "cls": null
+      },
+      {
+        "name": "<router.delete:/users/:id:arg1>",
+        "cls": null
+      },
+      {
+        "name": "authenticate",
+        "cls": null
+      },
+      {
+        "name": "createUser",
+        "cls": null
+      },
+      {
+        "name": "listUsers",
+        "cls": null
+      },
+      {
+        "name": "validateUser",
+        "cls": null
+      }
+    ]
+  },
+  "order/booleans": {
+    "rows": [
+      {
+        "name": "<adminRouter.get:/dashboard:arg1>",
+        "e": false
+      },
+      {
+        "name": "<router.delete:/users/:id:arg1>",
+        "e": false
+      },
+      {
+        "name": "authenticate",
+        "e": false
+      },
+      {
+        "name": "createUser",
+        "e": false
+      },
+      {
+        "name": "listUsers",
+        "e": false
+      },
+      {
+        "name": "validateUser",
+        "e": false
+      }
+    ]
+  },
+  "order/string-case": {
+    "rows": [
+      {
+        "name": "<adminRouter.get:/dashboard:arg1>"
+      },
+      {
+        "name": "<router.delete:/users/:id:arg1>"
+      },
+      {
+        "name": "ADMIN_PATH"
+      },
+      {
+        "name": "API_PREFIX"
+      },
+      {
+        "name": "USERS_PATH"
+      },
+      {
+        "name": "adminRouter"
+      },
+      {
+        "name": "adminRouter.get"
+      },
+      {
+        "name": "app"
+      },
+      {
+        "name": "app.listen"
+      },
+      {
+        "name": "app.use"
+      },
+      {
+        "name": "authenticate"
+      },
+      {
+        "name": "cache"
+      },
+      {
+        "name": "cache.get"
+      },
+      {
+        "name": "createUser"
+      },
+      {
+        "name": "express"
+      },
+      {
+        "name": "express-koa-routes"
+      },
+      {
+        "name": "express.Router"
+      },
+      {
+        "name": "listUsers"
+      },
+      {
+        "name": "new Map"
+      },
+      {
+        "name": "next"
+      },
+      {
+        "name": "res.json"
+      },
+      {
+        "name": "res.status"
+      },
+      {
+        "name": "res.status(201).json"
+      },
+      {
+        "name": "res.status(204).end"
+      },
+      {
+        "name": "router"
+      },
+      {
+        "name": "router.delete"
+      },
+      {
+        "name": "router.get"
+      },
+      {
+        "name": "router.post"
+      },
+      {
+        "name": "router.put"
+      },
+      {
+        "name": "router.use"
+      },
+      {
+        "name": "validateUser"
+      }
+    ]
+  },
+  "order/skip-limit": {
+    "rows": [
+      {
+        "name": "express.Router",
+        "line": 7,
+        "col": 20
+      },
+      {
+        "name": "new Map",
+        "line": 8,
+        "col": 14
+      },
+      {
+        "name": "res.json",
+        "line": 11,
+        "col": 2
+      }
+    ]
+  },
+  "order/limit-zero": {
+    "rows": []
+  },
+  "order/skip-past-end": {
+    "rows": []
+  },
+  "order/expression": {
+    "rows": [
+      {
+        "name": "<adminRouter.get:/dashboard:arg1>"
+      },
+      {
+        "name": "<router.delete:/users/:id:arg1>"
+      },
+      {
+        "name": "authenticate"
+      },
+      {
+        "name": "validateUser"
+      },
+      {
+        "name": "createUser"
+      },
+      {
+        "name": "listUsers"
+      }
+    ]
+  },
+  "order/not-in-return": {
+    "rows": [
+      {
+        "name": "listUsers"
+      },
+      {
+        "name": "createUser"
+      },
+      {
+        "name": "authenticate"
+      },
+      {
+        "name": "validateUser"
+      },
+      {
+        "name": "<router.delete:/users/:id:arg1>"
+      },
+      {
+        "name": "<adminRouter.get:/dashboard:arg1>"
+      }
+    ]
+  },
+  "syntax/case-insensitive-keywords": {
+    "rows": [
+      {
+        "path": "paths.ts"
+      },
+      {
+        "path": "routes.ts"
+      }
+    ]
+  },
+  "syntax/double-quoted-string": {
+    "rows": [
+      {
+        "path": "/dashboard"
+      },
+      {
+        "path": "/users"
+      }
+    ]
+  },
+  "syntax/escaped-string": {
+    "rows": [
+      {
+        "a": "it's",
+        "b": "say \"hi\"",
+        "c": "tabtnewlinen"
+      }
+    ]
+  },
+  "syntax/backtick-identifier": {
+    "rows": [
+      {
+        "the path": "paths.ts"
+      },
+      {
+        "the path": "routes.ts"
+      }
+    ]
+  },
+  "syntax/comments": {
+    "rows": [
+      {
+        "n": 2
+      }
+    ]
+  },
+  "syntax/trailing-semicolon": {
+    "rows": [
+      {
+        "n": 2
+      }
+    ]
+  },
+  "error/unknown-label": {
+    "error": "binder"
+  },
+  "error/unknown-rel-type": {
+    "error": "binder"
+  },
+  "error/unknown-property": {
+    "error": "binder"
+  },
+  "error/unbound-variable": {
+    "error": "binder"
+  },
+  "error/syntax": {
+    "error": "parser"
+  },
+  "error/missing-return": {
+    "error": "parser"
+  },
+  "error/wrong-endpoint-labels": {
+    "rows": []
+  },
+  "error/aggregate-in-where": {
+    "error": "binder"
+  },
+  "error/missing-param": {
+    "error": "binder"
+  },
+  "error/create": {
+    "error": "unsupported"
+  },
+  "error/delete": {
+    "error": "unsupported"
+  },
+  "error/set": {
+    "error": "unsupported"
+  },
+  "error/merge": {
+    "error": "unsupported"
+  },
+  "error/unwind": {
+    "error": "unsupported"
+  },
+  "error/union": {
+    "error": "unsupported"
+  }
+}
