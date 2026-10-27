@@ -1,4 +1,4 @@
-import type Parser from "tree-sitter";
+import type { SyntaxNode } from "../../languages/syntax/tree-sitter.js";
 import type { GraphNode, GraphRelationship } from "../../../core/graph/model.js";
 import {
   createConfigValueGraph,
@@ -18,11 +18,11 @@ import type { ISemanticContributor } from "../../../core/contracts/semantic-cont
 // language-level walk and passed here to avoid re-traversing the AST.
 export function applyEnvConfigParseSemantics(
   fileNodeId: string,
-  programNode: Parser.SyntaxNode,
+  programNode: SyntaxNode,
   nodes: GraphNode[],
   relationships: GraphRelationship[],
-  functionAstPairs: Array<{ functionNodeId: string; astNode: Parser.SyntaxNode }>,
-  variableDeclaratorAstNodes: Parser.SyntaxNode[],
+  functionAstPairs: Array<{ functionNodeId: string; astNode: SyntaxNode }>,
+  variableDeclaratorAstNodes: SyntaxNode[],
 ): void {
   for (const { functionNodeId, astNode } of functionAstPairs) {
     const usage = createFunctionEnvUsageGraph(functionNodeId, astNode);

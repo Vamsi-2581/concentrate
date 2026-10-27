@@ -1,4 +1,4 @@
-import type Parser from "tree-sitter";
+import { indexOfNode, type SyntaxNode } from "../syntax/tree-sitter.js";
 import type { GraphNode } from "../../../core/graph/model.js";
 import {
   analyzeMemberCallExpression,
@@ -17,7 +17,7 @@ import {
   extractReturnType,
 } from "./function-signature.js";
 
-export function isInlineHandlerArgument(node: Parser.SyntaxNode): boolean {
+export function isInlineHandlerArgument(node: SyntaxNode): boolean {
   if (node.type !== "arrow_function" && node.type !== "function_expression") return false;
   if (node.parent?.type !== "arguments") return false;
   const callExpr = node.parent.parent;
@@ -27,7 +27,7 @@ export function isInlineHandlerArgument(node: Parser.SyntaxNode): boolean {
 
 // A callback passed to the call that initializes a module-level variable:
 // `export const User = createParamDecorator((data, ctx) => { … })`.
-export function isInitializerHandlerArgument(node: Parser.SyntaxNode): boolean {
+export function isInitializerHandlerArgument(node: SyntaxNode): boolean {
   if (node.type !== "arrow_function" && node.type !== "function_expression") return false;
   if (node.parent?.type !== "arguments") return false;
   const callExpr = node.parent.parent;
@@ -38,7 +38,7 @@ export function isInitializerHandlerArgument(node: Parser.SyntaxNode): boolean {
     && isModuleLevelDeclarator(declarator);
 }
 
-export function isObjectLiteralHandlerFunction(node: Parser.SyntaxNode): boolean {
+export function isObjectLiteralHandlerFunction(node: SyntaxNode): boolean {
   if (node.type !== "arrow_function" && node.type !== "function_expression") return false;
   if (node.parent?.type !== "pair") return false;
 
@@ -57,7 +57,7 @@ export function isObjectLiteralHandlerFunction(node: Parser.SyntaxNode): boolean
 
 export function createInlineHandlerNode(
   fileNodeId: string,
-  handlerNode: Parser.SyntaxNode,
+  handlerNode: SyntaxNode,
   callKind: "modulecall" | "initializercall" = "modulecall",
 ): { functionNode: GraphNode; callNodeId: string } | null {
   const argsNode = handlerNode.parent;
@@ -72,7 +72,7 @@ export function createInlineHandlerNode(
     .find((c) => c.type === "string")
     ?.text.replace(/^["']|["']$/g, "");
 
-  const argIndex = argsNode.namedChildren.indexOf(handlerNode);
+  const argIndex = indexOfNode(argsNode.namedChildren, handlerNode);
   const syntheticName = routePath
     ? `<${expression}:${routePath}:arg${argIndex}>`
     : `<${expression}:arg${argIndex}>`;
@@ -106,7 +106,7 @@ export function createInlineHandlerNode(
 
 export function createObjectLiteralHandlerNode(
   fileNodeId: string,
-  handlerNode: Parser.SyntaxNode,
+  handlerNode: SyntaxNode,
 ): { functionNode: GraphNode; callNodeId: string } | null {
   const pairNode = handlerNode.parent;
   const objectNode = pairNode?.parent;
@@ -151,7 +151,7 @@ export function createObjectLiteralHandlerNode(
   };
 }
 
-function isModuleLevelCallExpression(callExpr: Parser.SyntaxNode): boolean {
+function isModuleLevelCallExpression(callExpr: SyntaxNode): boolean {
   const parent = callExpr.parent;
   if (parent?.type === "expression_statement") {
     return parent.parent?.type === "program";
@@ -163,7 +163,7 @@ function isModuleLevelCallExpression(callExpr: Parser.SyntaxNode): boolean {
   return false;
 }
 
-function isHandlerPropertyName(node: Parser.SyntaxNode): boolean {
+function isHandlerPropertyName(node: SyntaxNode): boolean {
   return [
     "handler",
     "preHandler",
@@ -178,7 +178,7 @@ function isHandlerPropertyName(node: Parser.SyntaxNode): boolean {
   ].includes(normalizePropertyName(node));
 }
 
-function extractRoutePathFromObject(objectNode: Parser.SyntaxNode): string | null {
+function extractRoutePathFromObject(objectNode: SyntaxNode): string | null {
   for (const child of objectNode.namedChildren) {
     if (child.type !== "pair") continue;
     const key = child.childForFieldName("key");
@@ -191,13 +191,13 @@ function extractRoutePathFromObject(objectNode: Parser.SyntaxNode): string | nul
   return null;
 }
 
-function normalizePropertyName(node: Parser.SyntaxNode): string {
+function normalizePropertyName(node: SyntaxNode): string {
   return node.type === "string" ? node.text.replace(/^["'`]|["'`]$/g, "") : node.text;
 }
 
 // Literal-ish arguments of a call or decorator as a JSON array: string contents,
 // numbers, identifiers and member expressions; anything else is left out.
-export function extractCallArgs(callExpr: Parser.SyntaxNode): string {
+export function extractCallArgs(callExpr: SyntaxNode): string {
   const argsNode = callExpr.childForFieldName("arguments");
   if (!argsNode) return "[]";
 
@@ -214,7 +214,7 @@ export function extractCallArgs(callExpr: Parser.SyntaxNode): string {
   return JSON.stringify(args);
 }
 
-export function createModuleLevelCallNodes(fileNodeId: string, programNode: Parser.SyntaxNode): GraphNode[] {
+export function createModuleLevelCallNodes(fileNodeId: string, programNode: SyntaxNode): GraphNode[] {
   const calls: GraphNode[] = [];
 
   for (const stmt of programNode.namedChildren) {
@@ -270,7 +270,7 @@ export function createModuleLevelCallNodes(fileNodeId: string, programNode: Pars
   return calls;
 }
 
-export function createInitializerCallNode(fileNodeId: string, valueNode: Parser.SyntaxNode): GraphNode | null {
+export function createInitializerCallNode(fileNodeId: string, valueNode: SyntaxNode): GraphNode | null {
   if (valueNode.type === "call_expression") {
     const parts = analyzeMemberCallExpression(valueNode.childForFieldName("function")?.text);
     if (!parts) return null;
@@ -313,7 +313,7 @@ export function createInitializerCallNode(fileNodeId: string, valueNode: Parser.
   return null;
 }
 
-export function createCallNodes(functionNodeId: string, node: Parser.SyntaxNode): GraphNode[] {
+export function createCallNodes(functionNodeId: string, node: SyntaxNode): GraphNode[] {
   const calls: GraphNode[] = [];
 
   walkScoped(node, (child) => {
@@ -361,7 +361,7 @@ export function createCallNodes(functionNodeId: string, node: Parser.SyntaxNode)
 // Functions that get a Function node of their own keep their calls. Anonymous
 // callbacks such as forEach(el => …) or it('…', () => …) do not, so their calls
 // belong to the enclosing function.
-function ownsCalls(node: Parser.SyntaxNode): boolean {
+function ownsCalls(node: SyntaxNode): boolean {
   if (isClassNode(node) || isVariableClassValue(node)) return true;
   if (!isFunctionNode(node)) return false;
   if (node.type === "method_definition" || node.type === "abstract_method_signature") {

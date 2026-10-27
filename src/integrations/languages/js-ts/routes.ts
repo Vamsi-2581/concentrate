@@ -1,4 +1,4 @@
-import type Parser from "tree-sitter";
+import { indexOfNode, type SyntaxNode } from "../syntax/tree-sitter.js";
 import type { GraphNode, GraphRelationship } from "../../../core/graph/model.js";
 import { analyzeMemberCallExpression } from "../tree-sitter-utils.js";
 
@@ -45,7 +45,7 @@ type RouteLifecycleStep = {
 
 export function createExpressKoaRouteGraph(
   fileNodeId: string,
-  programNode: Parser.SyntaxNode,
+  programNode: SyntaxNode,
   nodes: GraphNode[],
   relationships: GraphRelationship[],
 ): { nodes: GraphNode[]; relationships: GraphRelationship[] } {
@@ -54,7 +54,7 @@ export function createExpressKoaRouteGraph(
 
 export function createFastifyRouteGraph(
   fileNodeId: string,
-  programNode: Parser.SyntaxNode,
+  programNode: SyntaxNode,
   nodes: GraphNode[],
   relationships: GraphRelationship[],
 ): { nodes: GraphNode[]; relationships: GraphRelationship[] } {
@@ -63,7 +63,7 @@ export function createFastifyRouteGraph(
 
 function createHttpRouteGraph(
   fileNodeId: string,
-  programNode: Parser.SyntaxNode,
+  programNode: SyntaxNode,
   nodes: GraphNode[],
   relationships: GraphRelationship[],
   frameworkFilter: FrameworkFilter,
@@ -196,7 +196,7 @@ export function createNestJsRouteGraph(
 }
 
 function createMountRelationships(
-  callExpr: Parser.SyntaxNode,
+  callExpr: SyntaxNode,
   variablesByName: Map<string, string>,
   functionsByName: Map<string, string>,
   stringConstantsByName: Map<string, string>,
@@ -248,7 +248,7 @@ function createMountRelationships(
 
 function createRouteNodes(
   fileNodeId: string,
-  callExpr: Parser.SyntaxNode,
+  callExpr: SyntaxNode,
   stringConstantsByName: Map<string, string>,
   frameworkFilter: FrameworkFilter,
 ): RouteCandidate[] {
@@ -312,7 +312,7 @@ function createRouteNodes(
 
 function createFastifyObjectRouteNodes(
   fileNodeId: string,
-  callExpr: Parser.SyntaxNode,
+  callExpr: SyntaxNode,
   expression: string,
   stringConstantsByName: Map<string, string>,
 ): RouteCandidate[] {
@@ -399,8 +399,8 @@ function createLifecycleRelationships(
 }
 
 function createCallLifecycleSteps(input: {
-  args: Parser.SyntaxNode[];
-  handlerArgs: Parser.SyntaxNode[];
+  args: SyntaxNode[];
+  handlerArgs: SyntaxNode[];
   expression: string;
   routePath: string | null;
   method: string;
@@ -440,7 +440,7 @@ function createCallLifecycleSteps(input: {
 }
 
 function createFastifyObjectLifecycleSteps(
-  config: Parser.SyntaxNode,
+  config: SyntaxNode,
   expression: string,
   routePath: string,
 ): RouteLifecycleStep[] {
@@ -455,7 +455,7 @@ function createFastifyObjectLifecycleSteps(
 }
 
 function fastifyHookFunctionNames(
-  objectNode: Parser.SyntaxNode,
+  objectNode: SyntaxNode,
   expression?: string,
   routePath?: string,
 ): Array<{ key: string; name: string }> {
@@ -471,8 +471,8 @@ function fastifyHookFunctionNames(
 }
 
 function extractLifecycleFunctionNames(
-  node: Parser.SyntaxNode,
-  args: Parser.SyntaxNode[],
+  node: SyntaxNode,
+  args: SyntaxNode[],
   expression?: string,
   routePath?: string | null,
   propertyName?: string,
@@ -492,7 +492,7 @@ function extractLifecycleFunctionNames(
       return [routePath ? `<${expression}:${routePath}:${propertyName}>` : `<${expression}:${propertyName}>`];
     }
 
-    const argIndex = args.indexOf(node);
+    const argIndex = indexOfNode(args, node);
     if (argIndex >= 0) {
       return [routePath ? `<${expression}:${routePath}:arg${argIndex}>` : `<${expression}:arg${argIndex}>`];
     }
@@ -543,13 +543,13 @@ function createRouteNode(input: {
   };
 }
 
-function extractObjectStringProperty(node: Parser.SyntaxNode | undefined, key: string): string | null {
+function extractObjectStringProperty(node: SyntaxNode | undefined, key: string): string | null {
   const value = node ? extractObjectProperty(node, key) : null;
   return value?.type === "string" ? stripStringQuotes(value.text) : null;
 }
 
 function extractObjectPathProperty(
-  node: Parser.SyntaxNode | undefined,
+  node: SyntaxNode | undefined,
   key: string,
   stringConstantsByName: Map<string, string>,
 ): { value: string | null; expression: string | null } | null {
@@ -557,7 +557,7 @@ function extractObjectPathProperty(
   return value ? extractPathArgument(value, stringConstantsByName) : null;
 }
 
-function extractObjectStringListProperty(node: Parser.SyntaxNode, key: string): string[] {
+function extractObjectStringListProperty(node: SyntaxNode, key: string): string[] {
   const value = extractObjectProperty(node, key);
   if (!value) return [];
 
@@ -574,7 +574,7 @@ function extractObjectStringListProperty(node: Parser.SyntaxNode, key: string): 
   return [];
 }
 
-function extractObjectProperty(node: Parser.SyntaxNode, key: string): Parser.SyntaxNode | null {
+function extractObjectProperty(node: SyntaxNode, key: string): SyntaxNode | null {
   if (node.type !== "object") return null;
 
   for (const child of node.namedChildren) {
@@ -587,32 +587,32 @@ function extractObjectProperty(node: Parser.SyntaxNode, key: string): Parser.Syn
   return null;
 }
 
-function isFunctionExpressionNode(node: Parser.SyntaxNode | null): boolean {
+function isFunctionExpressionNode(node: SyntaxNode | null): boolean {
   return node?.type === "arrow_function" || node?.type === "function_expression";
 }
 
-function normalizeObjectKey(node: Parser.SyntaxNode): string {
+function normalizeObjectKey(node: SyntaxNode): string {
   return node.type === "string" ? stripStringQuotes(node.text) : node.text;
 }
 
 function extractLeadingPath(
-  args: Parser.SyntaxNode[],
+  args: SyntaxNode[],
   stringConstantsByName: Map<string, string>,
 ): { value: string | null; expression: string | null } {
   const pathArg = args.find((arg, index) => isPathArgument(arg, args, index, stringConstantsByName));
   return pathArg ? extractPathArgument(pathArg, stringConstantsByName) : { value: null, expression: null };
 }
 
-function argsAfterLeadingPath(args: Parser.SyntaxNode[]): Parser.SyntaxNode[] {
+function argsAfterLeadingPath(args: SyntaxNode[]): SyntaxNode[] {
   const pathArg = args.find((arg, index) => (
     arg.type === "string" || (arg.type === "identifier" && index === 0 && args.length > 1)
   ));
-  return pathArg ? args.slice(args.indexOf(pathArg) + 1) : args;
+  return pathArg ? args.slice(indexOfNode(args, pathArg) + 1) : args;
 }
 
 function isPathArgument(
-  arg: Parser.SyntaxNode,
-  args: Parser.SyntaxNode[],
+  arg: SyntaxNode,
+  args: SyntaxNode[],
   index: number,
   stringConstantsByName: Map<string, string>,
 ): boolean {
@@ -622,7 +622,7 @@ function isPathArgument(
 }
 
 function extractPathArgument(
-  node: Parser.SyntaxNode,
+  node: SyntaxNode,
   stringConstantsByName: Map<string, string>,
 ): { value: string | null; expression: string | null } {
   if (node.type === "string") {
@@ -683,8 +683,8 @@ function stripStringQuotes(value: string): string {
   return value.replace(/^["'`]|["'`]$/g, "");
 }
 
-function moduleLevelCallExpressions(programNode: Parser.SyntaxNode): Parser.SyntaxNode[] {
-  const calls: Parser.SyntaxNode[] = [];
+function moduleLevelCallExpressions(programNode: SyntaxNode): SyntaxNode[] {
+  const calls: SyntaxNode[] = [];
   for (const stmt of programNode.namedChildren) {
     if (stmt.type !== "expression_statement") continue;
 

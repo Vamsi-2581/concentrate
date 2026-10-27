@@ -1,7 +1,7 @@
-import type Parser from "tree-sitter";
+import type { SyntaxNode } from "../syntax/tree-sitter.js";
 import type { GraphNode } from "../../../core/graph/model.js";
 
-export function createVariableNode(fileNodeId: string, declarator: Parser.SyntaxNode): GraphNode | null {
+export function createVariableNode(fileNodeId: string, declarator: SyntaxNode): GraphNode | null {
   const nameNode = declarator.childForFieldName("name");
   if (!nameNode || nameNode.type !== "identifier") return null;
 
@@ -24,6 +24,6 @@ export function createVariableNode(fileNodeId: string, declarator: Parser.Syntax
   };
 }
 
-function extractStringValue(valueNode: Parser.SyntaxNode | null): string | null {
+function extractStringValue(valueNode: SyntaxNode | null): string | null {
   return valueNode?.type === "string" ? valueNode.text.replace(/^["'`]|["'`]$/g, "") : null;
 }

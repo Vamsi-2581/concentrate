@@ -1,4 +1,4 @@
-import type Parser from "tree-sitter";
+import type { SyntaxNode } from "../../languages/syntax/tree-sitter.js";
 import type { GraphNode, GraphRelationship } from "../../../core/graph/model.js";
 import { createBackendEntrypointGraph } from "../../languages/js-ts/entrypoints.js";
 
@@ -8,7 +8,7 @@ import { createBackendEntrypointGraph } from "../../languages/js-ts/entrypoints.
 // handlers from module-level call expressions.
 export function applyBackendEntrypointParseSemantics(
   fileNodeId: string,
-  programNode: Parser.SyntaxNode,
+  programNode: SyntaxNode,
   nodes: GraphNode[],
   relationships: GraphRelationship[],
 ): void {

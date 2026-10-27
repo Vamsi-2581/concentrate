@@ -1,4 +1,4 @@
-# Concentrate Roadmap: Zero Runtime Dependencies
+# Concentrate Roadmap: Minimal Runtime Dependencies
 
 > Progress is tracked both here and in the linked GitHub issues. When a PR completes a task, tick it
 > in this file **and** in the issue. The tracking epic is [#1](https://github.com/fatihserhatturan/concentrate/issues/1).
@@ -7,21 +7,30 @@
 
 Concentrate scans a codebase, builds a structural code graph and serves it to AI agents over MCP.
 It started with 10 runtime dependencies: commander, fast-glob, ignore, kuzu, tree-sitter and five
-grammar packages. KuzuDB was archived in October 2025 (last release 0.11.3), and tree-sitter needs
-native builds, which makes installation fragile. After Phase 2 only tree-sitter and its five grammars remain.
+grammar packages. KuzuDB was archived in October 2025 (last release 0.11.3), and the native
+tree-sitter binding needs prebuilt or locally compiled addons, which makes installation fragile.
+Phase 3a replaced the native binding with web-tree-sitter (WebAssembly) and vendored grammars, so
+the only runtime dependency left is `web-tree-sitter`.
 
 ### Decisions
 
-- **Zero runtime dependencies.** `dependencies` in `package.json` must be empty. Dev dependencies
-  (typescript, @types/node, and tree-sitter temporarily as a parity oracle) are allowed.
-- **Own parsers.** Hand-written, error-tolerant parsers that emit a tree-sitter-compatible CST subset,
-  so most extractor code survives unchanged.
+- **Minimal runtime dependencies.** `dependencies` in `package.json` holds only `web-tree-sitter`,
+  pinned to an exact version: plain JS and WebAssembly, no dependencies of its own and no install
+  scripts. Nothing else is added. Dev dependencies (typescript, @types/node, tsx, tree-sitter-cli)
+  are allowed.
+- **tree-sitter on WebAssembly, not own parsers.** Grammars are built to `.wasm` from pinned versions
+  (`npm run grammars:build`) and committed under `vendor/grammars/`. Writing our own JS/TS, Python,
+  Go and Rust parsers was the original plan (Phases 3b–3d); it was dropped on 2026-10-27 because the
+  install problem was the native binding, not tree-sitter, and hand-written parsers would need
+  permanent upkeep for every TypeScript release. See [benchmarks.md](benchmarks.md#parser-native-vs-wasm).
 - **Own graph engine.** In-memory graph, segmented on-disk snapshots and a Cypher subset. No
   `node:sqlite` (still experimental).
 - **Stable `node:` APIs only.**
 - **Enforced by tests.** `tests/guardrails.test.ts` fails if `src/` imports a package outside
-  `RUNTIME_DEPENDENCY_ALLOWLIST` or if an allow-listed package is no longer used. The list may only
-  shrink and must be empty at the end of M4.
+  `RUNTIME_DEPENDENCY_ALLOWLIST`, if an allow-listed package is no longer used, if a runtime
+  dependency is not pinned or has install scripts or dependencies, or if anything but
+  `src/integrations/languages/syntax/tree-sitter.ts` imports web-tree-sitter.
+  `tests/grammars.test.ts` checks the vendored grammars against their manifest.
 - **Focus.** The Node.js/TypeScript backend niche first; Python, Go and Rust stay at least at today's level.
 
 ### Dependency replacement map
@@ -32,7 +41,7 @@ native builds, which makes installation fragile. After Phase 2 only tree-sitter 
 | fast-glob | `core/scan/discover-files.ts`, `workspace-packages.ts`, `js-ts/resolution/package-json.ts` | Own glob + `fs.readdir` walker | 1 |
 | ignore | `core/scan/discover-files.ts` | Own gitignore matcher (nested `.gitignore`) | 1 |
 | kuzu | `adapters/kuzu/*` | Own graph store + Cypher subset | 2 |
-| tree-sitter + 5 grammars | 22 files | Own lexers/parsers | 3 |
+| tree-sitter + 5 grammars | 22 files | web-tree-sitter (pinned) + vendored `.wasm` grammars | 3a |
 
 ## Milestones
 
@@ -40,13 +49,13 @@ native builds, which makes installation fragile. After Phase 2 only tree-sitter 
 | --- | --- | --- |
 | M1 – Safety net & easy deps | 0, 1 | Golden tests green; commander, fast-glob and ignore removed. |
 | M2 – Own graph engine | 2 | All golden Cypher queries match; kuzu removed. |
-| M3 – JS/TS parser | 3a, 3b, 4 | JS/TS parser parity reached; route semantics moved into the framework layer. |
-| M4 – Zero runtime dependencies | 3c, 3d, 3e | Python/Go/Rust parity reached; tree-sitter removed; `dependencies: {}`. |
+| M3 – Portable parser | 3a, 4 | tree-sitter runs on WebAssembly with no native install step; route semantics moved into the framework layer. |
+| M4 – Current grammars | 3b, 3e | Grammars upgraded with reviewed golden diffs, TSX and partial-tree error tolerance; parser performance documented. |
 | M5 – Incremental & agent tools | 5, 6a | Real incremental scan, watch mode, and the first agent-facing MCP tools. |
 | M6 – Release | 8, 9 | Published to npm with a benchmarked README and CI. |
 | M7 – Niche depth | 6b, 7 | Deeper Node.js/TS backend semantics and the remaining MCP tools. |
 
-Risks: parser workmanship (mitigated by differential parity tests and JS/TS first), Cypher subset
+Risks: grammar upgrades changing trees (bounded by golden graph and query tests), Cypher subset
 breadth (bounded by golden queries), and performance (worker pool if needed).
 
 ## Phase 0: Safety net (golden tests, samples, dependency guardrail, store contracts) ([#2](https://github.com/fatihserhatturan/concentrate/issues/2))
@@ -198,172 +207,86 @@ Done in [#20](https://github.com/fatihserhatturan/concentrate/pull/20), [#21](ht
 - [x] Concurrent `mcp` reader and `scan` writer work without lock errors
 - [x] Query latency for MCP tools is equal to or better than the Kuzu baseline
 
-## Phase 3a: Shared syntax core (tree-sitter-compatible CST) ([#5](https://github.com/fatihserhatturan/concentrate/issues/5))
+## Phase 3a: tree-sitter on WebAssembly ([#5](https://github.com/fatihserhatturan/concentrate/issues/5))
 
-**Milestone:** M3 – JS/TS parser  
+**Milestone:** M3 – Portable parser  
 **Depends on:** Phase 0
 
-**Goal:** Provide the CST types and utilities every hand-written parser will build on.
+**Goal:** Keep tree-sitter but drop the native binding, so installing Concentrate never compiles or downloads native code.
 
-Extractors use only a narrow tree-sitter API: `type`, `text`, `startPosition`, `endPosition`, `namedChildren`, `children`, `childForFieldName`, `parent`, `hasError` and `rootNode`. Producing the same node types and field names lets most of the ~5k lines of extractor code survive unchanged.
+Extractors use only a narrow tree-sitter API: `type`, `id`, `text`, `startPosition`, `endPosition`, `namedChildren`, `children`, `childForFieldName`, `parent`, `hasError` and `rootNode`. web-tree-sitter exposes the same API.
 
-### CST (`src/integrations/languages/syntax/`)
+### Syntax module (`src/integrations/languages/syntax/tree-sitter.ts`)
 
-- [ ] `SyntaxNode` with `type`, lazy `text`, `startIndex`/`endIndex`, `startPosition`/`endPosition`, `children`, `namedChildren`, `parent`, `childForFieldName`, `hasError`, `isNamed`
-- [ ] `Tree` type exposing `rootNode`
-- [ ] Replace `import type Parser from "tree-sitter"` in extractors and `tree-sitter-utils.ts` with the new types
+- [x] `SyntaxNode` / `SyntaxTree` types; extractors no longer import `tree-sitter` types
+- [x] Lazy `Parser.init()` and grammar loading; `parseSyntaxTree` / `withSyntaxTree` free trees with `delete()` (WebAssembly memory is not garbage collected)
+- [x] Node comparisons by `id` (`indexOfNode`), since node objects are wrappers created on access
+- [x] Whole-string input; the 32 KB chunked-input workaround for the native binding is gone
 
-### Shared utilities
+### Grammars (`vendor/grammars/`)
 
-- [ ] Character stream and line/column table
-- [ ] Error-recovery helpers: skip to a sync point and emit an `ERROR` node
-- [ ] CST debug printer (S-expression output) for tests and troubleshooting
-
-### Tests
-
-- [ ] Unit tests for positions, field lookup, parent links and error nodes
+- [x] `scripts/build-grammars.mjs` downloads each grammar with `npm pack` (no install scripts) and builds it with the pinned `tree-sitter-cli`; builds are reproducible
+- [x] Same grammar versions as the native setup: javascript 0.23.1, typescript 0.23.2, python 0.21.0, go 0.21.2, rust 0.21.0
+- [x] `manifest.json` with version and sha256 per grammar, checked by `tests/grammars.test.ts`
 
 ### Acceptance criteria
 
-- [ ] Extractors compile against the new CST types without tree-sitter type imports
-- [ ] Syntax core has its own unit tests
+- [x] Golden graph, golden query and sample tests pass unchanged
+- [x] `npm ci --omit=dev --ignore-scripts` installs only `web-tree-sitter` (4.5 MB, was 67 MB) and `scan` works
+- [x] Scan time ≤ 1.5× native on every standing sample (it is 0.4–0.9×, see [benchmarks.md](benchmarks.md#parser-native-vs-wasm))
+- [x] Repeated scans in one process do not grow memory
 
-## Phase 3b: Hand-written JS/TS parser (JSX/TSX included) ([#6](https://github.com/fatihserhatturan/concentrate/issues/6))
+## Phase 3b: Grammar upgrades, TSX and error tolerance
 
-**Milestone:** M3 – JS/TS parser  
+**Milestone:** M4 – Current grammars  
 **Depends on:** Phase 3a
 
-**Goal:** Replace tree-sitter-javascript and tree-sitter-typescript with our own tolerant parser.
+**Goal:** Move to current grammar releases and stop rejecting whole files on a syntax error.
 
-JS/TS extractors and framework semantics use about 75 node types and 16 fields (`alias`, `arguments`, `body`, `constructor`, `function`, `key`, `left`, `name`, `object`, `parameters`, `pattern`, `property`, `return_type`, `right`, `type`, `value`). Today a file with any syntax error is rejected entirely.
+### Grammars
 
-### Lexer
-
-- [ ] Regex vs. division disambiguation
-- [ ] Nested template literals
-- [ ] JSX text mode
-- [ ] Numeric separators, BigInt, hashbang and Unicode identifiers
-
-### Parser
-
-- [ ] Recursive-descent statements and a Pratt expression parser
-- [ ] Arrow function detection with bounded backtracking
-- [ ] Generic `<T>` vs. less-than disambiguation following TS/TSX rules
-- [ ] Decorators on classes, members and parameters
-- [ ] Class members: accessibility, `readonly`, `abstract`, `static`, `get`/`set` and parameter properties
-- [ ] `enum`, `interface`, `type`, `namespace` and `declare`
-- [ ] Import/export forms including `import type`, re-exports, CommonJS `require` / `module.exports`
-- [ ] JSX elements, with embedded expressions walked so calls are captured
-
-### Types
-
-- [ ] Emit `type_identifier`, `generic_type` and `nested_type_identifier` precisely
-- [ ] Skip remaining type syntax as a single balanced node
+- [ ] Upgrade javascript (0.25), python (0.25), go (0.25), rust (0.24) and typescript to current releases; review and document each golden diff
+- [ ] Parse `.tsx` with the TSX grammar (today `.tsx` uses the TypeScript grammar)
 
 ### Error tolerance (behavior improvement)
 
-- [ ] Produce a partial tree plus a scan warning instead of rejecting the file
+- [ ] Produce a partial graph plus a scan warning instead of rejecting a file whose tree has `ERROR` nodes
 - [ ] Document the resulting golden diffs
 
 ### Integration
 
 - [ ] Add `endLine` to JS/TS `Variable` and `Route` nodes (functions, classes, interfaces, enums and type aliases already have it)
-- [ ] Wire the new parser into the JS/TS language integration
 
 ### Acceptance criteria
 
-- [ ] JS/TS CST parity with tree-sitter on all fixtures and sample repos (see Phase 3d)
-- [ ] Golden graph diff is empty apart from documented error-tolerance improvements
-- [ ] No runtime import of `tree-sitter-javascript` or `tree-sitter-typescript`
+- [ ] Golden diffs are reviewed and explained in the PR
+- [ ] `internet-nest` files that fail today on syntax errors produce partial graphs
 
-## Phase 3c: Hand-written Python, Go and Rust parsers ([#7](https://github.com/fatihserhatturan/concentrate/issues/7))
+## Phase 3e: Parser performance ([#9](https://github.com/fatihserhatturan/concentrate/issues/9))
 
-**Milestone:** M4 – Zero runtime dependencies  
+**Milestone:** M4 – Current grammars  
 **Depends on:** Phase 3a
 
-**Goal:** Replace tree-sitter-python, tree-sitter-go and tree-sitter-rust while keeping current coverage.
-
-Each language uses about 13 node types. Python: `aliased_import`, `argument_list`, `attribute`, `block`, `call`, `class_definition`, `dotted_name`, `function_definition`, `import_from_statement`, `import_statement`, `relative_import`. Go: `call_expression`, `function_declaration`, `method_declaration`, `import_spec`, `type_spec`, `struct_type`, … Rust: `function_item`, `impl_item`, `mod_item`, `struct_item`, `use_declaration`, `macro_invocation`, …
-
-### Python
-
-- [ ] Indentation-aware tokenizer (INDENT/DEDENT), strings including f-strings and triple quotes
-- [ ] Imports, relative imports, aliased imports
-- [ ] `def` / `async def`, `class`, decorated definitions, calls and attributes
-
-### Go
-
-- [ ] Package, imports (single and grouped, interpreted and raw strings)
-- [ ] Functions, methods with receivers, structs and type specs
-- [ ] Call expressions
-
-### Rust
-
-- [ ] `use`, `mod`, `fn` (with modifiers and visibility), `struct`, `impl`
-- [ ] Call expressions and macro invocations
-
-### Acceptance criteria
-
-- [ ] CST parity with tree-sitter on all Python, Go and Rust fixtures (see Phase 3d)
-- [ ] Existing Python, Go and Rust tests pass unchanged
-
-## Phase 3d: Differential parser parity tests and tree-sitter removal ([#8](https://github.com/fatihserhatturan/concentrate/issues/8))
-
-**Milestone:** M4 – Zero runtime dependencies  
-**Depends on:** Phase 3b, Phase 3c
-
-**Goal:** Prove our parsers match tree-sitter where it matters, then drop tree-sitter entirely.
-
-Runtime dependencies must be zero, but dev dependencies are allowed. tree-sitter can therefore serve as a temporary dev-only oracle during migration.
-
-### Parity harness
-
-- [ ] Move tree-sitter and the grammar packages to `devDependencies`
-- [ ] Add `tests/parser-parity.test.ts` projecting both CSTs onto the used node types and fields
-- [ ] Compare type, field, text and position for every fixture and sample repository file
-- [ ] Produce a readable mismatch report (file, path in tree, expected vs. actual)
-
-### Removal
-
-- [ ] Reach zero parity mismatches (or documented, intentional ones)
-- [ ] Remove tree-sitter and all grammar packages from `devDependencies`
-- [ ] Delete the `src/types/tree-sitter-*.d.ts` ambient declarations
-- [ ] Empty the guardrail allow-list and assert `dependencies` is `{}`
-
-### Acceptance criteria
-
-- [ ] `npm ls --omit=dev` is empty
-- [ ] No `tree-sitter` string remains in `package.json` or `src/`
-- [ ] Golden graph and query tests pass
-
-## Phase 3e: Parser performance targets ([#9](https://github.com/fatihserhatturan/concentrate/issues/9))
-
-**Milestone:** M4 – Zero runtime dependencies  
-**Depends on:** Phase 3b, Phase 3c
-
-**Goal:** Keep scan time competitive after leaving native tree-sitter.
-
-Target: scan time on the standing samples is at most 1.5× the tree-sitter baseline.
+**Goal:** Keep scan time competitive as repositories grow.
 
 ### Measurement
 
-- [ ] Record the tree-sitter scan-time and memory baseline on each standing sample
-- [ ] Add a repeatable parser benchmark script
+- [x] Record native and WASM scan time and peak memory on each standing sample
+- [ ] Add a repeatable parser benchmark script to `scripts/`
 
 ### Optimization
 
-- [ ] Profile and optimize lexer and parser hot paths
-- [ ] Add an optional `node:worker_threads` pool for per-file parsing if needed
+- [ ] Add an optional `node:worker_threads` pool for per-file parsing if profiles show parsing dominates
 
 ### Acceptance criteria
 
-- [ ] Scan time ≤ 1.5× the recorded baseline on every standing sample
-- [ ] Benchmark results are documented
+- [x] Benchmark results are documented
+- [ ] Scan time on `internet-nest` does not regress across grammar upgrades
 
 ## Phase 4: Move framework route knowledge out of the language layer ([#10](https://github.com/fatihserhatturan/concentrate/issues/10))
 
-**Milestone:** M3 – JS/TS parser  
-**Depends on:** Phase 3b
+**Milestone:** M3 – Portable parser  
+**Depends on:** Phase 3a
 
 **Goal:** Keep the language layer framework-agnostic and use a single parser per language.
 
@@ -556,15 +479,15 @@ Builds on the existing `--semantic-samples` infrastructure in the smoke command.
 ## Phase 9: Distribution (npm, init command, CI) ([#16](https://github.com/fatihserhatturan/concentrate/issues/16))
 
 **Milestone:** M6 – Release  
-**Depends on:** Phase 3d
+**Depends on:** Phase 3a
 
 **Goal:** Make `npx concentrate` work everywhere with no native build.
 
-Requires zero runtime dependencies (M4). Only stable `node:` APIs may be used; no `node:sqlite`.
+Requires the portable parser (M3): the only runtime dependency is `web-tree-sitter`. Only stable `node:` APIs may be used; no `node:sqlite`.
 
 ### Package
 
-- [ ] Set `dependencies: {}`, `files`, `bin` and `engines: node >=22`; drop `private: true`
+- [ ] Set `bin` and `engines: node >=22`; drop `private: true` (`files` and the single pinned dependency are done)
 - [ ] Choose a license and add `LICENSE`
 - [ ] Verify `npm pack` then `npx ./concentrate-*.tgz scan` in a clean directory without native builds
 

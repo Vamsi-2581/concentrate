@@ -1,4 +1,4 @@
-import type Parser from "tree-sitter";
+import type { SyntaxNode } from "../syntax/tree-sitter.js";
 import type { GraphNode } from "../../../core/graph/model.js";
 import { extractStringSource } from "./common.js";
 import {
@@ -6,7 +6,7 @@ import {
   serializeImportBindings,
 } from "./import-bindings.js";
 
-export function createImportNode(fileNodeId: string, node: Parser.SyntaxNode): GraphNode | null {
+export function createImportNode(fileNodeId: string, node: SyntaxNode): GraphNode | null {
   const source = extractStringSource(node);
 
   if (!source) {
@@ -30,7 +30,7 @@ export function createImportNode(fileNodeId: string, node: Parser.SyntaxNode): G
   };
 }
 
-export function createDynamicImportNode(fileNodeId: string, node: Parser.SyntaxNode, source: string): GraphNode {
+export function createDynamicImportNode(fileNodeId: string, node: SyntaxNode, source: string): GraphNode {
   return {
     id: `${fileNodeId}:import:${node.startPosition.row + 1}:${source}`,
     label: "Import",
@@ -50,7 +50,7 @@ export function createDynamicImportNode(fileNodeId: string, node: Parser.SyntaxN
 
 export function createCjsImportNode(
   fileNodeId: string,
-  node: Parser.SyntaxNode,
+  node: SyntaxNode,
   source: string,
   isConditional = false,
 ): GraphNode {
@@ -71,7 +71,7 @@ export function createCjsImportNode(
   };
 }
 
-export function createReExportImportNode(fileNodeId: string, node: Parser.SyntaxNode): GraphNode | null {
+export function createReExportImportNode(fileNodeId: string, node: SyntaxNode): GraphNode | null {
   const source = extractStringSource(node);
   if (!source) {
     return null;
@@ -94,14 +94,14 @@ export function createReExportImportNode(fileNodeId: string, node: Parser.Syntax
   };
 }
 
-function isTypeOnlyImport(node: Parser.SyntaxNode): boolean {
+function isTypeOnlyImport(node: SyntaxNode): boolean {
   return /^import\s+type[\s{]/.test(node.text);
 }
 
-function isTypeOnlyReExport(node: Parser.SyntaxNode): boolean {
+function isTypeOnlyReExport(node: SyntaxNode): boolean {
   return /^export\s+type[\s{]/.test(node.text);
 }
 
-function isWildcardReExport(node: Parser.SyntaxNode): boolean {
+function isWildcardReExport(node: SyntaxNode): boolean {
   return /^export\s+\*/.test(node.text);
 }

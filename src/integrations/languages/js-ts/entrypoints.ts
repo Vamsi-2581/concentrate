@@ -1,4 +1,4 @@
-import type Parser from "tree-sitter";
+import type { SyntaxNode } from "../syntax/tree-sitter.js";
 import type { GraphNode, GraphRelationship } from "../../../core/graph/model.js";
 import { analyzeMemberCallExpression } from "../tree-sitter-utils.js";
 
@@ -12,7 +12,7 @@ const nestSchedulerDecorators = new Set(["Cron", "Interval", "Timeout"]);
 
 export function createBackendEntrypointGraph(
   fileNodeId: string,
-  programNode: Parser.SyntaxNode,
+  programNode: SyntaxNode,
   nodes: GraphNode[],
   relationships: GraphRelationship[],
 ): { nodes: GraphNode[]; relationships: GraphRelationship[] } {
@@ -64,7 +64,7 @@ export function createBackendEntrypointGraph(
 
 function createCallEntrypoint(
   fileNodeId: string,
-  callExpr: Parser.SyntaxNode,
+  callExpr: SyntaxNode,
 ): EntrypointCandidate | null {
   const parts = analyzeMemberCallExpression(callExpr.childForFieldName("function")?.text);
   if (!parts) return null;
@@ -184,7 +184,7 @@ function classifyEntrypointCall(
   return null;
 }
 
-function extractEntrypointTrigger(args: Parser.SyntaxNode[], kind: string): string | null {
+function extractEntrypointTrigger(args: SyntaxNode[], kind: string): string | null {
   const firstString = args.find((arg) => arg.type === "string");
   if (firstString) return stripStringQuotes(firstString.text);
   return kind === "queue" ? null : null;
@@ -215,8 +215,8 @@ function createEntrypointNode(input: {
   };
 }
 
-function moduleLevelCallExpressions(programNode: Parser.SyntaxNode): Parser.SyntaxNode[] {
-  const calls: Parser.SyntaxNode[] = [];
+function moduleLevelCallExpressions(programNode: SyntaxNode): SyntaxNode[] {
+  const calls: SyntaxNode[] = [];
   for (const stmt of programNode.namedChildren) {
     if (stmt.type !== "expression_statement") continue;
 

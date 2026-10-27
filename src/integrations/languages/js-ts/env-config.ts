@@ -1,4 +1,4 @@
-import type Parser from "tree-sitter";
+import type { SyntaxNode } from "../syntax/tree-sitter.js";
 import type { GraphNode, GraphRelationship } from "../../../core/graph/model.js";
 import { walk } from "../tree-sitter-utils.js";
 
@@ -10,7 +10,7 @@ type EnvAccess = {
 
 export function createFileEnvUsageGraph(
   fileNodeId: string,
-  programNode: Parser.SyntaxNode,
+  programNode: SyntaxNode,
 ): { nodes: GraphNode[]; relationships: GraphRelationship[] } {
   const accesses = extractEnvAccesses(programNode);
   return createEnvUsageGraph(fileNodeId, accesses);
@@ -18,7 +18,7 @@ export function createFileEnvUsageGraph(
 
 export function createFunctionEnvUsageGraph(
   functionNodeId: string,
-  functionNode: Parser.SyntaxNode,
+  functionNode: SyntaxNode,
 ): { nodes: GraphNode[]; relationships: GraphRelationship[] } {
   const accesses = extractEnvAccesses(functionNode);
   return createEnvUsageGraph(functionNodeId, accesses);
@@ -26,7 +26,7 @@ export function createFunctionEnvUsageGraph(
 
 export function createConfigValueGraph(
   fileNodeId: string,
-  declarator: Parser.SyntaxNode,
+  declarator: SyntaxNode,
 ): { node: GraphNode; relationship: GraphRelationship } | null {
   const declaration = declarator.parent;
   const nameNode = declarator.childForFieldName("name");
@@ -104,7 +104,7 @@ function createEnvUsageGraph(
   return { nodes, relationships };
 }
 
-function extractEnvAccesses(node: Parser.SyntaxNode): EnvAccess[] {
+function extractEnvAccesses(node: SyntaxNode): EnvAccess[] {
   const accesses: EnvAccess[] = [];
   walk(node, (child) => {
     if (child.type !== "member_expression" && child.type !== "subscript_expression") {
@@ -148,7 +148,7 @@ function dedupeEnvAccesses(accesses: EnvAccess[]): EnvAccess[] {
   });
 }
 
-function extractLiteralValue(node: Parser.SyntaxNode): { value: string; type: string } | null {
+function extractLiteralValue(node: SyntaxNode): { value: string; type: string } | null {
   if (node.type === "string") {
     return {
       value: node.text.replace(/^["'`]|["'`]$/g, ""),

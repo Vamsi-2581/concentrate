@@ -1,19 +1,14 @@
 import path from "node:path";
 import { readFile } from "node:fs/promises";
-import Parser from "tree-sitter";
-import Python from "tree-sitter-python";
+import { indexOfNode, parseSyntaxTree, type SyntaxNode } from "../syntax/tree-sitter.js";
 import type { GraphNode, GraphRelationship, ParsedSourceFile } from "../../../core/graph/model.js";
 import type { SupportedLanguage } from "../../../core/scan/language.js";
 import type { LanguageParser } from "../../../core/contracts/language-parser.js";
 import {
   analyzeMemberCallExpression,
-  createTreeSitterInput,
   walk,
   walkScoped,
 } from "../tree-sitter-utils.js";
-
-const parser = new Parser();
-parser.setLanguage(Python);
 
 export const pythonParser: LanguageParser = {
   language: "python",
@@ -41,95 +36,99 @@ async function parsePythonFile(
   ];
   const relationships: GraphRelationship[] = [];
 
-  const tree = parser.parse(createTreeSitterInput(source));
-  if (tree.rootNode.hasError) {
-    throw new Error("Syntax error");
-  }
-
-  walk(tree.rootNode, (node) => {
-    if (node.type === "import_statement" || node.type === "import_from_statement") {
-      const importNode = createImportNode(fileNodeId, node);
-      if (importNode) {
-        nodes.push(importNode);
-        relationships.push({
-          from: fileNodeId,
-          to: importNode.id,
-          type: "IMPORTS",
-          properties: {},
-        });
-      }
+  const tree = await parseSyntaxTree("python", source);
+  try {
+    if (tree.rootNode.hasError) {
+      throw new Error("Syntax error");
     }
 
-    if (node.type === "function_definition" && !isPythonClassMethod(node)) {
-      const functionNode = createFunctionNode(fileNodeId, node);
-      if (functionNode) {
-        nodes.push(functionNode);
-        relationships.push({
-          from: fileNodeId,
-          to: functionNode.id,
-          type: "DEFINES_FUNCTION",
-          properties: {},
-        });
-
-        const callNodes = createCallNodes(functionNode.id, node);
-        nodes.push(...callNodes);
-        relationships.push(
-          ...callNodes.map((callNode) => ({
-            from: functionNode.id,
-            to: callNode.id,
-            type: "CALLS" as const,
+    walk(tree.rootNode, (node) => {
+      if (node.type === "import_statement" || node.type === "import_from_statement") {
+        const importNode = createImportNode(fileNodeId, node);
+        if (importNode) {
+          nodes.push(importNode);
+          relationships.push({
+            from: fileNodeId,
+            to: importNode.id,
+            type: "IMPORTS",
             properties: {},
-          })),
-        );
+          });
+        }
       }
-    }
 
-    if (node.type === "class_definition") {
-      const classNode = createClassNode(fileNodeId, node);
-      if (classNode) {
-        nodes.push(classNode);
-        relationships.push({
-          from: fileNodeId,
-          to: classNode.id,
-          type: "DEFINES_CLASS",
-          properties: {},
-        });
+      if (node.type === "function_definition" && !isPythonClassMethod(node)) {
+        const functionNode = createFunctionNode(fileNodeId, node);
+        if (functionNode) {
+          nodes.push(functionNode);
+          relationships.push({
+            from: fileNodeId,
+            to: functionNode.id,
+            type: "DEFINES_FUNCTION",
+            properties: {},
+          });
 
-        const className = String(classNode.properties.name);
-        const body = node.namedChildren.find((c) => c.type === "block");
-        if (body) {
-          for (const child of body.namedChildren) {
-            if (child.type !== "function_definition") continue;
-            const methodNode = createFunctionNode(fileNodeId, child, className);
-            if (methodNode) {
-              nodes.push(methodNode);
-              relationships.push({
-                from: classNode.id,
-                to: methodNode.id,
-                type: "DEFINES_METHOD",
-                properties: {},
-              });
-              const callNodes = createCallNodes(methodNode.id, child);
-              nodes.push(...callNodes);
-              relationships.push(
-                ...callNodes.map((callNode) => ({
-                  from: methodNode.id,
-                  to: callNode.id,
-                  type: "CALLS" as const,
+          const callNodes = createCallNodes(functionNode.id, node);
+          nodes.push(...callNodes);
+          relationships.push(
+            ...callNodes.map((callNode) => ({
+              from: functionNode.id,
+              to: callNode.id,
+              type: "CALLS" as const,
+              properties: {},
+            })),
+          );
+        }
+      }
+
+      if (node.type === "class_definition") {
+        const classNode = createClassNode(fileNodeId, node);
+        if (classNode) {
+          nodes.push(classNode);
+          relationships.push({
+            from: fileNodeId,
+            to: classNode.id,
+            type: "DEFINES_CLASS",
+            properties: {},
+          });
+
+          const className = String(classNode.properties.name);
+          const body = node.namedChildren.find((c) => c.type === "block");
+          if (body) {
+            for (const child of body.namedChildren) {
+              if (child.type !== "function_definition") continue;
+              const methodNode = createFunctionNode(fileNodeId, child, className);
+              if (methodNode) {
+                nodes.push(methodNode);
+                relationships.push({
+                  from: classNode.id,
+                  to: methodNode.id,
+                  type: "DEFINES_METHOD",
                   properties: {},
-                })),
-              );
+                });
+                const callNodes = createCallNodes(methodNode.id, child);
+                nodes.push(...callNodes);
+                relationships.push(
+                  ...callNodes.map((callNode) => ({
+                    from: methodNode.id,
+                    to: callNode.id,
+                    type: "CALLS" as const,
+                    properties: {},
+                  })),
+                );
+              }
             }
           }
         }
       }
-    }
-  });
+    });
 
-  return { fileNodeId, nodes, relationships };
+    return { fileNodeId, nodes, relationships };
+  } finally {
+    tree.delete();
+  }
 }
 
-function createImportNode(fileNodeId: string, node: Parser.SyntaxNode): GraphNode | null {
+function createImportNode(fileNodeId: string, node: SyntaxNode): GraphNode | null {
   const source = node.type === "import_from_statement"
     ? extractImportFromSource(node)
     : extractImportStatementSource(node);
@@ -149,7 +148,7 @@ function createImportNode(fileNodeId: string, node: Parser.SyntaxNode): GraphNod
   };
 }
 
-function extractImportFromSource(node: Parser.SyntaxNode): string | null {
+function extractImportFromSource(node: SyntaxNode): string | null {
   const relativeImport = node.namedChildren.find((child) => child.type === "relative_import");
   if (relativeImport) {
     return normalizePythonRelativeImport(relativeImport.text, getImportedName(node));
@@ -159,11 +158,11 @@ function extractImportFromSource(node: Parser.SyntaxNode): string | null {
   return dottedName?.text ?? null;
 }
 
-function getImportedName(node: Parser.SyntaxNode): string | null {
+function getImportedName(node: SyntaxNode): string | null {
   const importSourceNode = node.namedChildren.find((child) => (
     child.type === "relative_import" || child.type === "dotted_name"
   ));
-  const importSourceIndex = importSourceNode ? node.namedChildren.indexOf(importSourceNode) : -1;
+  const importSourceIndex = importSourceNode ? indexOfNode(node.namedChildren, importSourceNode) : -1;
   const importedName = node.namedChildren
     .slice(importSourceIndex + 1)
     .find((child) => child.type === "dotted_name" || child.type === "aliased_import");
@@ -179,7 +178,7 @@ function getImportedName(node: Parser.SyntaxNode): string | null {
   return dottedName?.text ?? null;
 }
 
-function extractImportStatementSource(node: Parser.SyntaxNode): string | null {
+function extractImportStatementSource(node: SyntaxNode): string | null {
   const firstImport = node.namedChildren.find((child) => (
     child.type === "dotted_name" || child.type === "aliased_import"
   ));
@@ -208,11 +207,11 @@ function normalizePythonRelativeImport(source: string, importedName: string | nu
   return importedPath ? `${parentPrefix}/${importedPath}` : parentPrefix;
 }
 
-function isPythonClassMethod(node: Parser.SyntaxNode): boolean {
+function isPythonClassMethod(node: SyntaxNode): boolean {
   return node.parent?.type === "block" && node.parent?.parent?.type === "class_definition";
 }
 
-function createFunctionNode(fileNodeId: string, node: Parser.SyntaxNode, className?: string): GraphNode | null {
+function createFunctionNode(fileNodeId: string, node: SyntaxNode, className?: string): GraphNode | null {
   const name = extractName(node);
   if (!name) {
     return null;
@@ -238,7 +237,7 @@ function createFunctionNode(fileNodeId: string, node: Parser.SyntaxNode, classNa
   };
 }
 
-function createClassNode(fileNodeId: string, node: Parser.SyntaxNode): GraphNode | null {
+function createClassNode(fileNodeId: string, node: SyntaxNode): GraphNode | null {
   const name = extractName(node);
   if (!name) {
     return null;
@@ -267,7 +266,7 @@ function pythonVisibility(name: string): string {
   return name.startsWith("_") ? "private" : "public";
 }
 
-function extractPythonBaseClassNames(node: Parser.SyntaxNode): string[] {
+function extractPythonBaseClassNames(node: SyntaxNode): string[] {
   const argumentList = node.namedChildren.find((child) => child.type === "argument_list");
   if (!argumentList) {
     return [];
@@ -282,7 +281,7 @@ function serializeNameList(names: string[]): string | null {
   return names.length > 0 ? JSON.stringify(names) : null;
 }
 
-function createCallNodes(functionNodeId: string, node: Parser.SyntaxNode): GraphNode[] {
+function createCallNodes(functionNodeId: string, node: SyntaxNode): GraphNode[] {
   const calls: GraphNode[] = [];
 
   walkScoped(node, (child) => {
@@ -312,6 +311,6 @@ function createCallNodes(functionNodeId: string, node: Parser.SyntaxNode): Graph
   return calls;
 }
 
-function extractName(node: Parser.SyntaxNode): string | null {
+function extractName(node: SyntaxNode): string | null {
   return node.childForFieldName("name")?.text ?? null;
 }

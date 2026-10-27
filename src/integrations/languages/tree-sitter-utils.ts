@@ -1,4 +1,4 @@
-import type Parser from "tree-sitter";
+import type { SyntaxNode } from "./syntax/tree-sitter.js";
 
 export type CallExpressionParts = {
   expression: string;
@@ -6,7 +6,7 @@ export type CallExpressionParts = {
   receiver: string | null;
 };
 
-export function walk(node: Parser.SyntaxNode, visit: (node: Parser.SyntaxNode) => void): void {
+export function walk(node: SyntaxNode, visit: (node: SyntaxNode) => void): void {
   visit(node);
   for (const child of node.namedChildren) {
     walk(child, visit);
@@ -14,24 +14,19 @@ export function walk(node: Parser.SyntaxNode, visit: (node: Parser.SyntaxNode) =
 }
 
 export function walkScoped(
-  node: Parser.SyntaxNode,
-  visit: (node: Parser.SyntaxNode) => void,
-  shouldSkipChild: (node: Parser.SyntaxNode) => boolean,
+  node: SyntaxNode,
+  visit: (node: SyntaxNode) => void,
+  shouldSkipChild: (node: SyntaxNode) => boolean,
 ): void {
   visit(node);
 
   for (const child of node.namedChildren) {
-    if (child !== node && shouldSkipChild(child)) {
+    if (child.id !== node.id && shouldSkipChild(child)) {
       continue;
     }
 
     walkScoped(child, visit, shouldSkipChild);
   }
-}
-
-export function createTreeSitterInput(source: string): (offset: number) => string {
-  const chunkSize = 16 * 1024;
-  return (offset: number) => source.slice(offset, offset + chunkSize);
 }
 
 export function analyzeMemberCallExpression(expression: string | undefined): CallExpressionParts | null {
