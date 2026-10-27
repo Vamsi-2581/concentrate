@@ -1016,7 +1016,7 @@
     "rows": [
       {
         "name": "buildMessage",
-        "visibility": "private"
+        "visibility": "public"
       },
       {
         "name": "start",

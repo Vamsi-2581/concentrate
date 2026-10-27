@@ -93,7 +93,7 @@
     { "id": "return/list-literal", "cypher": "RETURN [1, 2, 3] AS list, size([1, 2]) AS n" },
     { "id": "return/string-functions", "cypher": "MATCH (fn:Function) RETURN fn.name AS name, lower(fn.name) AS lower, upper(fn.name) AS upper, size(fn.name) AS length" },
     { "id": "return/coalesce", "cypher": "MATCH (fn:Function) RETURN fn.name AS name, coalesce(fn.className, 'none') AS cls" },
-    { "id": "return/case", "cypher": "MATCH (fn:Function) RETURN fn.name AS name, CASE WHEN fn.isExported THEN 'public' ELSE 'private' END AS visibility" },
+    { "id": "return/case", "cypher": "MATCH (fn:Function) RETURN fn.name AS name, CASE WHEN fn.isExported = true THEN 'public' ELSE 'private' END AS visibility", "note": "Compares with = true: Kuzu 0.11 evaluates a bare boolean property in CASE WHEN wrongly from the second row on" },
     { "id": "return/case-simple", "cypher": "MATCH (r:Route) RETURN r.path AS path, CASE r.method WHEN 'GET' THEN 'read' WHEN 'POST' THEN 'write' ELSE 'other' END AS kind" },
     { "id": "return/label-function", "cypher": "MATCH (f:File)-[:DEFINES_VARIABLE|DEFINES_FUNCTION]->(x) RETURN x.name AS name, label(x) AS label" },
     { "id": "return/missing-property-null", "cypher": "MATCH (s:Route)-[step:ROUTE_LIFECYCLE_STEP]->(fn:Function) RETURN fn.name AS fn, step.hook AS hook" },

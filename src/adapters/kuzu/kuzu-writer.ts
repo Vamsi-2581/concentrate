@@ -3,7 +3,7 @@ import path from "node:path";
 import kuzu from "kuzu";
 import type { Connection as KuzuConnection, Database as KuzuDatabase } from "kuzu";
 import { formatProperties, quote } from "./kuzu-format.js";
-import { physicalRelationshipType } from "./kuzu-relationships.js";
+import { physicalRelationshipType } from "../store/physical-types.js";
 import { withKuzuRetry, type KuzuRetryOptions } from "./kuzu-retry.js";
 import { closeResults } from "./kuzu-results.js";
 import { readKuzuSchemaVersion, resetKuzuSchema } from "./kuzu-schema-management.js";
