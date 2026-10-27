@@ -49,7 +49,7 @@ export const mcpToolDefinitions: McpToolDefinition[] = [
   },
   {
     name: "find_callers",
-    description: "Find call sites that resolve to functions with the given name.",
+    description: "Find call sites that resolve to functions with the given name. Callers can be functions, class methods (with className), or module-level code.",
     inputSchema: objectSchema({
       name: {
         type: "string",
@@ -264,6 +264,23 @@ async function findCallers(
     ORDER BY file.relativePath, call.line
     LIMIT ${limit}
   `);
+  // Class methods hang off their class, not off the file.
+  const methodCallers = await engine.query(`
+    MATCH (call:Call)-[:CALL_RESOLVES_TO]->(target:Function)
+    MATCH (caller:Function)-[:CALLS]->(call)
+    MATCH (file:File)-[:DEFINES_CLASS]->(class:Class)-[:DEFINES_METHOD]->(caller)
+    WHERE ${predicate}
+    RETURN target.name AS target,
+      caller.name AS caller,
+      'Method' AS callerKind,
+      class.name AS className,
+      file.relativePath AS file,
+      call.line AS line,
+      call.expression AS expression,
+      'CALLS' AS relationship
+    ORDER BY file.relativePath, call.line
+    LIMIT ${limit}
+  `);
   const moduleCallers = await engine.query(`
     MATCH (call:Call)-[:CALL_RESOLVES_TO]->(target:Function)
     MATCH (file:File)-[:MODULE_CALLS]->(call)
@@ -279,7 +296,7 @@ async function findCallers(
     LIMIT ${limit}
   `);
 
-  return { query: { name, exact, limit }, callers: [...functionCallers, ...moduleCallers].slice(0, limit) };
+  return { query: { name, exact, limit }, callers: [...functionCallers, ...methodCallers, ...moduleCallers].slice(0, limit) };
 }
 
 async function listExports(

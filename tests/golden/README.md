@@ -46,5 +46,5 @@ per case in [`query-cases.json`](query-cases.json):
   `$num`). A new tool or filter that the cases do not cover shows up as a diff
   here.
 
-The recordings pin current behavior, including known gaps: `find_callers`
-currently misses callers that are class methods (`DEFINES_METHOD`).
+The recordings pin current behavior. A tool fix that changes results must show
+up as a golden diff and be explained in the PR.
