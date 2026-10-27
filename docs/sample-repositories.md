@@ -1,6 +1,36 @@
 # Sample Repositories
 
-This document tracks external repositories used for scanner smoke tests.
+This document tracks external repositories used for scanner smoke tests and
+golden sample tests.
+
+## Fetching
+
+Every sample is pinned to a commit in [`scripts/samples.json`](../scripts/samples.json):
+the last default-branch commit before 2026-05-01, when the expected counts below
+were recorded. Fetch them (shallow, idempotent) with:
+
+```bash
+npm run samples:fetch                      # standing suite
+npm run samples:fetch -- --suite all       # standing + internet
+```
+
+Samples land in `.concentrate/samples/<name>`; set `CONCENTRATE_SAMPLES_DIR` to
+use another directory. The smoke runner, `npm run test:samples` and the golden
+sample test (`tests/golden-samples.test.ts`) all read from there.
+
+| Sample | Suite | Repository | Pinned commit |
+| --- | --- | --- | --- |
+| express | standing | expressjs/express | `6340c1eaaedc0ddcae8be8df2cdb1d2e961cbf2f` |
+| fastify | standing | fastify/example | `10ab6cdde7a60d1fcf8cc8cd8e84cfde0b3708e8` |
+| nestjs-starter | standing | nestjs/typescript-starter | `c4d9330f5513eda0fb5df594f6b34a11fde1a934` |
+| ky | standing | sindresorhus/ky | `e0fcf780de2bd69af2528e4b7b87ccae6bb727b1` |
+| internet-node-express-firebase-mongodb | internet | JDIZM/node-express-firebase-mongodb | `269ab2619cf320bb38eb821e95a35dd9ad772770` |
+| internet-node-express-realworld | internet | gothinkster/node-express-realworld-example-app | `30b68e1e881462b2f4164ea09ab4c4f5699c7b0b` |
+| internet-nest | internet | nestjs/nest | `958ff952c00bd5a25efa04ffaafac28721af7827` |
+
+At these commits every recorded count reproduces exactly, except ky's
+`discoveredFiles` (67 instead of 68: the original local clone had one extra
+untracked file).
 
 ## Backend Smoke Scans
 
@@ -53,12 +83,12 @@ manual findings can be recorded next to the sample rows.
 ### Express
 
 - Repository: `https://github.com/expressjs/express`
-- Local path: `~/Desktop/concentrate-sample-express`
+- Local path: `.concentrate/samples/express`
 - Graph database: `.concentrate/express.kuzu`
 - Last scan command:
 
 ```bash
-npm run dev -- scan ~/Desktop/concentrate-sample-express --database .concentrate/express.kuzu
+npm run dev -- scan .concentrate/samples/express --database .concentrate/express.kuzu
 ```
 
 - Example stats command:
@@ -81,12 +111,12 @@ npm run dev -- stats --database .concentrate/express.kuzu
 ### Fastify
 
 - Repository: `https://github.com/fastify/example`
-- Local path: `~/Desktop/concentrate-sample-fastify`
+- Local path: `.concentrate/samples/fastify`
 - Graph database: `.concentrate/fastify.kuzu`
 - Last scan command:
 
 ```bash
-npm run dev -- scan ~/Desktop/concentrate-sample-fastify --database .concentrate/fastify.kuzu
+npm run dev -- scan .concentrate/samples/fastify --database .concentrate/fastify.kuzu
 ```
 
 - Example stats command:
@@ -109,18 +139,18 @@ npm run dev -- stats --database .concentrate/fastify.kuzu
 ### NestJS
 
 - Repository: `https://github.com/nestjs/typescript-starter`
-- Local path: `~/Desktop/concentrate-sample-nestjs`
-- Graph database: `.concentrate/nestjs.kuzu`
+- Local path: `.concentrate/samples/nestjs-starter`
+- Graph database: `.concentrate/nestjs-starter.kuzu`
 - Last scan command:
 
 ```bash
-npm run dev -- scan ~/Desktop/concentrate-sample-nestjs --database .concentrate/nestjs.kuzu
+npm run dev -- scan .concentrate/samples/nestjs-starter --database .concentrate/nestjs-starter.kuzu
 ```
 
 - Example stats command:
 
 ```bash
-npm run dev -- stats --database .concentrate/nestjs.kuzu
+npm run dev -- stats --database .concentrate/nestjs-starter.kuzu
 ```
 
 - Last scan result, 2026-05-02: 16 discovered files, 7 supported files,
@@ -137,12 +167,12 @@ npm run dev -- stats --database .concentrate/nestjs.kuzu
 ## Ky
 
 - Repository: `https://github.com/sindresorhus/ky`
-- Local path: `~/Desktop/concentrate-sample-ky`
+- Local path: `.concentrate/samples/ky`
 - Graph database: `.concentrate/ky.kuzu`
 - Last scan command:
 
 ```bash
-npm run dev -- scan ~/Desktop/concentrate-sample-ky --database .concentrate/ky.kuzu
+npm run dev -- scan .concentrate/samples/ky --database .concentrate/ky.kuzu
 ```
 
 - Example stats command:
@@ -169,7 +199,7 @@ standing smoke samples.
 
 - Scale: small
 - Repository: `https://github.com/JDIZM/node-express-firebase-mongodb`
-- Local path: `.concentrate/internet-samples/node-express-firebase-mongodb`
+- Local path: `.concentrate/samples/internet-node-express-firebase-mongodb`
 - Graph database: `.concentrate/internet-node-express-firebase-mongodb.kuzu`
 - Last scan result, 2026-05-02: 40 discovered files, 24 supported files,
   24 parsed files, 0 failed files, 22 resolved imports, 28 unresolved
@@ -186,7 +216,7 @@ standing smoke samples.
 
 - Scale: medium
 - Repository: `https://github.com/gothinkster/node-express-realworld-example-app`
-- Local path: `.concentrate/internet-samples/node-express-realworld-example-app`
+- Local path: `.concentrate/samples/internet-node-express-realworld`
 - Graph database: `.concentrate/internet-node-express-realworld.kuzu`
 - Last scan result, 2026-05-02: 67 discovered files, 39 supported files,
   39 parsed files, 0 failed files, 49 resolved imports, 22 unresolved
@@ -200,7 +230,7 @@ standing smoke samples.
 
 - Scale: large
 - Repository: `https://github.com/nestjs/nest`
-- Local path: `.concentrate/internet-samples/nest`
+- Local path: `.concentrate/samples/internet-nest`
 - Graph database: `.concentrate/internet-nest.kuzu`
 - Last scan result, 2026-05-02: 2115 discovered files, 1714 supported files,
   1712 parsed files, 2 failed files, 4914 resolved imports, 1395 unresolved

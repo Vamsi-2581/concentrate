@@ -1,4 +1,5 @@
-import { quote } from "../kuzu/kuzu-format.js";
+import type { IQueryEngine } from "../../core/contracts/query-engine.js";
+import { quote } from "./cypher.js";
 
 export type McpToolContent = {
   type: "text";
@@ -15,17 +16,12 @@ export type McpToolDefinition = {
   inputSchema: Record<string, unknown>;
 };
 
-export type GraphQueryEngine = {
-  query(cypher: string): Promise<unknown[]>;
-  stats(options?: { packageName?: string }): Promise<Array<{ table: string; count: unknown }>>;
-  schemaVersion(): Promise<number | null>;
-  close?(): Promise<void>;
-};
+export type GraphQueryEngine = IQueryEngine;
 
 export const mcpToolDefinitions: McpToolDefinition[] = [
   {
     name: "graph_stats",
-    description: "Return schema version and node counts for the current Concentrate Kuzu graph.",
+    description: "Return schema version and node counts for the current Concentrate graph.",
     inputSchema: objectSchema({
       packageName: {
         type: "string",

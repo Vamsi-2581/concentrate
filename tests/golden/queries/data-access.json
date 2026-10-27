@@ -1,0 +1,1495 @@
+[
+  {
+    "tool": "graph_stats",
+    "args": {},
+    "calls": [
+      {
+        "method": "schemaVersion",
+        "result": 34
+      },
+      {
+        "method": "stats",
+        "options": {},
+        "rows": [
+          {
+            "table": "Repo",
+            "count": 1
+          },
+          {
+            "table": "Package",
+            "count": 0
+          },
+          {
+            "table": "Directory",
+            "count": 1
+          },
+          {
+            "table": "File",
+            "count": 1
+          },
+          {
+            "table": "Import",
+            "count": 2
+          },
+          {
+            "table": "Function",
+            "count": 13
+          },
+          {
+            "table": "Class",
+            "count": 5
+          },
+          {
+            "table": "Field",
+            "count": 4
+          },
+          {
+            "table": "Variable",
+            "count": 8
+          },
+          {
+            "table": "Decorator",
+            "count": 0
+          },
+          {
+            "table": "Interface",
+            "count": 0
+          },
+          {
+            "table": "TypeAlias",
+            "count": 0
+          },
+          {
+            "table": "Enum",
+            "count": 0
+          },
+          {
+            "table": "Call",
+            "count": 27
+          },
+          {
+            "table": "Route",
+            "count": 2
+          },
+          {
+            "table": "EntryPoint",
+            "count": 1
+          },
+          {
+            "table": "EnvVar",
+            "count": 0
+          },
+          {
+            "table": "ConfigValue",
+            "count": 0
+          },
+          {
+            "table": "DataModel",
+            "count": 6
+          }
+        ]
+      }
+    ],
+    "output": {
+      "schemaVersion": 34,
+      "stats": [
+        {
+          "table": "Repo",
+          "count": 1
+        },
+        {
+          "table": "Package",
+          "count": 0
+        },
+        {
+          "table": "Directory",
+          "count": 1
+        },
+        {
+          "table": "File",
+          "count": 1
+        },
+        {
+          "table": "Import",
+          "count": 2
+        },
+        {
+          "table": "Function",
+          "count": 13
+        },
+        {
+          "table": "Class",
+          "count": 5
+        },
+        {
+          "table": "Field",
+          "count": 4
+        },
+        {
+          "table": "Variable",
+          "count": 8
+        },
+        {
+          "table": "Decorator",
+          "count": 0
+        },
+        {
+          "table": "Interface",
+          "count": 0
+        },
+        {
+          "table": "TypeAlias",
+          "count": 0
+        },
+        {
+          "table": "Enum",
+          "count": 0
+        },
+        {
+          "table": "Call",
+          "count": 27
+        },
+        {
+          "table": "Route",
+          "count": 2
+        },
+        {
+          "table": "EntryPoint",
+          "count": 1
+        },
+        {
+          "table": "EnvVar",
+          "count": 0
+        },
+        {
+          "table": "ConfigValue",
+          "count": 0
+        },
+        {
+          "table": "DataModel",
+          "count": 6
+        }
+      ]
+    }
+  },
+  {
+    "tool": "find_definitions",
+    "args": {
+      "name": "e"
+    },
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_FUNCTION]->(n:Function) WHERE contains(lower(n.name), lower(\"e\")) RETURN n.name AS name, 'Function' AS kind, file.relativePath AS file, n.line AS line, n.isExported AS isExported, 'DEFINES_FUNCTION' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 20",
+        "rows": [
+          {
+            "name": "listUsers",
+            "kind": "Function",
+            "file": "service.ts",
+            "line": 13,
+            "isExported": false,
+            "relationship": "DEFINES_FUNCTION"
+          },
+          {
+            "name": "createUser",
+            "kind": "Function",
+            "file": "service.ts",
+            "line": 20,
+            "isExported": false,
+            "relationship": "DEFINES_FUNCTION"
+          },
+          {
+            "name": "handleJob",
+            "kind": "Function",
+            "file": "service.ts",
+            "line": 26,
+            "isExported": false,
+            "relationship": "DEFINES_FUNCTION"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(n:Class) WHERE contains(lower(n.name), lower(\"e\")) RETURN n.name AS name, 'Class' AS kind, file.relativePath AS file, n.line AS line, n.isExported AS isExported, 'DEFINES_CLASS' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 20",
+        "rows": [
+          {
+            "name": "PrismaBackedRepository",
+            "kind": "Class",
+            "file": "service.ts",
+            "line": 30,
+            "isExported": false,
+            "relationship": "DEFINES_CLASS"
+          },
+          {
+            "name": "TypeOrmBackedRepository",
+            "kind": "Class",
+            "file": "service.ts",
+            "line": 38,
+            "isExported": false,
+            "relationship": "DEFINES_CLASS"
+          },
+          {
+            "name": "MongooseBackedRepository",
+            "kind": "Class",
+            "file": "service.ts",
+            "line": 46,
+            "isExported": false,
+            "relationship": "DEFINES_CLASS"
+          },
+          {
+            "name": "KnexBackedRepository",
+            "kind": "Class",
+            "file": "service.ts",
+            "line": 54,
+            "isExported": false,
+            "relationship": "DEFINES_CLASS"
+          },
+          {
+            "name": "UserService",
+            "kind": "Class",
+            "file": "service.ts",
+            "line": 60,
+            "isExported": false,
+            "relationship": "DEFINES_CLASS"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_VARIABLE]->(n:Variable) WHERE contains(lower(n.name), lower(\"e\")) RETURN n.name AS name, 'Variable' AS kind, file.relativePath AS file, n.line AS line, n.isExported AS isExported, 'DEFINES_VARIABLE' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 20",
+        "rows": [
+          {
+            "name": "aliasedPrisma",
+            "kind": "Variable",
+            "file": "service.ts",
+            "line": 6,
+            "isExported": false,
+            "relationship": "DEFINES_VARIABLE"
+          },
+          {
+            "name": "usersRepository",
+            "kind": "Variable",
+            "file": "service.ts",
+            "line": 7,
+            "isExported": false,
+            "relationship": "DEFINES_VARIABLE"
+          },
+          {
+            "name": "AuditModel",
+            "kind": "Variable",
+            "file": "service.ts",
+            "line": 8,
+            "isExported": false,
+            "relationship": "DEFINES_VARIABLE"
+          },
+          {
+            "name": "knex",
+            "kind": "Variable",
+            "file": "service.ts",
+            "line": 10,
+            "isExported": false,
+            "relationship": "DEFINES_VARIABLE"
+          },
+          {
+            "name": "plainObject",
+            "kind": "Variable",
+            "file": "service.ts",
+            "line": 11,
+            "isExported": false,
+            "relationship": "DEFINES_VARIABLE"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_INTERFACE]->(n:Interface) WHERE contains(lower(n.name), lower(\"e\")) RETURN n.name AS name, 'Interface' AS kind, file.relativePath AS file, n.line AS line, n.isExported AS isExported, 'DEFINES_INTERFACE' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 20",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_TYPE_ALIAS]->(n:TypeAlias) WHERE contains(lower(n.name), lower(\"e\")) RETURN n.name AS name, 'TypeAlias' AS kind, file.relativePath AS file, n.line AS line, n.isExported AS isExported, 'DEFINES_TYPE_ALIAS' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 20",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_ENUM]->(n:Enum) WHERE contains(lower(n.name), lower(\"e\")) RETURN n.name AS name, 'Enum' AS kind, file.relativePath AS file, n.line AS line, n.isExported AS isExported, 'DEFINES_ENUM' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 20",
+        "rows": []
+      }
+    ],
+    "output": {
+      "query": {
+        "name": "e",
+        "exact": false,
+        "limit": 20
+      },
+      "definitions": [
+        {
+          "name": "listUsers",
+          "kind": "Function",
+          "file": "service.ts",
+          "line": 13,
+          "isExported": false,
+          "relationship": "DEFINES_FUNCTION"
+        },
+        {
+          "name": "createUser",
+          "kind": "Function",
+          "file": "service.ts",
+          "line": 20,
+          "isExported": false,
+          "relationship": "DEFINES_FUNCTION"
+        },
+        {
+          "name": "handleJob",
+          "kind": "Function",
+          "file": "service.ts",
+          "line": 26,
+          "isExported": false,
+          "relationship": "DEFINES_FUNCTION"
+        },
+        {
+          "name": "PrismaBackedRepository",
+          "kind": "Class",
+          "file": "service.ts",
+          "line": 30,
+          "isExported": false,
+          "relationship": "DEFINES_CLASS"
+        },
+        {
+          "name": "TypeOrmBackedRepository",
+          "kind": "Class",
+          "file": "service.ts",
+          "line": 38,
+          "isExported": false,
+          "relationship": "DEFINES_CLASS"
+        },
+        {
+          "name": "MongooseBackedRepository",
+          "kind": "Class",
+          "file": "service.ts",
+          "line": 46,
+          "isExported": false,
+          "relationship": "DEFINES_CLASS"
+        },
+        {
+          "name": "KnexBackedRepository",
+          "kind": "Class",
+          "file": "service.ts",
+          "line": 54,
+          "isExported": false,
+          "relationship": "DEFINES_CLASS"
+        },
+        {
+          "name": "UserService",
+          "kind": "Class",
+          "file": "service.ts",
+          "line": 60,
+          "isExported": false,
+          "relationship": "DEFINES_CLASS"
+        },
+        {
+          "name": "aliasedPrisma",
+          "kind": "Variable",
+          "file": "service.ts",
+          "line": 6,
+          "isExported": false,
+          "relationship": "DEFINES_VARIABLE"
+        },
+        {
+          "name": "usersRepository",
+          "kind": "Variable",
+          "file": "service.ts",
+          "line": 7,
+          "isExported": false,
+          "relationship": "DEFINES_VARIABLE"
+        },
+        {
+          "name": "AuditModel",
+          "kind": "Variable",
+          "file": "service.ts",
+          "line": 8,
+          "isExported": false,
+          "relationship": "DEFINES_VARIABLE"
+        },
+        {
+          "name": "knex",
+          "kind": "Variable",
+          "file": "service.ts",
+          "line": 10,
+          "isExported": false,
+          "relationship": "DEFINES_VARIABLE"
+        },
+        {
+          "name": "plainObject",
+          "kind": "Variable",
+          "file": "service.ts",
+          "line": 11,
+          "isExported": false,
+          "relationship": "DEFINES_VARIABLE"
+        }
+      ]
+    }
+  },
+  {
+    "tool": "list_exports",
+    "args": {},
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_FUNCTION]->(n:Function) WHERE n.isExported = true RETURN file.relativePath AS file, n.name AS name, 'Function' AS kind, n.line AS line, 'DEFINES_FUNCTION' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(n:Class) WHERE n.isExported = true RETURN file.relativePath AS file, n.name AS name, 'Class' AS kind, n.line AS line, 'DEFINES_CLASS' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_VARIABLE]->(n:Variable) WHERE n.isExported = true RETURN file.relativePath AS file, n.name AS name, 'Variable' AS kind, n.line AS line, 'DEFINES_VARIABLE' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_INTERFACE]->(n:Interface) WHERE n.isExported = true RETURN file.relativePath AS file, n.name AS name, 'Interface' AS kind, n.line AS line, 'DEFINES_INTERFACE' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_TYPE_ALIAS]->(n:TypeAlias) WHERE n.isExported = true RETURN file.relativePath AS file, n.name AS name, 'TypeAlias' AS kind, n.line AS line, 'DEFINES_TYPE_ALIAS' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_ENUM]->(n:Enum) WHERE n.isExported = true RETURN file.relativePath AS file, n.name AS name, 'Enum' AS kind, n.line AS line, 'DEFINES_ENUM' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:RE_EXPORTS]->(target:Import) WHERE true RETURN file.relativePath AS file, target.source AS name, 'Import' AS kind, target.line AS line, 'RE_EXPORTS' AS relationship ORDER BY file.relativePath, target.line, target.source LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:RE_EXPORTS_FUNCTION]->(target:Function) WHERE true RETURN file.relativePath AS file, target.name AS name, 'Function' AS kind, target.line AS line, 'RE_EXPORTS_FUNCTION' AS relationship ORDER BY file.relativePath, target.line, target.name LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:RE_EXPORTS_CLASS]->(target:Class) WHERE true RETURN file.relativePath AS file, target.name AS name, 'Class' AS kind, target.line AS line, 'RE_EXPORTS_CLASS' AS relationship ORDER BY file.relativePath, target.line, target.name LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:RE_EXPORTS_VARIABLE]->(target:Variable) WHERE true RETURN file.relativePath AS file, target.name AS name, 'Variable' AS kind, target.line AS line, 'RE_EXPORTS_VARIABLE' AS relationship ORDER BY file.relativePath, target.line, target.name LIMIT 50",
+        "rows": []
+      }
+    ],
+    "output": {
+      "query": {
+        "limit": 50
+      },
+      "exports": []
+    }
+  },
+  {
+    "tool": "list_routes",
+    "args": {},
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_ROUTE]->(route:Route) OPTIONAL MATCH (route)-[:ROUTE_HANDLED_BY]->(handler:Function) WHERE true RETURN file.relativePath AS file, route.line AS line, route.method AS method, route.path AS path, route.fullPath AS fullPath, route.framework AS framework, route.handlerName AS handlerName, handler.name AS handler ORDER BY file.relativePath, route.line LIMIT 50",
+        "rows": [
+          {
+            "file": "service.ts",
+            "line": 73,
+            "method": "GET",
+            "path": "/users",
+            "fullPath": "/users",
+            "framework": "express-koa",
+            "handlerName": "listUsers",
+            "handler": "listUsers"
+          },
+          {
+            "file": "service.ts",
+            "line": 74,
+            "method": "POST",
+            "path": "/users",
+            "fullPath": "/users",
+            "framework": "express-koa",
+            "handlerName": "createUser",
+            "handler": "createUser"
+          }
+        ]
+      }
+    ],
+    "output": {
+      "query": {
+        "limit": 50
+      },
+      "routes": [
+        {
+          "file": "service.ts",
+          "line": 73,
+          "method": "GET",
+          "path": "/users",
+          "fullPath": "/users",
+          "framework": "express-koa",
+          "handlerName": "listUsers",
+          "handler": "listUsers"
+        },
+        {
+          "file": "service.ts",
+          "line": 74,
+          "method": "POST",
+          "path": "/users",
+          "fullPath": "/users",
+          "framework": "express-koa",
+          "handlerName": "createUser",
+          "handler": "createUser"
+        }
+      ]
+    }
+  },
+  {
+    "tool": "list_entrypoints",
+    "args": {},
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(entrypoint:EntryPoint) OPTIONAL MATCH (entrypoint)-[:ENTRYPOINT_HANDLED_BY]->(handler:Function) WHERE true RETURN file.relativePath AS file, entrypoint.line AS line, entrypoint.kind AS kind, entrypoint.trigger AS trigger, entrypoint.library AS library, entrypoint.handlerName AS handlerName, handler.name AS handler ORDER BY file.relativePath, entrypoint.line LIMIT 50",
+        "rows": [
+          {
+            "file": "service.ts",
+            "line": 75,
+            "kind": "queue",
+            "trigger": "cleanup",
+            "library": "bull",
+            "handlerName": "handleJob",
+            "handler": "handleJob"
+          }
+        ]
+      }
+    ],
+    "output": {
+      "query": {
+        "limit": 50
+      },
+      "entrypoints": [
+        {
+          "file": "service.ts",
+          "line": 75,
+          "kind": "queue",
+          "trigger": "cleanup",
+          "library": "bull",
+          "handlerName": "handleJob",
+          "handler": "handleJob"
+        }
+      ]
+    }
+  },
+  {
+    "tool": "list_env_config",
+    "args": {},
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[rel:USES_ENV_FILE]->(env:EnvVar) WHERE true RETURN 'env' AS kind, file.relativePath AS file, rel.line AS line, env.name AS name, rel.access AS value, NULL AS valueType, file.relativePath AS consumer, 'File' AS consumerKind ORDER BY file.relativePath, rel.line LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_CONFIG_FILE]->(config:ConfigValue) WHERE true RETURN 'config' AS kind, file.relativePath AS file, config.line AS line, config.name AS name, config.value AS value, config.valueType AS valueType, file.relativePath AS consumer, 'File' AS consumerKind ORDER BY file.relativePath, config.line LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[rel:CONSUMES_CONFIG_FILE]->(config:ConfigValue) WHERE true RETURN 'config-consumer' AS kind, file.relativePath AS file, config.line AS line, config.name AS name, config.value AS value, config.valueType AS valueType, rel.localName AS consumer, 'File' AS consumerKind ORDER BY file.relativePath, config.line LIMIT 50",
+        "rows": []
+      }
+    ],
+    "output": {
+      "query": {
+        "limit": 50
+      },
+      "envConfig": []
+    }
+  },
+  {
+    "tool": "list_data_access",
+    "args": {},
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (source:File)-[rel:ACCESSES_DATA_FILE]->(model:DataModel) WHERE true WITH source AS file, source, rel, model RETURN 'File' AS sourceKind, source.relativePath AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (source:Function)-[rel:ACCESSES_DATA_FUNCTION]->(model:DataModel) WHERE true OPTIONAL MATCH (file:File)-[:DEFINES_FUNCTION]->(source) RETURN 'Function' AS sourceKind, source.name AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 50",
+        "rows": [
+          {
+            "sourceKind": "Function",
+            "sourceName": "listUsers",
+            "file": "service.ts",
+            "line": 14,
+            "model": "user",
+            "library": "prisma",
+            "operation": "read",
+            "expression": "prisma.user.findMany"
+          },
+          {
+            "sourceKind": "Function",
+            "sourceName": "listUsers",
+            "file": "service.ts",
+            "line": 15,
+            "model": "user",
+            "library": "prisma",
+            "operation": "read",
+            "expression": "aliasedPrisma.user.findFirst"
+          },
+          {
+            "sourceKind": "Function",
+            "sourceName": "listUsers",
+            "file": "service.ts",
+            "line": 16,
+            "model": "Audit",
+            "library": "mongoose",
+            "operation": "read",
+            "expression": "AuditModel.findOne"
+          },
+          {
+            "sourceKind": "Function",
+            "sourceName": "createUser",
+            "file": "service.ts",
+            "line": 21,
+            "model": "users",
+            "library": "typeorm",
+            "operation": "create",
+            "expression": "usersRepository.save"
+          },
+          {
+            "sourceKind": "Function",
+            "sourceName": "createUser",
+            "file": "service.ts",
+            "line": 22,
+            "model": "user",
+            "library": "prisma",
+            "operation": "update",
+            "expression": "prisma.user.update"
+          },
+          {
+            "sourceKind": "Function",
+            "sourceName": "handleJob",
+            "file": "service.ts",
+            "line": 27,
+            "model": "Job",
+            "library": "sequelize",
+            "operation": "delete",
+            "expression": "Job.destroy"
+          },
+          {
+            "sourceKind": "Function",
+            "sourceName": "findUsers",
+            "file": null,
+            "line": 34,
+            "model": "user",
+            "library": "prisma",
+            "operation": "read",
+            "expression": "this.prisma.user.findMany"
+          },
+          {
+            "sourceKind": "Function",
+            "sourceName": "listViaRepository",
+            "file": null,
+            "line": 34,
+            "model": "user",
+            "library": "prisma",
+            "operation": "read",
+            "expression": "this.prisma.user.findMany"
+          },
+          {
+            "sourceKind": "Function",
+            "sourceName": "createUser",
+            "file": null,
+            "line": 42,
+            "model": "User",
+            "library": "typeorm",
+            "operation": "create",
+            "expression": "this.usersRepository.save"
+          },
+          {
+            "sourceKind": "Function",
+            "sourceName": "readAudit",
+            "file": null,
+            "line": 50,
+            "model": "Audit",
+            "library": "mongoose",
+            "operation": "read",
+            "expression": "this.AuditModel.findOne"
+          },
+          {
+            "sourceKind": "Function",
+            "sourceName": "listUsers",
+            "file": null,
+            "line": 56,
+            "model": "users",
+            "library": "knex",
+            "operation": "read",
+            "expression": "knex('users').select"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (source:Route)-[rel:ACCESSES_DATA_ROUTE]->(model:DataModel) WHERE true OPTIONAL MATCH (file:File)-[:DECLARES_ROUTE]->(source) RETURN 'Route' AS sourceKind, source.path AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 50",
+        "rows": [
+          {
+            "sourceKind": "Route",
+            "sourceName": "/users",
+            "file": "service.ts",
+            "line": 14,
+            "model": "user",
+            "library": "prisma",
+            "operation": "read",
+            "expression": "prisma.user.findMany"
+          },
+          {
+            "sourceKind": "Route",
+            "sourceName": "/users",
+            "file": "service.ts",
+            "line": 15,
+            "model": "user",
+            "library": "prisma",
+            "operation": "read",
+            "expression": "aliasedPrisma.user.findFirst"
+          },
+          {
+            "sourceKind": "Route",
+            "sourceName": "/users",
+            "file": "service.ts",
+            "line": 16,
+            "model": "Audit",
+            "library": "mongoose",
+            "operation": "read",
+            "expression": "AuditModel.findOne"
+          },
+          {
+            "sourceKind": "Route",
+            "sourceName": "/users",
+            "file": "service.ts",
+            "line": 21,
+            "model": "users",
+            "library": "typeorm",
+            "operation": "create",
+            "expression": "usersRepository.save"
+          },
+          {
+            "sourceKind": "Route",
+            "sourceName": "/users",
+            "file": "service.ts",
+            "line": 22,
+            "model": "user",
+            "library": "prisma",
+            "operation": "update",
+            "expression": "prisma.user.update"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (source:EntryPoint)-[rel:ACCESSES_DATA_ENTRYPOINT]->(model:DataModel) WHERE true OPTIONAL MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(source) RETURN 'EntryPoint' AS sourceKind, source.trigger AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 50",
+        "rows": [
+          {
+            "sourceKind": "EntryPoint",
+            "sourceName": "cleanup",
+            "file": "service.ts",
+            "line": 27,
+            "model": "Job",
+            "library": "sequelize",
+            "operation": "delete",
+            "expression": "Job.destroy"
+          }
+        ]
+      }
+    ],
+    "output": {
+      "query": {
+        "limit": 50
+      },
+      "dataAccess": [
+        {
+          "sourceKind": "Function",
+          "sourceName": "listUsers",
+          "file": "service.ts",
+          "line": 14,
+          "model": "user",
+          "library": "prisma",
+          "operation": "read",
+          "expression": "prisma.user.findMany"
+        },
+        {
+          "sourceKind": "Function",
+          "sourceName": "listUsers",
+          "file": "service.ts",
+          "line": 15,
+          "model": "user",
+          "library": "prisma",
+          "operation": "read",
+          "expression": "aliasedPrisma.user.findFirst"
+        },
+        {
+          "sourceKind": "Function",
+          "sourceName": "listUsers",
+          "file": "service.ts",
+          "line": 16,
+          "model": "Audit",
+          "library": "mongoose",
+          "operation": "read",
+          "expression": "AuditModel.findOne"
+        },
+        {
+          "sourceKind": "Function",
+          "sourceName": "createUser",
+          "file": "service.ts",
+          "line": 21,
+          "model": "users",
+          "library": "typeorm",
+          "operation": "create",
+          "expression": "usersRepository.save"
+        },
+        {
+          "sourceKind": "Function",
+          "sourceName": "createUser",
+          "file": "service.ts",
+          "line": 22,
+          "model": "user",
+          "library": "prisma",
+          "operation": "update",
+          "expression": "prisma.user.update"
+        },
+        {
+          "sourceKind": "Function",
+          "sourceName": "handleJob",
+          "file": "service.ts",
+          "line": 27,
+          "model": "Job",
+          "library": "sequelize",
+          "operation": "delete",
+          "expression": "Job.destroy"
+        },
+        {
+          "sourceKind": "Function",
+          "sourceName": "findUsers",
+          "file": null,
+          "line": 34,
+          "model": "user",
+          "library": "prisma",
+          "operation": "read",
+          "expression": "this.prisma.user.findMany"
+        },
+        {
+          "sourceKind": "Function",
+          "sourceName": "listViaRepository",
+          "file": null,
+          "line": 34,
+          "model": "user",
+          "library": "prisma",
+          "operation": "read",
+          "expression": "this.prisma.user.findMany"
+        },
+        {
+          "sourceKind": "Function",
+          "sourceName": "createUser",
+          "file": null,
+          "line": 42,
+          "model": "User",
+          "library": "typeorm",
+          "operation": "create",
+          "expression": "this.usersRepository.save"
+        },
+        {
+          "sourceKind": "Function",
+          "sourceName": "readAudit",
+          "file": null,
+          "line": 50,
+          "model": "Audit",
+          "library": "mongoose",
+          "operation": "read",
+          "expression": "this.AuditModel.findOne"
+        },
+        {
+          "sourceKind": "Function",
+          "sourceName": "listUsers",
+          "file": null,
+          "line": 56,
+          "model": "users",
+          "library": "knex",
+          "operation": "read",
+          "expression": "knex('users').select"
+        },
+        {
+          "sourceKind": "Route",
+          "sourceName": "/users",
+          "file": "service.ts",
+          "line": 14,
+          "model": "user",
+          "library": "prisma",
+          "operation": "read",
+          "expression": "prisma.user.findMany"
+        },
+        {
+          "sourceKind": "Route",
+          "sourceName": "/users",
+          "file": "service.ts",
+          "line": 15,
+          "model": "user",
+          "library": "prisma",
+          "operation": "read",
+          "expression": "aliasedPrisma.user.findFirst"
+        },
+        {
+          "sourceKind": "Route",
+          "sourceName": "/users",
+          "file": "service.ts",
+          "line": 16,
+          "model": "Audit",
+          "library": "mongoose",
+          "operation": "read",
+          "expression": "AuditModel.findOne"
+        },
+        {
+          "sourceKind": "Route",
+          "sourceName": "/users",
+          "file": "service.ts",
+          "line": 21,
+          "model": "users",
+          "library": "typeorm",
+          "operation": "create",
+          "expression": "usersRepository.save"
+        },
+        {
+          "sourceKind": "Route",
+          "sourceName": "/users",
+          "file": "service.ts",
+          "line": 22,
+          "model": "user",
+          "library": "prisma",
+          "operation": "update",
+          "expression": "prisma.user.update"
+        },
+        {
+          "sourceKind": "EntryPoint",
+          "sourceName": "cleanup",
+          "file": "service.ts",
+          "line": 27,
+          "model": "Job",
+          "library": "sequelize",
+          "operation": "delete",
+          "expression": "Job.destroy"
+        }
+      ]
+    }
+  },
+  {
+    "tool": "list_data_access",
+    "args": {
+      "model": "user"
+    },
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (source:File)-[rel:ACCESSES_DATA_FILE]->(model:DataModel) WHERE true AND contains(lower(model.name), lower(\"user\")) WITH source AS file, source, rel, model RETURN 'File' AS sourceKind, source.relativePath AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (source:Function)-[rel:ACCESSES_DATA_FUNCTION]->(model:DataModel) WHERE true AND contains(lower(model.name), lower(\"user\")) OPTIONAL MATCH (file:File)-[:DEFINES_FUNCTION]->(source) RETURN 'Function' AS sourceKind, source.name AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 50",
+        "rows": [
+          {
+            "sourceKind": "Function",
+            "sourceName": "listUsers",
+            "file": "service.ts",
+            "line": 14,
+            "model": "user",
+            "library": "prisma",
+            "operation": "read",
+            "expression": "prisma.user.findMany"
+          },
+          {
+            "sourceKind": "Function",
+            "sourceName": "listUsers",
+            "file": "service.ts",
+            "line": 15,
+            "model": "user",
+            "library": "prisma",
+            "operation": "read",
+            "expression": "aliasedPrisma.user.findFirst"
+          },
+          {
+            "sourceKind": "Function",
+            "sourceName": "createUser",
+            "file": "service.ts",
+            "line": 21,
+            "model": "users",
+            "library": "typeorm",
+            "operation": "create",
+            "expression": "usersRepository.save"
+          },
+          {
+            "sourceKind": "Function",
+            "sourceName": "createUser",
+            "file": "service.ts",
+            "line": 22,
+            "model": "user",
+            "library": "prisma",
+            "operation": "update",
+            "expression": "prisma.user.update"
+          },
+          {
+            "sourceKind": "Function",
+            "sourceName": "findUsers",
+            "file": null,
+            "line": 34,
+            "model": "user",
+            "library": "prisma",
+            "operation": "read",
+            "expression": "this.prisma.user.findMany"
+          },
+          {
+            "sourceKind": "Function",
+            "sourceName": "listViaRepository",
+            "file": null,
+            "line": 34,
+            "model": "user",
+            "library": "prisma",
+            "operation": "read",
+            "expression": "this.prisma.user.findMany"
+          },
+          {
+            "sourceKind": "Function",
+            "sourceName": "createUser",
+            "file": null,
+            "line": 42,
+            "model": "User",
+            "library": "typeorm",
+            "operation": "create",
+            "expression": "this.usersRepository.save"
+          },
+          {
+            "sourceKind": "Function",
+            "sourceName": "listUsers",
+            "file": null,
+            "line": 56,
+            "model": "users",
+            "library": "knex",
+            "operation": "read",
+            "expression": "knex('users').select"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (source:Route)-[rel:ACCESSES_DATA_ROUTE]->(model:DataModel) WHERE true AND contains(lower(model.name), lower(\"user\")) OPTIONAL MATCH (file:File)-[:DECLARES_ROUTE]->(source) RETURN 'Route' AS sourceKind, source.path AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 50",
+        "rows": [
+          {
+            "sourceKind": "Route",
+            "sourceName": "/users",
+            "file": "service.ts",
+            "line": 14,
+            "model": "user",
+            "library": "prisma",
+            "operation": "read",
+            "expression": "prisma.user.findMany"
+          },
+          {
+            "sourceKind": "Route",
+            "sourceName": "/users",
+            "file": "service.ts",
+            "line": 15,
+            "model": "user",
+            "library": "prisma",
+            "operation": "read",
+            "expression": "aliasedPrisma.user.findFirst"
+          },
+          {
+            "sourceKind": "Route",
+            "sourceName": "/users",
+            "file": "service.ts",
+            "line": 21,
+            "model": "users",
+            "library": "typeorm",
+            "operation": "create",
+            "expression": "usersRepository.save"
+          },
+          {
+            "sourceKind": "Route",
+            "sourceName": "/users",
+            "file": "service.ts",
+            "line": 22,
+            "model": "user",
+            "library": "prisma",
+            "operation": "update",
+            "expression": "prisma.user.update"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (source:EntryPoint)-[rel:ACCESSES_DATA_ENTRYPOINT]->(model:DataModel) WHERE true AND contains(lower(model.name), lower(\"user\")) OPTIONAL MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(source) RETURN 'EntryPoint' AS sourceKind, source.trigger AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 50",
+        "rows": []
+      }
+    ],
+    "output": {
+      "query": {
+        "model": "user",
+        "limit": 50
+      },
+      "dataAccess": [
+        {
+          "sourceKind": "Function",
+          "sourceName": "listUsers",
+          "file": "service.ts",
+          "line": 14,
+          "model": "user",
+          "library": "prisma",
+          "operation": "read",
+          "expression": "prisma.user.findMany"
+        },
+        {
+          "sourceKind": "Function",
+          "sourceName": "listUsers",
+          "file": "service.ts",
+          "line": 15,
+          "model": "user",
+          "library": "prisma",
+          "operation": "read",
+          "expression": "aliasedPrisma.user.findFirst"
+        },
+        {
+          "sourceKind": "Function",
+          "sourceName": "createUser",
+          "file": "service.ts",
+          "line": 21,
+          "model": "users",
+          "library": "typeorm",
+          "operation": "create",
+          "expression": "usersRepository.save"
+        },
+        {
+          "sourceKind": "Function",
+          "sourceName": "createUser",
+          "file": "service.ts",
+          "line": 22,
+          "model": "user",
+          "library": "prisma",
+          "operation": "update",
+          "expression": "prisma.user.update"
+        },
+        {
+          "sourceKind": "Function",
+          "sourceName": "findUsers",
+          "file": null,
+          "line": 34,
+          "model": "user",
+          "library": "prisma",
+          "operation": "read",
+          "expression": "this.prisma.user.findMany"
+        },
+        {
+          "sourceKind": "Function",
+          "sourceName": "listViaRepository",
+          "file": null,
+          "line": 34,
+          "model": "user",
+          "library": "prisma",
+          "operation": "read",
+          "expression": "this.prisma.user.findMany"
+        },
+        {
+          "sourceKind": "Function",
+          "sourceName": "createUser",
+          "file": null,
+          "line": 42,
+          "model": "User",
+          "library": "typeorm",
+          "operation": "create",
+          "expression": "this.usersRepository.save"
+        },
+        {
+          "sourceKind": "Function",
+          "sourceName": "listUsers",
+          "file": null,
+          "line": 56,
+          "model": "users",
+          "library": "knex",
+          "operation": "read",
+          "expression": "knex('users').select"
+        },
+        {
+          "sourceKind": "Route",
+          "sourceName": "/users",
+          "file": "service.ts",
+          "line": 14,
+          "model": "user",
+          "library": "prisma",
+          "operation": "read",
+          "expression": "prisma.user.findMany"
+        },
+        {
+          "sourceKind": "Route",
+          "sourceName": "/users",
+          "file": "service.ts",
+          "line": 15,
+          "model": "user",
+          "library": "prisma",
+          "operation": "read",
+          "expression": "aliasedPrisma.user.findFirst"
+        },
+        {
+          "sourceKind": "Route",
+          "sourceName": "/users",
+          "file": "service.ts",
+          "line": 21,
+          "model": "users",
+          "library": "typeorm",
+          "operation": "create",
+          "expression": "usersRepository.save"
+        },
+        {
+          "sourceKind": "Route",
+          "sourceName": "/users",
+          "file": "service.ts",
+          "line": 22,
+          "model": "user",
+          "library": "prisma",
+          "operation": "update",
+          "expression": "prisma.user.update"
+        }
+      ]
+    }
+  },
+  {
+    "tool": "list_data_access",
+    "args": {
+      "operation": "create"
+    },
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (source:File)-[rel:ACCESSES_DATA_FILE]->(model:DataModel) WHERE true AND rel.operation = \"create\" WITH source AS file, source, rel, model RETURN 'File' AS sourceKind, source.relativePath AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (source:Function)-[rel:ACCESSES_DATA_FUNCTION]->(model:DataModel) WHERE true AND rel.operation = \"create\" OPTIONAL MATCH (file:File)-[:DEFINES_FUNCTION]->(source) RETURN 'Function' AS sourceKind, source.name AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 50",
+        "rows": [
+          {
+            "sourceKind": "Function",
+            "sourceName": "createUser",
+            "file": "service.ts",
+            "line": 21,
+            "model": "users",
+            "library": "typeorm",
+            "operation": "create",
+            "expression": "usersRepository.save"
+          },
+          {
+            "sourceKind": "Function",
+            "sourceName": "createUser",
+            "file": null,
+            "line": 42,
+            "model": "User",
+            "library": "typeorm",
+            "operation": "create",
+            "expression": "this.usersRepository.save"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (source:Route)-[rel:ACCESSES_DATA_ROUTE]->(model:DataModel) WHERE true AND rel.operation = \"create\" OPTIONAL MATCH (file:File)-[:DECLARES_ROUTE]->(source) RETURN 'Route' AS sourceKind, source.path AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 50",
+        "rows": [
+          {
+            "sourceKind": "Route",
+            "sourceName": "/users",
+            "file": "service.ts",
+            "line": 21,
+            "model": "users",
+            "library": "typeorm",
+            "operation": "create",
+            "expression": "usersRepository.save"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (source:EntryPoint)-[rel:ACCESSES_DATA_ENTRYPOINT]->(model:DataModel) WHERE true AND rel.operation = \"create\" OPTIONAL MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(source) RETURN 'EntryPoint' AS sourceKind, source.trigger AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 50",
+        "rows": []
+      }
+    ],
+    "output": {
+      "query": {
+        "operation": "create",
+        "limit": 50
+      },
+      "dataAccess": [
+        {
+          "sourceKind": "Function",
+          "sourceName": "createUser",
+          "file": "service.ts",
+          "line": 21,
+          "model": "users",
+          "library": "typeorm",
+          "operation": "create",
+          "expression": "usersRepository.save"
+        },
+        {
+          "sourceKind": "Function",
+          "sourceName": "createUser",
+          "file": null,
+          "line": 42,
+          "model": "User",
+          "library": "typeorm",
+          "operation": "create",
+          "expression": "this.usersRepository.save"
+        },
+        {
+          "sourceKind": "Route",
+          "sourceName": "/users",
+          "file": "service.ts",
+          "line": 21,
+          "model": "users",
+          "library": "typeorm",
+          "operation": "create",
+          "expression": "usersRepository.save"
+        }
+      ]
+    }
+  },
+  {
+    "tool": "list_data_access",
+    "args": {
+      "library": "mongoose",
+      "limit": 5
+    },
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (source:File)-[rel:ACCESSES_DATA_FILE]->(model:DataModel) WHERE true AND model.library = \"mongoose\" WITH source AS file, source, rel, model RETURN 'File' AS sourceKind, source.relativePath AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 5",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (source:Function)-[rel:ACCESSES_DATA_FUNCTION]->(model:DataModel) WHERE true AND model.library = \"mongoose\" OPTIONAL MATCH (file:File)-[:DEFINES_FUNCTION]->(source) RETURN 'Function' AS sourceKind, source.name AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 5",
+        "rows": [
+          {
+            "sourceKind": "Function",
+            "sourceName": "listUsers",
+            "file": "service.ts",
+            "line": 16,
+            "model": "Audit",
+            "library": "mongoose",
+            "operation": "read",
+            "expression": "AuditModel.findOne"
+          },
+          {
+            "sourceKind": "Function",
+            "sourceName": "readAudit",
+            "file": null,
+            "line": 50,
+            "model": "Audit",
+            "library": "mongoose",
+            "operation": "read",
+            "expression": "this.AuditModel.findOne"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (source:Route)-[rel:ACCESSES_DATA_ROUTE]->(model:DataModel) WHERE true AND model.library = \"mongoose\" OPTIONAL MATCH (file:File)-[:DECLARES_ROUTE]->(source) RETURN 'Route' AS sourceKind, source.path AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 5",
+        "rows": [
+          {
+            "sourceKind": "Route",
+            "sourceName": "/users",
+            "file": "service.ts",
+            "line": 16,
+            "model": "Audit",
+            "library": "mongoose",
+            "operation": "read",
+            "expression": "AuditModel.findOne"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (source:EntryPoint)-[rel:ACCESSES_DATA_ENTRYPOINT]->(model:DataModel) WHERE true AND model.library = \"mongoose\" OPTIONAL MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(source) RETURN 'EntryPoint' AS sourceKind, source.trigger AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 5",
+        "rows": []
+      }
+    ],
+    "output": {
+      "query": {
+        "library": "mongoose",
+        "limit": 5
+      },
+      "dataAccess": [
+        {
+          "sourceKind": "Function",
+          "sourceName": "listUsers",
+          "file": "service.ts",
+          "line": 16,
+          "model": "Audit",
+          "library": "mongoose",
+          "operation": "read",
+          "expression": "AuditModel.findOne"
+        },
+        {
+          "sourceKind": "Function",
+          "sourceName": "readAudit",
+          "file": null,
+          "line": 50,
+          "model": "Audit",
+          "library": "mongoose",
+          "operation": "read",
+          "expression": "this.AuditModel.findOne"
+        },
+        {
+          "sourceKind": "Route",
+          "sourceName": "/users",
+          "file": "service.ts",
+          "line": 16,
+          "model": "Audit",
+          "library": "mongoose",
+          "operation": "read",
+          "expression": "AuditModel.findOne"
+        }
+      ]
+    }
+  },
+  {
+    "tool": "find_callers",
+    "args": {
+      "name": "findUsers"
+    },
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (call:Call)-[:CALL_RESOLVES_TO]->(target:Function) MATCH (caller:Function)-[:CALLS]->(call) MATCH (file:File)-[:DEFINES_FUNCTION]->(caller) WHERE target.name = \"findUsers\" RETURN target.name AS target, caller.name AS caller, 'Function' AS callerKind, file.relativePath AS file, call.line AS line, call.expression AS expression, 'CALLS' AS relationship ORDER BY file.relativePath, call.line LIMIT 20",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (call:Call)-[:CALL_RESOLVES_TO]->(target:Function) MATCH (file:File)-[:MODULE_CALLS]->(call) WHERE target.name = \"findUsers\" RETURN target.name AS target, file.relativePath AS caller, 'File' AS callerKind, file.relativePath AS file, call.line AS line, call.expression AS expression, 'MODULE_CALLS' AS relationship ORDER BY file.relativePath, call.line LIMIT 20",
+        "rows": []
+      }
+    ],
+    "output": {
+      "query": {
+        "name": "findUsers",
+        "exact": true,
+        "limit": 20
+      },
+      "callers": []
+    }
+  }
+]

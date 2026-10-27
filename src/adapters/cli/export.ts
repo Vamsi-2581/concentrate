@@ -3,6 +3,7 @@ import path from "node:path";
 import { printScanReport } from "./report.js";
 import { ProgressReporter } from "./progress.js";
 import type { GraphNode, GraphRelationship } from "../../core/graph/model.js";
+import { formatNormalizedGraph, normalizeGraph } from "../../core/graph/normalize.js";
 import type { IncrementalMode } from "../../core/scan/index.js";
 import { didFailFast, didPartiallySucceed } from "../../core/scan/index.js";
 import { scanOrchestrator } from "../../composition/orchestrator.js";
@@ -17,6 +18,7 @@ export type ExportAdapterOptions = {
   exclude: string[];
   previousManifest?: string;
   incremental: string;
+  normalized?: boolean;
 };
 
 export async function runExportAdapter(projectPath: string, options: ExportAdapterOptions): Promise<CliAdapterResult> {
@@ -61,13 +63,20 @@ export async function runExportAdapter(projectPath: string, options: ExportAdapt
     }, null, 2)}\n`,
     "utf8",
   );
+  if (options.normalized) {
+    await writeFile(
+      path.join(outputPath, "graph.normalized.jsonl"),
+      formatNormalizedGraph(normalizeGraph(result)),
+      "utf8",
+    );
+  }
   await writeFile(
     path.join(outputPath, "manifest.json"),
     `${JSON.stringify(result.manifest, null, 2)}\n`,
     "utf8",
   );
 
-  printExportReport(outputPath, result.nodes.length, result.relationships.length);
+  printExportReport(outputPath, result.nodes.length, result.relationships.length, options.normalized === true);
   printScanReport(result.report, result.nodes.length, result.relationships.length, outputPath);
   return { exitCode: didPartiallySucceed(result) ? 1 : 0 };
 }
@@ -92,6 +101,7 @@ function printExportReport(
   outputPath: string,
   nodeCount: number,
   relationshipCount: number,
+  normalized: boolean,
 ): void {
   console.log("Export complete");
   console.log(`  Output:        ${outputPath}`);
@@ -99,6 +109,9 @@ function printExportReport(
   console.log(`  Rels JSONL:    ${path.join(outputPath, "relationships.jsonl")}`);
   console.log(`  Summary JSON:  ${path.join(outputPath, "summary.json")}`);
   console.log(`  Manifest JSON: ${path.join(outputPath, "manifest.json")}`);
+  if (normalized) {
+    console.log(`  Normalized:    ${path.join(outputPath, "graph.normalized.jsonl")}`);
+  }
   console.log(`  Nodes:         ${nodeCount}`);
   console.log(`  Relationships: ${relationshipCount}`);
 }

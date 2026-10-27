@@ -1,6 +1,5 @@
 import path from "node:path";
-import { defaultKuzuRetryOptions } from "../kuzu/kuzu-retry.js";
-import { KuzuGraphWriter } from "../kuzu/index.js";
+import { openGraphStore } from "../../composition/graph-store.js";
 import { runMcpServer } from "../mcp/index.js";
 
 export type McpAdapterOptions = {
@@ -10,7 +9,5 @@ export type McpAdapterOptions = {
 
 export async function runMcpAdapter(options: McpAdapterOptions): Promise<void> {
   const databasePath = path.resolve(options.database);
-  await runMcpServer(async () => KuzuGraphWriter.open(databasePath, {
-    retry: options.retryLock !== false ? defaultKuzuRetryOptions : false,
-  }));
+  await runMcpServer(async () => openGraphStore(databasePath, { retryLock: options.retryLock !== false }));
 }

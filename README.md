@@ -78,4 +78,10 @@ npm test                  # unit tests
 npm run typecheck         # TypeScript check
 npm run build             # compile to dist/
 npm run verify:rc         # typecheck + tests + build + standing smoke
+npm run samples:fetch     # fetch pinned sample repos into .concentrate/samples
+npm run test:samples      # golden graph + query tests on the samples (required, not skipped)
+npm run golden:update     # rewrite golden files after an intended behavior change
 ```
+
+Golden tests (`tests/golden*.test.ts`) pin graph output and MCP query results;
+see [tests/golden/README.md](tests/golden/README.md).

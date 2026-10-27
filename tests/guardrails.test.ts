@@ -59,13 +59,11 @@ async function collectTsFiles(dir: string): Promise<string[]> {
 }
 
 function extractImportPaths(source: string): string[] {
-  const pattern = /^(?:import|export)\s[^'"]*['"]([^'"]+)['"]/gm;
-  const paths: string[] = [];
-  let match: RegExpExecArray | null;
-  while ((match = pattern.exec(source)) !== null) {
-    paths.push(match[1]);
-  }
-  return pattern[Symbol.replace] !== undefined ? paths : paths;
+  // Static `import ... from "x"`, `export ... from "x"` and side-effect `import "x"`.
+  // The specifier must follow `from` or the keyword directly, so string literals
+  // inside ordinary `export const` / `export function` declarations are ignored.
+  const pattern = /^\s*(?:import|export)\b(?:[^'";]*?\bfrom)?\s*['"]([^'"\n]+)['"]/gm;
+  return [...source.matchAll(pattern)].map((match) => match[1]!);
 }
 
 function resolveImportPath(file: string, importPath: string): string | null {
@@ -109,6 +107,48 @@ async function checkFiles(
 }
 
 const legacyDirs = ["scanner/", "parsers/", "graph/"];
+
+/**
+ * Runtime packages src/ may still import. Concentrate is moving to zero runtime
+ * dependencies (docs/ROADMAP.md): this list may only shrink, and it must be
+ * empty at the end of milestone M4.
+ */
+const RUNTIME_DEPENDENCY_ALLOWLIST: readonly string[] = [
+  "commander", // Phase 1
+  "fast-glob", // Phase 1
+  "ignore", // Phase 1
+  "kuzu", // Phase 2
+  "tree-sitter", // Phase 3
+  "tree-sitter-go", // Phase 3
+  "tree-sitter-javascript", // Phase 3
+  "tree-sitter-python", // Phase 3
+  "tree-sitter-rust", // Phase 3
+  "tree-sitter-typescript", // Phase 3
+];
+
+function packageNameOf(specifier: string): string {
+  const parts = specifier.split("/");
+  return specifier.startsWith("@") ? parts.slice(0, 2).join("/") : parts[0]!;
+}
+
+/** Bare (non-relative, non-`node:`) package imports per src/ file, including dynamic import() and require(). */
+async function bareImportsBySourceFile(): Promise<Map<string, Set<string>>> {
+  const result = new Map<string, Set<string>>();
+  for (const file of await collectTsFiles(srcRoot)) {
+    const source = await readFile(file, "utf8");
+    const specifiers = [
+      ...extractImportPaths(source),
+      ...[...source.matchAll(/\b(?:import|require)\(\s*['"]([^'"]+)['"]\s*\)/g)].map((match) => match[1]!),
+    ];
+    const packages = new Set(specifiers
+      .filter((specifier) => !specifier.startsWith(".") && !specifier.startsWith("node:"))
+      .map(packageNameOf));
+    if (packages.size > 0) {
+      result.set(path.relative(srcRoot, file), packages);
+    }
+  }
+  return result;
+}
 
 describe("Architecture dependency guardrails", () => {
   it("src/core/contracts/ only imports core contracts, core graph, and core scan DTOs", async () => {
@@ -239,6 +279,52 @@ describe("Architecture dependency guardrails", () => {
       violations,
       [],
       `Boundary violations in commands:\n${violations.map((v) => `  ${v.file}: ${v.violation}`).join("\n")}`,
+    );
+  });
+
+  it("src/ imports only node: built-ins and allow-listed runtime dependencies", async () => {
+    const violations: string[] = [];
+    for (const [file, packages] of await bareImportsBySourceFile()) {
+      for (const name of packages) {
+        if (!RUNTIME_DEPENDENCY_ALLOWLIST.includes(name)) {
+          violations.push(`${file}: imports "${name}"`);
+        }
+      }
+    }
+
+    assert.deepEqual(
+      violations,
+      [],
+      `New runtime dependencies are not allowed (zero-dependency goal, docs/ROADMAP.md):\n${violations.join("\n")}`,
+    );
+  });
+
+  it("package.json dependencies are a subset of the runtime allow-list", async () => {
+    const packageJson = JSON.parse(await readFile(path.join(srcRoot, "../package.json"), "utf8")) as {
+      dependencies?: Record<string, string>;
+    };
+    const extra = Object.keys(packageJson.dependencies ?? {}).filter((name) => !RUNTIME_DEPENDENCY_ALLOWLIST.includes(name));
+
+    assert.deepEqual(extra, [], `Dependencies outside the allow-list: ${extra.join(", ")}`);
+  });
+
+  it("every allow-listed runtime dependency is still imported (remove it from the list once unused)", async () => {
+    const used = new Set([...(await bareImportsBySourceFile()).values()].flatMap((packages) => [...packages]));
+    const stale = RUNTIME_DEPENDENCY_ALLOWLIST.filter((name) => !used.has(name));
+
+    assert.deepEqual(stale, [], `Allow-listed but no longer imported; remove from RUNTIME_DEPENDENCY_ALLOWLIST and package.json: ${stale.join(", ")}`);
+  });
+
+  it("CLI and MCP adapters reach the graph store only through contracts and composition", async () => {
+    const violations = [
+      ...await checkFiles(path.join(srcRoot, "adapters/cli"), ["adapters/kuzu/"]),
+      ...await checkFiles(path.join(srcRoot, "adapters/mcp"), ["adapters/kuzu/"]),
+    ];
+
+    assert.deepEqual(
+      violations,
+      [],
+      `Storage engine leaks into CLI/MCP:\n${violations.map((v) => `  ${v.file}: ${v.violation}`).join("\n")}`,
     );
   });
 });

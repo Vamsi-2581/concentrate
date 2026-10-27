@@ -1,6 +1,5 @@
 import path from "node:path";
-import { defaultKuzuRetryOptions } from "../kuzu/kuzu-retry.js";
-import { KuzuGraphWriter } from "../kuzu/index.js";
+import { openGraphStore } from "../../composition/graph-store.js";
 
 export type OutputFormat = "json" | "table" | "csv";
 
@@ -11,8 +10,8 @@ export type QueryAdapterOptions = {
 };
 
 export async function runQueryAdapter(cypher: string, options: QueryAdapterOptions): Promise<void> {
-  const writer = await KuzuGraphWriter.open(path.resolve(options.database), {
-    retry: options.retryLock !== false ? defaultKuzuRetryOptions : false,
+  const writer = await openGraphStore(path.resolve(options.database), {
+    retryLock: options.retryLock !== false,
   });
   let rows: unknown[];
   try {

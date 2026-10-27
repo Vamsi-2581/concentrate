@@ -1,0 +1,529 @@
+[
+  {
+    "tool": "graph_stats",
+    "args": {},
+    "calls": [
+      {
+        "method": "schemaVersion",
+        "result": 34
+      },
+      {
+        "method": "stats",
+        "options": {},
+        "rows": [
+          {
+            "table": "Repo",
+            "count": 1
+          },
+          {
+            "table": "Package",
+            "count": 3
+          },
+          {
+            "table": "Directory",
+            "count": 7
+          },
+          {
+            "table": "File",
+            "count": 2
+          },
+          {
+            "table": "Import",
+            "count": 1
+          },
+          {
+            "table": "Function",
+            "count": 2
+          },
+          {
+            "table": "Class",
+            "count": 0
+          },
+          {
+            "table": "Field",
+            "count": 0
+          },
+          {
+            "table": "Variable",
+            "count": 0
+          },
+          {
+            "table": "Decorator",
+            "count": 0
+          },
+          {
+            "table": "Interface",
+            "count": 0
+          },
+          {
+            "table": "TypeAlias",
+            "count": 0
+          },
+          {
+            "table": "Enum",
+            "count": 0
+          },
+          {
+            "table": "Call",
+            "count": 1
+          },
+          {
+            "table": "Route",
+            "count": 0
+          },
+          {
+            "table": "EntryPoint",
+            "count": 0
+          },
+          {
+            "table": "EnvVar",
+            "count": 0
+          },
+          {
+            "table": "ConfigValue",
+            "count": 9
+          },
+          {
+            "table": "DataModel",
+            "count": 0
+          }
+        ]
+      }
+    ],
+    "output": {
+      "schemaVersion": 34,
+      "stats": [
+        {
+          "table": "Repo",
+          "count": 1
+        },
+        {
+          "table": "Package",
+          "count": 3
+        },
+        {
+          "table": "Directory",
+          "count": 7
+        },
+        {
+          "table": "File",
+          "count": 2
+        },
+        {
+          "table": "Import",
+          "count": 1
+        },
+        {
+          "table": "Function",
+          "count": 2
+        },
+        {
+          "table": "Class",
+          "count": 0
+        },
+        {
+          "table": "Field",
+          "count": 0
+        },
+        {
+          "table": "Variable",
+          "count": 0
+        },
+        {
+          "table": "Decorator",
+          "count": 0
+        },
+        {
+          "table": "Interface",
+          "count": 0
+        },
+        {
+          "table": "TypeAlias",
+          "count": 0
+        },
+        {
+          "table": "Enum",
+          "count": 0
+        },
+        {
+          "table": "Call",
+          "count": 1
+        },
+        {
+          "table": "Route",
+          "count": 0
+        },
+        {
+          "table": "EntryPoint",
+          "count": 0
+        },
+        {
+          "table": "EnvVar",
+          "count": 0
+        },
+        {
+          "table": "ConfigValue",
+          "count": 9
+        },
+        {
+          "table": "DataModel",
+          "count": 0
+        }
+      ]
+    }
+  },
+  {
+    "tool": "find_definitions",
+    "args": {
+      "name": "e"
+    },
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_FUNCTION]->(n:Function) WHERE contains(lower(n.name), lower(\"e\")) RETURN n.name AS name, 'Function' AS kind, file.relativePath AS file, n.line AS line, n.isExported AS isExported, 'DEFINES_FUNCTION' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 20",
+        "rows": [
+          {
+            "name": "buildMessage",
+            "kind": "Function",
+            "file": "packages/core/src/index.ts",
+            "line": 1,
+            "isExported": true,
+            "relationship": "DEFINES_FUNCTION"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(n:Class) WHERE contains(lower(n.name), lower(\"e\")) RETURN n.name AS name, 'Class' AS kind, file.relativePath AS file, n.line AS line, n.isExported AS isExported, 'DEFINES_CLASS' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 20",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_VARIABLE]->(n:Variable) WHERE contains(lower(n.name), lower(\"e\")) RETURN n.name AS name, 'Variable' AS kind, file.relativePath AS file, n.line AS line, n.isExported AS isExported, 'DEFINES_VARIABLE' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 20",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_INTERFACE]->(n:Interface) WHERE contains(lower(n.name), lower(\"e\")) RETURN n.name AS name, 'Interface' AS kind, file.relativePath AS file, n.line AS line, n.isExported AS isExported, 'DEFINES_INTERFACE' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 20",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_TYPE_ALIAS]->(n:TypeAlias) WHERE contains(lower(n.name), lower(\"e\")) RETURN n.name AS name, 'TypeAlias' AS kind, file.relativePath AS file, n.line AS line, n.isExported AS isExported, 'DEFINES_TYPE_ALIAS' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 20",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_ENUM]->(n:Enum) WHERE contains(lower(n.name), lower(\"e\")) RETURN n.name AS name, 'Enum' AS kind, file.relativePath AS file, n.line AS line, n.isExported AS isExported, 'DEFINES_ENUM' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 20",
+        "rows": []
+      }
+    ],
+    "output": {
+      "query": {
+        "name": "e",
+        "exact": false,
+        "limit": 20
+      },
+      "definitions": [
+        {
+          "name": "buildMessage",
+          "kind": "Function",
+          "file": "packages/core/src/index.ts",
+          "line": 1,
+          "isExported": true,
+          "relationship": "DEFINES_FUNCTION"
+        }
+      ]
+    }
+  },
+  {
+    "tool": "list_exports",
+    "args": {},
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_FUNCTION]->(n:Function) WHERE n.isExported = true RETURN file.relativePath AS file, n.name AS name, 'Function' AS kind, n.line AS line, 'DEFINES_FUNCTION' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 50",
+        "rows": [
+          {
+            "file": "apps/api/src/server.ts",
+            "name": "start",
+            "kind": "Function",
+            "line": 3,
+            "relationship": "DEFINES_FUNCTION"
+          },
+          {
+            "file": "packages/core/src/index.ts",
+            "name": "buildMessage",
+            "kind": "Function",
+            "line": 1,
+            "relationship": "DEFINES_FUNCTION"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(n:Class) WHERE n.isExported = true RETURN file.relativePath AS file, n.name AS name, 'Class' AS kind, n.line AS line, 'DEFINES_CLASS' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_VARIABLE]->(n:Variable) WHERE n.isExported = true RETURN file.relativePath AS file, n.name AS name, 'Variable' AS kind, n.line AS line, 'DEFINES_VARIABLE' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_INTERFACE]->(n:Interface) WHERE n.isExported = true RETURN file.relativePath AS file, n.name AS name, 'Interface' AS kind, n.line AS line, 'DEFINES_INTERFACE' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_TYPE_ALIAS]->(n:TypeAlias) WHERE n.isExported = true RETURN file.relativePath AS file, n.name AS name, 'TypeAlias' AS kind, n.line AS line, 'DEFINES_TYPE_ALIAS' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_ENUM]->(n:Enum) WHERE n.isExported = true RETURN file.relativePath AS file, n.name AS name, 'Enum' AS kind, n.line AS line, 'DEFINES_ENUM' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:RE_EXPORTS]->(target:Import) WHERE true RETURN file.relativePath AS file, target.source AS name, 'Import' AS kind, target.line AS line, 'RE_EXPORTS' AS relationship ORDER BY file.relativePath, target.line, target.source LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:RE_EXPORTS_FUNCTION]->(target:Function) WHERE true RETURN file.relativePath AS file, target.name AS name, 'Function' AS kind, target.line AS line, 'RE_EXPORTS_FUNCTION' AS relationship ORDER BY file.relativePath, target.line, target.name LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:RE_EXPORTS_CLASS]->(target:Class) WHERE true RETURN file.relativePath AS file, target.name AS name, 'Class' AS kind, target.line AS line, 'RE_EXPORTS_CLASS' AS relationship ORDER BY file.relativePath, target.line, target.name LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:RE_EXPORTS_VARIABLE]->(target:Variable) WHERE true RETURN file.relativePath AS file, target.name AS name, 'Variable' AS kind, target.line AS line, 'RE_EXPORTS_VARIABLE' AS relationship ORDER BY file.relativePath, target.line, target.name LIMIT 50",
+        "rows": []
+      }
+    ],
+    "output": {
+      "query": {
+        "limit": 50
+      },
+      "exports": [
+        {
+          "file": "apps/api/src/server.ts",
+          "name": "start",
+          "kind": "Function",
+          "line": 3,
+          "relationship": "DEFINES_FUNCTION"
+        },
+        {
+          "file": "packages/core/src/index.ts",
+          "name": "buildMessage",
+          "kind": "Function",
+          "line": 1,
+          "relationship": "DEFINES_FUNCTION"
+        }
+      ]
+    }
+  },
+  {
+    "tool": "list_routes",
+    "args": {},
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_ROUTE]->(route:Route) OPTIONAL MATCH (route)-[:ROUTE_HANDLED_BY]->(handler:Function) WHERE true RETURN file.relativePath AS file, route.line AS line, route.method AS method, route.path AS path, route.fullPath AS fullPath, route.framework AS framework, route.handlerName AS handlerName, handler.name AS handler ORDER BY file.relativePath, route.line LIMIT 50",
+        "rows": []
+      }
+    ],
+    "output": {
+      "query": {
+        "limit": 50
+      },
+      "routes": []
+    }
+  },
+  {
+    "tool": "list_entrypoints",
+    "args": {},
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(entrypoint:EntryPoint) OPTIONAL MATCH (entrypoint)-[:ENTRYPOINT_HANDLED_BY]->(handler:Function) WHERE true RETURN file.relativePath AS file, entrypoint.line AS line, entrypoint.kind AS kind, entrypoint.trigger AS trigger, entrypoint.library AS library, entrypoint.handlerName AS handlerName, handler.name AS handler ORDER BY file.relativePath, entrypoint.line LIMIT 50",
+        "rows": []
+      }
+    ],
+    "output": {
+      "query": {
+        "limit": 50
+      },
+      "entrypoints": []
+    }
+  },
+  {
+    "tool": "list_env_config",
+    "args": {},
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[rel:USES_ENV_FILE]->(env:EnvVar) WHERE true RETURN 'env' AS kind, file.relativePath AS file, rel.line AS line, env.name AS name, rel.access AS value, NULL AS valueType, file.relativePath AS consumer, 'File' AS consumerKind ORDER BY file.relativePath, rel.line LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_CONFIG_FILE]->(config:ConfigValue) WHERE true RETURN 'config' AS kind, file.relativePath AS file, config.line AS line, config.name AS name, config.value AS value, config.valueType AS valueType, file.relativePath AS consumer, 'File' AS consumerKind ORDER BY file.relativePath, config.line LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[rel:CONSUMES_CONFIG_FILE]->(config:ConfigValue) WHERE true RETURN 'config-consumer' AS kind, file.relativePath AS file, config.line AS line, config.name AS name, config.value AS value, config.valueType AS valueType, rel.localName AS consumer, 'File' AS consumerKind ORDER BY file.relativePath, config.line LIMIT 50",
+        "rows": []
+      }
+    ],
+    "output": {
+      "query": {
+        "limit": 50
+      },
+      "envConfig": []
+    }
+  },
+  {
+    "tool": "list_data_access",
+    "args": {},
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (source:File)-[rel:ACCESSES_DATA_FILE]->(model:DataModel) WHERE true WITH source AS file, source, rel, model RETURN 'File' AS sourceKind, source.relativePath AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (source:Function)-[rel:ACCESSES_DATA_FUNCTION]->(model:DataModel) WHERE true OPTIONAL MATCH (file:File)-[:DEFINES_FUNCTION]->(source) RETURN 'Function' AS sourceKind, source.name AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (source:Route)-[rel:ACCESSES_DATA_ROUTE]->(model:DataModel) WHERE true OPTIONAL MATCH (file:File)-[:DECLARES_ROUTE]->(source) RETURN 'Route' AS sourceKind, source.path AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 50",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (source:EntryPoint)-[rel:ACCESSES_DATA_ENTRYPOINT]->(model:DataModel) WHERE true OPTIONAL MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(source) RETURN 'EntryPoint' AS sourceKind, source.trigger AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 50",
+        "rows": []
+      }
+    ],
+    "output": {
+      "query": {
+        "limit": 50
+      },
+      "dataAccess": []
+    }
+  },
+  {
+    "tool": "graph_stats",
+    "args": {
+      "packageName": "@sample/core"
+    },
+    "calls": [
+      {
+        "method": "schemaVersion",
+        "result": 34
+      },
+      {
+        "method": "stats",
+        "options": {
+          "packageName": "@sample/core"
+        },
+        "rows": [
+          {
+            "table": "Package",
+            "count": 1
+          },
+          {
+            "table": "File",
+            "count": 1
+          },
+          {
+            "table": "Import",
+            "count": 0
+          },
+          {
+            "table": "Function",
+            "count": 1
+          },
+          {
+            "table": "Class",
+            "count": 0
+          },
+          {
+            "table": "Route",
+            "count": 0
+          }
+        ]
+      }
+    ],
+    "output": {
+      "schemaVersion": 34,
+      "packageName": "@sample/core",
+      "stats": [
+        {
+          "table": "Package",
+          "count": 1
+        },
+        {
+          "table": "File",
+          "count": 1
+        },
+        {
+          "table": "Import",
+          "count": 0
+        },
+        {
+          "table": "Function",
+          "count": 1
+        },
+        {
+          "table": "Class",
+          "count": 0
+        },
+        {
+          "table": "Route",
+          "count": 0
+        }
+      ]
+    }
+  },
+  {
+    "tool": "trace_import_chain",
+    "args": {
+      "from": "apps/api/src/server.ts",
+      "to": "packages/core/src/index.ts"
+    },
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (source:File)-[:IMPORTS]->(:Import)-[:RESOLVES_TO]->(target:File) RETURN source.relativePath AS source, target.relativePath AS target",
+        "rows": [
+          {
+            "source": "apps/api/src/server.ts",
+            "target": "packages/core/src/index.ts"
+          }
+        ]
+      }
+    ],
+    "output": {
+      "query": {
+        "from": "apps/api/src/server.ts",
+        "to": "packages/core/src/index.ts",
+        "maxDepth": 6
+      },
+      "found": true,
+      "chain": [
+        "apps/api/src/server.ts",
+        "packages/core/src/index.ts"
+      ]
+    }
+  }
+]

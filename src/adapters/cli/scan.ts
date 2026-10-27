@@ -1,12 +1,12 @@
 import path from "node:path";
 import { mkdir, writeFile } from "node:fs/promises";
-import { SCHEMA_VERSION } from "../kuzu/schema.js";
 import { printScanReport } from "./report.js";
 import { ProgressReporter } from "./progress.js";
 import type { BuildCodeGraphResult, IncrementalEligibility, IncrementalMode } from "../../core/scan/index.js";
 import { didFailFast, didPartiallySucceed } from "../../core/scan/index.js";
 import { scanOrchestrator } from "../../composition/orchestrator.js";
-import { KuzuGraphWriter, type KuzuWriteMode } from "../kuzu/index.js";
+import { GRAPH_SCHEMA_VERSION, openGraphStore } from "../../composition/graph-store.js";
+import type { GraphWriteMode, IGraphStore } from "../../core/contracts/graph-store.js";
 
 export type ScanAdapterOptions = {
   database: string;
@@ -29,7 +29,7 @@ export async function runScanAdapter(projectPath: string, options: ScanAdapterOp
   const databasePath = path.resolve(options.database);
   const manifestPath = path.resolve(options.manifest);
   const incrementalMode = parseIncrementalMode(options.incremental);
-  const kuzuWriteMode = parseKuzuWriteMode(options.kuzuWriteMode);
+  const kuzuWriteMode = parseGraphWriteMode(options.kuzuWriteMode);
   const progress = new ProgressReporter();
 
   const result = await scanOrchestrator.buildGraph(projectPath, {
@@ -54,7 +54,7 @@ export async function runScanAdapter(projectPath: string, options: ScanAdapterOp
     return { exitCode: 1 };
   }
 
-  const writer = await KuzuGraphWriter.open(databasePath);
+  const writer = await openGraphStore(databasePath);
   try {
     await writeGraph(writer, result, incrementalMode, kuzuWriteMode);
   } finally {
@@ -68,10 +68,10 @@ export async function runScanAdapter(projectPath: string, options: ScanAdapterOp
 }
 
 async function writeGraph(
-  writer: KuzuGraphWriter,
+  writer: IGraphStore,
   result: BuildCodeGraphResult,
   incrementalMode: IncrementalMode,
-  kuzuWriteMode: KuzuWriteMode,
+  kuzuWriteMode: GraphWriteMode,
 ): Promise<void> {
   const requestedPatch = incrementalMode === "changed-files";
   result.report.graphPatch = {
@@ -95,13 +95,13 @@ async function writeGraph(
   }
 
   const schemaVersion = await writer.schemaVersion();
-  if (schemaVersion !== SCHEMA_VERSION) {
+  if (schemaVersion !== GRAPH_SCHEMA_VERSION) {
     result.report.graphPatch = {
       ...result.report.graphPatch,
       effectiveMode: "reset",
       reason: schemaVersion === null
         ? "Previous graph schema is missing"
-        : `Previous graph schema mismatch: previous ${schemaVersion}, current ${SCHEMA_VERSION}`,
+        : `Previous graph schema mismatch: previous ${schemaVersion}, current ${GRAPH_SCHEMA_VERSION}`,
     };
     await resetAndWriteGraph(writer, result, kuzuWriteMode);
     return;
@@ -123,9 +123,9 @@ async function writeGraph(
 }
 
 async function resetAndWriteGraph(
-  writer: KuzuGraphWriter,
+  writer: IGraphStore,
   result: BuildCodeGraphResult,
-  kuzuWriteMode: KuzuWriteMode,
+  kuzuWriteMode: GraphWriteMode,
 ): Promise<void> {
   await writer.reset();
   await writer.write(result.nodes, result.relationships, {
@@ -164,7 +164,7 @@ function parseIncrementalMode(value: string): IncrementalMode {
   throw new Error(`Unsupported incremental mode: ${value}`);
 }
 
-function parseKuzuWriteMode(value: string): KuzuWriteMode {
+function parseGraphWriteMode(value: string): GraphWriteMode {
   if (value === "transaction" || value === "individual") {
     return value;
   }
