@@ -44,6 +44,7 @@ import {
   createVariableClassNode,
   createVariableFunctionNode,
   createVariableNode,
+  isInitializerHandlerArgument,
   isInlineHandlerArgument,
   isObjectLiteralHandlerFunction,
 } from "./declarations.js";
@@ -155,10 +156,12 @@ export function walkJsTsNodes(
         relationships.push(...callNodes.map((c) => ({ from: functionNode.id, to: c.id, type: "CALLS" as const, properties: {} })));
 
         functionAstPairs.push({ functionNodeId: functionNode.id, astNode: node });
-      } else if (isInlineHandlerArgument(node) || isObjectLiteralHandlerFunction(node)) {
+      } else if (isInlineHandlerArgument(node) || isObjectLiteralHandlerFunction(node) || isInitializerHandlerArgument(node)) {
         const result = isInlineHandlerArgument(node)
           ? createInlineHandlerNode(fileNodeId, node)
-          : createObjectLiteralHandlerNode(fileNodeId, node);
+          : isInitializerHandlerArgument(node)
+            ? createInlineHandlerNode(fileNodeId, node, "initializercall")
+            : createObjectLiteralHandlerNode(fileNodeId, node);
         if (result) {
           nodes.push(result.functionNode);
           relationships.push({ from: fileNodeId, to: result.functionNode.id, type: "DEFINES_FUNCTION", properties: {} });

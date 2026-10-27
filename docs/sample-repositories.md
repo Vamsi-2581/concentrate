@@ -94,12 +94,12 @@ npm run dev -- scan .concentrate/samples/express --database .concentrate/express
 npm run dev -- stats --database .concentrate/express.graph
 ```
 
-- Last scan result, 2026-05-02: 213 discovered files, 141 supported files,
+- Last scan result, 2026-10-27: 213 discovered files, 141 supported files,
   141 parsed files, 0 failed files, 158 resolved imports, 0 unresolved
-  relationships, 3281 nodes, 4130 relationships.
+  relationships, 12879 nodes, 14052 relationships.
 - File classification counts: 50 production files, 91 test files, 0 fixture
   files, 0 support files, 0 generated files.
-- Expected smoke counts: schema version 34, 91 `Route` nodes, 57 routes with
+- Expected smoke counts: schema version 36, 91 `Route` nodes, 57 routes with
   non-null `fullPath`, 65
   `ROUTE_HANDLED_BY` relationships, 65 `ROUTE_LIFECYCLE_STEP`
   relationships, 9 `LIFECYCLE_PRECEDES` relationships, 2 `EnvVar` nodes, 5
@@ -122,12 +122,12 @@ npm run dev -- scan .concentrate/samples/fastify --database .concentrate/fastify
 npm run dev -- stats --database .concentrate/fastify.graph
 ```
 
-- Last scan result, 2026-05-01: 45 discovered files, 18 supported files,
+- Last scan result, 2026-10-27: 45 discovered files, 18 supported files,
   18 parsed files, 0 failed files, 10 resolved imports, 1 unresolved
-  relationship, 339 nodes, 392 relationships.
+  relationship, 398 nodes, 454 relationships.
 - File classification counts: 11 production files, 7 test files, 0 fixture
   files, 0 support files, 0 generated files.
-- Expected smoke counts: schema version 34, 1 `Route` node, 1 route with
+- Expected smoke counts: schema version 36, 1 `Route` node, 1 route with
   non-null `fullPath`, 1 `ROUTE_HANDLED_BY` relationship, 1
   `ROUTE_LIFECYCLE_STEP` relationship, 0 `LIFECYCLE_PRECEDES`
   relationships, 2 `EnvVar` nodes, 0 `ConfigValue` nodes, 0 `EntryPoint`
@@ -150,12 +150,12 @@ npm run dev -- scan .concentrate/samples/nestjs-starter --database .concentrate/
 npm run dev -- stats --database .concentrate/nestjs-starter.graph
 ```
 
-- Last scan result, 2026-05-02: 16 discovered files, 7 supported files,
+- Last scan result, 2026-10-27: 16 discovered files, 7 supported files,
   7 parsed files, 0 failed files, 7 resolved imports, 13 unresolved
-  relationships, 68 nodes, 95 relationships.
+  relationships, 85 nodes, 112 relationships.
 - File classification counts: 5 production files, 2 test files, 0 fixture
   files, 0 support files, 0 generated files.
-- Expected smoke counts: schema version 34, 1 `Route` node, 1 route with
+- Expected smoke counts: schema version 36, 1 `Route` node, 1 route with
   non-null `fullPath`, 1
   `MODULE_CONTROLS` relationship, 1 `MODULE_PROVIDES` relationship, 1
   `INJECTS` relationship, 0 `ROUTE_LIFECYCLE_STEP` relationships, 0 `EnvVar`
@@ -178,12 +178,12 @@ npm run dev -- scan .concentrate/samples/ky --database .concentrate/ky.graph
 npm run dev -- stats --database .concentrate/ky.graph
 ```
 
-- Last scan result, 2026-05-02: 68 discovered files, 52 supported files,
+- Last scan result, 2026-10-27: 68 discovered files, 52 supported files,
   52 parsed files, 0 failed files, 134 resolved imports, 0 unresolved
-  relationships, 5494 nodes, 6926 relationships.
+  relationships, 7013 nodes, 8497 relationships.
 - File classification counts: 29 production files, 23 test files, 0 fixture
   files, 0 support files, 0 generated files.
-- Expected smoke counts: schema version 34, 0 `Route` nodes, 2 `EnvVar`
+- Expected smoke counts: schema version 36, 0 `Route` nodes, 2 `EnvVar`
   nodes, 10 `ConfigValue` nodes, 0 `EntryPoint` nodes, 0 `DataModel` nodes.
 
 ## Internet Validation Scans
@@ -198,12 +198,12 @@ standing smoke samples.
 - Repository: `https://github.com/JDIZM/node-express-firebase-mongodb`
 - Local path: `.concentrate/samples/internet-node-express-firebase-mongodb`
 - Graph store: `.concentrate/internet-node-express-firebase-mongodb.graph`
-- Last scan result, 2026-05-02: 40 discovered files, 24 supported files,
+- Last scan result, 2026-10-27: 40 discovered files, 24 supported files,
   24 parsed files, 0 failed files, 22 resolved imports, 28 unresolved
-  relationships, 438 nodes, 536 relationships.
+  relationships, 514 nodes, 631 relationships.
 - File classification counts: 20 production files, 3 test files, 0 fixture
   files, 0 support files, 1 generated file.
-- Expected smoke counts: schema version 34, 7 `Route` nodes, 2 `EnvVar`
+- Expected smoke counts: schema version 36, 7 `Route` nodes, 2 `EnvVar`
   nodes, 14 `ConfigValue` nodes, 1 `DataModel` node.
 - Notes: exposed a `tsconfig.json` parsing bug where glob strings such as
   `@/*` and `**/*.test.ts` were incorrectly treated as comments; fixed by
@@ -215,12 +215,12 @@ standing smoke samples.
 - Repository: `https://github.com/gothinkster/node-express-realworld-example-app`
 - Local path: `.concentrate/samples/internet-node-express-realworld`
 - Graph store: `.concentrate/internet-node-express-realworld.graph`
-- Last scan result, 2026-05-02: 67 discovered files, 39 supported files,
+- Last scan result, 2026-10-27: 67 discovered files, 39 supported files,
   39 parsed files, 0 failed files, 49 resolved imports, 22 unresolved
-  relationships, 540 nodes, 862 relationships.
+  relationships, 692 nodes, 1069 relationships.
 - File classification counts: 29 production files, 7 test files, 0 fixture
   files, 3 support files, 0 generated files.
-- Expected smoke counts: schema version 34, 26 `Route` nodes, 4 `EnvVar`
+- Expected smoke counts: schema version 36, 26 `Route` nodes, 4 `EnvVar`
   nodes, 9 `ConfigValue` nodes, 4 `DataModel` nodes.
 
 ### Nest
@@ -229,12 +229,12 @@ standing smoke samples.
 - Repository: `https://github.com/nestjs/nest`
 - Local path: `.concentrate/samples/internet-nest`
 - Graph store: `.concentrate/internet-nest.graph`
-- Last scan result, 2026-05-02: 2115 discovered files, 1714 supported files,
+- Last scan result, 2026-10-27: 2115 discovered files, 1714 supported files,
   1712 parsed files, 2 failed files, 4914 resolved imports, 1395 unresolved
-  relationships, 27392 nodes, 42953 relationships.
+  relationships, 52723 nodes, 69023 relationships.
 - File classification counts: 985 production files, 351 test files, 376 fixture
   files, 0 support files, 0 generated files.
-- Expected smoke counts: schema version 34, 309 `Route` nodes, 3 `EntryPoint`
+- Expected smoke counts: schema version 36, 309 `Route` nodes, 3 `EntryPoint`
   nodes, 9 `EnvVar` nodes, 144 `ConfigValue` nodes, 4 `DataModel` nodes.
 - Data-access validation, 2026-05-02: detected large Nest models `Cat`
   (Mongoose), `Photo`, `User`, and `Mongo` (TypeORM) and propagated accesses

@@ -5,9 +5,12 @@ import {
   walkScoped,
 } from "../tree-sitter-utils.js";
 import {
+  extractName,
   isClassNode,
   isFunctionNode,
+  isModuleLevelDeclarator,
   isVariableClassValue,
+  isVariableFunctionValue,
 } from "./common.js";
 import {
   extractFunctionParameters,
@@ -20,6 +23,19 @@ export function isInlineHandlerArgument(node: Parser.SyntaxNode): boolean {
   const callExpr = node.parent.parent;
   if (!callExpr || callExpr.type !== "call_expression") return false;
   return isModuleLevelCallExpression(callExpr);
+}
+
+// A callback passed to the call that initializes a module-level variable:
+// `export const User = createParamDecorator((data, ctx) => { … })`.
+export function isInitializerHandlerArgument(node: Parser.SyntaxNode): boolean {
+  if (node.type !== "arrow_function" && node.type !== "function_expression") return false;
+  if (node.parent?.type !== "arguments") return false;
+  const callExpr = node.parent.parent;
+  if (!callExpr || callExpr.type !== "call_expression") return false;
+  const declarator = callExpr.parent;
+  return declarator?.type === "variable_declarator"
+    && declarator.childForFieldName("value")?.id === callExpr.id
+    && isModuleLevelDeclarator(declarator);
 }
 
 export function isObjectLiteralHandlerFunction(node: Parser.SyntaxNode): boolean {
@@ -42,6 +58,7 @@ export function isObjectLiteralHandlerFunction(node: Parser.SyntaxNode): boolean
 export function createInlineHandlerNode(
   fileNodeId: string,
   handlerNode: Parser.SyntaxNode,
+  callKind: "modulecall" | "initializercall" = "modulecall",
 ): { functionNode: GraphNode; callNodeId: string } | null {
   const argsNode = handlerNode.parent;
   const callExprNode = argsNode?.parent;
@@ -62,7 +79,7 @@ export function createInlineHandlerNode(
 
   const row = callExprNode.startPosition.row + 1;
   const col = callExprNode.startPosition.column;
-  const callNodeId = `${fileNodeId}:modulecall:${row}:${col}:${expression}`;
+  const callNodeId = `${fileNodeId}:${callKind}:${row}:${col}:${expression}`;
 
   return {
     functionNode: {
@@ -178,6 +195,25 @@ function normalizePropertyName(node: Parser.SyntaxNode): string {
   return node.type === "string" ? node.text.replace(/^["'`]|["'`]$/g, "") : node.text;
 }
 
+// Literal-ish arguments of a call or decorator as a JSON array: string contents,
+// numbers, identifiers and member expressions; anything else is left out.
+export function extractCallArgs(callExpr: Parser.SyntaxNode): string {
+  const argsNode = callExpr.childForFieldName("arguments");
+  if (!argsNode) return "[]";
+
+  const args = argsNode.namedChildren
+    .map((arg) => {
+      if (arg.type === "string") return arg.text.replace(/^["'`]|["'`]$/g, "");
+      if (arg.type === "number") return arg.text;
+      if (arg.type === "identifier" || arg.type === "type_identifier") return arg.text;
+      if (arg.type === "member_expression") return arg.text;
+      return null;
+    })
+    .filter((v): v is string => v !== null);
+
+  return JSON.stringify(args);
+}
+
 export function createModuleLevelCallNodes(fileNodeId: string, programNode: Parser.SyntaxNode): GraphNode[] {
   const calls: GraphNode[] = [];
 
@@ -207,6 +243,7 @@ export function createModuleLevelCallNodes(fileNodeId: string, programNode: Pars
           receiver: parts.receiver,
           line: expr.startPosition.row + 1,
           columnNumber: expr.startPosition.column,
+          args: extractCallArgs(expr),
         },
       });
     } else if (expr.type === "new_expression") {
@@ -224,6 +261,7 @@ export function createModuleLevelCallNodes(fileNodeId: string, programNode: Pars
           receiver: parts.receiver,
           line: expr.startPosition.row + 1,
           columnNumber: expr.startPosition.column,
+          args: extractCallArgs(expr),
         },
       });
     }
@@ -247,6 +285,7 @@ export function createInitializerCallNode(fileNodeId: string, valueNode: Parser.
         receiver: parts.receiver,
         line: valueNode.startPosition.row + 1,
         columnNumber: valueNode.startPosition.column,
+        args: extractCallArgs(valueNode),
       },
     };
   }
@@ -266,6 +305,7 @@ export function createInitializerCallNode(fileNodeId: string, valueNode: Parser.
         receiver: parts.receiver,
         line: valueNode.startPosition.row + 1,
         columnNumber: valueNode.startPosition.column,
+        args: extractCallArgs(valueNode),
       },
     };
   }
@@ -291,6 +331,7 @@ export function createCallNodes(functionNodeId: string, node: Parser.SyntaxNode)
           receiver: parts.receiver,
           line: child.startPosition.row + 1,
           columnNumber: child.startPosition.column,
+          args: extractCallArgs(child),
         },
       });
     } else if (child.type === "new_expression") {
@@ -308,10 +349,34 @@ export function createCallNodes(functionNodeId: string, node: Parser.SyntaxNode)
           receiver: parts.receiver,
           line: child.startPosition.row + 1,
           columnNumber: child.startPosition.column,
+          args: extractCallArgs(child),
         },
       });
     }
-  }, (child) => isFunctionNode(child) || isClassNode(child) || isVariableClassValue(child));
+  }, ownsCalls);
 
   return calls;
+}
+
+// Functions that get a Function node of their own keep their calls. Anonymous
+// callbacks such as forEach(el => …) or it('…', () => …) do not, so their calls
+// belong to the enclosing function.
+function ownsCalls(node: Parser.SyntaxNode): boolean {
+  if (isClassNode(node) || isVariableClassValue(node)) return true;
+  if (!isFunctionNode(node)) return false;
+  if (node.type === "method_definition" || node.type === "abstract_method_signature") {
+    return node.parent?.type === "class_body";
+  }
+  if (extractName(node) !== null) return true;
+
+  const declarator = node.parent;
+  if (
+    isVariableFunctionValue(node)
+    && declarator?.type === "variable_declarator"
+    && declarator.childForFieldName("name")?.type === "identifier"
+  ) {
+    return true;
+  }
+
+  return isInlineHandlerArgument(node) || isObjectLiteralHandlerFunction(node) || isInitializerHandlerArgument(node);
 }
