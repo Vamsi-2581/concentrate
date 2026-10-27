@@ -59,6 +59,7 @@ export function appendClassMembers(
   classSyntaxNode: SyntaxNode,
   nodes: GraphNode[],
   relationships: GraphRelationship[],
+  callbackKeys: ReadonlySet<string>,
 ): void {
   const decoratorSource = classSyntaxNode.parent?.type === "export_statement"
     || classSyntaxNode.parent?.type === "decorated_definition"
@@ -123,7 +124,7 @@ export function appendClassMembers(
         type: "DEFINES_METHOD",
         properties: {},
       });
-      const callNodes = createCallNodes(methodNode.id, child);
+      const callNodes = createCallNodes(methodNode.id, child, callbackKeys);
       nodes.push(...callNodes);
       relationships.push(
         ...callNodes.map((callNode) => ({

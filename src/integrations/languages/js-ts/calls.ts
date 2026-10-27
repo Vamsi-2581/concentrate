@@ -38,12 +38,15 @@ export function isInitializerHandlerArgument(node: SyntaxNode): boolean {
     && isModuleLevelDeclarator(declarator);
 }
 
-export function isObjectLiteralHandlerFunction(node: SyntaxNode): boolean {
+// A function stored under one of `callbackKeys` in an object literal passed to
+// a module-level call: `register({ url: "/x", handler: () => { … } })`.
+// Frameworks declare the keys (JsTsFrameworkPlugin.callbackPropertyNames).
+export function isObjectLiteralHandlerFunction(node: SyntaxNode, callbackKeys: ReadonlySet<string>): boolean {
   if (node.type !== "arrow_function" && node.type !== "function_expression") return false;
   if (node.parent?.type !== "pair") return false;
 
   const key = node.parent.childForFieldName("key");
-  if (!key || !isHandlerPropertyName(key)) return false;
+  if (!key || !callbackKeys.has(normalizePropertyName(key))) return false;
 
   const objectNode = node.parent.parent;
   const argsNode = objectNode?.parent;
@@ -68,13 +71,13 @@ export function createInlineHandlerNode(
   const callParts = analyzeMemberCallExpression(calleeText);
   const expression = callParts?.expression ?? calleeText;
 
-  const routePath = argsNode.namedChildren
+  const firstString = argsNode.namedChildren
     .find((c) => c.type === "string")
     ?.text.replace(/^["']|["']$/g, "");
 
   const argIndex = indexOfNode(argsNode.namedChildren, handlerNode);
-  const syntheticName = routePath
-    ? `<${expression}:${routePath}:arg${argIndex}>`
+  const syntheticName = firstString
+    ? `<${expression}:${firstString}:arg${argIndex}>`
     : `<${expression}:arg${argIndex}>`;
 
   const row = callExprNode.startPosition.row + 1;
@@ -119,10 +122,10 @@ export function createObjectLiteralHandlerNode(
   const calleeText = callExprNode.childForFieldName("function")?.text ?? "unknown";
   const callParts = analyzeMemberCallExpression(calleeText);
   const expression = callParts?.expression ?? calleeText;
-  const routePath = extractRoutePathFromObject(objectNode)
+  const label = extractUrlOrPathProperty(objectNode)
     ?? argsNode.namedChildren.find((c) => c.type === "string")?.text.replace(/^["']|["']$/g, "");
-  const syntheticName = routePath
-    ? `<${expression}:${routePath}:${propertyName}>`
+  const syntheticName = label
+    ? `<${expression}:${label}:${propertyName}>`
     : `<${expression}:${propertyName}>`;
   const row = callExprNode.startPosition.row + 1;
   const col = callExprNode.startPosition.column;
@@ -163,22 +166,7 @@ function isModuleLevelCallExpression(callExpr: SyntaxNode): boolean {
   return false;
 }
 
-function isHandlerPropertyName(node: SyntaxNode): boolean {
-  return [
-    "handler",
-    "preHandler",
-    "preValidation",
-    "preParsing",
-    "preSerialization",
-    "onRequest",
-    "onResponse",
-    "onSend",
-    "onTimeout",
-    "onError",
-  ].includes(normalizePropertyName(node));
-}
-
-function extractRoutePathFromObject(objectNode: SyntaxNode): string | null {
+function extractUrlOrPathProperty(objectNode: SyntaxNode): string | null {
   for (const child of objectNode.namedChildren) {
     if (child.type !== "pair") continue;
     const key = child.childForFieldName("key");
@@ -313,7 +301,11 @@ export function createInitializerCallNode(fileNodeId: string, valueNode: SyntaxN
   return null;
 }
 
-export function createCallNodes(functionNodeId: string, node: SyntaxNode): GraphNode[] {
+export function createCallNodes(
+  functionNodeId: string,
+  node: SyntaxNode,
+  callbackKeys: ReadonlySet<string>,
+): GraphNode[] {
   const calls: GraphNode[] = [];
 
   walkScoped(node, (child) => {
@@ -353,7 +345,7 @@ export function createCallNodes(functionNodeId: string, node: SyntaxNode): Graph
         },
       });
     }
-  }, ownsCalls);
+  }, (candidate) => ownsCalls(candidate, callbackKeys));
 
   return calls;
 }
@@ -361,7 +353,7 @@ export function createCallNodes(functionNodeId: string, node: SyntaxNode): Graph
 // Functions that get a Function node of their own keep their calls. Anonymous
 // callbacks such as forEach(el => …) or it('…', () => …) do not, so their calls
 // belong to the enclosing function.
-function ownsCalls(node: SyntaxNode): boolean {
+function ownsCalls(node: SyntaxNode, callbackKeys: ReadonlySet<string>): boolean {
   if (isClassNode(node) || isVariableClassValue(node)) return true;
   if (!isFunctionNode(node)) return false;
   if (node.type === "method_definition" || node.type === "abstract_method_signature") {
@@ -378,5 +370,7 @@ function ownsCalls(node: SyntaxNode): boolean {
     return true;
   }
 
-  return isInlineHandlerArgument(node) || isObjectLiteralHandlerFunction(node) || isInitializerHandlerArgument(node);
+  return isInlineHandlerArgument(node)
+    || isObjectLiteralHandlerFunction(node, callbackKeys)
+    || isInitializerHandlerArgument(node);
 }

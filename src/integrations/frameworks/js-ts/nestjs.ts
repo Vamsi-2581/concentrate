@@ -1,5 +1,5 @@
 import type { GraphNode, GraphRelationship } from "../../../core/graph/model.js";
-import { createNestJsRouteGraph } from "../../languages/js-ts/routes.js";
+import { createNestJsRouteGraph } from "./route-graph.js";
 import { addNestJsModuleRelationships } from "./resolution/nestjs-modules.js";
 import { addInjectionRelationships } from "./resolution/injections.js";
 import { addInstanceMethodResolutionRelationships } from "./resolution/instances.js";

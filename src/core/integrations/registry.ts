@@ -3,44 +3,25 @@ import type { ILanguageResolver } from "../contracts/language-resolver.js";
 import type { ISemanticContributor } from "../contracts/semantic-contributor.js";
 
 export class CoreIntegrationRegistry {
-  private readonly scanParsersByLanguage = new Map<string, ILanguageParser>();
-  private readonly languageParsersByLanguage = new Map<string, ILanguageParser>();
+  private readonly parsersByLanguage = new Map<string, ILanguageParser>();
   private readonly languageResolverList: ILanguageResolver[] = [];
   private readonly semanticContributorList: ISemanticContributor[] = [];
 
-  registerLanguageParser(
-    parser: ILanguageParser,
-    options: { scan?: boolean; integration?: boolean } = {},
-  ): void {
-    const scan = options.scan ?? true;
-    const integration = options.integration ?? true;
-
-    if (scan) {
-      this.scanParsersByLanguage.set(parser.language, parser);
-    }
-    if (integration) {
-      this.languageParsersByLanguage.set(parser.language, parser);
-    }
+  // One parser per language; registering a language again replaces its parser.
+  registerLanguageParser(parser: ILanguageParser): void {
+    this.parsersByLanguage.set(parser.language, parser);
   }
 
   getLanguageParser(language: string): ILanguageParser {
-    const parser = this.scanParsersByLanguage.get(language);
+    const parser = this.parsersByLanguage.get(language);
     if (!parser) {
       throw new Error(`No parser registered for language: ${language}`);
     }
     return parser;
   }
 
-  getLanguageIntegration(language: string): ILanguageParser {
-    const parser = this.languageParsersByLanguage.get(language) ?? this.scanParsersByLanguage.get(language);
-    if (!parser) {
-      throw new Error(`No language integration registered for language: ${language}`);
-    }
-    return parser;
-  }
-
   get languageParsers(): ReadonlyMap<string, ILanguageParser> {
-    return this.languageParsersByLanguage;
+    return this.parsersByLanguage;
   }
 
   registerLanguageResolver(resolver: ILanguageResolver): void {

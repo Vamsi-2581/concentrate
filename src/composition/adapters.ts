@@ -11,7 +11,7 @@ export function registerParserAdapter(parser: ILanguageParser): void {
   coreIntegrationRegistry.registerLanguageParser(parser);
 }
 
-// Language-boundary parsers, indexed by language name.
+// Registered parsers (language level plus framework plugins), indexed by language name.
 export const languageParsers: ReadonlyMap<string, ILanguageParser> = coreIntegrationRegistry.languageParsers;
 export const languageResolvers = coreIntegrationRegistry.languageResolvers;
 export const semanticContributors = coreIntegrationRegistry.semanticContributors;

@@ -1137,9 +1137,8 @@ It supersedes the follow-ups below, which are folded into its phases 4 and 5.
 
 Open follow-ups:
 
-- Move HTTP route framework knowledge (Express/Koa/Fastify/NestJS) out of
-  `src/integrations/languages/js-ts/routes.ts` and `entrypoints.ts` into
-  `src/integrations/frameworks/js-ts/`, then collapse the dual scan/integration
-  parser registration in `src/composition/default-registry.ts`.
+- ~~Move HTTP route framework knowledge out of the language layer and collapse
+  the dual scan/integration parser registration~~ (done in ROADMAP Phase 4:
+  framework semantics run as `JsTsFrameworkPlugin`s on one parser per language).
 - Implement real changed-file-only parsing; `createParsePlan` still always
   returns `effectiveMode: "full"`.
