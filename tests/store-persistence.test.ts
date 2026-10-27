@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtemp, readdir, readFile, rm, utimes, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readdir, readFile, rm, utimes, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { after, describe, it } from "node:test";
@@ -131,9 +131,35 @@ describe("GraphStore", () => {
     assert.equal((await readHead(directory))!.generation, 1);
   });
 
+  it("recognizes an old Kuzu database and refuses unrelated directories", async () => {
+    const kuzuFile = path.join(workRoot, "graph.kuzu");
+    await writeFile(kuzuFile, "KUZU");
+    await assert.rejects(GraphStore.open(kuzuFile), /is a Kuzu database from an older version of Concentrate; delete it and run concentrate scan again/);
+
+    const kuzuDirectory = freshDirectory();
+    await mkdir(kuzuDirectory);
+    await writeFile(path.join(kuzuDirectory, "catalog.kz"), "");
+    await assert.rejects(GraphStore.open(kuzuDirectory), /is a Kuzu database/);
+
+    const other = freshDirectory();
+    await mkdir(other);
+    await writeFile(path.join(other, "notes.txt"), "");
+    await assert.rejects(GraphStore.open(other), /is not a Concentrate graph store \(found notes.txt\)/);
+  });
+
+  it("does not create a store just by reading it", async () => {
+    const directory = freshDirectory();
+    const reader = await GraphStore.open(directory);
+    assert.equal(await reader.schemaVersion(), null);
+    assert.deepEqual(await reader.query("MATCH (n) RETURN count(n) AS n"), [{ n: 0 }]);
+    await reader.close();
+    await assert.rejects(readdir(directory), { code: "ENOENT" });
+  });
+
   it("fails fast on a held lock unless asked to wait", async () => {
     const directory = freshDirectory();
     const store = await GraphStore.open(directory);
+    await mkdir(directory, { recursive: true });
     await writeFile(path.join(directory, "LOCK"), JSON.stringify({ pid: process.pid, host: os.hostname(), startedAt: new Date().toISOString() }));
     await store.reset();
     await assert.rejects(store.write(nodes([]), []), GraphLockError);

@@ -6,8 +6,8 @@ import { describe, it } from "node:test";
 import { buildCodeGraph } from "../src/composition/orchestrator.js";
 import { coreIntegrationRegistry } from "../src/composition/default-registry.js";
 import { scanCommand } from "../src/commands/scan.js";
-import { KuzuGraphWriter } from "../src/adapters/kuzu/kuzu-writer.js";
-import { SCHEMA_VERSION } from "../src/adapters/kuzu/schema.js";
+import { SCHEMA_VERSION } from "../src/adapters/store/schema.js";
+import { GraphStore } from "../src/adapters/store/store.js";
 import { parseJsTsWithRootNode } from "../src/integrations/languages/js-ts/parser.js";
 import { applyExpressKoaParseSemantics } from "../src/integrations/frameworks/js-ts/express-koa.js";
 import { applyFastifyParseSemantics } from "../src/integrations/frameworks/js-ts/fastify.js";
@@ -131,11 +131,11 @@ describe("buildCodeGraph", () => {
     });
   });
 
-  it("patches an existing Kuzu graph for added, changed, and deleted files", async () => {
-    const fixturePath = await createKuzuPatchFixture();
+  it("patches an existing graph for added, changed, and deleted files", async () => {
+    const fixturePath = await createPatchFixture();
     const databasePath = path.join(
       await mkdtemp(path.join(os.tmpdir(), "concentrate-patch-graph-")),
-      "graph.kuzu",
+      "graph",
     );
     const previousManifestPath = path.join(path.dirname(databasePath), "previous-manifest.json");
     const nextManifestPath = path.join(path.dirname(databasePath), "next-manifest.json");
@@ -146,7 +146,7 @@ describe("buildCodeGraph", () => {
       continueOnError: false,
       include: ["src/**/*.ts"],
       exclude: [],
-      kuzuWriteMode: "transaction",
+      retryLock: true,
       manifest: previousManifestPath,
       incremental: "full",
     });
@@ -160,7 +160,7 @@ describe("buildCodeGraph", () => {
       continueOnError: false,
       include: ["src/**/*.ts"],
       exclude: [],
-      kuzuWriteMode: "transaction",
+      retryLock: true,
       manifest: nextManifestPath,
       previousManifest: previousManifestPath,
       incremental: "changed-files",
@@ -168,7 +168,7 @@ describe("buildCodeGraph", () => {
 
     process.exitCode = previousExitCode;
 
-    const writer = await KuzuGraphWriter.open(databasePath);
+    const writer = await GraphStore.open(databasePath);
     try {
       const rows = await writer.query("MATCH (fn:Function) RETURN fn.name AS name ORDER BY name");
       const names = rows.map((row) => String((row as { name: unknown }).name));
@@ -184,11 +184,11 @@ describe("buildCodeGraph", () => {
     }
   });
 
-  it("writes partial Kuzu graphs when continue-on-error is enabled", async () => {
+  it("writes partial graphs when continue-on-error is enabled", async () => {
     const fixturePath = await createScanErrorFixture();
     const databasePath = path.join(
       await mkdtemp(path.join(os.tmpdir(), "concentrate-partial-graph-")),
-      "graph.kuzu",
+      "graph",
     );
     const manifestPath = path.join(path.dirname(databasePath), "manifest.json");
     const previousExitCode = process.exitCode;
@@ -198,7 +198,7 @@ describe("buildCodeGraph", () => {
       continueOnError: true,
       include: [],
       exclude: [],
-      kuzuWriteMode: "transaction",
+      retryLock: true,
       manifest: manifestPath,
       incremental: "full",
     });
@@ -208,7 +208,7 @@ describe("buildCodeGraph", () => {
     const manifest = JSON.parse(await readFile(manifestPath, "utf8")) as { files?: unknown[] };
     assert.equal(manifest.files?.length, 2);
 
-    const writer = await KuzuGraphWriter.open(databasePath);
+    const writer = await GraphStore.open(databasePath);
     try {
       assert.equal(await writer.schemaVersion(), SCHEMA_VERSION);
       const rows = await writer.query(
@@ -2042,8 +2042,8 @@ async function createManifestDiffFixture(): Promise<string> {
   return fixturePath;
 }
 
-async function createKuzuPatchFixture(): Promise<string> {
-  const fixturePath = await mkdtemp(path.join(os.tmpdir(), "concentrate-kuzu-patch-"));
+async function createPatchFixture(): Promise<string> {
+  const fixturePath = await mkdtemp(path.join(os.tmpdir(), "concentrate-patch-"));
   const srcPath = path.join(fixturePath, "src");
   await mkdir(srcPath, { recursive: true });
   await writeFile(path.join(srcPath, "same.ts"), "export function same() { return 1; }\n", "utf8");

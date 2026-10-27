@@ -181,7 +181,7 @@ export function resolveSamples(expectations: SampleExpectation[], manifest: Samp
     return {
       ...sample,
       projectPath: path.join(samplesDirectory(), sample.name),
-      databasePath: `.concentrate/${sample.name}.kuzu`,
+      databasePath: `.concentrate/${sample.name}.graph`,
       continueOnError: entry.continueOnError,
       exclude: entry.exclude,
     };

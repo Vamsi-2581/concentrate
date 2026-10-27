@@ -64,15 +64,12 @@ For standing-only benchmark checks:
 npm run smoke:samples -- --suite standing --incremental-benchmark --report .concentrate/incremental-standing-benchmark-report.json
 ```
 
-The smoke runner scans each repository, writes a Kuzu database, checks expected
+The smoke runner scans each repository, writes a graph store, checks expected
 scan counts and semantic graph counts, and writes a machine-readable JSON
-report. Queries for each database are run serially to avoid Kuzu per-database
-lock contention.
+report.
 
-The `stats` and `query` commands retry transient Kuzu database lock errors with
-backoff by default. Use `--no-retry-lock` when a script should fail immediately
-instead. Parallel operations should target different database paths; the smoke
-runner intentionally runs samples and same-database queries in sequence.
+Readers (`stats`, `query`, `mcp`) never lock a store. A `scan` waits for another
+scan writing the same store; pass `--no-retry-lock` to make it fail at once.
 
 Each smoke result also includes `semanticSamples`: top route, entrypoint,
 env/config, and data-access rows with file and line metadata for quick manual
@@ -84,17 +81,17 @@ manual findings can be recorded next to the sample rows.
 
 - Repository: `https://github.com/expressjs/express`
 - Local path: `.concentrate/samples/express`
-- Graph database: `.concentrate/express.kuzu`
+- Graph store: `.concentrate/express.graph`
 - Last scan command:
 
 ```bash
-npm run dev -- scan .concentrate/samples/express --database .concentrate/express.kuzu
+npm run dev -- scan .concentrate/samples/express --database .concentrate/express.graph
 ```
 
 - Example stats command:
 
 ```bash
-npm run dev -- stats --database .concentrate/express.kuzu
+npm run dev -- stats --database .concentrate/express.graph
 ```
 
 - Last scan result, 2026-05-02: 213 discovered files, 141 supported files,
@@ -112,17 +109,17 @@ npm run dev -- stats --database .concentrate/express.kuzu
 
 - Repository: `https://github.com/fastify/example`
 - Local path: `.concentrate/samples/fastify`
-- Graph database: `.concentrate/fastify.kuzu`
+- Graph store: `.concentrate/fastify.graph`
 - Last scan command:
 
 ```bash
-npm run dev -- scan .concentrate/samples/fastify --database .concentrate/fastify.kuzu
+npm run dev -- scan .concentrate/samples/fastify --database .concentrate/fastify.graph
 ```
 
 - Example stats command:
 
 ```bash
-npm run dev -- stats --database .concentrate/fastify.kuzu
+npm run dev -- stats --database .concentrate/fastify.graph
 ```
 
 - Last scan result, 2026-05-01: 45 discovered files, 18 supported files,
@@ -140,17 +137,17 @@ npm run dev -- stats --database .concentrate/fastify.kuzu
 
 - Repository: `https://github.com/nestjs/typescript-starter`
 - Local path: `.concentrate/samples/nestjs-starter`
-- Graph database: `.concentrate/nestjs-starter.kuzu`
+- Graph store: `.concentrate/nestjs-starter.graph`
 - Last scan command:
 
 ```bash
-npm run dev -- scan .concentrate/samples/nestjs-starter --database .concentrate/nestjs-starter.kuzu
+npm run dev -- scan .concentrate/samples/nestjs-starter --database .concentrate/nestjs-starter.graph
 ```
 
 - Example stats command:
 
 ```bash
-npm run dev -- stats --database .concentrate/nestjs-starter.kuzu
+npm run dev -- stats --database .concentrate/nestjs-starter.graph
 ```
 
 - Last scan result, 2026-05-02: 16 discovered files, 7 supported files,
@@ -168,17 +165,17 @@ npm run dev -- stats --database .concentrate/nestjs-starter.kuzu
 
 - Repository: `https://github.com/sindresorhus/ky`
 - Local path: `.concentrate/samples/ky`
-- Graph database: `.concentrate/ky.kuzu`
+- Graph store: `.concentrate/ky.graph`
 - Last scan command:
 
 ```bash
-npm run dev -- scan .concentrate/samples/ky --database .concentrate/ky.kuzu
+npm run dev -- scan .concentrate/samples/ky --database .concentrate/ky.graph
 ```
 
 - Example stats command:
 
 ```bash
-npm run dev -- stats --database .concentrate/ky.kuzu
+npm run dev -- stats --database .concentrate/ky.graph
 ```
 
 - Last scan result, 2026-05-02: 68 discovered files, 52 supported files,
@@ -200,7 +197,7 @@ standing smoke samples.
 - Scale: small
 - Repository: `https://github.com/JDIZM/node-express-firebase-mongodb`
 - Local path: `.concentrate/samples/internet-node-express-firebase-mongodb`
-- Graph database: `.concentrate/internet-node-express-firebase-mongodb.kuzu`
+- Graph store: `.concentrate/internet-node-express-firebase-mongodb.graph`
 - Last scan result, 2026-05-02: 40 discovered files, 24 supported files,
   24 parsed files, 0 failed files, 22 resolved imports, 28 unresolved
   relationships, 438 nodes, 536 relationships.
@@ -217,7 +214,7 @@ standing smoke samples.
 - Scale: medium
 - Repository: `https://github.com/gothinkster/node-express-realworld-example-app`
 - Local path: `.concentrate/samples/internet-node-express-realworld`
-- Graph database: `.concentrate/internet-node-express-realworld.kuzu`
+- Graph store: `.concentrate/internet-node-express-realworld.graph`
 - Last scan result, 2026-05-02: 67 discovered files, 39 supported files,
   39 parsed files, 0 failed files, 49 resolved imports, 22 unresolved
   relationships, 540 nodes, 862 relationships.
@@ -231,7 +228,7 @@ standing smoke samples.
 - Scale: large
 - Repository: `https://github.com/nestjs/nest`
 - Local path: `.concentrate/samples/internet-nest`
-- Graph database: `.concentrate/internet-nest.kuzu`
+- Graph store: `.concentrate/internet-nest.graph`
 - Last scan result, 2026-05-02: 2115 discovered files, 1714 supported files,
   1712 parsed files, 2 failed files, 4914 resolved imports, 1395 unresolved
   relationships, 27392 nodes, 42953 relationships.
@@ -254,5 +251,6 @@ standing smoke samples.
   validation DB can now be produced either by excluding those two spec files or
   by using `--continue-on-error` to keep a partial graph. Large graph validation
   showed that wrapping graph writes in a manual Kuzu transaction is the first
-  required production-scale write path; the legacy single-row autocommit path
-  remains available with `--kuzu-write-mode individual`.
+  required production-scale write path. (Historical: Kuzu and
+  `--kuzu-write-mode` were removed in Phase 2; the built-in store writes the
+  whole express graph in about 12 ms, see [benchmarks.md](benchmarks.md).)

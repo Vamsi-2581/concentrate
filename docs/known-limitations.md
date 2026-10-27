@@ -75,15 +75,18 @@ queries.
 Blocks or informs: incremental scanning package-level invalidation and package
 filtered MCP queries.
 
-## Kuzu Operations
+## Graph Store
 
-- CLI `stats` and `query` retry transient lock errors by default, but Kuzu still
-  allows one process per database path. Heavy parallel workflows should use
-  separate database paths.
-- Smoke validation serializes same-database operations. Ad hoc user scripts
-  should follow the same rule unless they isolate database outputs.
+- Writers are serialized by a lock file; a second `scan` on the same store
+  waits for the first (or fails at once with `--no-retry-lock`). Readers never
+  lock and read the last committed snapshot.
+- The whole graph is held in memory by each reader and writer. That is fine
+  for the sample repositories (tens of thousands of records) but not designed
+  for graphs of millions of records.
+- `query` accepts a read-only Cypher subset; see [cypher.md](cypher.md) for
+  what is supported and where it differs from Kuzu.
 
-Blocks or informs: future query server design and MCP concurrency behavior.
+Blocks or informs: future query server design.
 
 ## Review Process
 

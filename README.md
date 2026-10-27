@@ -1,6 +1,6 @@
 # Concentrate
 
-Scans a codebase, extracts a structural code graph, and stores it in an embedded [KuzuDB](https://kuzudb.com) graph database.
+Scans a codebase, extracts a structural code graph, and stores it in a built-in graph store (`.concentrate/graph/`) that you can query with a read-only Cypher subset.
 
 ## Supported Languages
 
@@ -20,14 +20,15 @@ JavaScript / TypeScript · Python · Go · Rust
 ```bash
 npm install
 
-# Scan a project into a graph database
+# Scan a project into the graph store (.concentrate/graph)
 npm run dev -- scan ./path/to/project
 
 # Show graph statistics
 npm run dev -- stats
 
-# Run a Cypher query
+# Run a Cypher query (subset: docs/cypher.md); $name placeholders come from --param
 npm run dev -- query "MATCH (f:File)-[:DEFINES_FUNCTION]->(fn:Function) RETURN f.relativePath, fn.name LIMIT 10"
+npm run dev -- query "MATCH (fn:Function) WHERE fn.name = \$name RETURN fn.line" --param name=main
 
 # Export graph as JSONL
 npm run dev -- export ./path/to/project --output .concentrate/export
@@ -35,6 +36,11 @@ npm run dev -- export ./path/to/project --output .concentrate/export
 # Start MCP server (for AI tool integration)
 npm run dev -- mcp
 ```
+
+Scans and the MCP server can run at the same time: a scan takes a writer lock and
+commits a new snapshot atomically, readers never lock, and a running MCP server
+picks up the new snapshot on its next tool call. A second scan waits for the
+first (`--no-retry-lock` makes it fail instead).
 
 ## MCP Tools
 
@@ -51,7 +57,8 @@ src/
   program.ts        — Command, argument and flag definitions
   adapters/
     cli/            — Command adapters (scan, stats, query, export, smoke, mcp) and the parseArgs router
-    kuzu/           — KuzuDB writer, schema, retry
+    store/          — Graph store: in-memory graph, snapshots, writer lock, schema
+      cypher/       — Read-only Cypher subset: lexer, parser, binder, planner, executor
     mcp/            — MCP server adapter
   commands/         — CLI command entry points
   composition/      — Default registry + orchestrator wiring (core ← integrations)

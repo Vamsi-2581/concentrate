@@ -1,3 +1,4 @@
+import type { QueryParameters } from "../../../core/contracts/query-engine.js";
 import { NodeRecord, RelationshipRecord, type MemoryGraph, type PropertyValue } from "../graph.js";
 import type { Expression, MatchClause, NodePattern, ProjectionClause, RelationshipPattern } from "./ast.js";
 import { bindQuery, columnName, containsAggregate, type BoundQuery } from "./binder.js";
@@ -7,7 +8,7 @@ import { parseCypher } from "./parser.js";
 import { planMatch, type ExpandStep, type MatchPlan, type NodeTarget, type PartPlan, type StartLookup } from "./planner.js";
 import { compareComparable, compareForSort, equals, toOutput, valueKey, type Value } from "./values.js";
 
-export type QueryParameters = Readonly<Record<string, unknown>>;
+export type { QueryParameters };
 
 type Row = Readonly<Record<string, Value>>;
 

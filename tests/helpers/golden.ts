@@ -40,11 +40,12 @@ export function renderGolden(result: BuildCodeGraphResult): string {
 
 /**
  * Compare `actual` with the golden file, or rewrite it when UPDATE_GOLDEN=1.
- * Files ending in `.gz` are stored gzip-compressed.
+ * Files ending in `.gz` are stored gzip-compressed. `readOnly` goldens are
+ * references that UPDATE_GOLDEN=1 must not rewrite.
  */
-export async function assertGolden(goldenPath: string, actual: string): Promise<void> {
+export async function assertGolden(goldenPath: string, actual: string, options: { readOnly?: boolean } = {}): Promise<void> {
   const compressed = goldenPath.endsWith(".gz");
-  if (updateGolden) {
+  if (updateGolden && !options.readOnly) {
     await mkdir(path.dirname(goldenPath), { recursive: true });
     await writeFile(goldenPath, compressed ? gzipSync(actual, { level: 9 }) : actual);
     return;

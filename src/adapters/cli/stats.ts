@@ -4,13 +4,10 @@ import { openGraphStore } from "../../composition/graph-store.js";
 export type StatsAdapterOptions = {
   database: string;
   package?: string;
-  retryLock: boolean;
 };
 
 export async function runStatsAdapter(options: StatsAdapterOptions): Promise<void> {
-  const writer = await openGraphStore(path.resolve(options.database), {
-    retryLock: options.retryLock !== false,
-  });
+  const writer = await openGraphStore(path.resolve(options.database));
   let version: number | null;
   let stats: Array<{ table: string; count: unknown }>;
   try {

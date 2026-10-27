@@ -6,9 +6,9 @@
 ## Context
 
 Concentrate scans a codebase, builds a structural code graph and serves it to AI agents over MCP.
-It currently has 10 runtime dependencies: commander, fast-glob, ignore, kuzu, tree-sitter and five
+It started with 10 runtime dependencies: commander, fast-glob, ignore, kuzu, tree-sitter and five
 grammar packages. KuzuDB was archived in October 2025 (last release 0.11.3), and tree-sitter needs
-native builds, which makes installation fragile.
+native builds, which makes installation fragile. After Phase 2 only tree-sitter and its five grammars remain.
 
 ### Decisions
 
@@ -145,55 +145,58 @@ commander is used only in `src/index.ts`; fast-glob in `core/scan/discover-files
 
 **Goal:** Replace the archived KuzuDB with a zero-dependency graph store and query engine.
 
-KuzuDB was archived in October 2025 (last release 0.11.3). The Kuzu adapter is ~1.5k lines under `src/adapters/kuzu/`, and the distinct query shapes the MCP tools issue are pinned in `tests/golden/queries/templates.json`. Graph sizes (tens of thousands of nodes) fit comfortably in memory.
+KuzuDB was archived in October 2025 (last release 0.11.3). The Kuzu adapter was ~1.5k lines under `src/adapters/kuzu/`, and the distinct query shapes the MCP tools issue are pinned in `tests/golden/queries/templates.json`. Graph sizes (tens of thousands of nodes) fit comfortably in memory.
 
 ### In-memory model (`src/adapters/store/`)
 
-- [ ] Node map by id, label index, and property indexes for `name`, `relativePath` and `method+path`
-- [ ] Outgoing/incoming adjacency lists keyed by relationship type
-- [ ] Validate labels and properties against `schema.ts`; keep the schema version
+- [x] Node map by id, label index, and property indexes for `name`, `relativePath`, `method` and `path`
+- [x] Outgoing/incoming adjacency lists (filtered by relationship type while expanding)
+- [x] Validate labels and properties against `schema.ts`; schema version 35 for the new format
 
 ### Persistence
 
-- [ ] Versioned on-disk format under `.concentrate/graph/` with a header
-- [ ] Segment data by owning source file, plus one global segment for cross-file resolution edges
-- [ ] Compress segments with `node:zlib`
-- [ ] Atomic writes (write to temp file, then rename)
-- [ ] Patch rewrites only changed file segments and the global segment
+- [x] Versioned on-disk format under `.concentrate/graph/` with a header
+- [x] Segment data by owning source file, plus one global segment for cross-file resolution edges
+- [x] Compress segments with `node:zlib`
+- [x] Atomic writes (write to temp file, then rename)
+- [x] Patch rewrites only changed file segments and the global segment
 
 ### Concurrency
 
-- [ ] Writer lock file with pid and stale-lock detection
-- [ ] Lock-free readers via atomic snapshots
-- [ ] Delete `kuzu-retry.ts` and its tests once the new store is in place
+- [x] Writer lock file with pid and stale-lock detection
+- [x] Lock-free readers via atomic snapshots
+- [x] Delete `kuzu-retry.ts` and its tests once the new store is in place
 
 ### Cypher subset (`src/adapters/store/cypher/`)
 
-- [ ] Lexer and parser producing an AST
-- [ ] `MATCH` / `OPTIONAL MATCH` chains, anonymous nodes, relationship variables and `[:A|B]`
-- [ ] Variable-length paths `*min..max`
-- [ ] `WHERE`: comparisons, `AND`/`OR`/`NOT`, `CONTAINS`, `STARTS WITH`, `ENDS WITH`, `IN`, `IS NULL`, `lower`/`toLower`
-- [ ] `contains()` and `lower()` function calls (used by MCP name and model filters)
-- [ ] `WITH ... AS` projection (used by the data-access queries)
-- [ ] `RETURN ... AS`, `DISTINCT`, `count` / `collect` / `min` / `max`
-- [ ] `ORDER BY`, `SKIP`, `LIMIT` and `$param` parameters
-- [ ] Planner that starts from the most selective index
-- [ ] Read-only query surface; writes go through `IGraphStore` only
-- [ ] Clear error messages for unsupported Cypher features
+- [x] Lexer and parser producing an AST
+- [x] `MATCH` / `OPTIONAL MATCH` chains, anonymous nodes, relationship variables and `[:A|B]`
+- [x] Variable-length paths `*min..max`
+- [x] `WHERE`: comparisons, `AND`/`OR`/`NOT`, `CONTAINS`, `STARTS WITH`, `ENDS WITH`, `IN`, `IS NULL`, `lower`/`toLower`
+- [x] `contains()` and `lower()` function calls (used by MCP name and model filters)
+- [x] `WITH ... AS` projection (used by the data-access queries)
+- [x] `RETURN ... AS`, `DISTINCT`, `count` / `collect` / `min` / `max`
+- [x] `ORDER BY`, `SKIP`, `LIMIT` and `$param` parameters
+- [x] Planner that starts from the most selective index
+- [x] Read-only query surface; writes go through `IGraphStore` only
+- [x] Clear error messages for unsupported Cypher features
 
 ### Migration
 
-- [ ] Replay every recording in `tests/golden/queries/` against the new engine and match rows and tool output exactly
-- [ ] Port `scan`, `stats`, `query`, `export`, `smoke` and `mcp` to the new store
-- [ ] Delete `src/adapters/kuzu/` and remove `kuzu` from dependencies and the allow-list
-- [ ] Benchmark scan-write time and query latency against the Kuzu baseline
+- [x] Replay every recording in `tests/golden/queries/` against the new engine and match rows and tool output exactly
+- [x] Port `scan`, `stats`, `query`, `export`, `smoke` and `mcp` to the new store
+- [x] Delete `src/adapters/kuzu/` and remove `kuzu` from dependencies and the allow-list
+- [x] Benchmark scan-write time and query latency against the Kuzu baseline
 
 ### Acceptance criteria
 
-- [ ] All golden query recordings (every shape in `templates.json`, fixtures and standing samples) match exactly
-- [ ] `kuzu` is gone from `package.json` and `src/`
-- [ ] Concurrent `mcp` reader and `scan` writer work without lock errors
-- [ ] Query latency for MCP tools is equal to or better than the Kuzu baseline
+Done in [#20](https://github.com/fatihserhatturan/concentrate/pull/20), [#21](https://github.com/fatihserhatturan/concentrate/pull/21) and the store switch PR; numbers in [benchmarks.md](benchmarks.md), the supported subset in [cypher.md](cypher.md).
+
+
+- [x] All golden query recordings (every shape in `templates.json`, fixtures and standing samples) match exactly
+- [x] `kuzu` is gone from `package.json` and `src/`
+- [x] Concurrent `mcp` reader and `scan` writer work without lock errors
+- [x] Query latency for MCP tools is equal to or better than the Kuzu baseline
 
 ## Phase 3a: Shared syntax core (tree-sitter-compatible CST) ([#5](https://github.com/fatihserhatturan/concentrate/issues/5))
 

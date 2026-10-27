@@ -4,10 +4,9 @@ import { runMcpServer } from "../mcp/index.js";
 
 export type McpAdapterOptions = {
   database: string;
-  retryLock: boolean;
 };
 
 export async function runMcpAdapter(options: McpAdapterOptions): Promise<void> {
   const databasePath = path.resolve(options.database);
-  await runMcpServer(async () => openGraphStore(databasePath, { retryLock: options.retryLock !== false }));
+  await runMcpServer(async () => openGraphStore(databasePath));
 }

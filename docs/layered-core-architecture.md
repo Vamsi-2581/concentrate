@@ -126,7 +126,7 @@ Enforced by `tests/guardrails.test.ts`:
 | Module | May import from | Must not import from |
 | --- | --- | --- |
 | `src/core/contracts/` | `src/core/graph`, `src/core/scan`, each other | `src/scanner/`, `src/graph/`, `src/integrations/`, `src/parsers/`, `src/adapters/`, `src/commands/` |
-| `src/core/` | core modules only | `src/composition/`, `src/integrations/`, `src/adapters/cli/`, `src/adapters/kuzu/`, `src/adapters/mcp/`, `src/commands/` |
+| `src/core/` | core modules only | `src/composition/`, `src/integrations/`, `src/adapters/cli/`, `src/adapters/store/`, `src/adapters/mcp/`, `src/commands/` |
 | `src/integrations/languages/` | `src/core/`, `src/parsers/` | `src/integrations/frameworks/`, `src/commands/` |
 | `src/integrations/frameworks/` | `src/core/`, `src/integrations/languages/`, `src/parsers/` | `src/commands/`, `src/adapters/` |
 | `src/commands/` | `src/adapters/cli/` | `src/core/`, `src/scanner/`, `src/graph/`, `src/parsers/`, `src/integrations/` |
@@ -160,7 +160,7 @@ src/integrations/frameworks/
     data-access/
 
 src/adapters/
-  kuzu/
+  store/
   cli/
   mcp/
 ```
@@ -431,7 +431,7 @@ The Architecture Completion phase is done when:
 src/
   adapters/
     cli/        — CLI command adapters (scan, stats, query, export, smoke, mcp)
-    kuzu/       — Kuzu database adapter (writer, schema, retry, format)
+    store/      — Graph store (in-memory graph, snapshots, writer lock, schema) and its Cypher subset
     mcp/        — MCP server adapter
   commands/     — CLI command entry points (wired in `src/program.ts`)
   core/

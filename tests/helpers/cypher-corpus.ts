@@ -4,8 +4,8 @@ import { goldenRoot } from "./golden.js";
 
 /**
  * The Cypher conformance corpus (tests/golden/cypher/): hand-written queries
- * whose results were recorded from Kuzu, so our own engine can be checked
- * against Kuzu's semantics after Kuzu is gone.
+ * whose results were recorded from Kuzu 0.11.3 before it was removed. They pin
+ * the semantics the built-in engine must keep.
  */
 
 export type CorpusCase = {
@@ -14,7 +14,7 @@ export type CorpusCase = {
   params?: Record<string, unknown>;
   /** Compare rows in order; otherwise rows are compared as a sorted multiset. */
   ordered?: boolean;
-  /** Not run against Kuzu: our engine must reject it with this error class. */
+  /** Was not run against Kuzu: the engine must reject it with this error class. */
   expectError?: CypherErrorClass;
   /** Why the expectation deviates from Kuzu, when it does. */
   note?: string;
@@ -41,14 +41,9 @@ export async function runCorpus(
   cases: CorpusCase[],
   run: CypherRunner,
   classify: (error: unknown) => CypherErrorClass,
-  options: { skipExpectedErrors?: boolean } = {},
 ): Promise<Record<string, CorpusResult>> {
   const results: Record<string, CorpusResult> = {};
   for (const testCase of cases) {
-    if (testCase.expectError && options.skipExpectedErrors) {
-      results[testCase.id] = { error: testCase.expectError };
-      continue;
-    }
     try {
       const rows = await run(testCase.cypher, testCase.params ?? {});
       results[testCase.id] = { rows: testCase.ordered ? rows : sortRows(rows) };

@@ -4,7 +4,8 @@
  * against this schema and the Cypher binder resolves names against it.
  */
 
-export const SCHEMA_VERSION = 34;
+/** Bump when tables or properties change; scans of an older version are rewritten, never patched. */
+export const SCHEMA_VERSION = 35;
 
 export type PropertyType = "STRING" | "INT64" | "BOOLEAN";
 

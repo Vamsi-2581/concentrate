@@ -39,7 +39,7 @@ per case in [`query-cases.json`](query-cases.json):
 ```
 
 - `calls` lists every `IQueryEngine` call the tool made, in issue order:
-  `query` (whitespace-collapsed Cypher and the rows Kuzu returned), `stats`, or
+  `query` (whitespace-collapsed Cypher and the rows the store returned), `stats`, or
   `schemaVersion`. The Phase 2 engine must return the same rows when it replays
   each `cypher`.
 - `output` is the parsed JSON text the MCP tool returned to the client.
@@ -59,12 +59,12 @@ the Cypher subset Concentrate supports: patterns, variable-length paths,
 from Kuzu 0.11.3: `{ "rows": [...] }`, or `{ "error": "parser" | "binder" | "runtime" | "unsupported" }`.
 
 - Rows are compared as a sorted multiset unless the case sets `"ordered": true`.
-- Cases with `expectError` are not run against Kuzu. They are writes and
+- Cases with `expectError` were not run against Kuzu. They are writes and
   features outside the read-only subset (`unsupported`), or places where we
   deliberately report an error that Kuzu does not (explained in `note`).
-- The built-in engine (`src/adapters/store/`, see [docs/cypher.md](../../docs/cypher.md))
-  replays both this corpus and the MCP recordings in `queries/` against the
-  same files. `golden:update` records from Kuzu only and skips the replay.
-- Kuzu is removed in Phase 2. After that these files are the reference, and
-  they must not be regenerated from our own engine.
+- Kuzu was removed in Phase 2. These files are now the reference for the
+  built-in engine (`src/adapters/store/`, see [docs/cypher.md](../../docs/cypher.md)):
+  `golden:update` never rewrites them, so a semantic change shows up as a
+  failing test. A new case needs its expected result written by hand, checked
+  against Cypher semantics and the rules above.
 

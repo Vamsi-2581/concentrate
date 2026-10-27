@@ -4,16 +4,16 @@ import os from "node:os";
 import path from "node:path";
 import { describe, it } from "node:test";
 import type { GraphNode, GraphRelationship } from "../src/core/graph/model.js";
-import { SCHEMA_VERSION } from "../src/adapters/kuzu/schema.js";
-import { KuzuGraphWriter } from "../src/adapters/kuzu/kuzu-writer.js";
+import { SCHEMA_VERSION } from "../src/adapters/store/schema.js";
+import { GraphStore } from "../src/adapters/store/store.js";
 
-describe("Kuzu route schema", () => {
+describe("graph store route schema", () => {
   it("writes Route nodes and route relationships", async () => {
     const databasePath = path.join(
       await mkdtemp(path.join(os.tmpdir(), "concentrate-route-schema-")),
-      "graph.kuzu",
+      "graph",
     );
-    const writer = await KuzuGraphWriter.open(databasePath);
+    const writer = await GraphStore.open(databasePath);
     await writer.reset();
 
     const nodes: GraphNode[] = [
