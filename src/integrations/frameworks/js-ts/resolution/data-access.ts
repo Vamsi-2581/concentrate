@@ -349,6 +349,7 @@ function hasDataAccess(
     && access.dataAccess.operation === dataAccess.operation
     && access.dataAccess.library === dataAccess.library
     && access.dataAccess.expression === dataAccess.expression
+    && access.dataAccess.line === dataAccess.line
   )) ?? false;
 }
 

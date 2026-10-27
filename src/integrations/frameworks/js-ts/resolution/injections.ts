@@ -41,6 +41,11 @@ export function addInjectionRelationships(graph: IGraphContributor): void {
       }
       injectedFields.set(fieldName, targetClassId);
 
+      // Every typed field resolves this.field.method() calls, but only
+      // constructor parameter properties and @Inject...() properties are
+      // injected; an entity relation (`author: UserEntity`) is not a dependency.
+      if (field.properties.isInjected !== true) continue;
+
       graph.addRelationship({
         from: classId,
         to: targetClassId,

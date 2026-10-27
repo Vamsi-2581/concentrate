@@ -6,7 +6,7 @@ import {
   isTypeScriptAbstract,
   serializeNameList,
 } from "./common.js";
-import { createCallNodes } from "./calls.js";
+import { createCallNodes, extractCallArgs } from "./calls.js";
 import { createFunctionNode } from "./functions.js";
 
 export function createVariableClassNode(
@@ -84,7 +84,7 @@ export function appendClassMembers(
     }
 
     if (child.type === "public_field_definition" || child.type === "field_definition") {
-      const fieldNode = createFieldNode(classNode.id, child);
+      const fieldNode = createFieldNode(classNode.id, child, pendingDecorators);
       if (fieldNode) {
         nodes.push(fieldNode);
         relationships.push({
@@ -193,11 +193,16 @@ function createConstructorParameterFieldNode(
       isReadonly,
       visibility,
       line: paramNode.startPosition.row + 1,
+      isInjected: true,
     },
   };
 }
 
-function createFieldNode(classNodeId: string, node: Parser.SyntaxNode): GraphNode | null {
+function createFieldNode(
+  classNodeId: string,
+  node: Parser.SyntaxNode,
+  precedingDecorators: Parser.SyntaxNode[],
+): GraphNode | null {
   const nameNode = node.childForFieldName("name")
     ?? node.namedChildren.find((child) => child.type === "property_identifier" || child.type === "private_property_identifier");
   if (!nameNode) return null;
@@ -216,6 +221,8 @@ function createFieldNode(classNodeId: string, node: Parser.SyntaxNode): GraphNod
     visibility = modifier === "private" || modifier === "protected" ? modifier : "public";
   }
 
+  const decorators = [...precedingDecorators, ...node.namedChildren.filter((c) => c.type === "decorator")];
+
   return {
     id: `${classNodeId}:field:${node.startPosition.row + 1}:${name}`,
     label: "Field",
@@ -226,25 +233,16 @@ function createFieldNode(classNodeId: string, node: Parser.SyntaxNode): GraphNod
       isReadonly,
       visibility,
       line: node.startPosition.row + 1,
+      isInjected: decorators.some(isInjectionDecorator),
     },
   };
 }
 
-function extractDecoratorArgs(callExpr: Parser.SyntaxNode): string {
-  const argsNode = callExpr.childForFieldName("arguments");
-  if (!argsNode) return "[]";
-
-  const args = argsNode.namedChildren
-    .map((arg) => {
-      if (arg.type === "string") return arg.text.replace(/^["'`]|["'`]$/g, "");
-      if (arg.type === "number") return arg.text;
-      if (arg.type === "identifier" || arg.type === "type_identifier") return arg.text;
-      if (arg.type === "member_expression") return arg.text;
-      return null;
-    })
-    .filter((v): v is string => v !== null);
-
-  return JSON.stringify(args);
+// Property injection: @Inject(), @InjectRepository(User), @InjectModel(Cat), ...
+function isInjectionDecorator(node: Parser.SyntaxNode): boolean {
+  const inner = node.namedChildren[0];
+  const name = inner?.type === "call_expression" ? inner.childForFieldName("function")?.text : inner?.text;
+  return name !== undefined && /^Inject(?:[A-Z]\w*)?$/.test(name);
 }
 
 function createDecoratorNode(targetId: string, node: Parser.SyntaxNode): GraphNode {
@@ -257,7 +255,7 @@ function createDecoratorNode(targetId: string, node: Parser.SyntaxNode): GraphNo
     name = inner.text;
   } else if (inner.type === "call_expression") {
     name = inner.childForFieldName("function")?.text ?? inner.text;
-    args = extractDecoratorArgs(inner);
+    args = extractCallArgs(inner);
   } else {
     name = inner.text;
   }

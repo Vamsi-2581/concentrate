@@ -25,9 +25,29 @@ and deeper package graph queries.
 - Full path resolution depends on visible mount chains and constant strings.
   Highly dynamic path construction can remain unresolved.
 - Middleware ordering is structural, not a full runtime execution model.
+- NestJS `app.setGlobalPrefix()` is applied to the routes of the package that
+  calls it when its argument is a string literal or a visible constant. Its
+  `exclude` option and prefixes chosen at runtime are not modelled.
 
 Blocks or informs: semantic sample review reports and MCP route inspection
 tools.
+
+## Calls and Dependency Injection
+
+- Calls inside anonymous callbacks (`items.forEach(item => …)`,
+  `it('…', () => …)`) belong to the enclosing function. Callbacks passed to a
+  module-level call or to a module-level variable initializer get a synthetic
+  `Function` node of their own instead.
+- Parameter decorators such as `@Param()` or `@InjectRepository()` are recorded
+  as `Call` nodes of their method; class and method decorators are `Decorator`
+  nodes.
+- `INJECTS` comes from constructor parameter properties
+  (`constructor(private readonly users: UsersService)`) and from properties
+  decorated with `@Inject...()`, recorded as `Field.isInjected`. Constructor
+  parameters without an access modifier are not modelled. Every typed field
+  still resolves `this.field.method()` calls.
+
+Blocks or informs: MCP `find_callers` and dependency impact analysis.
 
 ## Entrypoints
 

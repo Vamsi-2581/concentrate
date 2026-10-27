@@ -31,6 +31,68 @@ export function resolveRouteFullPaths(graph: IGraphContributor): void {
     const prefixes = receiverId ? resolveMountPrefixes(receiverId, context, new Set()) : [""];
     route.properties.fullPath = chooseBestFullPath(prefixes, rawPath);
   }
+
+  applyNestGlobalPrefixes(graph, context);
+}
+
+// app.setGlobalPrefix('api') prefixes every NestJS route of the application.
+// The prefix applies to the routes of the package that calls it (the whole
+// repo when there are no packages); a package with conflicting prefixes is left
+// alone. The `exclude` option is not modelled.
+function applyNestGlobalPrefixes(graph: IGraphContributor, context: RoutePathContext): void {
+  const packageIdByFileId = new Map<string, string>();
+  for (const rel of graph.relationships) {
+    if (rel.type === "PACKAGE_CONTAINS_FILE") packageIdByFileId.set(rel.to, rel.from);
+  }
+  const fileIds = new Set(context.fileIdByRouteId.values());
+  for (const node of graph.nodes) {
+    if (node.label === "File") fileIds.add(node.id);
+  }
+
+  const prefixesByScope = new Map<string, Set<string>>();
+  for (const call of graph.nodes) {
+    if (call.label !== "Call" || call.properties.callee !== "setGlobalPrefix" || !call.properties.receiver) continue;
+
+    const fileId = owningFileId(call.id, fileIds);
+    const argument = fileId ? firstCallArg(call) : null;
+    if (!fileId || argument === null) continue;
+
+    const prefix = context.constantsByFileId.get(fileId)?.get(argument) ?? argument;
+    const scope = packageIdByFileId.get(fileId) ?? "";
+    prefixesByScope.set(scope, (prefixesByScope.get(scope) ?? new Set()).add(prefix));
+  }
+
+  for (const route of graph.nodes) {
+    if (route.label !== "Route" || route.properties.framework !== "nestjs") continue;
+
+    const fileId = context.fileIdByRouteId.get(route.id);
+    const fullPath = route.properties.fullPath;
+    if (!fileId || typeof fullPath !== "string") continue;
+
+    const prefixes = prefixesByScope.get(packageIdByFileId.get(fileId) ?? "");
+    if (prefixes?.size !== 1) continue;
+    route.properties.fullPath = joinRoutePaths([...prefixes][0]!, fullPath);
+  }
+}
+
+function owningFileId(nodeId: string, fileIds: Set<string>): string | null {
+  for (let end = nodeId.indexOf(":", "file:".length); end !== -1; end = nodeId.indexOf(":", end + 1)) {
+    const candidate = nodeId.slice(0, end);
+    if (fileIds.has(candidate)) return candidate;
+  }
+  return null;
+}
+
+function firstCallArg(call: GraphNode): string | null {
+  const args = call.properties.args;
+  if (typeof args !== "string") return null;
+
+  try {
+    const parsed = JSON.parse(args) as unknown;
+    return Array.isArray(parsed) && typeof parsed[0] === "string" ? parsed[0] : null;
+  } catch {
+    return null;
+  }
 }
 
 function createRoutePathContext(nodes: GraphNode[], relationships: GraphRelationship[]): RoutePathContext {
