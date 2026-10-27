@@ -290,29 +290,29 @@ Extractors use only a narrow tree-sitter API: `type`, `id`, `text`, `startPositi
 
 **Goal:** Keep the language layer framework-agnostic and use a single parser per language.
 
-`src/integrations/languages/js-ts/routes.ts` (830 lines) mentions express/koa/fastify/nest 72 times and `entrypoints.ts` 13 times. `src/composition/default-registry.ts` registers two parser sets per language (scan vs. integration); `getLanguageIntegration` is used only in tests.
+Before this phase, `src/integrations/languages/js-ts/routes.ts` (830 lines) and `entrypoints.ts` held the Express/Koa/Fastify/NestJS and queue/cron/socket.io knowledge, `calls.ts` held Fastify's hook names, and the registry kept two parser sets per language (scan vs. integration).
 
 ### Route and entrypoint semantics
 
-- [ ] Move Express/Koa/Fastify/NestJS route detection from `languages/js-ts/routes.ts` into `frameworks/js-ts/`
-- [ ] Move framework-specific entrypoint detection from `languages/js-ts/entrypoints.ts` into `frameworks/js-ts/`
-- [ ] Keep only generic call/argument structures in the language layer
+- [x] Move Express/Koa/Fastify/NestJS route detection into `frameworks/js-ts/route-graph.ts`
+- [x] Move framework-specific entrypoint detection into `frameworks/js-ts/entrypoint-graph.ts`; shared file lookups live in `frameworks/js-ts/file-index.ts`
+- [x] Keep only generic call/argument structures in the language layer; callback object keys such as Fastify's `handler` and hooks are declared by the framework plugin (`callbackPropertyNames`)
 
 ### Plugin model
 
-- [ ] Introduce `IFrameworkPlugin.onFile(tree, parsed)` running on the shared CST
-- [ ] Remove the dual scan/integration parser registration from `default-registry.ts`
-- [ ] Remove `getLanguageIntegration` once unused
+- [x] `JsTsFrameworkPlugin.onFile({ fileNodeId, rootNode, parsed, state })` runs on the shared tree; `createJsTsParser(language, plugins)` builds the one JS/TS parser, and `frameworks/js-ts/scanner.ts` lists the plugins in order
+- [x] Remove the dual scan/integration parser registration from `default-registry.ts`
+- [x] Remove `getLanguageIntegration`
 
 ### Guardrails
 
-- [ ] Add a guardrail that fails if framework names appear in `integrations/languages/`
+- [x] `tests/guardrails.test.ts` fails if framework or library names appear in `integrations/languages/`
 
 ### Acceptance criteria
 
-- [ ] One parser per language in the registry
-- [ ] No framework-specific code in `integrations/languages/`
-- [ ] Golden tests pass unchanged
+- [x] One parser per language in the registry
+- [x] No framework-specific code in `integrations/languages/`
+- [x] Golden tests pass unchanged
 
 ## Phase 5: Real incremental scanning and watch mode ([#11](https://github.com/fatihserhatturan/concentrate/issues/11))
 

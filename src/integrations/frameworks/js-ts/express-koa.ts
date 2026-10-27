@@ -1,6 +1,6 @@
 import type { SyntaxNode } from "../../languages/syntax/tree-sitter.js";
 import type { GraphNode, GraphRelationship } from "../../../core/graph/model.js";
-import { createExpressKoaRouteGraph } from "../../languages/js-ts/routes.js";
+import { createExpressKoaRouteGraph } from "./route-graph.js";
 
 // Parse-time Express/Koa route semantic module.
 // Fastify route detection shares the same underlying function — the

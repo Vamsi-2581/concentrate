@@ -63,6 +63,7 @@ export function walkJsTsNodes(
   fileNodeId: string,
   tree: SyntaxTree,
   language: SupportedLanguage,
+  callbackKeys: ReadonlySet<string> = new Set(),
 ): WalkState {
   const nodes: GraphNode[] = [];
   const relationships: GraphRelationship[] = [];
@@ -142,12 +143,12 @@ export function walkJsTsNodes(
         nodes.push(functionNode);
         relationships.push({ from: fileNodeId, to: functionNode.id, type: "DEFINES_FUNCTION", properties: {} });
 
-        const callNodes = createCallNodes(functionNode.id, node);
+        const callNodes = createCallNodes(functionNode.id, node, callbackKeys);
         nodes.push(...callNodes);
         relationships.push(...callNodes.map((c) => ({ from: functionNode.id, to: c.id, type: "CALLS" as const, properties: {} })));
 
         functionAstPairs.push({ functionNodeId: functionNode.id, astNode: node });
-      } else if (isInlineHandlerArgument(node) || isObjectLiteralHandlerFunction(node) || isInitializerHandlerArgument(node)) {
+      } else if (isInlineHandlerArgument(node) || isObjectLiteralHandlerFunction(node, callbackKeys) || isInitializerHandlerArgument(node)) {
         const result = isInlineHandlerArgument(node)
           ? createInlineHandlerNode(fileNodeId, node)
           : isInitializerHandlerArgument(node)
@@ -158,7 +159,7 @@ export function walkJsTsNodes(
           relationships.push({ from: fileNodeId, to: result.functionNode.id, type: "DEFINES_FUNCTION", properties: {} });
           relationships.push({ from: result.functionNode.id, to: result.callNodeId, type: "PASSED_TO", properties: {} });
 
-          const callNodes = createCallNodes(result.functionNode.id, node);
+          const callNodes = createCallNodes(result.functionNode.id, node, callbackKeys);
           nodes.push(...callNodes);
           relationships.push(...callNodes.map((c) => ({ from: result.functionNode.id, to: c.id, type: "CALLS" as const, properties: {} })));
 
@@ -174,14 +175,14 @@ export function walkJsTsNodes(
         if (classNode) {
           nodes.push(classNode);
           relationships.push({ from: fileNodeId, to: classNode.id, type: "DEFINES_CLASS", properties: {} });
-          appendClassMembers(fileNodeId, classNode, valueChild!, nodes, relationships);
+          appendClassMembers(fileNodeId, classNode, valueChild!, nodes, relationships, callbackKeys);
         }
       } else if (isVariableFunctionValue(valueChild)) {
         const functionNode = createVariableFunctionNode(fileNodeId, node, valueChild!);
         if (functionNode) {
           nodes.push(functionNode);
           relationships.push({ from: fileNodeId, to: functionNode.id, type: "DEFINES_FUNCTION", properties: {} });
-          const callNodes = createCallNodes(functionNode.id, valueChild!);
+          const callNodes = createCallNodes(functionNode.id, valueChild!, callbackKeys);
           nodes.push(...callNodes);
           relationships.push(...callNodes.map((c) => ({ from: functionNode.id, to: c.id, type: "CALLS" as const, properties: {} })));
 
@@ -211,7 +212,7 @@ export function walkJsTsNodes(
       if (classNode) {
         nodes.push(classNode);
         relationships.push({ from: fileNodeId, to: classNode.id, type: "DEFINES_CLASS", properties: {} });
-        appendClassMembers(fileNodeId, classNode, node, nodes, relationships);
+        appendClassMembers(fileNodeId, classNode, node, nodes, relationships, callbackKeys);
       }
     }
 
@@ -253,11 +254,32 @@ export function parseTree(source: string, language: SupportedLanguage): Promise<
   return parseSyntaxTree(language === "typescript" ? "typescript" : "javascript", source);
 }
 
-// Language-only parse — no framework semantic nodes (routes, entrypoints, env/config).
-export async function parseJsTsLanguageOnly(
+// A parsed file as framework plugins see it: the language-level graph plus the
+// syntax tree and walk state it was built from. The tree is freed after the
+// plugins run, so plugins must not keep nodes from it.
+export type JsTsParsedFile = {
+  fileNodeId: string;
+  rootNode: SyntaxNode;
+  parsed: ParsedSourceFile;
+  state: WalkState;
+};
+
+// Framework semantics (routes, entrypoints, ...) hook into the one JS/TS
+// parser through plugins; the language layer itself stays framework-agnostic.
+// Plugins run in order and add nodes and relationships to `file.parsed`.
+export interface JsTsFrameworkPlugin {
+  readonly name: string;
+  // Object-literal keys whose function values are callbacks the framework
+  // calls (`handler`, hooks). Such functions get a Function node of their own.
+  readonly callbackPropertyNames?: readonly string[];
+  onFile(file: JsTsParsedFile): void;
+}
+
+export async function parseJsTsFile(
   rootPath: string,
   filePath: string,
   language: SupportedLanguage,
+  plugins: readonly JsTsFrameworkPlugin[] = [],
 ): Promise<ParsedSourceFile> {
   const source = await readFile(filePath, "utf8");
   const relativePath = path.relative(rootPath, filePath);
@@ -275,16 +297,21 @@ export async function parseJsTsLanguageOnly(
       throw new Error("Syntax error");
     }
 
-    const state = walkJsTsNodes(fileNodeId, tree, language);
+    const callbackKeys = new Set(plugins.flatMap((plugin) => plugin.callbackPropertyNames ?? []));
+    const state = walkJsTsNodes(fileNodeId, tree, language, callbackKeys);
     state.nodes.unshift(fileNode);
 
-    return finalizeLanguageLevel(fileNodeId, tree, state);
+    const parsed = finalizeLanguageLevel(fileNodeId, tree, state);
+    for (const plugin of plugins) {
+      plugin.onFile({ fileNodeId, rootNode: tree.rootNode, parsed, state });
+    }
+    return parsed;
   } finally {
     tree.delete();
   }
 }
 
-// Language-only parse that also returns the tree root node for framework
+// Language-level parse (no plugins) that also returns the tree root node for framework
 // module boundary tests that need to call applyXxxParseSemantics directly.
 export async function parseJsTsWithRootNode(
   rootPath: string,

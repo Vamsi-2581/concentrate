@@ -212,6 +212,21 @@ describe("Architecture dependency guardrails", () => {
     );
   });
 
+  it("src/integrations/languages/ does not mention framework or library names (they belong in frameworks/)", async () => {
+    const frameworkName =
+      /\b(express|koa|fastify|nestjs|nest|hapi|socket\.io|bullmq|bull|node-cron|node-schedule|prisma|typeorm|sequelize|knex|mongoose)\b/gi;
+    const violations: string[] = [];
+    for (const file of await collectTsFiles(path.join(srcRoot, "integrations/languages"))) {
+      const lines = (await readFile(file, "utf8")).split("\n");
+      lines.forEach((line, index) => {
+        const names = line.match(frameworkName);
+        if (names) violations.push(`${path.relative(srcRoot, file)}:${index + 1}: ${names.join(", ")}`);
+      });
+    }
+
+    assert.deepEqual(violations, [], `Framework names in integrations/languages:\n  ${violations.join("\n  ")}`);
+  });
+
   it("src/integrations/frameworks/ does not import from adapters, commands, or legacy directories", async () => {
     const violations = await checkFiles(
       path.join(srcRoot, "integrations/frameworks"),

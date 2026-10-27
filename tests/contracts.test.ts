@@ -146,7 +146,7 @@ describe("Core contract conformance", () => {
     });
 
     assert.equal(registry.getLanguageParser("custom"), parser);
-    assert.equal(registry.getLanguageIntegration("custom"), parser);
+    assert.equal(registry.languageParsers.get("custom"), parser);
     await registry.languageResolvers[0]?.resolve(new GraphBuilder(), fixturesRoot, createScanReport(0, 0));
     await registry.semanticContributors[0]?.contribute(new GraphBuilder(), fixturesRoot, createScanReport(0, 0));
     assert.deepEqual(resolverCalls, ["resolver"]);

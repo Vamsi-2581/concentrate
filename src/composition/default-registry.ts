@@ -7,13 +7,6 @@ import { pythonParser } from "../integrations/languages/python/parser.js";
 import { goParser } from "../integrations/languages/go/parser.js";
 import { rustParser } from "../integrations/languages/rust/parser.js";
 import {
-  javascriptLanguageParser,
-  typescriptLanguageParser,
-} from "../integrations/languages/js-ts/index.js";
-import { pythonLanguageParser } from "../integrations/languages/python/index.js";
-import { goLanguageParser } from "../integrations/languages/go/index.js";
-import { rustLanguageParser } from "../integrations/languages/rust/index.js";
-import {
   nestjsModulesContributor,
   nestjsInjectionContributor,
   instanceMethodContributor,
@@ -30,17 +23,7 @@ export function createDefaultCoreIntegrationRegistry(): CoreIntegrationRegistry 
   const registry = new CoreIntegrationRegistry();
 
   for (const parser of [javascriptParser, typescriptParser, pythonParser, goParser, rustParser]) {
-    registry.registerLanguageParser(parser, { scan: true, integration: false });
-  }
-
-  for (const parser of [
-    javascriptLanguageParser,
-    typescriptLanguageParser,
-    pythonLanguageParser,
-    goLanguageParser,
-    rustLanguageParser,
-  ]) {
-    registry.registerLanguageParser(parser, { scan: false, integration: true });
+    registry.registerLanguageParser(parser);
   }
 
   for (const resolver of createDefaultLanguageResolvers()) {
