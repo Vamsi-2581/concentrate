@@ -4,6 +4,12 @@ import os from "node:os";
 import path from "node:path";
 import { describe, it } from "node:test";
 import { runSmokeValidation, type SmokeSample } from "../src/commands/smoke.js";
+import {
+  defaultSampleExpectations,
+  readSampleManifest,
+  resolveSamples,
+  samplesDirectory,
+} from "../src/adapters/cli/smoke.js";
 import { SCHEMA_VERSION } from "../src/adapters/kuzu/schema.js";
 
 describe("smoke validation", () => {
@@ -78,5 +84,17 @@ describe("smoke validation", () => {
     assert.equal(saved.status, "passed");
     assert.ok(saved.results?.[0]?.semanticSamples);
     assert.ok(saved.results?.[0]?.incrementalBenchmark);
+  });
+
+  it("pins every expected sample in scripts/samples.json and resolves it under the samples directory", async () => {
+    const manifest = await readSampleManifest();
+    const samples = resolveSamples(defaultSampleExpectations, manifest);
+
+    assert.equal(samples.length, manifest.length);
+    for (const sample of samples) {
+      assert.equal(sample.projectPath, path.join(samplesDirectory(), sample.name));
+      assert.match(manifest.find((entry) => entry.name === sample.name)!.sha, /^[0-9a-f]{40}$/);
+    }
+    assert.throws(() => resolveSamples(defaultSampleExpectations, manifest.slice(1)), /disagree/);
   });
 });

@@ -1,4 +1,4 @@
-import { access, mkdir, writeFile } from "node:fs/promises";
+import { access, mkdir, readFile, writeFile } from "node:fs/promises";
 import { performance } from "node:perf_hooks";
 import os from "node:os";
 import path from "node:path";
@@ -143,12 +143,55 @@ export type IncrementalBenchmarkResult = {
   failures: string[];
 };
 
-const defaultSamples: SmokeSample[] = [
+export type SampleManifestEntry = {
+  name: string;
+  suite: SmokeSuite;
+  repo: string;
+  sha: string;
+  continueOnError?: boolean;
+  exclude?: string[];
+};
+
+type SampleExpectation = Pick<SmokeSample, "name" | "suite" | "expected">;
+
+const sampleManifestUrl = new URL("../../../scripts/samples.json", import.meta.url);
+
+/** Where `npm run samples:fetch` puts the pinned sample repositories. */
+export function samplesDirectory(): string {
+  return path.resolve(process.env.CONCENTRATE_SAMPLES_DIR ?? ".concentrate/samples");
+}
+
+export async function readSampleManifest(): Promise<SampleManifestEntry[]> {
+  const manifest = JSON.parse(await readFile(sampleManifestUrl, "utf8")) as { samples: SampleManifestEntry[] };
+  return manifest.samples;
+}
+
+/** Join expected counts with the pinned manifest; every sample must appear in both. */
+export function resolveSamples(expectations: SampleExpectation[], manifest: SampleManifestEntry[]): SmokeSample[] {
+  const byName = new Map(manifest.map((entry) => [entry.name, entry]));
+  const missing = expectations.filter((sample) => !byName.has(sample.name)).map((sample) => sample.name);
+  const unexpected = manifest.filter((entry) => !expectations.some((sample) => sample.name === entry.name))
+    .map((entry) => entry.name);
+  if (missing.length > 0 || unexpected.length > 0) {
+    throw new Error(`scripts/samples.json and smoke expectations disagree; missing: [${missing.join(", ")}], unexpected: [${unexpected.join(", ")}]`);
+  }
+
+  return expectations.map((sample) => {
+    const entry = byName.get(sample.name)!;
+    return {
+      ...sample,
+      projectPath: path.join(samplesDirectory(), sample.name),
+      databasePath: `.concentrate/${sample.name}.kuzu`,
+      continueOnError: entry.continueOnError,
+      exclude: entry.exclude,
+    };
+  });
+}
+
+export const defaultSampleExpectations: SampleExpectation[] = [
   {
     name: "express",
     suite: "standing",
-    projectPath: "~/Desktop/concentrate-sample-express",
-    databasePath: ".concentrate/express.kuzu",
     expected: {
       discoveredFiles: 213,
       supportedFiles: 141,
@@ -176,8 +219,6 @@ const defaultSamples: SmokeSample[] = [
   {
     name: "fastify",
     suite: "standing",
-    projectPath: "~/Desktop/concentrate-sample-fastify",
-    databasePath: ".concentrate/fastify.kuzu",
     expected: {
       discoveredFiles: 45,
       supportedFiles: 18,
@@ -205,8 +246,6 @@ const defaultSamples: SmokeSample[] = [
   {
     name: "nestjs-starter",
     suite: "standing",
-    projectPath: "~/Desktop/concentrate-sample-nestjs",
-    databasePath: ".concentrate/nestjs.kuzu",
     expected: {
       discoveredFiles: 16,
       supportedFiles: 7,
@@ -235,10 +274,9 @@ const defaultSamples: SmokeSample[] = [
   {
     name: "ky",
     suite: "standing",
-    projectPath: "~/Desktop/concentrate-sample-ky",
-    databasePath: ".concentrate/ky.kuzu",
     expected: {
-      discoveredFiles: 68,
+      // 68 in the original 2026-05 local clone, which had one extra untracked file.
+      discoveredFiles: 67,
       supportedFiles: 52,
       parsedFiles: 52,
       failedFiles: 0,
@@ -261,8 +299,6 @@ const defaultSamples: SmokeSample[] = [
   {
     name: "internet-node-express-firebase-mongodb",
     suite: "internet",
-    projectPath: ".concentrate/internet-samples/node-express-firebase-mongodb",
-    databasePath: ".concentrate/internet-node-express-firebase-mongodb.kuzu",
     expected: {
       discoveredFiles: 40,
       supportedFiles: 24,
@@ -285,8 +321,6 @@ const defaultSamples: SmokeSample[] = [
   {
     name: "internet-node-express-realworld",
     suite: "internet",
-    projectPath: ".concentrate/internet-samples/node-express-realworld-example-app",
-    databasePath: ".concentrate/internet-node-express-realworld.kuzu",
     expected: {
       discoveredFiles: 67,
       supportedFiles: 39,
@@ -309,9 +343,6 @@ const defaultSamples: SmokeSample[] = [
   {
     name: "internet-nest",
     suite: "internet",
-    projectPath: ".concentrate/internet-samples/nest",
-    databasePath: ".concentrate/internet-nest.kuzu",
-    continueOnError: true,
     expected: {
       status: "partial",
       discoveredFiles: 2115,
@@ -336,7 +367,7 @@ const defaultSamples: SmokeSample[] = [
 ];
 
 export async function smokeCommand(options: SmokeOptions): Promise<void> {
-  const samples = selectSamples(defaultSamples, options.suite);
+  const samples = selectSamples(resolveSamples(defaultSampleExpectations, await readSampleManifest()), options.suite);
   const report = await runSmokeValidation(samples, {
     allowMissing: options.allowMissing,
     reportPath: options.report,

@@ -1,0 +1,12 @@
+{
+  "$comment": "Pinned sample repositories for smoke and golden tests. SHAs are the last default-branch commit before 2026-05-01, when the expected smoke counts were recorded. Fetch with `npm run samples:fetch`.",
+  "samples": [
+    { "name": "express", "suite": "standing", "repo": "https://github.com/expressjs/express", "sha": "6340c1eaaedc0ddcae8be8df2cdb1d2e961cbf2f" },
+    { "name": "fastify", "suite": "standing", "repo": "https://github.com/fastify/example", "sha": "10ab6cdde7a60d1fcf8cc8cd8e84cfde0b3708e8" },
+    { "name": "nestjs-starter", "suite": "standing", "repo": "https://github.com/nestjs/typescript-starter", "sha": "c4d9330f5513eda0fb5df594f6b34a11fde1a934" },
+    { "name": "ky", "suite": "standing", "repo": "https://github.com/sindresorhus/ky", "sha": "e0fcf780de2bd69af2528e4b7b87ccae6bb727b1" },
+    { "name": "internet-node-express-firebase-mongodb", "suite": "internet", "repo": "https://github.com/JDIZM/node-express-firebase-mongodb", "sha": "269ab2619cf320bb38eb821e95a35dd9ad772770" },
+    { "name": "internet-node-express-realworld", "suite": "internet", "repo": "https://github.com/gothinkster/node-express-realworld-example-app", "sha": "30b68e1e881462b2f4164ea09ab4c4f5699c7b0b" },
+    { "name": "internet-nest", "suite": "internet", "repo": "https://github.com/nestjs/nest", "sha": "958ff952c00bd5a25efa04ffaafac28721af7827", "continueOnError": true }
+  ]
+}
