@@ -19,6 +19,9 @@ native builds, which makes installation fragile.
 - **Own graph engine.** In-memory graph, segmented on-disk snapshots and a Cypher subset. No
   `node:sqlite` (still experimental).
 - **Stable `node:` APIs only.**
+- **Enforced by tests.** `tests/guardrails.test.ts` fails if `src/` imports a package outside
+  `RUNTIME_DEPENDENCY_ALLOWLIST` or if an allow-listed package is no longer used. The list may only
+  shrink and must be empty at the end of M4.
 - **Focus.** The Node.js/TypeScript backend niche first; Python, Go and Rust stay at least at today's level.
 
 ### Dependency replacement map
@@ -57,42 +60,42 @@ The parser and storage rewrites in later phases are only safe if graph output ca
 
 ### Golden graph tests
 
-- [ ] Add a normalized JSONL graph export (stable ordering, absolute paths stripped) usable from tests
-- [ ] Record golden graphs for every fixture under `tests/golden/fixtures/`
-- [ ] Record golden graphs for every standing sample repository under `tests/golden/samples/`
-- [ ] Add `tests/golden.test.ts` that diffs current output against the golden files with a readable diff
-- [ ] Add an `--update-golden` (or `UPDATE_GOLDEN=1`) flow and document when it is acceptable to use
+- [x] Add a normalized JSONL graph export (stable ordering, absolute paths stripped) usable from tests
+- [x] Record golden graphs for every fixture under `tests/golden/fixtures/`
+- [x] Record golden graphs for every standing sample repository under `tests/golden/samples/`
+- [x] Add `tests/golden.test.ts` that diffs current output against the golden files with a readable diff
+- [x] Add an `--update-golden` (or `UPDATE_GOLDEN=1`) flow and document when it is acceptable to use
 
 ### Sample repositories
 
-- [ ] Add `scripts/fetch-samples.mjs` that clones express, fastify, nestjs and ky using only `git`
-- [ ] Pin each sample to a commit SHA and record it in `docs/sample-repositories.md`
-- [ ] Make sample paths configurable (env var or `.concentrate/samples/`) instead of hard-coded Desktop paths
-- [ ] Verify `npm run smoke:samples -- --suite standing` passes end to end
+- [x] Add `scripts/fetch-samples.mjs` that clones express, fastify, nestjs and ky using only `git`
+- [x] Pin each sample to a commit SHA and record it in `docs/sample-repositories.md`
+- [x] Make sample paths configurable (env var or `.concentrate/samples/`) instead of hard-coded Desktop paths
+- [x] Verify `npm run smoke:samples -- --suite standing` passes end to end
 
 ### Golden query results (reference for the new engine)
 
-- [ ] Extract the 21 Cypher queries used by `src/adapters/mcp/tools.ts` into a reusable list
-- [ ] Run them against Kuzu on every standing sample and store normalized results under `tests/golden/queries/`
+- [x] Record every Cypher statement the MCP tools issue and pin the distinct query shapes in `tests/golden/queries/templates.json` (67 shapes)
+- [x] Run them against Kuzu on every standing sample and store normalized results under `tests/golden/queries/`
 
 ### Dependency guardrail
 
-- [ ] Add a guardrail test: every bare import in `src/` must start with `node:` or be in a shrinking allow-list
-- [ ] Add a guardrail test: `package.json` `dependencies` must be a subset of the same allow-list
-- [ ] Document that the allow-list must only shrink and must be empty at the end of M4
+- [x] Add a guardrail test: every bare import in `src/` must start with `node:` or be in a shrinking allow-list
+- [x] Add a guardrail test: `package.json` `dependencies` must be a subset of the same allow-list
+- [x] Document that the allow-list must only shrink and must be empty at the end of M4
 
 ### Store contracts
 
-- [ ] Add `IGraphStore` (open, write, patch, stats, close) to `src/core/contracts/`
-- [ ] Add `IQueryEngine` (`query(cypher, params)`) to `src/core/contracts/`
-- [ ] Make the existing Kuzu adapter implement both contracts and route CLI/MCP through them
+- [x] Add `IGraphStore` (open, write, patch, stats, close) to `src/core/contracts/`
+- [x] Add `IQueryEngine` (`query(cypher)`, `stats`, `schemaVersion`, `close`) to `src/core/contracts/`; `$param` support lands with Phase 2
+- [x] Make the existing Kuzu adapter implement both contracts and route CLI/MCP through them
 
 ### Acceptance criteria
 
-- [ ] Golden fixture, sample and query tests run in `npm test` and pass
-- [ ] Standing smoke suite runs from a fresh clone via the fetch script
-- [ ] Guardrail fails if a new runtime dependency is imported
-- [ ] CLI and MCP depend only on `IGraphStore` / `IQueryEngine`, not on Kuzu types
+- [x] Golden fixture, sample and query tests run in `npm test` and pass
+- [x] Standing smoke suite runs from a fresh clone via the fetch script
+- [x] Guardrail fails if a new runtime dependency is imported
+- [x] CLI and MCP depend only on `IGraphStore` / `IQueryEngine`, not on Kuzu types
 
 ## Phase 1: Replace commander, fast-glob and ignore with built-ins ([#3](https://github.com/fatihserhatturan/concentrate/issues/3))
 
@@ -142,7 +145,7 @@ commander is used only in `src/index.ts`; fast-glob in `core/scan/discover-files
 
 **Goal:** Replace the archived KuzuDB with a zero-dependency graph store and query engine.
 
-KuzuDB was archived in October 2025 (last release 0.11.3). The Kuzu adapter is ~1.5k lines under `src/adapters/kuzu/`, and MCP issues 21 Cypher queries. Graph sizes (tens of thousands of nodes) fit comfortably in memory.
+KuzuDB was archived in October 2025 (last release 0.11.3). The Kuzu adapter is ~1.5k lines under `src/adapters/kuzu/`, and the MCP tools issue 67 distinct query shapes (`tests/golden/queries/templates.json`). Graph sizes (tens of thousands of nodes) fit comfortably in memory.
 
 ### In-memory model (`src/adapters/store/`)
 
@@ -170,6 +173,8 @@ KuzuDB was archived in October 2025 (last release 0.11.3). The Kuzu adapter is ~
 - [ ] `MATCH` / `OPTIONAL MATCH` chains, anonymous nodes, relationship variables and `[:A|B]`
 - [ ] Variable-length paths `*min..max`
 - [ ] `WHERE`: comparisons, `AND`/`OR`/`NOT`, `CONTAINS`, `STARTS WITH`, `ENDS WITH`, `IN`, `IS NULL`, `lower`/`toLower`
+- [ ] `contains()` and `lower()` function calls (used by MCP name and model filters)
+- [ ] `WITH ... AS` projection (used by the data-access queries)
 - [ ] `RETURN ... AS`, `DISTINCT`, `count` / `collect` / `min` / `max`
 - [ ] `ORDER BY`, `SKIP`, `LIMIT` and `$param` parameters
 - [ ] Planner that starts from the most selective index
@@ -178,14 +183,14 @@ KuzuDB was archived in October 2025 (last release 0.11.3). The Kuzu adapter is ~
 
 ### Migration
 
-- [ ] Run all golden query results from Phase 0 against the new engine and match them exactly
+- [ ] Replay every recording in `tests/golden/queries/` against the new engine and match rows and tool output exactly
 - [ ] Port `scan`, `stats`, `query`, `export`, `smoke` and `mcp` to the new store
 - [ ] Delete `src/adapters/kuzu/` and remove `kuzu` from dependencies and the allow-list
 - [ ] Benchmark scan-write time and query latency against the Kuzu baseline
 
 ### Acceptance criteria
 
-- [ ] All 21 golden query results match exactly
+- [ ] All golden query recordings (67 query shapes, fixtures and standing samples) match exactly
 - [ ] `kuzu` is gone from `package.json` and `src/`
 - [ ] Concurrent `mcp` reader and `scan` writer work without lock errors
 - [ ] Query latency for MCP tools is equal to or better than the Kuzu baseline
@@ -259,7 +264,7 @@ JS/TS extractors and framework semantics use about 75 node types and 16 fields (
 
 ### Integration
 
-- [ ] Add `endLine` to JS/TS function, class and method nodes (Python/Go/Rust already have it)
+- [ ] Add `endLine` to JS/TS `Variable` and `Route` nodes (functions, classes, interfaces, enums and type aliases already have it)
 - [ ] Wire the new parser into the JS/TS language integration
 
 ### Acceptance criteria
