@@ -17,7 +17,8 @@
     "mcp": "tsx src/index.ts mcp",
     "verify:rc": "npm run typecheck && npm test && npm run build && npm run smoke:samples -- --suite standing --report .concentrate/smoke-standing-rc-report.json --semantic-samples 5",
     "test": "tsx --test tests/**/*.test.ts",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "golden:update": "UPDATE_GOLDEN=1 tsx --test tests/golden*.test.ts"
   },
   "dependencies": {
     "commander": "^14.0.1",

@@ -1,0 +1,41 @@
+{"kind":"report","status":"success","discoveredFiles":2,"supportedFiles":2,"parsedFiles":2,"failedFiles":[],"warnings":[]}
+{"kind":"node","id":"dir:.","label":"Directory","properties":{"name":"instance-method-resolution","path":"<root>","relativePath":"."}}
+{"kind":"node","id":"file:app.ts","label":"File","properties":{"isFixture":false,"isGenerated":false,"isSupport":false,"isTest":false,"language":"typescript","path":"<root>/app.ts","relativePath":"app.ts","sourceType":"production"}}
+{"kind":"node","id":"file:app.ts:class:3:AppService","label":"Class","properties":{"endLine":7,"extendsNames":null,"implementsNames":null,"isAbstract":false,"isExported":false,"line":3,"name":"AppService","visibility":"public"}}
+{"kind":"node","id":"file:app.ts:function:12:start","label":"Function","properties":{"className":null,"endLine":15,"isAbstract":false,"isAsync":false,"isExported":true,"kind":"function_declaration","line":12,"methodKind":null,"name":"start","parameters":"[]","returnType":null,"visibility":"public"}}
+{"kind":"node","id":"file:app.ts:function:12:start:call:13:2:appService.run","label":"Call","properties":{"callee":"run","columnNumber":2,"expression":"appService.run","line":13,"name":"appService.run","receiver":"appService"}}
+{"kind":"node","id":"file:app.ts:function:12:start:call:14:2:importedService.execute","label":"Call","properties":{"callee":"execute","columnNumber":2,"expression":"importedService.execute","line":14,"name":"importedService.execute","receiver":"importedService"}}
+{"kind":"node","id":"file:app.ts:function:4:run","label":"Function","properties":{"className":"AppService","endLine":6,"isAbstract":false,"isAsync":false,"isExported":false,"kind":"method_definition","line":4,"methodKind":"method","name":"run","parameters":"[]","returnType":null,"visibility":"public"}}
+{"kind":"node","id":"file:app.ts:import:1:./service","label":"Import","properties":{"bindings":"[{\"imported\":\"ImportedService\",\"local\":\"ImportedService\",\"kind\":\"named\"}]","isCjs":false,"isDynamic":false,"isReExport":false,"isTypeOnly":false,"isWildcard":false,"line":1,"source":"./service","specifier":"import { ImportedService } from './service'"}}
+{"kind":"node","id":"file:app.ts:initializercall:10:24:new ImportedService","label":"Call","properties":{"callee":"ImportedService","columnNumber":24,"expression":"new ImportedService","line":10,"name":"new ImportedService","receiver":null}}
+{"kind":"node","id":"file:app.ts:initializercall:9:19:new AppService","label":"Call","properties":{"callee":"AppService","columnNumber":19,"expression":"new AppService","line":9,"name":"new AppService","receiver":null}}
+{"kind":"node","id":"file:app.ts:variable:10:importedService","label":"Variable","properties":{"isExported":false,"kind":"const","line":10,"name":"importedService","stringValue":null}}
+{"kind":"node","id":"file:app.ts:variable:9:appService","label":"Variable","properties":{"isExported":false,"kind":"const","line":9,"name":"appService","stringValue":null}}
+{"kind":"node","id":"file:service.ts","label":"File","properties":{"isFixture":false,"isGenerated":false,"isSupport":false,"isTest":false,"language":"typescript","path":"<root>/service.ts","relativePath":"service.ts","sourceType":"production"}}
+{"kind":"node","id":"file:service.ts:class:11:ImportedService","label":"Class","properties":{"endLine":15,"extendsNames":null,"implementsNames":null,"isAbstract":false,"isExported":true,"line":11,"name":"ImportedService","visibility":"public"}}
+{"kind":"node","id":"file:service.ts:class:1:LocalService","label":"Class","properties":{"endLine":9,"extendsNames":null,"implementsNames":null,"isAbstract":false,"isExported":true,"line":1,"name":"LocalService","visibility":"public"}}
+{"kind":"node","id":"file:service.ts:function:12:execute","label":"Function","properties":{"className":"ImportedService","endLine":14,"isAbstract":false,"isAsync":false,"isExported":false,"kind":"method_definition","line":12,"methodKind":"method","name":"execute","parameters":"[]","returnType":null,"visibility":"public"}}
+{"kind":"node","id":"file:service.ts:function:2:run","label":"Function","properties":{"className":"LocalService","endLine":4,"isAbstract":false,"isAsync":false,"isExported":false,"kind":"method_definition","line":2,"methodKind":"method","name":"run","parameters":"[]","returnType":null,"visibility":"public"}}
+{"kind":"node","id":"file:service.ts:function:6:stop","label":"Function","properties":{"className":"LocalService","endLine":8,"isAbstract":false,"isAsync":false,"isExported":false,"kind":"method_definition","line":6,"methodKind":"method","name":"stop","parameters":"[]","returnType":null,"visibility":"public"}}
+{"kind":"node","id":"repo:<root>","label":"Repo","properties":{"name":"instance-method-resolution","path":"<root>"}}
+{"kind":"rel","from":"dir:.","type":"CONTAINS_FILE","to":"file:app.ts","properties":{}}
+{"kind":"rel","from":"dir:.","type":"CONTAINS_FILE","to":"file:service.ts","properties":{}}
+{"kind":"rel","from":"file:app.ts","type":"DEFINES_CLASS","to":"file:app.ts:class:3:AppService","properties":{}}
+{"kind":"rel","from":"file:app.ts","type":"DEFINES_FUNCTION","to":"file:app.ts:function:12:start","properties":{}}
+{"kind":"rel","from":"file:app.ts","type":"DEFINES_VARIABLE","to":"file:app.ts:variable:10:importedService","properties":{}}
+{"kind":"rel","from":"file:app.ts","type":"DEFINES_VARIABLE","to":"file:app.ts:variable:9:appService","properties":{}}
+{"kind":"rel","from":"file:app.ts","type":"IMPORTS","to":"file:app.ts:import:1:./service","properties":{}}
+{"kind":"rel","from":"file:app.ts:class:3:AppService","type":"DEFINES_METHOD","to":"file:app.ts:function:4:run","properties":{}}
+{"kind":"rel","from":"file:app.ts:function:12:start","type":"CALLS","to":"file:app.ts:function:12:start:call:13:2:appService.run","properties":{}}
+{"kind":"rel","from":"file:app.ts:function:12:start","type":"CALLS","to":"file:app.ts:function:12:start:call:14:2:importedService.execute","properties":{}}
+{"kind":"rel","from":"file:app.ts:function:12:start:call:13:2:appService.run","type":"CALL_RESOLVES_TO","to":"file:app.ts:function:4:run","properties":{}}
+{"kind":"rel","from":"file:app.ts:function:12:start:call:14:2:importedService.execute","type":"CALL_RESOLVES_TO","to":"file:service.ts:function:12:execute","properties":{}}
+{"kind":"rel","from":"file:app.ts:import:1:./service","type":"RESOLVES_TO","to":"file:service.ts","properties":{}}
+{"kind":"rel","from":"file:app.ts:variable:10:importedService","type":"INITIALIZED_BY","to":"file:app.ts:initializercall:10:24:new ImportedService","properties":{}}
+{"kind":"rel","from":"file:app.ts:variable:9:appService","type":"INITIALIZED_BY","to":"file:app.ts:initializercall:9:19:new AppService","properties":{}}
+{"kind":"rel","from":"file:service.ts","type":"DEFINES_CLASS","to":"file:service.ts:class:11:ImportedService","properties":{}}
+{"kind":"rel","from":"file:service.ts","type":"DEFINES_CLASS","to":"file:service.ts:class:1:LocalService","properties":{}}
+{"kind":"rel","from":"file:service.ts:class:11:ImportedService","type":"DEFINES_METHOD","to":"file:service.ts:function:12:execute","properties":{}}
+{"kind":"rel","from":"file:service.ts:class:1:LocalService","type":"DEFINES_METHOD","to":"file:service.ts:function:2:run","properties":{}}
+{"kind":"rel","from":"file:service.ts:class:1:LocalService","type":"DEFINES_METHOD","to":"file:service.ts:function:6:stop","properties":{}}
+{"kind":"rel","from":"repo:<root>","type":"CONTAINS_ROOT","to":"dir:.","properties":{}}
