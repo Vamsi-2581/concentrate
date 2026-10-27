@@ -334,7 +334,7 @@
     "calls": [
       {
         "method": "query",
-        "cypher": "MATCH (file:File)-[:DECLARES_ROUTE]->(route:Route) OPTIONAL MATCH (route)-[:ROUTE_HANDLED_BY]->(handler:Function) WHERE true RETURN file.relativePath AS file, route.line AS line, route.method AS method, route.path AS path, route.fullPath AS fullPath, route.framework AS framework, route.handlerName AS handlerName, handler.name AS handler ORDER BY file.relativePath, route.line, route.method, route.path, handler.name LIMIT 50",
+        "cypher": "MATCH (file:File)-[:DECLARES_ROUTE]->(route:Route) WHERE true OPTIONAL MATCH (route)-[:ROUTE_HANDLED_BY]->(handler:Function) RETURN file.relativePath AS file, route.line AS line, route.method AS method, route.path AS path, route.fullPath AS fullPath, route.framework AS framework, route.handlerName AS handlerName, handler.name AS handler ORDER BY file.relativePath, route.line, route.method, route.path, handler.name LIMIT 50",
         "rows": []
       }
     ],
@@ -351,7 +351,7 @@
     "calls": [
       {
         "method": "query",
-        "cypher": "MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(entrypoint:EntryPoint) OPTIONAL MATCH (entrypoint)-[:ENTRYPOINT_HANDLED_BY]->(handler:Function) WHERE true RETURN file.relativePath AS file, entrypoint.line AS line, entrypoint.kind AS kind, entrypoint.trigger AS trigger, entrypoint.library AS library, entrypoint.handlerName AS handlerName, handler.name AS handler ORDER BY file.relativePath, entrypoint.line, entrypoint.kind, entrypoint.trigger, handler.name LIMIT 50",
+        "cypher": "MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(entrypoint:EntryPoint) WHERE true OPTIONAL MATCH (entrypoint)-[:ENTRYPOINT_HANDLED_BY]->(handler:Function) RETURN file.relativePath AS file, entrypoint.line AS line, entrypoint.kind AS kind, entrypoint.trigger AS trigger, entrypoint.library AS library, entrypoint.handlerName AS handlerName, handler.name AS handler ORDER BY file.relativePath, entrypoint.line, entrypoint.kind, entrypoint.trigger, handler.name LIMIT 50",
         "rows": []
       }
     ],
