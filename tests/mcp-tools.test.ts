@@ -137,6 +137,26 @@ describe("MCP tools", () => {
 
     assert.ok(databasePath.endsWith("graph.kuzu"));
   });
+
+  it("find_callers includes callers that are class methods", async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), "concentrate-mcp-methods-"));
+    const graph = await buildCodeGraph(path.resolve("fixtures/nestjs-injection"), { continueOnError: false });
+    const writer = await KuzuGraphWriter.open(path.join(root, "graph.kuzu"));
+    try {
+      await writer.reset();
+      await writer.write(graph.nodes, graph.relationships);
+
+      const result = await callJsonTool(writer, "find_callers", { name: "findAll" });
+      const methodCaller = result.callers.find((row: any) => row.callerKind === "Method");
+      assert.ok(methodCaller, `expected a method caller, got ${JSON.stringify(result.callers)}`);
+      assert.equal(methodCaller.caller, "findAll");
+      assert.equal(methodCaller.className, "UsersController");
+      assert.equal(methodCaller.file, "users.controller.ts");
+      assert.equal(methodCaller.relationship, "CALLS");
+    } finally {
+      await writer.close();
+    }
+  });
 });
 
 async function callJsonTool(

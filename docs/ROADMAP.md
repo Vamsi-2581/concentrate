@@ -75,7 +75,7 @@ The parser and storage rewrites in later phases are only safe if graph output ca
 
 ### Golden query results (reference for the new engine)
 
-- [x] Record every Cypher statement the MCP tools issue and pin the distinct query shapes in `tests/golden/queries/templates.json` (67 shapes)
+- [x] Record every Cypher statement the MCP tools issue and pin the distinct query shapes in `tests/golden/queries/templates.json`
 - [x] Run them against Kuzu on every standing sample and store normalized results under `tests/golden/queries/`
 
 ### Dependency guardrail
@@ -145,7 +145,7 @@ commander is used only in `src/index.ts`; fast-glob in `core/scan/discover-files
 
 **Goal:** Replace the archived KuzuDB with a zero-dependency graph store and query engine.
 
-KuzuDB was archived in October 2025 (last release 0.11.3). The Kuzu adapter is ~1.5k lines under `src/adapters/kuzu/`, and the MCP tools issue 67 distinct query shapes (`tests/golden/queries/templates.json`). Graph sizes (tens of thousands of nodes) fit comfortably in memory.
+KuzuDB was archived in October 2025 (last release 0.11.3). The Kuzu adapter is ~1.5k lines under `src/adapters/kuzu/`, and the distinct query shapes the MCP tools issue are pinned in `tests/golden/queries/templates.json`. Graph sizes (tens of thousands of nodes) fit comfortably in memory.
 
 ### In-memory model (`src/adapters/store/`)
 
@@ -190,7 +190,7 @@ KuzuDB was archived in October 2025 (last release 0.11.3). The Kuzu adapter is ~
 
 ### Acceptance criteria
 
-- [ ] All golden query recordings (67 query shapes, fixtures and standing samples) match exactly
+- [ ] All golden query recordings (every shape in `templates.json`, fixtures and standing samples) match exactly
 - [ ] `kuzu` is gone from `package.json` and `src/`
 - [ ] Concurrent `mcp` reader and `scan` writer work without lock errors
 - [ ] Query latency for MCP tools is equal to or better than the Kuzu baseline
