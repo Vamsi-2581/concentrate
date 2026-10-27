@@ -1,0 +1,1030 @@
+{
+  "match/all-files": {
+    "rows": [
+      {
+        "path": "nested.ts",
+        "language": "typescript",
+        "isTest": false
+      }
+    ]
+  },
+  "match/label-count": {
+    "rows": [
+      {
+        "count": 2
+      }
+    ]
+  },
+  "match/count-star": {
+    "rows": [
+      {
+        "count": 3
+      }
+    ]
+  },
+  "match/two-hop": {
+    "rows": [
+      {
+        "file": "nested.ts",
+        "fn": "inner",
+        "call": "nestedOnly",
+        "line": 9
+      },
+      {
+        "file": "nested.ts",
+        "fn": "outer",
+        "call": "finish",
+        "line": 12
+      },
+      {
+        "file": "nested.ts",
+        "fn": "outer",
+        "call": "setup",
+        "line": 6
+      }
+    ]
+  },
+  "match/comma-patterns": {
+    "rows": [
+      {
+        "file": "nested.ts",
+        "repo": "call-graph"
+      }
+    ]
+  },
+  "match/shared-variable": {
+    "rows": []
+  },
+  "match/repeated-match": {
+    "rows": [
+      {
+        "fn": "inner",
+        "calls": 1
+      },
+      {
+        "fn": "outer",
+        "calls": 2
+      }
+    ]
+  },
+  "match/inline-properties": {
+    "rows": [
+      {
+        "name": "outer",
+        "line": 5
+      }
+    ]
+  },
+  "match/inline-properties-string": {
+    "rows": []
+  },
+  "match/anonymous-node": {
+    "rows": []
+  },
+  "match/anonymous-rel": {
+    "rows": []
+  },
+  "match/unlabeled-start": {
+    "rows": [
+      {
+        "caller": "inner",
+        "callee": "nestedOnly"
+      },
+      {
+        "caller": "outer",
+        "callee": "finish"
+      },
+      {
+        "caller": "outer",
+        "callee": "setup"
+      }
+    ]
+  },
+  "match/unlabeled-end": {
+    "rows": []
+  },
+  "match/unlabeled-both": {
+    "rows": []
+  },
+  "match/incoming": {
+    "rows": [
+      {
+        "fn": "inner",
+        "file": "nested.ts"
+      },
+      {
+        "fn": "outer",
+        "file": "nested.ts"
+      }
+    ]
+  },
+  "match/undirected": {
+    "rows": [
+      {
+        "fn": "inner",
+        "file": "nested.ts"
+      },
+      {
+        "fn": "outer",
+        "file": "nested.ts"
+      }
+    ]
+  },
+  "match/rel-alternatives": {
+    "rows": [
+      {
+        "file": "nested.ts",
+        "name": "inner"
+      },
+      {
+        "file": "nested.ts",
+        "name": "outer"
+      }
+    ]
+  },
+  "match/rel-variable-properties": {
+    "rows": []
+  },
+  "match/rel-inline-properties": {
+    "rows": []
+  },
+  "match/self-join-distinct-rels": {
+    "rows": [
+      {
+        "a": "inner",
+        "b": "inner"
+      },
+      {
+        "a": "inner",
+        "b": "outer"
+      },
+      {
+        "a": "outer",
+        "b": "inner"
+      },
+      {
+        "a": "outer",
+        "b": "outer"
+      }
+    ]
+  },
+  "match/same-rel-twice": {
+    "rows": [
+      {
+        "a": "nested.ts",
+        "b": "nested.ts"
+      }
+    ]
+  },
+  "match/cycle-back": {
+    "rows": []
+  },
+  "match/package-hierarchy": {
+    "rows": []
+  },
+  "match/physical-rel-types": {
+    "rows": []
+  },
+  "match/physical-rel-types-function": {
+    "rows": []
+  },
+  "match/mounts": {
+    "rows": []
+  },
+  "varlen/directories-1-3": {
+    "rows": []
+  },
+  "varlen/directories-exact-2": {
+    "rows": []
+  },
+  "varlen/directories-unbounded": {
+    "rows": []
+  },
+  "varlen/directories-upper-only": {
+    "rows": []
+  },
+  "varlen/root-to-file": {
+    "rows": [
+      {
+        "repo": "call-graph",
+        "dir": ".",
+        "file": "nested.ts"
+      }
+    ]
+  },
+  "varlen/zero-length": {
+    "rows": [
+      {
+        "a": ".",
+        "b": "."
+      }
+    ]
+  },
+  "varlen/incoming": {
+    "rows": []
+  },
+  "varlen/undirected": {
+    "rows": []
+  },
+  "varlen/extends-chain": {
+    "rows": []
+  },
+  "varlen/call-chain": {
+    "rows": []
+  },
+  "varlen/import-chain": {
+    "rows": []
+  },
+  "varlen/count-paths": {
+    "rows": [
+      {
+        "paths": 0
+      }
+    ]
+  },
+  "varlen/distinct-targets": {
+    "rows": []
+  },
+  "varlen/no-type": {
+    "rows": [
+      {
+        "repo": "call-graph",
+        "dir": "."
+      }
+    ]
+  },
+  "optional/no-match-null": {
+    "rows": [
+      {
+        "file": "nested.ts",
+        "route": null
+      }
+    ]
+  },
+  "optional/count-optional": {
+    "rows": [
+      {
+        "file": "nested.ts",
+        "routes": 0
+      }
+    ]
+  },
+  "optional/where-on-optional": {
+    "rows": [
+      {
+        "file": "nested.ts",
+        "route": null
+      }
+    ]
+  },
+  "optional/where-on-outer-var": {
+    "rows": []
+  },
+  "optional/where-false": {
+    "rows": [
+      {
+        "file": "nested.ts",
+        "fn": null
+      }
+    ]
+  },
+  "optional/chain": {
+    "rows": []
+  },
+  "optional/two-optionals": {
+    "rows": [
+      {
+        "file": "nested.ts",
+        "fn": "inner",
+        "cls": null
+      },
+      {
+        "file": "nested.ts",
+        "fn": "outer",
+        "cls": null
+      }
+    ]
+  },
+  "optional/first-clause": {
+    "rows": [
+      {
+        "path": null
+      }
+    ]
+  },
+  "optional/then-match": {
+    "rows": []
+  },
+  "optional/is-null-filter": {
+    "rows": []
+  },
+  "where/equality-string": {
+    "rows": []
+  },
+  "where/inequality": {
+    "rows": [
+      {
+        "name": "inner"
+      },
+      {
+        "name": "outer"
+      }
+    ]
+  },
+  "where/int-compare": {
+    "rows": [
+      {
+        "name": "finish",
+        "line": 12
+      },
+      {
+        "name": "nestedOnly",
+        "line": 9
+      },
+      {
+        "name": "setup",
+        "line": 6
+      }
+    ]
+  },
+  "where/bool-compare": {
+    "rows": [
+      {
+        "name": "inner"
+      }
+    ]
+  },
+  "where/bool-bare": {
+    "rows": []
+  },
+  "where/not": {
+    "rows": [
+      {
+        "name": "inner"
+      }
+    ]
+  },
+  "where/or": {
+    "rows": [
+      {
+        "name": "outer"
+      }
+    ]
+  },
+  "where/xor": {
+    "rows": [
+      {
+        "name": "outer"
+      }
+    ]
+  },
+  "where/precedence": {
+    "rows": [
+      {
+        "name": "outer"
+      }
+    ]
+  },
+  "where/parentheses": {
+    "rows": [
+      {
+        "name": "outer"
+      }
+    ]
+  },
+  "where/contains-op": {
+    "rows": []
+  },
+  "where/contains-fn": {
+    "rows": []
+  },
+  "where/starts-with": {
+    "rows": []
+  },
+  "where/ends-with": {
+    "rows": [
+      {
+        "path": "nested.ts"
+      }
+    ]
+  },
+  "where/in-list": {
+    "rows": []
+  },
+  "where/in-empty-list": {
+    "rows": []
+  },
+  "where/not-in": {
+    "rows": []
+  },
+  "where/is-null": {
+    "rows": [
+      {
+        "name": "inner"
+      },
+      {
+        "name": "outer"
+      }
+    ]
+  },
+  "where/is-not-null": {
+    "rows": []
+  },
+  "where/null-equality": {
+    "rows": []
+  },
+  "where/null-in-or": {
+    "rows": [
+      {
+        "name": "inner"
+      },
+      {
+        "name": "outer"
+      }
+    ]
+  },
+  "where/null-not": {
+    "rows": []
+  },
+  "where/string-compare": {
+    "rows": [
+      {
+        "name": "outer"
+      }
+    ]
+  },
+  "where/case-sensitive": {
+    "rows": []
+  },
+  "where/to-lower": {
+    "rows": []
+  },
+  "where/upper": {
+    "rows": []
+  },
+  "where/cross-variable": {
+    "rows": [
+      {
+        "fn": "inner",
+        "call": "nestedOnly"
+      },
+      {
+        "fn": "outer",
+        "call": "finish"
+      },
+      {
+        "fn": "outer",
+        "call": "setup"
+      }
+    ]
+  },
+  "where/after-multi-match": {
+    "rows": [
+      {
+        "file": "nested.ts",
+        "fn": "outer"
+      }
+    ]
+  },
+  "where/arithmetic": {
+    "rows": [
+      {
+        "name": "inner",
+        "span": 2
+      },
+      {
+        "name": "outer",
+        "span": 8
+      }
+    ]
+  },
+  "where/param-string": {
+    "rows": []
+  },
+  "where/param-int": {
+    "rows": [
+      {
+        "name": "finish",
+        "line": 12
+      }
+    ]
+  },
+  "where/param-in-return": {
+    "rows": []
+  },
+  "return/literals": {
+    "rows": [
+      {
+        "one": 1,
+        "two": "two",
+        "yes": true,
+        "nothing": null,
+        "half": 1.5
+      }
+    ]
+  },
+  "return/arithmetic": {
+    "rows": [
+      {
+        "div": 3,
+        "mod": 1,
+        "expr": 14,
+        "neg": -5,
+        "fdiv": 3.5
+      }
+    ]
+  },
+  "return/string-concat": {
+    "rows": []
+  },
+  "return/list-literal": {
+    "rows": [
+      {
+        "list": [
+          1,
+          2,
+          3
+        ],
+        "n": 2
+      }
+    ]
+  },
+  "return/string-functions": {
+    "rows": [
+      {
+        "name": "inner",
+        "lower": "inner",
+        "upper": "INNER",
+        "length": 5
+      },
+      {
+        "name": "outer",
+        "lower": "outer",
+        "upper": "OUTER",
+        "length": 5
+      }
+    ]
+  },
+  "return/coalesce": {
+    "rows": [
+      {
+        "name": "inner",
+        "cls": "none"
+      },
+      {
+        "name": "outer",
+        "cls": "none"
+      }
+    ]
+  },
+  "return/case": {
+    "rows": [
+      {
+        "name": "inner",
+        "visibility": "private"
+      },
+      {
+        "name": "outer",
+        "visibility": "public"
+      }
+    ]
+  },
+  "return/case-simple": {
+    "rows": []
+  },
+  "return/label-function": {
+    "rows": [
+      {
+        "name": "inner",
+        "label": "Function"
+      },
+      {
+        "name": "outer",
+        "label": "Function"
+      }
+    ]
+  },
+  "return/missing-property-null": {
+    "rows": []
+  },
+  "return/distinct": {
+    "rows": []
+  },
+  "return/distinct-multi": {
+    "rows": [
+      {
+        "file": "nested.ts",
+        "exported": false
+      },
+      {
+        "file": "nested.ts",
+        "exported": true
+      }
+    ]
+  },
+  "return/unaliased": {
+    "rows": []
+  },
+  "return/property-unlabeled-mixed": {
+    "rows": [
+      {
+        "name": "inner",
+        "kind": "function_declaration"
+      },
+      {
+        "name": "outer",
+        "kind": "function_declaration"
+      }
+    ]
+  },
+  "agg/count-group": {
+    "rows": [
+      {
+        "file": "nested.ts",
+        "functions": 2
+      }
+    ]
+  },
+  "agg/count-distinct": {
+    "rows": [
+      {
+        "methods": 0,
+        "total": 0
+      }
+    ]
+  },
+  "agg/count-nulls": {
+    "rows": [
+      {
+        "withClass": 0,
+        "total": 2
+      }
+    ]
+  },
+  "agg/min-max": {
+    "rows": [
+      {
+        "first": 6,
+        "last": 12
+      }
+    ]
+  },
+  "agg/min-max-string": {
+    "rows": [
+      {
+        "first": "inner",
+        "last": "outer"
+      }
+    ]
+  },
+  "agg/sum-avg": {
+    "rows": [
+      {
+        "total": 27,
+        "mean": 9
+      }
+    ]
+  },
+  "agg/collect-sorted": {
+    "rows": [
+      {
+        "paths": null
+      }
+    ]
+  },
+  "agg/collect-size": {
+    "rows": [
+      {
+        "file": "nested.ts",
+        "n": 2
+      }
+    ]
+  },
+  "agg/collect-skips-null": {
+    "rows": [
+      {
+        "n": null
+      }
+    ]
+  },
+  "agg/empty-input": {
+    "rows": [
+      {
+        "count": 0,
+        "first": null,
+        "names": null
+      }
+    ]
+  },
+  "agg/empty-input-grouped": {
+    "rows": []
+  },
+  "agg/expression-of-aggregates": {
+    "rows": [
+      {
+        "span": 6
+      }
+    ]
+  },
+  "agg/order-by-aggregate": {
+    "rows": []
+  },
+  "with/projection": {
+    "rows": [
+      {
+        "name": "inner",
+        "line": 8
+      },
+      {
+        "name": "outer",
+        "line": 5
+      }
+    ]
+  },
+  "with/rename-node": {
+    "rows": [
+      {
+        "file": "nested.ts",
+        "source": "nested.ts",
+        "fn": "inner"
+      },
+      {
+        "file": "nested.ts",
+        "source": "nested.ts",
+        "fn": "outer"
+      }
+    ]
+  },
+  "with/where-after": {
+    "rows": [
+      {
+        "file": "nested.ts",
+        "n": 2
+      }
+    ]
+  },
+  "with/distinct": {
+    "rows": []
+  },
+  "with/order-limit": {
+    "rows": [
+      {
+        "name": "finish",
+        "line": 12
+      },
+      {
+        "name": "nestedOnly",
+        "line": 9
+      },
+      {
+        "name": "setup",
+        "line": 6
+      }
+    ]
+  },
+  "with/chain": {
+    "rows": [
+      {
+        "name": "outer"
+      }
+    ]
+  },
+  "with/then-match": {
+    "rows": [
+      {
+        "file": "nested.ts",
+        "fn": "inner"
+      },
+      {
+        "file": "nested.ts",
+        "fn": "outer"
+      }
+    ]
+  },
+  "order/single-asc": {
+    "rows": [
+      {
+        "name": "setup",
+        "line": 6,
+        "col": 2
+      },
+      {
+        "name": "nestedOnly",
+        "line": 9,
+        "col": 4
+      },
+      {
+        "name": "finish",
+        "line": 12,
+        "col": 2
+      }
+    ]
+  },
+  "order/desc": {
+    "rows": [
+      {
+        "name": "finish",
+        "line": 12,
+        "col": 2
+      },
+      {
+        "name": "nestedOnly",
+        "line": 9,
+        "col": 4
+      },
+      {
+        "name": "setup",
+        "line": 6,
+        "col": 2
+      }
+    ]
+  },
+  "order/by-alias": {
+    "rows": [
+      {
+        "name": "inner"
+      },
+      {
+        "name": "outer"
+      }
+    ]
+  },
+  "order/nulls-asc": {
+    "rows": [
+      {
+        "name": "inner",
+        "cls": null
+      },
+      {
+        "name": "outer",
+        "cls": null
+      }
+    ]
+  },
+  "order/nulls-desc": {
+    "rows": [
+      {
+        "name": "inner",
+        "cls": null
+      },
+      {
+        "name": "outer",
+        "cls": null
+      }
+    ]
+  },
+  "order/booleans": {
+    "rows": [
+      {
+        "name": "inner",
+        "e": false
+      },
+      {
+        "name": "outer",
+        "e": true
+      }
+    ]
+  },
+  "order/string-case": {
+    "rows": [
+      {
+        "name": "call-graph"
+      },
+      {
+        "name": "finish"
+      },
+      {
+        "name": "inner"
+      },
+      {
+        "name": "nestedOnly"
+      },
+      {
+        "name": "outer"
+      },
+      {
+        "name": "setup"
+      }
+    ]
+  },
+  "order/skip-limit": {
+    "rows": [
+      {
+        "name": "finish",
+        "line": 12,
+        "col": 2
+      }
+    ]
+  },
+  "order/limit-zero": {
+    "rows": []
+  },
+  "order/skip-past-end": {
+    "rows": []
+  },
+  "order/expression": {
+    "rows": [
+      {
+        "name": "inner"
+      },
+      {
+        "name": "outer"
+      }
+    ]
+  },
+  "order/not-in-return": {
+    "rows": [
+      {
+        "name": "outer"
+      },
+      {
+        "name": "inner"
+      }
+    ]
+  },
+  "syntax/case-insensitive-keywords": {
+    "rows": [
+      {
+        "path": "nested.ts"
+      }
+    ]
+  },
+  "syntax/double-quoted-string": {
+    "rows": []
+  },
+  "syntax/escaped-string": {
+    "rows": [
+      {
+        "a": "it's",
+        "b": "say \"hi\"",
+        "c": "tabtnewlinen"
+      }
+    ]
+  },
+  "syntax/backtick-identifier": {
+    "rows": [
+      {
+        "the path": "nested.ts"
+      }
+    ]
+  },
+  "syntax/comments": {
+    "rows": [
+      {
+        "n": 1
+      }
+    ]
+  },
+  "syntax/trailing-semicolon": {
+    "rows": [
+      {
+        "n": 1
+      }
+    ]
+  },
+  "error/unknown-label": {
+    "error": "binder"
+  },
+  "error/unknown-rel-type": {
+    "error": "binder"
+  },
+  "error/unknown-property": {
+    "error": "binder"
+  },
+  "error/unbound-variable": {
+    "error": "binder"
+  },
+  "error/syntax": {
+    "error": "parser"
+  },
+  "error/missing-return": {
+    "error": "parser"
+  },
+  "error/wrong-endpoint-labels": {
+    "rows": []
+  },
+  "error/aggregate-in-where": {
+    "error": "binder"
+  },
+  "error/missing-param": {
+    "error": "binder"
+  },
+  "error/create": {
+    "error": "unsupported"
+  },
+  "error/delete": {
+    "error": "unsupported"
+  },
+  "error/set": {
+    "error": "unsupported"
+  },
+  "error/merge": {
+    "error": "unsupported"
+  },
+  "error/unwind": {
+    "error": "unsupported"
+  },
+  "error/union": {
+    "error": "unsupported"
+  }
+}

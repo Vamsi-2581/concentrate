@@ -1,0 +1,3243 @@
+{
+  "match/all-files": {
+    "rows": [
+      {
+        "path": "service.ts",
+        "language": "typescript",
+        "isTest": false
+      }
+    ]
+  },
+  "match/label-count": {
+    "rows": [
+      {
+        "count": 13
+      }
+    ]
+  },
+  "match/count-star": {
+    "rows": [
+      {
+        "count": 27
+      }
+    ]
+  },
+  "match/two-hop": {
+    "rows": [
+      {
+        "file": "service.ts",
+        "fn": "bootstrap",
+        "call": "NestFactory.create",
+        "line": 69
+      },
+      {
+        "file": "service.ts",
+        "fn": "createUser",
+        "call": "prisma.user.update",
+        "line": 22
+      },
+      {
+        "file": "service.ts",
+        "fn": "createUser",
+        "call": "res.status",
+        "line": 23
+      },
+      {
+        "file": "service.ts",
+        "fn": "createUser",
+        "call": "res.status(201).json",
+        "line": 23
+      },
+      {
+        "file": "service.ts",
+        "fn": "createUser",
+        "call": "usersRepository.save",
+        "line": 21
+      },
+      {
+        "file": "service.ts",
+        "fn": "handleJob",
+        "call": "Job.destroy",
+        "line": 27
+      },
+      {
+        "file": "service.ts",
+        "fn": "listUsers",
+        "call": "AuditModel.findOne",
+        "line": 16
+      },
+      {
+        "file": "service.ts",
+        "fn": "listUsers",
+        "call": "aliasedPrisma.user.findFirst",
+        "line": 15
+      },
+      {
+        "file": "service.ts",
+        "fn": "listUsers",
+        "call": "prisma.user.findMany",
+        "line": 14
+      },
+      {
+        "file": "service.ts",
+        "fn": "listUsers",
+        "call": "res.json",
+        "line": 17
+      }
+    ]
+  },
+  "match/comma-patterns": {
+    "rows": [
+      {
+        "file": "service.ts",
+        "repo": "data-access"
+      }
+    ]
+  },
+  "match/shared-variable": {
+    "rows": [
+      {
+        "file": "service.ts",
+        "fn": "bootstrap",
+        "source": "@prisma/client"
+      },
+      {
+        "file": "service.ts",
+        "fn": "bootstrap",
+        "source": "mongoose"
+      },
+      {
+        "file": "service.ts",
+        "fn": "createUser",
+        "source": "@prisma/client"
+      },
+      {
+        "file": "service.ts",
+        "fn": "createUser",
+        "source": "mongoose"
+      },
+      {
+        "file": "service.ts",
+        "fn": "handleJob",
+        "source": "@prisma/client"
+      },
+      {
+        "file": "service.ts",
+        "fn": "handleJob",
+        "source": "mongoose"
+      },
+      {
+        "file": "service.ts",
+        "fn": "listUsers",
+        "source": "@prisma/client"
+      },
+      {
+        "file": "service.ts",
+        "fn": "listUsers",
+        "source": "mongoose"
+      }
+    ]
+  },
+  "match/repeated-match": {
+    "rows": [
+      {
+        "fn": "bootstrap",
+        "calls": 1
+      },
+      {
+        "fn": "createUser",
+        "calls": 4
+      },
+      {
+        "fn": "handleJob",
+        "calls": 1
+      },
+      {
+        "fn": "listUsers",
+        "calls": 4
+      }
+    ]
+  },
+  "match/inline-properties": {
+    "rows": []
+  },
+  "match/inline-properties-string": {
+    "rows": [
+      {
+        "path": "/users",
+        "framework": "express-koa"
+      }
+    ]
+  },
+  "match/anonymous-node": {
+    "rows": []
+  },
+  "match/anonymous-rel": {
+    "rows": [
+      {
+        "file": "service.ts",
+        "source": "@prisma/client"
+      },
+      {
+        "file": "service.ts",
+        "source": "mongoose"
+      }
+    ]
+  },
+  "match/unlabeled-start": {
+    "rows": [
+      {
+        "caller": "bootstrap",
+        "callee": "NestFactory.create"
+      },
+      {
+        "caller": "createUser",
+        "callee": "prisma.user.update"
+      },
+      {
+        "caller": "createUser",
+        "callee": "res.status"
+      },
+      {
+        "caller": "createUser",
+        "callee": "res.status(201).json"
+      },
+      {
+        "caller": "createUser",
+        "callee": "this.usersRepository.save"
+      },
+      {
+        "caller": "createUser",
+        "callee": "usersRepository.save"
+      },
+      {
+        "caller": "findUsers",
+        "callee": "this.prisma.user.findMany"
+      },
+      {
+        "caller": "handleJob",
+        "callee": "Job.destroy"
+      },
+      {
+        "caller": "listUsers",
+        "callee": "AuditModel.findOne"
+      },
+      {
+        "caller": "listUsers",
+        "callee": "aliasedPrisma.user.findFirst"
+      },
+      {
+        "caller": "listUsers",
+        "callee": "knex"
+      },
+      {
+        "caller": "listUsers",
+        "callee": "knex('users').select"
+      },
+      {
+        "caller": "listUsers",
+        "callee": "prisma.user.findMany"
+      },
+      {
+        "caller": "listUsers",
+        "callee": "res.json"
+      },
+      {
+        "caller": "listViaRepository",
+        "callee": "this.repository.findUsers"
+      },
+      {
+        "caller": "readAudit",
+        "callee": "this.AuditModel.findOne"
+      }
+    ]
+  },
+  "match/unlabeled-end": {
+    "rows": [
+      {
+        "file": "service.ts",
+        "name": "AuditModel",
+        "kind": "const"
+      },
+      {
+        "file": "service.ts",
+        "name": "Job",
+        "kind": "const"
+      },
+      {
+        "file": "service.ts",
+        "name": "aliasedPrisma",
+        "kind": "const"
+      },
+      {
+        "file": "service.ts",
+        "name": "app",
+        "kind": "const"
+      },
+      {
+        "file": "service.ts",
+        "name": "knex",
+        "kind": "const"
+      },
+      {
+        "file": "service.ts",
+        "name": "plainObject",
+        "kind": "const"
+      },
+      {
+        "file": "service.ts",
+        "name": "prisma",
+        "kind": "const"
+      },
+      {
+        "file": "service.ts",
+        "name": "usersRepository",
+        "kind": "const"
+      }
+    ]
+  },
+  "match/unlabeled-both": {
+    "rows": [
+      {
+        "path": "/users",
+        "handler": "createUser"
+      },
+      {
+        "path": "/users",
+        "handler": "listUsers"
+      }
+    ]
+  },
+  "match/incoming": {
+    "rows": [
+      {
+        "fn": "bootstrap",
+        "file": "service.ts"
+      },
+      {
+        "fn": "createUser",
+        "file": "service.ts"
+      },
+      {
+        "fn": "handleJob",
+        "file": "service.ts"
+      },
+      {
+        "fn": "listUsers",
+        "file": "service.ts"
+      }
+    ]
+  },
+  "match/undirected": {
+    "rows": [
+      {
+        "fn": "bootstrap",
+        "file": "service.ts"
+      },
+      {
+        "fn": "createUser",
+        "file": "service.ts"
+      },
+      {
+        "fn": "handleJob",
+        "file": "service.ts"
+      },
+      {
+        "fn": "listUsers",
+        "file": "service.ts"
+      }
+    ]
+  },
+  "match/rel-alternatives": {
+    "rows": [
+      {
+        "file": "service.ts",
+        "name": "AuditModel"
+      },
+      {
+        "file": "service.ts",
+        "name": "Job"
+      },
+      {
+        "file": "service.ts",
+        "name": "aliasedPrisma"
+      },
+      {
+        "file": "service.ts",
+        "name": "app"
+      },
+      {
+        "file": "service.ts",
+        "name": "bootstrap"
+      },
+      {
+        "file": "service.ts",
+        "name": "createUser"
+      },
+      {
+        "file": "service.ts",
+        "name": "handleJob"
+      },
+      {
+        "file": "service.ts",
+        "name": "knex"
+      },
+      {
+        "file": "service.ts",
+        "name": "listUsers"
+      },
+      {
+        "file": "service.ts",
+        "name": "plainObject"
+      },
+      {
+        "file": "service.ts",
+        "name": "prisma"
+      },
+      {
+        "file": "service.ts",
+        "name": "usersRepository"
+      }
+    ]
+  },
+  "match/rel-variable-properties": {
+    "rows": [
+      {
+        "path": "/users",
+        "fn": "createUser",
+        "role": "handler",
+        "scope": "route",
+        "hook": "handler",
+        "orderIndex": 0
+      },
+      {
+        "path": "/users",
+        "fn": "listUsers",
+        "role": "handler",
+        "scope": "route",
+        "hook": "handler",
+        "orderIndex": 0
+      }
+    ]
+  },
+  "match/rel-inline-properties": {
+    "rows": []
+  },
+  "match/self-join-distinct-rels": {
+    "rows": [
+      {
+        "a": "bootstrap",
+        "b": "bootstrap"
+      },
+      {
+        "a": "bootstrap",
+        "b": "createUser"
+      },
+      {
+        "a": "bootstrap",
+        "b": "handleJob"
+      },
+      {
+        "a": "bootstrap",
+        "b": "listUsers"
+      },
+      {
+        "a": "createUser",
+        "b": "bootstrap"
+      },
+      {
+        "a": "createUser",
+        "b": "createUser"
+      },
+      {
+        "a": "createUser",
+        "b": "handleJob"
+      },
+      {
+        "a": "createUser",
+        "b": "listUsers"
+      },
+      {
+        "a": "handleJob",
+        "b": "bootstrap"
+      },
+      {
+        "a": "handleJob",
+        "b": "createUser"
+      },
+      {
+        "a": "handleJob",
+        "b": "handleJob"
+      },
+      {
+        "a": "handleJob",
+        "b": "listUsers"
+      },
+      {
+        "a": "listUsers",
+        "b": "bootstrap"
+      },
+      {
+        "a": "listUsers",
+        "b": "createUser"
+      },
+      {
+        "a": "listUsers",
+        "b": "handleJob"
+      },
+      {
+        "a": "listUsers",
+        "b": "listUsers"
+      }
+    ]
+  },
+  "match/same-rel-twice": {
+    "rows": [
+      {
+        "a": "service.ts",
+        "b": "service.ts"
+      }
+    ]
+  },
+  "match/cycle-back": {
+    "rows": []
+  },
+  "match/package-hierarchy": {
+    "rows": []
+  },
+  "match/physical-rel-types": {
+    "rows": []
+  },
+  "match/physical-rel-types-function": {
+    "rows": [
+      {
+        "fn": "createUser",
+        "model": "User",
+        "operation": "create",
+        "library": "typeorm",
+        "line": 42
+      },
+      {
+        "fn": "createUser",
+        "model": "user",
+        "operation": "update",
+        "library": "prisma",
+        "line": 22
+      },
+      {
+        "fn": "createUser",
+        "model": "users",
+        "operation": "create",
+        "library": "typeorm",
+        "line": 21
+      },
+      {
+        "fn": "findUsers",
+        "model": "user",
+        "operation": "read",
+        "library": "prisma",
+        "line": 34
+      },
+      {
+        "fn": "handleJob",
+        "model": "Job",
+        "operation": "delete",
+        "library": "sequelize",
+        "line": 27
+      },
+      {
+        "fn": "listUsers",
+        "model": "Audit",
+        "operation": "read",
+        "library": "mongoose",
+        "line": 16
+      },
+      {
+        "fn": "listUsers",
+        "model": "user",
+        "operation": "read",
+        "library": "prisma",
+        "line": 14
+      },
+      {
+        "fn": "listUsers",
+        "model": "user",
+        "operation": "read",
+        "library": "prisma",
+        "line": 15
+      },
+      {
+        "fn": "listUsers",
+        "model": "users",
+        "operation": "read",
+        "library": "knex",
+        "line": 56
+      },
+      {
+        "fn": "listViaRepository",
+        "model": "user",
+        "operation": "read",
+        "library": "prisma",
+        "line": 34
+      },
+      {
+        "fn": "readAudit",
+        "model": "Audit",
+        "operation": "read",
+        "library": "mongoose",
+        "line": 50
+      }
+    ]
+  },
+  "match/mounts": {
+    "rows": []
+  },
+  "varlen/directories-1-3": {
+    "rows": []
+  },
+  "varlen/directories-exact-2": {
+    "rows": []
+  },
+  "varlen/directories-unbounded": {
+    "rows": []
+  },
+  "varlen/directories-upper-only": {
+    "rows": []
+  },
+  "varlen/root-to-file": {
+    "rows": [
+      {
+        "repo": "data-access",
+        "dir": ".",
+        "file": "service.ts"
+      }
+    ]
+  },
+  "varlen/zero-length": {
+    "rows": [
+      {
+        "a": ".",
+        "b": "."
+      }
+    ]
+  },
+  "varlen/incoming": {
+    "rows": []
+  },
+  "varlen/undirected": {
+    "rows": []
+  },
+  "varlen/extends-chain": {
+    "rows": []
+  },
+  "varlen/call-chain": {
+    "rows": [
+      {
+        "a": "listViaRepository",
+        "b": "findUsers"
+      }
+    ]
+  },
+  "varlen/import-chain": {
+    "rows": []
+  },
+  "varlen/count-paths": {
+    "rows": [
+      {
+        "paths": 0
+      }
+    ]
+  },
+  "varlen/distinct-targets": {
+    "rows": []
+  },
+  "varlen/no-type": {
+    "rows": [
+      {
+        "repo": "data-access",
+        "dir": "."
+      }
+    ]
+  },
+  "optional/no-match-null": {
+    "rows": [
+      {
+        "file": "service.ts",
+        "route": "/users"
+      },
+      {
+        "file": "service.ts",
+        "route": "/users"
+      }
+    ]
+  },
+  "optional/count-optional": {
+    "rows": [
+      {
+        "file": "service.ts",
+        "routes": 2
+      }
+    ]
+  },
+  "optional/where-on-optional": {
+    "rows": [
+      {
+        "file": "service.ts",
+        "route": "/users"
+      }
+    ]
+  },
+  "optional/where-on-outer-var": {
+    "rows": [
+      {
+        "path": "/users",
+        "method": "GET",
+        "handler": null
+      },
+      {
+        "path": "/users",
+        "method": "POST",
+        "handler": "createUser"
+      }
+    ]
+  },
+  "optional/where-false": {
+    "rows": [
+      {
+        "file": "service.ts",
+        "fn": null
+      }
+    ]
+  },
+  "optional/chain": {
+    "rows": [
+      {
+        "path": "/users",
+        "handler": "createUser",
+        "call": "prisma.user.update"
+      },
+      {
+        "path": "/users",
+        "handler": "createUser",
+        "call": "res.status"
+      },
+      {
+        "path": "/users",
+        "handler": "createUser",
+        "call": "res.status(201).json"
+      },
+      {
+        "path": "/users",
+        "handler": "createUser",
+        "call": "usersRepository.save"
+      },
+      {
+        "path": "/users",
+        "handler": "listUsers",
+        "call": "AuditModel.findOne"
+      },
+      {
+        "path": "/users",
+        "handler": "listUsers",
+        "call": "aliasedPrisma.user.findFirst"
+      },
+      {
+        "path": "/users",
+        "handler": "listUsers",
+        "call": "prisma.user.findMany"
+      },
+      {
+        "path": "/users",
+        "handler": "listUsers",
+        "call": "res.json"
+      }
+    ]
+  },
+  "optional/two-optionals": {
+    "rows": [
+      {
+        "file": "service.ts",
+        "fn": "bootstrap",
+        "cls": "KnexBackedRepository"
+      },
+      {
+        "file": "service.ts",
+        "fn": "bootstrap",
+        "cls": "MongooseBackedRepository"
+      },
+      {
+        "file": "service.ts",
+        "fn": "bootstrap",
+        "cls": "PrismaBackedRepository"
+      },
+      {
+        "file": "service.ts",
+        "fn": "bootstrap",
+        "cls": "TypeOrmBackedRepository"
+      },
+      {
+        "file": "service.ts",
+        "fn": "bootstrap",
+        "cls": "UserService"
+      },
+      {
+        "file": "service.ts",
+        "fn": "createUser",
+        "cls": "KnexBackedRepository"
+      },
+      {
+        "file": "service.ts",
+        "fn": "createUser",
+        "cls": "MongooseBackedRepository"
+      },
+      {
+        "file": "service.ts",
+        "fn": "createUser",
+        "cls": "PrismaBackedRepository"
+      },
+      {
+        "file": "service.ts",
+        "fn": "createUser",
+        "cls": "TypeOrmBackedRepository"
+      },
+      {
+        "file": "service.ts",
+        "fn": "createUser",
+        "cls": "UserService"
+      },
+      {
+        "file": "service.ts",
+        "fn": "handleJob",
+        "cls": "KnexBackedRepository"
+      },
+      {
+        "file": "service.ts",
+        "fn": "handleJob",
+        "cls": "MongooseBackedRepository"
+      },
+      {
+        "file": "service.ts",
+        "fn": "handleJob",
+        "cls": "PrismaBackedRepository"
+      },
+      {
+        "file": "service.ts",
+        "fn": "handleJob",
+        "cls": "TypeOrmBackedRepository"
+      },
+      {
+        "file": "service.ts",
+        "fn": "handleJob",
+        "cls": "UserService"
+      },
+      {
+        "file": "service.ts",
+        "fn": "listUsers",
+        "cls": "KnexBackedRepository"
+      },
+      {
+        "file": "service.ts",
+        "fn": "listUsers",
+        "cls": "MongooseBackedRepository"
+      },
+      {
+        "file": "service.ts",
+        "fn": "listUsers",
+        "cls": "PrismaBackedRepository"
+      },
+      {
+        "file": "service.ts",
+        "fn": "listUsers",
+        "cls": "TypeOrmBackedRepository"
+      },
+      {
+        "file": "service.ts",
+        "fn": "listUsers",
+        "cls": "UserService"
+      }
+    ]
+  },
+  "optional/first-clause": {
+    "rows": [
+      {
+        "path": "/users"
+      },
+      {
+        "path": "/users"
+      }
+    ]
+  },
+  "optional/then-match": {
+    "rows": [
+      {
+        "file": "service.ts",
+        "route": "/users",
+        "variable": "AuditModel"
+      },
+      {
+        "file": "service.ts",
+        "route": "/users",
+        "variable": "AuditModel"
+      },
+      {
+        "file": "service.ts",
+        "route": "/users",
+        "variable": "Job"
+      },
+      {
+        "file": "service.ts",
+        "route": "/users",
+        "variable": "Job"
+      },
+      {
+        "file": "service.ts",
+        "route": "/users",
+        "variable": "aliasedPrisma"
+      },
+      {
+        "file": "service.ts",
+        "route": "/users",
+        "variable": "aliasedPrisma"
+      },
+      {
+        "file": "service.ts",
+        "route": "/users",
+        "variable": "app"
+      },
+      {
+        "file": "service.ts",
+        "route": "/users",
+        "variable": "app"
+      },
+      {
+        "file": "service.ts",
+        "route": "/users",
+        "variable": "knex"
+      },
+      {
+        "file": "service.ts",
+        "route": "/users",
+        "variable": "knex"
+      },
+      {
+        "file": "service.ts",
+        "route": "/users",
+        "variable": "plainObject"
+      },
+      {
+        "file": "service.ts",
+        "route": "/users",
+        "variable": "plainObject"
+      },
+      {
+        "file": "service.ts",
+        "route": "/users",
+        "variable": "prisma"
+      },
+      {
+        "file": "service.ts",
+        "route": "/users",
+        "variable": "prisma"
+      },
+      {
+        "file": "service.ts",
+        "route": "/users",
+        "variable": "usersRepository"
+      },
+      {
+        "file": "service.ts",
+        "route": "/users",
+        "variable": "usersRepository"
+      }
+    ]
+  },
+  "optional/is-null-filter": {
+    "rows": [
+      {
+        "fn": "constructor"
+      },
+      {
+        "fn": "constructor"
+      },
+      {
+        "fn": "constructor"
+      },
+      {
+        "fn": "constructor"
+      }
+    ]
+  },
+  "where/equality-string": {
+    "rows": [
+      {
+        "name": "listUsers",
+        "line": 13
+      },
+      {
+        "name": "listUsers",
+        "line": 55
+      }
+    ]
+  },
+  "where/inequality": {
+    "rows": [
+      {
+        "name": "bootstrap"
+      },
+      {
+        "name": "constructor"
+      },
+      {
+        "name": "constructor"
+      },
+      {
+        "name": "constructor"
+      },
+      {
+        "name": "constructor"
+      },
+      {
+        "name": "createUser"
+      },
+      {
+        "name": "createUser"
+      },
+      {
+        "name": "findUsers"
+      },
+      {
+        "name": "handleJob"
+      },
+      {
+        "name": "listViaRepository"
+      },
+      {
+        "name": "readAudit"
+      }
+    ]
+  },
+  "where/int-compare": {
+    "rows": [
+      {
+        "name": "AuditModel.findOne",
+        "line": 16
+      },
+      {
+        "name": "Object.create",
+        "line": 11
+      },
+      {
+        "name": "aliasedPrisma.user.findFirst",
+        "line": 15
+      },
+      {
+        "name": "createKnex",
+        "line": 10
+      },
+      {
+        "name": "createPrismaClient",
+        "line": 5
+      },
+      {
+        "name": "createRepository",
+        "line": 7
+      },
+      {
+        "name": "createSequelizeModel",
+        "line": 9
+      },
+      {
+        "name": "defineModel",
+        "line": 8
+      },
+      {
+        "name": "new Client",
+        "line": 6
+      },
+      {
+        "name": "prisma.user.findMany",
+        "line": 14
+      },
+      {
+        "name": "res.json",
+        "line": 17
+      }
+    ]
+  },
+  "where/bool-compare": {
+    "rows": [
+      {
+        "name": "bootstrap"
+      },
+      {
+        "name": "constructor"
+      },
+      {
+        "name": "constructor"
+      },
+      {
+        "name": "constructor"
+      },
+      {
+        "name": "constructor"
+      },
+      {
+        "name": "createUser"
+      },
+      {
+        "name": "createUser"
+      },
+      {
+        "name": "findUsers"
+      },
+      {
+        "name": "handleJob"
+      },
+      {
+        "name": "listUsers"
+      },
+      {
+        "name": "listUsers"
+      },
+      {
+        "name": "listViaRepository"
+      },
+      {
+        "name": "readAudit"
+      }
+    ]
+  },
+  "where/bool-bare": {
+    "rows": [
+      {
+        "name": "bootstrap"
+      },
+      {
+        "name": "createUser"
+      },
+      {
+        "name": "createUser"
+      },
+      {
+        "name": "findUsers"
+      },
+      {
+        "name": "handleJob"
+      },
+      {
+        "name": "listUsers"
+      },
+      {
+        "name": "listUsers"
+      },
+      {
+        "name": "listViaRepository"
+      },
+      {
+        "name": "readAudit"
+      }
+    ]
+  },
+  "where/not": {
+    "rows": [
+      {
+        "name": "bootstrap"
+      },
+      {
+        "name": "constructor"
+      },
+      {
+        "name": "constructor"
+      },
+      {
+        "name": "constructor"
+      },
+      {
+        "name": "constructor"
+      },
+      {
+        "name": "createUser"
+      },
+      {
+        "name": "createUser"
+      },
+      {
+        "name": "findUsers"
+      },
+      {
+        "name": "handleJob"
+      },
+      {
+        "name": "listUsers"
+      },
+      {
+        "name": "listUsers"
+      },
+      {
+        "name": "listViaRepository"
+      },
+      {
+        "name": "readAudit"
+      }
+    ]
+  },
+  "where/or": {
+    "rows": [
+      {
+        "name": "bootstrap"
+      },
+      {
+        "name": "createUser"
+      },
+      {
+        "name": "createUser"
+      },
+      {
+        "name": "findUsers"
+      },
+      {
+        "name": "handleJob"
+      },
+      {
+        "name": "listUsers"
+      },
+      {
+        "name": "listUsers"
+      },
+      {
+        "name": "listViaRepository"
+      },
+      {
+        "name": "readAudit"
+      }
+    ]
+  },
+  "where/xor": {
+    "rows": [
+      {
+        "name": "bootstrap"
+      },
+      {
+        "name": "createUser"
+      },
+      {
+        "name": "createUser"
+      },
+      {
+        "name": "findUsers"
+      },
+      {
+        "name": "handleJob"
+      },
+      {
+        "name": "listUsers"
+      },
+      {
+        "name": "listUsers"
+      },
+      {
+        "name": "listViaRepository"
+      },
+      {
+        "name": "readAudit"
+      }
+    ]
+  },
+  "where/precedence": {
+    "rows": [
+      {
+        "name": "bootstrap"
+      },
+      {
+        "name": "createUser"
+      },
+      {
+        "name": "createUser"
+      },
+      {
+        "name": "findUsers"
+      },
+      {
+        "name": "handleJob"
+      },
+      {
+        "name": "listUsers"
+      },
+      {
+        "name": "listUsers"
+      },
+      {
+        "name": "listViaRepository"
+      },
+      {
+        "name": "readAudit"
+      }
+    ]
+  },
+  "where/parentheses": {
+    "rows": [
+      {
+        "name": "bootstrap"
+      },
+      {
+        "name": "createUser"
+      },
+      {
+        "name": "createUser"
+      },
+      {
+        "name": "findUsers"
+      },
+      {
+        "name": "handleJob"
+      },
+      {
+        "name": "listUsers"
+      },
+      {
+        "name": "listUsers"
+      },
+      {
+        "name": "listViaRepository"
+      },
+      {
+        "name": "readAudit"
+      }
+    ]
+  },
+  "where/contains-op": {
+    "rows": [
+      {
+        "name": "createUser"
+      },
+      {
+        "name": "createUser"
+      },
+      {
+        "name": "findUsers"
+      },
+      {
+        "name": "listUsers"
+      },
+      {
+        "name": "listUsers"
+      }
+    ]
+  },
+  "where/contains-fn": {
+    "rows": [
+      {
+        "name": "createUser"
+      },
+      {
+        "name": "createUser"
+      },
+      {
+        "name": "findUsers"
+      },
+      {
+        "name": "listUsers"
+      },
+      {
+        "name": "listUsers"
+      }
+    ]
+  },
+  "where/starts-with": {
+    "rows": []
+  },
+  "where/ends-with": {
+    "rows": [
+      {
+        "path": "service.ts"
+      }
+    ]
+  },
+  "where/in-list": {
+    "rows": [
+      {
+        "method": "GET",
+        "path": "/users"
+      }
+    ]
+  },
+  "where/in-empty-list": {
+    "rows": []
+  },
+  "where/not-in": {
+    "rows": [
+      {
+        "method": "POST",
+        "path": "/users"
+      }
+    ]
+  },
+  "where/is-null": {
+    "rows": [
+      {
+        "name": "bootstrap"
+      },
+      {
+        "name": "createUser"
+      },
+      {
+        "name": "handleJob"
+      },
+      {
+        "name": "listUsers"
+      }
+    ]
+  },
+  "where/is-not-null": {
+    "rows": [
+      {
+        "name": "constructor",
+        "className": "MongooseBackedRepository"
+      },
+      {
+        "name": "constructor",
+        "className": "PrismaBackedRepository"
+      },
+      {
+        "name": "constructor",
+        "className": "TypeOrmBackedRepository"
+      },
+      {
+        "name": "constructor",
+        "className": "UserService"
+      },
+      {
+        "name": "createUser",
+        "className": "TypeOrmBackedRepository"
+      },
+      {
+        "name": "findUsers",
+        "className": "PrismaBackedRepository"
+      },
+      {
+        "name": "listUsers",
+        "className": "KnexBackedRepository"
+      },
+      {
+        "name": "listViaRepository",
+        "className": "UserService"
+      },
+      {
+        "name": "readAudit",
+        "className": "MongooseBackedRepository"
+      }
+    ]
+  },
+  "where/null-equality": {
+    "rows": []
+  },
+  "where/null-in-or": {
+    "rows": [
+      {
+        "name": "bootstrap"
+      },
+      {
+        "name": "constructor"
+      },
+      {
+        "name": "constructor"
+      },
+      {
+        "name": "constructor"
+      },
+      {
+        "name": "constructor"
+      },
+      {
+        "name": "createUser"
+      },
+      {
+        "name": "createUser"
+      },
+      {
+        "name": "findUsers"
+      },
+      {
+        "name": "handleJob"
+      },
+      {
+        "name": "listUsers"
+      },
+      {
+        "name": "listUsers"
+      },
+      {
+        "name": "listViaRepository"
+      },
+      {
+        "name": "readAudit"
+      }
+    ]
+  },
+  "where/null-not": {
+    "rows": [
+      {
+        "name": "constructor"
+      },
+      {
+        "name": "constructor"
+      },
+      {
+        "name": "constructor"
+      },
+      {
+        "name": "constructor"
+      },
+      {
+        "name": "createUser"
+      },
+      {
+        "name": "findUsers"
+      },
+      {
+        "name": "listUsers"
+      },
+      {
+        "name": "listViaRepository"
+      },
+      {
+        "name": "readAudit"
+      }
+    ]
+  },
+  "where/string-compare": {
+    "rows": [
+      {
+        "name": "readAudit"
+      }
+    ]
+  },
+  "where/case-sensitive": {
+    "rows": []
+  },
+  "where/to-lower": {
+    "rows": [
+      {
+        "name": "listUsers"
+      },
+      {
+        "name": "listUsers"
+      }
+    ]
+  },
+  "where/upper": {
+    "rows": [
+      {
+        "name": "listUsers"
+      },
+      {
+        "name": "listUsers"
+      },
+      {
+        "name": "listViaRepository"
+      }
+    ]
+  },
+  "where/cross-variable": {
+    "rows": [
+      {
+        "fn": "bootstrap",
+        "call": "NestFactory.create"
+      },
+      {
+        "fn": "createUser",
+        "call": "prisma.user.update"
+      },
+      {
+        "fn": "createUser",
+        "call": "res.status"
+      },
+      {
+        "fn": "createUser",
+        "call": "res.status(201).json"
+      },
+      {
+        "fn": "createUser",
+        "call": "this.usersRepository.save"
+      },
+      {
+        "fn": "createUser",
+        "call": "usersRepository.save"
+      },
+      {
+        "fn": "findUsers",
+        "call": "this.prisma.user.findMany"
+      },
+      {
+        "fn": "handleJob",
+        "call": "Job.destroy"
+      },
+      {
+        "fn": "listUsers",
+        "call": "AuditModel.findOne"
+      },
+      {
+        "fn": "listUsers",
+        "call": "aliasedPrisma.user.findFirst"
+      },
+      {
+        "fn": "listUsers",
+        "call": "knex"
+      },
+      {
+        "fn": "listUsers",
+        "call": "knex('users').select"
+      },
+      {
+        "fn": "listUsers",
+        "call": "prisma.user.findMany"
+      },
+      {
+        "fn": "listUsers",
+        "call": "res.json"
+      },
+      {
+        "fn": "listViaRepository",
+        "call": "this.repository.findUsers"
+      },
+      {
+        "fn": "readAudit",
+        "call": "this.AuditModel.findOne"
+      }
+    ]
+  },
+  "where/after-multi-match": {
+    "rows": []
+  },
+  "where/arithmetic": {
+    "rows": [
+      {
+        "name": "bootstrap",
+        "span": 3
+      },
+      {
+        "name": "createUser",
+        "span": 2
+      },
+      {
+        "name": "createUser",
+        "span": 4
+      },
+      {
+        "name": "findUsers",
+        "span": 2
+      },
+      {
+        "name": "handleJob",
+        "span": 2
+      },
+      {
+        "name": "listUsers",
+        "span": 2
+      },
+      {
+        "name": "listUsers",
+        "span": 5
+      },
+      {
+        "name": "listViaRepository",
+        "span": 2
+      },
+      {
+        "name": "readAudit",
+        "span": 2
+      }
+    ]
+  },
+  "where/param-string": {
+    "rows": [
+      {
+        "name": "listUsers"
+      },
+      {
+        "name": "listUsers"
+      }
+    ]
+  },
+  "where/param-int": {
+    "rows": [
+      {
+        "name": "AuditModel.findOne",
+        "line": 16
+      },
+      {
+        "name": "Job.destroy",
+        "line": 27
+      },
+      {
+        "name": "NestFactory.create",
+        "line": 69
+      },
+      {
+        "name": "Object.create",
+        "line": 11
+      },
+      {
+        "name": "aliasedPrisma.user.findFirst",
+        "line": 15
+      },
+      {
+        "name": "app.get",
+        "line": 73
+      },
+      {
+        "name": "app.post",
+        "line": 74
+      },
+      {
+        "name": "knex",
+        "line": 56
+      },
+      {
+        "name": "knex('users').select",
+        "line": 56
+      },
+      {
+        "name": "prisma.user.findMany",
+        "line": 14
+      },
+      {
+        "name": "prisma.user.update",
+        "line": 22
+      },
+      {
+        "name": "queue.process",
+        "line": 75
+      },
+      {
+        "name": "res.json",
+        "line": 17
+      },
+      {
+        "name": "res.status",
+        "line": 23
+      },
+      {
+        "name": "res.status(201).json",
+        "line": 23
+      },
+      {
+        "name": "this.AuditModel.findOne",
+        "line": 50
+      },
+      {
+        "name": "this.prisma.user.findMany",
+        "line": 34
+      },
+      {
+        "name": "this.repository.findUsers",
+        "line": 64
+      },
+      {
+        "name": "this.usersRepository.save",
+        "line": 42
+      },
+      {
+        "name": "usersRepository.save",
+        "line": 21
+      }
+    ]
+  },
+  "where/param-in-return": {
+    "rows": [
+      {
+        "kind": "route",
+        "path": "/users"
+      },
+      {
+        "kind": "route",
+        "path": "/users"
+      }
+    ]
+  },
+  "return/literals": {
+    "rows": [
+      {
+        "one": 1,
+        "two": "two",
+        "yes": true,
+        "nothing": null,
+        "half": 1.5
+      }
+    ]
+  },
+  "return/arithmetic": {
+    "rows": [
+      {
+        "div": 3,
+        "mod": 1,
+        "expr": 14,
+        "neg": -5,
+        "fdiv": 3.5
+      }
+    ]
+  },
+  "return/string-concat": {
+    "rows": [
+      {
+        "route": "GET /users"
+      },
+      {
+        "route": "POST /users"
+      }
+    ]
+  },
+  "return/list-literal": {
+    "rows": [
+      {
+        "list": [
+          1,
+          2,
+          3
+        ],
+        "n": 2
+      }
+    ]
+  },
+  "return/string-functions": {
+    "rows": [
+      {
+        "name": "bootstrap",
+        "lower": "bootstrap",
+        "upper": "BOOTSTRAP",
+        "length": 9
+      },
+      {
+        "name": "constructor",
+        "lower": "constructor",
+        "upper": "CONSTRUCTOR",
+        "length": 11
+      },
+      {
+        "name": "constructor",
+        "lower": "constructor",
+        "upper": "CONSTRUCTOR",
+        "length": 11
+      },
+      {
+        "name": "constructor",
+        "lower": "constructor",
+        "upper": "CONSTRUCTOR",
+        "length": 11
+      },
+      {
+        "name": "constructor",
+        "lower": "constructor",
+        "upper": "CONSTRUCTOR",
+        "length": 11
+      },
+      {
+        "name": "createUser",
+        "lower": "createuser",
+        "upper": "CREATEUSER",
+        "length": 10
+      },
+      {
+        "name": "createUser",
+        "lower": "createuser",
+        "upper": "CREATEUSER",
+        "length": 10
+      },
+      {
+        "name": "findUsers",
+        "lower": "findusers",
+        "upper": "FINDUSERS",
+        "length": 9
+      },
+      {
+        "name": "handleJob",
+        "lower": "handlejob",
+        "upper": "HANDLEJOB",
+        "length": 9
+      },
+      {
+        "name": "listUsers",
+        "lower": "listusers",
+        "upper": "LISTUSERS",
+        "length": 9
+      },
+      {
+        "name": "listUsers",
+        "lower": "listusers",
+        "upper": "LISTUSERS",
+        "length": 9
+      },
+      {
+        "name": "listViaRepository",
+        "lower": "listviarepository",
+        "upper": "LISTVIAREPOSITORY",
+        "length": 17
+      },
+      {
+        "name": "readAudit",
+        "lower": "readaudit",
+        "upper": "READAUDIT",
+        "length": 9
+      }
+    ]
+  },
+  "return/coalesce": {
+    "rows": [
+      {
+        "name": "bootstrap",
+        "cls": "none"
+      },
+      {
+        "name": "constructor",
+        "cls": "MongooseBackedRepository"
+      },
+      {
+        "name": "constructor",
+        "cls": "PrismaBackedRepository"
+      },
+      {
+        "name": "constructor",
+        "cls": "TypeOrmBackedRepository"
+      },
+      {
+        "name": "constructor",
+        "cls": "UserService"
+      },
+      {
+        "name": "createUser",
+        "cls": "TypeOrmBackedRepository"
+      },
+      {
+        "name": "createUser",
+        "cls": "none"
+      },
+      {
+        "name": "findUsers",
+        "cls": "PrismaBackedRepository"
+      },
+      {
+        "name": "handleJob",
+        "cls": "none"
+      },
+      {
+        "name": "listUsers",
+        "cls": "KnexBackedRepository"
+      },
+      {
+        "name": "listUsers",
+        "cls": "none"
+      },
+      {
+        "name": "listViaRepository",
+        "cls": "UserService"
+      },
+      {
+        "name": "readAudit",
+        "cls": "MongooseBackedRepository"
+      }
+    ]
+  },
+  "return/case": {
+    "rows": [
+      {
+        "name": "bootstrap",
+        "visibility": "private"
+      },
+      {
+        "name": "constructor",
+        "visibility": "private"
+      },
+      {
+        "name": "constructor",
+        "visibility": "private"
+      },
+      {
+        "name": "constructor",
+        "visibility": "private"
+      },
+      {
+        "name": "constructor",
+        "visibility": "private"
+      },
+      {
+        "name": "createUser",
+        "visibility": "private"
+      },
+      {
+        "name": "createUser",
+        "visibility": "private"
+      },
+      {
+        "name": "findUsers",
+        "visibility": "private"
+      },
+      {
+        "name": "handleJob",
+        "visibility": "private"
+      },
+      {
+        "name": "listUsers",
+        "visibility": "private"
+      },
+      {
+        "name": "listUsers",
+        "visibility": "private"
+      },
+      {
+        "name": "listViaRepository",
+        "visibility": "private"
+      },
+      {
+        "name": "readAudit",
+        "visibility": "private"
+      }
+    ]
+  },
+  "return/case-simple": {
+    "rows": [
+      {
+        "path": "/users",
+        "kind": "read"
+      },
+      {
+        "path": "/users",
+        "kind": "write"
+      }
+    ]
+  },
+  "return/label-function": {
+    "rows": [
+      {
+        "name": "AuditModel",
+        "label": "Variable"
+      },
+      {
+        "name": "Job",
+        "label": "Variable"
+      },
+      {
+        "name": "aliasedPrisma",
+        "label": "Variable"
+      },
+      {
+        "name": "app",
+        "label": "Variable"
+      },
+      {
+        "name": "bootstrap",
+        "label": "Function"
+      },
+      {
+        "name": "createUser",
+        "label": "Function"
+      },
+      {
+        "name": "handleJob",
+        "label": "Function"
+      },
+      {
+        "name": "knex",
+        "label": "Variable"
+      },
+      {
+        "name": "listUsers",
+        "label": "Function"
+      },
+      {
+        "name": "plainObject",
+        "label": "Variable"
+      },
+      {
+        "name": "prisma",
+        "label": "Variable"
+      },
+      {
+        "name": "usersRepository",
+        "label": "Variable"
+      }
+    ]
+  },
+  "return/missing-property-null": {
+    "rows": [
+      {
+        "fn": "createUser",
+        "hook": "handler"
+      },
+      {
+        "fn": "listUsers",
+        "hook": "handler"
+      }
+    ]
+  },
+  "return/distinct": {
+    "rows": [
+      {
+        "method": "GET"
+      },
+      {
+        "method": "POST"
+      }
+    ]
+  },
+  "return/distinct-multi": {
+    "rows": [
+      {
+        "file": "service.ts",
+        "exported": false
+      }
+    ]
+  },
+  "return/unaliased": {
+    "rows": [
+      {
+        "r.path": "/users",
+        "r.method": "GET"
+      },
+      {
+        "r.path": "/users",
+        "r.method": "POST"
+      }
+    ]
+  },
+  "return/property-unlabeled-mixed": {
+    "rows": [
+      {
+        "name": "AuditModel",
+        "kind": "const"
+      },
+      {
+        "name": "Job",
+        "kind": "const"
+      },
+      {
+        "name": "aliasedPrisma",
+        "kind": "const"
+      },
+      {
+        "name": "app",
+        "kind": "const"
+      },
+      {
+        "name": "bootstrap",
+        "kind": "function_declaration"
+      },
+      {
+        "name": "createUser",
+        "kind": "function_declaration"
+      },
+      {
+        "name": "handleJob",
+        "kind": "function_declaration"
+      },
+      {
+        "name": "knex",
+        "kind": "const"
+      },
+      {
+        "name": "listUsers",
+        "kind": "function_declaration"
+      },
+      {
+        "name": "plainObject",
+        "kind": "const"
+      },
+      {
+        "name": "prisma",
+        "kind": "const"
+      },
+      {
+        "name": "usersRepository",
+        "kind": "const"
+      }
+    ]
+  },
+  "agg/count-group": {
+    "rows": [
+      {
+        "file": "service.ts",
+        "functions": 4
+      }
+    ]
+  },
+  "agg/count-distinct": {
+    "rows": [
+      {
+        "methods": 2,
+        "total": 2
+      }
+    ]
+  },
+  "agg/count-nulls": {
+    "rows": [
+      {
+        "withClass": 9,
+        "total": 13
+      }
+    ]
+  },
+  "agg/min-max": {
+    "rows": [
+      {
+        "first": 4,
+        "last": 75
+      }
+    ]
+  },
+  "agg/min-max-string": {
+    "rows": [
+      {
+        "first": "bootstrap",
+        "last": "readAudit"
+      }
+    ]
+  },
+  "agg/sum-avg": {
+    "rows": [
+      {
+        "total": 831,
+        "mean": 30.77777777777778
+      }
+    ]
+  },
+  "agg/collect-sorted": {
+    "rows": [
+      {
+        "paths": [
+          "/users",
+          "/users"
+        ]
+      }
+    ]
+  },
+  "agg/collect-size": {
+    "rows": [
+      {
+        "file": "service.ts",
+        "n": 4
+      }
+    ]
+  },
+  "agg/collect-skips-null": {
+    "rows": [
+      {
+        "n": 9
+      }
+    ]
+  },
+  "agg/empty-input": {
+    "rows": [
+      {
+        "count": 0,
+        "first": null,
+        "names": null
+      }
+    ]
+  },
+  "agg/empty-input-grouped": {
+    "rows": []
+  },
+  "agg/expression-of-aggregates": {
+    "rows": [
+      {
+        "span": 71
+      }
+    ]
+  },
+  "agg/order-by-aggregate": {
+    "rows": [
+      {
+        "file": "service.ts",
+        "n": 8
+      }
+    ]
+  },
+  "with/projection": {
+    "rows": [
+      {
+        "name": "bootstrap",
+        "line": 68
+      },
+      {
+        "name": "constructor",
+        "line": 31
+      },
+      {
+        "name": "constructor",
+        "line": 39
+      },
+      {
+        "name": "constructor",
+        "line": 47
+      },
+      {
+        "name": "constructor",
+        "line": 61
+      },
+      {
+        "name": "createUser",
+        "line": 20
+      },
+      {
+        "name": "createUser",
+        "line": 41
+      },
+      {
+        "name": "findUsers",
+        "line": 33
+      },
+      {
+        "name": "handleJob",
+        "line": 26
+      },
+      {
+        "name": "listUsers",
+        "line": 13
+      },
+      {
+        "name": "listUsers",
+        "line": 55
+      },
+      {
+        "name": "listViaRepository",
+        "line": 63
+      },
+      {
+        "name": "readAudit",
+        "line": 49
+      }
+    ]
+  },
+  "with/rename-node": {
+    "rows": [
+      {
+        "file": "service.ts",
+        "source": "service.ts",
+        "fn": "bootstrap"
+      },
+      {
+        "file": "service.ts",
+        "source": "service.ts",
+        "fn": "createUser"
+      },
+      {
+        "file": "service.ts",
+        "source": "service.ts",
+        "fn": "handleJob"
+      },
+      {
+        "file": "service.ts",
+        "source": "service.ts",
+        "fn": "listUsers"
+      }
+    ]
+  },
+  "with/where-after": {
+    "rows": [
+      {
+        "file": "service.ts",
+        "n": 4
+      }
+    ]
+  },
+  "with/distinct": {
+    "rows": [
+      {
+        "method": "GET"
+      },
+      {
+        "method": "POST"
+      }
+    ]
+  },
+  "with/order-limit": {
+    "rows": [
+      {
+        "name": "queue.process",
+        "line": 75
+      },
+      {
+        "name": "app.post",
+        "line": 74
+      },
+      {
+        "name": "app.get",
+        "line": 73
+      }
+    ]
+  },
+  "with/chain": {
+    "rows": []
+  },
+  "with/then-match": {
+    "rows": [
+      {
+        "file": "service.ts",
+        "fn": "bootstrap"
+      },
+      {
+        "file": "service.ts",
+        "fn": "createUser"
+      },
+      {
+        "file": "service.ts",
+        "fn": "handleJob"
+      },
+      {
+        "file": "service.ts",
+        "fn": "listUsers"
+      }
+    ]
+  },
+  "order/single-asc": {
+    "rows": [
+      {
+        "name": "express",
+        "line": 4,
+        "col": 12
+      },
+      {
+        "name": "createPrismaClient",
+        "line": 5,
+        "col": 15
+      },
+      {
+        "name": "new Client",
+        "line": 6,
+        "col": 22
+      },
+      {
+        "name": "createRepository",
+        "line": 7,
+        "col": 24
+      },
+      {
+        "name": "defineModel",
+        "line": 8,
+        "col": 19
+      },
+      {
+        "name": "createSequelizeModel",
+        "line": 9,
+        "col": 12
+      },
+      {
+        "name": "createKnex",
+        "line": 10,
+        "col": 13
+      },
+      {
+        "name": "Object.create",
+        "line": 11,
+        "col": 20
+      },
+      {
+        "name": "prisma.user.findMany",
+        "line": 14,
+        "col": 22
+      },
+      {
+        "name": "aliasedPrisma.user.findFirst",
+        "line": 15,
+        "col": 29
+      },
+      {
+        "name": "AuditModel.findOne",
+        "line": 16,
+        "col": 22
+      },
+      {
+        "name": "res.json",
+        "line": 17,
+        "col": 2
+      },
+      {
+        "name": "usersRepository.save",
+        "line": 21,
+        "col": 21
+      },
+      {
+        "name": "prisma.user.update",
+        "line": 22,
+        "col": 8
+      },
+      {
+        "name": "res.status",
+        "line": 23,
+        "col": 2
+      },
+      {
+        "name": "res.status(201).json",
+        "line": 23,
+        "col": 2
+      },
+      {
+        "name": "Job.destroy",
+        "line": 27,
+        "col": 8
+      },
+      {
+        "name": "this.prisma.user.findMany",
+        "line": 34,
+        "col": 11
+      },
+      {
+        "name": "this.usersRepository.save",
+        "line": 42,
+        "col": 11
+      },
+      {
+        "name": "this.AuditModel.findOne",
+        "line": 50,
+        "col": 11
+      },
+      {
+        "name": "knex",
+        "line": 56,
+        "col": 11
+      },
+      {
+        "name": "knex('users').select",
+        "line": 56,
+        "col": 11
+      },
+      {
+        "name": "this.repository.findUsers",
+        "line": 64,
+        "col": 11
+      },
+      {
+        "name": "NestFactory.create",
+        "line": 69,
+        "col": 8
+      },
+      {
+        "name": "app.get",
+        "line": 73,
+        "col": 0
+      },
+      {
+        "name": "app.post",
+        "line": 74,
+        "col": 0
+      },
+      {
+        "name": "queue.process",
+        "line": 75,
+        "col": 0
+      }
+    ]
+  },
+  "order/desc": {
+    "rows": [
+      {
+        "name": "queue.process",
+        "line": 75,
+        "col": 0
+      },
+      {
+        "name": "app.post",
+        "line": 74,
+        "col": 0
+      },
+      {
+        "name": "app.get",
+        "line": 73,
+        "col": 0
+      },
+      {
+        "name": "NestFactory.create",
+        "line": 69,
+        "col": 8
+      },
+      {
+        "name": "this.repository.findUsers",
+        "line": 64,
+        "col": 11
+      },
+      {
+        "name": "knex('users').select",
+        "line": 56,
+        "col": 11
+      },
+      {
+        "name": "knex",
+        "line": 56,
+        "col": 11
+      },
+      {
+        "name": "this.AuditModel.findOne",
+        "line": 50,
+        "col": 11
+      },
+      {
+        "name": "this.usersRepository.save",
+        "line": 42,
+        "col": 11
+      },
+      {
+        "name": "this.prisma.user.findMany",
+        "line": 34,
+        "col": 11
+      },
+      {
+        "name": "Job.destroy",
+        "line": 27,
+        "col": 8
+      },
+      {
+        "name": "res.status(201).json",
+        "line": 23,
+        "col": 2
+      },
+      {
+        "name": "res.status",
+        "line": 23,
+        "col": 2
+      },
+      {
+        "name": "prisma.user.update",
+        "line": 22,
+        "col": 8
+      },
+      {
+        "name": "usersRepository.save",
+        "line": 21,
+        "col": 21
+      },
+      {
+        "name": "res.json",
+        "line": 17,
+        "col": 2
+      },
+      {
+        "name": "AuditModel.findOne",
+        "line": 16,
+        "col": 22
+      },
+      {
+        "name": "aliasedPrisma.user.findFirst",
+        "line": 15,
+        "col": 29
+      },
+      {
+        "name": "prisma.user.findMany",
+        "line": 14,
+        "col": 22
+      },
+      {
+        "name": "Object.create",
+        "line": 11,
+        "col": 20
+      },
+      {
+        "name": "createKnex",
+        "line": 10,
+        "col": 13
+      },
+      {
+        "name": "createSequelizeModel",
+        "line": 9,
+        "col": 12
+      },
+      {
+        "name": "defineModel",
+        "line": 8,
+        "col": 19
+      },
+      {
+        "name": "createRepository",
+        "line": 7,
+        "col": 24
+      },
+      {
+        "name": "new Client",
+        "line": 6,
+        "col": 22
+      },
+      {
+        "name": "createPrismaClient",
+        "line": 5,
+        "col": 15
+      },
+      {
+        "name": "express",
+        "line": 4,
+        "col": 12
+      }
+    ]
+  },
+  "order/by-alias": {
+    "rows": [
+      {
+        "name": "bootstrap"
+      },
+      {
+        "name": "constructor"
+      },
+      {
+        "name": "constructor"
+      },
+      {
+        "name": "constructor"
+      },
+      {
+        "name": "constructor"
+      },
+      {
+        "name": "createUser"
+      },
+      {
+        "name": "createUser"
+      },
+      {
+        "name": "findUsers"
+      },
+      {
+        "name": "handleJob"
+      },
+      {
+        "name": "listUsers"
+      },
+      {
+        "name": "listUsers"
+      },
+      {
+        "name": "listViaRepository"
+      },
+      {
+        "name": "readAudit"
+      }
+    ]
+  },
+  "order/nulls-asc": {
+    "rows": [
+      {
+        "name": "listUsers",
+        "cls": "KnexBackedRepository"
+      },
+      {
+        "name": "constructor",
+        "cls": "MongooseBackedRepository"
+      },
+      {
+        "name": "readAudit",
+        "cls": "MongooseBackedRepository"
+      },
+      {
+        "name": "constructor",
+        "cls": "PrismaBackedRepository"
+      },
+      {
+        "name": "findUsers",
+        "cls": "PrismaBackedRepository"
+      },
+      {
+        "name": "constructor",
+        "cls": "TypeOrmBackedRepository"
+      },
+      {
+        "name": "createUser",
+        "cls": "TypeOrmBackedRepository"
+      },
+      {
+        "name": "constructor",
+        "cls": "UserService"
+      },
+      {
+        "name": "listViaRepository",
+        "cls": "UserService"
+      },
+      {
+        "name": "bootstrap",
+        "cls": null
+      },
+      {
+        "name": "createUser",
+        "cls": null
+      },
+      {
+        "name": "handleJob",
+        "cls": null
+      },
+      {
+        "name": "listUsers",
+        "cls": null
+      }
+    ]
+  },
+  "order/nulls-desc": {
+    "rows": [
+      {
+        "name": "bootstrap",
+        "cls": null
+      },
+      {
+        "name": "createUser",
+        "cls": null
+      },
+      {
+        "name": "handleJob",
+        "cls": null
+      },
+      {
+        "name": "listUsers",
+        "cls": null
+      },
+      {
+        "name": "constructor",
+        "cls": "UserService"
+      },
+      {
+        "name": "listViaRepository",
+        "cls": "UserService"
+      },
+      {
+        "name": "constructor",
+        "cls": "TypeOrmBackedRepository"
+      },
+      {
+        "name": "createUser",
+        "cls": "TypeOrmBackedRepository"
+      },
+      {
+        "name": "constructor",
+        "cls": "PrismaBackedRepository"
+      },
+      {
+        "name": "findUsers",
+        "cls": "PrismaBackedRepository"
+      },
+      {
+        "name": "constructor",
+        "cls": "MongooseBackedRepository"
+      },
+      {
+        "name": "readAudit",
+        "cls": "MongooseBackedRepository"
+      },
+      {
+        "name": "listUsers",
+        "cls": "KnexBackedRepository"
+      }
+    ]
+  },
+  "order/booleans": {
+    "rows": [
+      {
+        "name": "bootstrap",
+        "e": false
+      },
+      {
+        "name": "constructor",
+        "e": false
+      },
+      {
+        "name": "constructor",
+        "e": false
+      },
+      {
+        "name": "constructor",
+        "e": false
+      },
+      {
+        "name": "constructor",
+        "e": false
+      },
+      {
+        "name": "createUser",
+        "e": false
+      },
+      {
+        "name": "createUser",
+        "e": false
+      },
+      {
+        "name": "findUsers",
+        "e": false
+      },
+      {
+        "name": "handleJob",
+        "e": false
+      },
+      {
+        "name": "listUsers",
+        "e": false
+      },
+      {
+        "name": "listUsers",
+        "e": false
+      },
+      {
+        "name": "listViaRepository",
+        "e": false
+      },
+      {
+        "name": "readAudit",
+        "e": false
+      }
+    ]
+  },
+  "order/string-case": {
+    "rows": [
+      {
+        "name": "Audit"
+      },
+      {
+        "name": "AuditModel"
+      },
+      {
+        "name": "AuditModel.findOne"
+      },
+      {
+        "name": "Job"
+      },
+      {
+        "name": "Job.destroy"
+      },
+      {
+        "name": "KnexBackedRepository"
+      },
+      {
+        "name": "MongooseBackedRepository"
+      },
+      {
+        "name": "NestFactory.create"
+      },
+      {
+        "name": "Object.create"
+      },
+      {
+        "name": "PrismaBackedRepository"
+      },
+      {
+        "name": "TypeOrmBackedRepository"
+      },
+      {
+        "name": "User"
+      },
+      {
+        "name": "UserService"
+      },
+      {
+        "name": "aliasedPrisma"
+      },
+      {
+        "name": "aliasedPrisma.user.findFirst"
+      },
+      {
+        "name": "app"
+      },
+      {
+        "name": "app.get"
+      },
+      {
+        "name": "app.post"
+      },
+      {
+        "name": "bootstrap"
+      },
+      {
+        "name": "constructor"
+      },
+      {
+        "name": "createKnex"
+      },
+      {
+        "name": "createPrismaClient"
+      },
+      {
+        "name": "createRepository"
+      },
+      {
+        "name": "createSequelizeModel"
+      },
+      {
+        "name": "createUser"
+      },
+      {
+        "name": "data-access"
+      },
+      {
+        "name": "defineModel"
+      },
+      {
+        "name": "express"
+      },
+      {
+        "name": "findUsers"
+      },
+      {
+        "name": "handleJob"
+      },
+      {
+        "name": "knex"
+      },
+      {
+        "name": "knex('users').select"
+      },
+      {
+        "name": "listUsers"
+      },
+      {
+        "name": "listViaRepository"
+      },
+      {
+        "name": "new Client"
+      },
+      {
+        "name": "plainObject"
+      },
+      {
+        "name": "prisma"
+      },
+      {
+        "name": "prisma.user.findMany"
+      },
+      {
+        "name": "prisma.user.update"
+      },
+      {
+        "name": "queue.process"
+      },
+      {
+        "name": "readAudit"
+      },
+      {
+        "name": "repository"
+      },
+      {
+        "name": "res.json"
+      },
+      {
+        "name": "res.status"
+      },
+      {
+        "name": "res.status(201).json"
+      },
+      {
+        "name": "this.AuditModel.findOne"
+      },
+      {
+        "name": "this.prisma.user.findMany"
+      },
+      {
+        "name": "this.repository.findUsers"
+      },
+      {
+        "name": "this.usersRepository.save"
+      },
+      {
+        "name": "user"
+      },
+      {
+        "name": "users"
+      },
+      {
+        "name": "usersRepository"
+      },
+      {
+        "name": "usersRepository.save"
+      }
+    ]
+  },
+  "order/skip-limit": {
+    "rows": [
+      {
+        "name": "new Client",
+        "line": 6,
+        "col": 22
+      },
+      {
+        "name": "createRepository",
+        "line": 7,
+        "col": 24
+      },
+      {
+        "name": "defineModel",
+        "line": 8,
+        "col": 19
+      }
+    ]
+  },
+  "order/limit-zero": {
+    "rows": []
+  },
+  "order/skip-past-end": {
+    "rows": []
+  },
+  "order/expression": {
+    "rows": [
+      {
+        "name": "listViaRepository"
+      },
+      {
+        "name": "constructor"
+      },
+      {
+        "name": "constructor"
+      },
+      {
+        "name": "constructor"
+      },
+      {
+        "name": "constructor"
+      },
+      {
+        "name": "createUser"
+      },
+      {
+        "name": "createUser"
+      },
+      {
+        "name": "bootstrap"
+      },
+      {
+        "name": "findUsers"
+      },
+      {
+        "name": "handleJob"
+      },
+      {
+        "name": "listUsers"
+      },
+      {
+        "name": "listUsers"
+      },
+      {
+        "name": "readAudit"
+      }
+    ]
+  },
+  "order/not-in-return": {
+    "rows": [
+      {
+        "name": "listUsers"
+      },
+      {
+        "name": "createUser"
+      },
+      {
+        "name": "handleJob"
+      },
+      {
+        "name": "constructor"
+      },
+      {
+        "name": "findUsers"
+      },
+      {
+        "name": "constructor"
+      },
+      {
+        "name": "createUser"
+      },
+      {
+        "name": "constructor"
+      },
+      {
+        "name": "readAudit"
+      },
+      {
+        "name": "listUsers"
+      },
+      {
+        "name": "constructor"
+      },
+      {
+        "name": "listViaRepository"
+      },
+      {
+        "name": "bootstrap"
+      }
+    ]
+  },
+  "syntax/case-insensitive-keywords": {
+    "rows": [
+      {
+        "path": "service.ts"
+      }
+    ]
+  },
+  "syntax/double-quoted-string": {
+    "rows": [
+      {
+        "path": "/users"
+      }
+    ]
+  },
+  "syntax/escaped-string": {
+    "rows": [
+      {
+        "a": "it's",
+        "b": "say \"hi\"",
+        "c": "tabtnewlinen"
+      }
+    ]
+  },
+  "syntax/backtick-identifier": {
+    "rows": [
+      {
+        "the path": "service.ts"
+      }
+    ]
+  },
+  "syntax/comments": {
+    "rows": [
+      {
+        "n": 1
+      }
+    ]
+  },
+  "syntax/trailing-semicolon": {
+    "rows": [
+      {
+        "n": 1
+      }
+    ]
+  },
+  "error/unknown-label": {
+    "error": "binder"
+  },
+  "error/unknown-rel-type": {
+    "error": "binder"
+  },
+  "error/unknown-property": {
+    "error": "binder"
+  },
+  "error/unbound-variable": {
+    "error": "binder"
+  },
+  "error/syntax": {
+    "error": "parser"
+  },
+  "error/missing-return": {
+    "error": "parser"
+  },
+  "error/wrong-endpoint-labels": {
+    "rows": []
+  },
+  "error/aggregate-in-where": {
+    "error": "binder"
+  },
+  "error/missing-param": {
+    "error": "binder"
+  },
+  "error/create": {
+    "error": "unsupported"
+  },
+  "error/delete": {
+    "error": "unsupported"
+  },
+  "error/set": {
+    "error": "unsupported"
+  },
+  "error/merge": {
+    "error": "unsupported"
+  },
+  "error/unwind": {
+    "error": "unsupported"
+  },
+  "error/union": {
+    "error": "unsupported"
+  }
+}

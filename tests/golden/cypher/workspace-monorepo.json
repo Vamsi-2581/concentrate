@@ -1,0 +1,1464 @@
+{
+  "match/all-files": {
+    "rows": [
+      {
+        "path": "apps/api/src/server.ts",
+        "language": "typescript",
+        "isTest": false
+      },
+      {
+        "path": "packages/core/src/index.ts",
+        "language": "typescript",
+        "isTest": false
+      }
+    ]
+  },
+  "match/label-count": {
+    "rows": [
+      {
+        "count": 2
+      }
+    ]
+  },
+  "match/count-star": {
+    "rows": [
+      {
+        "count": 1
+      }
+    ]
+  },
+  "match/two-hop": {
+    "rows": [
+      {
+        "file": "apps/api/src/server.ts",
+        "fn": "start",
+        "call": "buildMessage",
+        "line": 4
+      }
+    ]
+  },
+  "match/comma-patterns": {
+    "rows": [
+      {
+        "file": "apps/api/src/server.ts",
+        "repo": "workspace-monorepo"
+      },
+      {
+        "file": "packages/core/src/index.ts",
+        "repo": "workspace-monorepo"
+      }
+    ]
+  },
+  "match/shared-variable": {
+    "rows": [
+      {
+        "file": "apps/api/src/server.ts",
+        "fn": "start",
+        "source": "@sample/core"
+      }
+    ]
+  },
+  "match/repeated-match": {
+    "rows": [
+      {
+        "fn": "start",
+        "calls": 1
+      }
+    ]
+  },
+  "match/inline-properties": {
+    "rows": [
+      {
+        "name": "buildMessage",
+        "line": 1
+      },
+      {
+        "name": "start",
+        "line": 3
+      }
+    ]
+  },
+  "match/inline-properties-string": {
+    "rows": []
+  },
+  "match/anonymous-node": {
+    "rows": [
+      {
+        "source": "apps/api/src/server.ts",
+        "target": "packages/core/src/index.ts"
+      }
+    ]
+  },
+  "match/anonymous-rel": {
+    "rows": [
+      {
+        "file": "apps/api/src/server.ts",
+        "source": "@sample/core"
+      }
+    ]
+  },
+  "match/unlabeled-start": {
+    "rows": [
+      {
+        "caller": "start",
+        "callee": "buildMessage"
+      }
+    ]
+  },
+  "match/unlabeled-end": {
+    "rows": []
+  },
+  "match/unlabeled-both": {
+    "rows": []
+  },
+  "match/incoming": {
+    "rows": [
+      {
+        "fn": "buildMessage",
+        "file": "packages/core/src/index.ts"
+      },
+      {
+        "fn": "start",
+        "file": "apps/api/src/server.ts"
+      }
+    ]
+  },
+  "match/undirected": {
+    "rows": [
+      {
+        "fn": "buildMessage",
+        "file": "packages/core/src/index.ts"
+      },
+      {
+        "fn": "start",
+        "file": "apps/api/src/server.ts"
+      }
+    ]
+  },
+  "match/rel-alternatives": {
+    "rows": [
+      {
+        "file": "apps/api/src/server.ts",
+        "name": "start"
+      },
+      {
+        "file": "packages/core/src/index.ts",
+        "name": "buildMessage"
+      }
+    ]
+  },
+  "match/rel-variable-properties": {
+    "rows": []
+  },
+  "match/rel-inline-properties": {
+    "rows": []
+  },
+  "match/self-join-distinct-rels": {
+    "rows": [
+      {
+        "a": "buildMessage",
+        "b": "buildMessage"
+      },
+      {
+        "a": "start",
+        "b": "start"
+      }
+    ]
+  },
+  "match/same-rel-twice": {
+    "rows": [
+      {
+        "a": "apps/api/src/server.ts",
+        "b": "apps/api/src/server.ts"
+      },
+      {
+        "a": "packages/core/src/index.ts",
+        "b": "packages/core/src/index.ts"
+      }
+    ]
+  },
+  "match/cycle-back": {
+    "rows": []
+  },
+  "match/package-hierarchy": {
+    "rows": [
+      {
+        "package": "@sample/api",
+        "packagePath": "apps/api",
+        "file": "apps/api/src/server.ts"
+      },
+      {
+        "package": "@sample/core",
+        "packagePath": "packages/core",
+        "file": "packages/core/src/index.ts"
+      }
+    ]
+  },
+  "match/physical-rel-types": {
+    "rows": []
+  },
+  "match/physical-rel-types-function": {
+    "rows": []
+  },
+  "match/mounts": {
+    "rows": []
+  },
+  "varlen/directories-1-3": {
+    "rows": [
+      {
+        "a": ".",
+        "b": "apps"
+      },
+      {
+        "a": ".",
+        "b": "apps/api"
+      },
+      {
+        "a": ".",
+        "b": "apps/api/src"
+      },
+      {
+        "a": ".",
+        "b": "packages"
+      },
+      {
+        "a": ".",
+        "b": "packages/core"
+      },
+      {
+        "a": ".",
+        "b": "packages/core/src"
+      },
+      {
+        "a": "apps",
+        "b": "apps/api"
+      },
+      {
+        "a": "apps",
+        "b": "apps/api/src"
+      },
+      {
+        "a": "apps/api",
+        "b": "apps/api/src"
+      },
+      {
+        "a": "packages",
+        "b": "packages/core"
+      },
+      {
+        "a": "packages",
+        "b": "packages/core/src"
+      },
+      {
+        "a": "packages/core",
+        "b": "packages/core/src"
+      }
+    ]
+  },
+  "varlen/directories-exact-2": {
+    "rows": [
+      {
+        "a": ".",
+        "b": "apps/api"
+      },
+      {
+        "a": ".",
+        "b": "packages/core"
+      },
+      {
+        "a": "apps",
+        "b": "apps/api/src"
+      },
+      {
+        "a": "packages",
+        "b": "packages/core/src"
+      }
+    ]
+  },
+  "varlen/directories-unbounded": {
+    "rows": [
+      {
+        "a": ".",
+        "b": "apps"
+      },
+      {
+        "a": ".",
+        "b": "apps/api"
+      },
+      {
+        "a": ".",
+        "b": "apps/api/src"
+      },
+      {
+        "a": ".",
+        "b": "packages"
+      },
+      {
+        "a": ".",
+        "b": "packages/core"
+      },
+      {
+        "a": ".",
+        "b": "packages/core/src"
+      },
+      {
+        "a": "apps",
+        "b": "apps/api"
+      },
+      {
+        "a": "apps",
+        "b": "apps/api/src"
+      },
+      {
+        "a": "apps/api",
+        "b": "apps/api/src"
+      },
+      {
+        "a": "packages",
+        "b": "packages/core"
+      },
+      {
+        "a": "packages",
+        "b": "packages/core/src"
+      },
+      {
+        "a": "packages/core",
+        "b": "packages/core/src"
+      }
+    ]
+  },
+  "varlen/directories-upper-only": {
+    "rows": [
+      {
+        "a": ".",
+        "b": "apps"
+      },
+      {
+        "a": ".",
+        "b": "apps/api"
+      },
+      {
+        "a": ".",
+        "b": "packages"
+      },
+      {
+        "a": ".",
+        "b": "packages/core"
+      },
+      {
+        "a": "apps",
+        "b": "apps/api"
+      },
+      {
+        "a": "apps",
+        "b": "apps/api/src"
+      },
+      {
+        "a": "apps/api",
+        "b": "apps/api/src"
+      },
+      {
+        "a": "packages",
+        "b": "packages/core"
+      },
+      {
+        "a": "packages",
+        "b": "packages/core/src"
+      },
+      {
+        "a": "packages/core",
+        "b": "packages/core/src"
+      }
+    ]
+  },
+  "varlen/root-to-file": {
+    "rows": [
+      {
+        "repo": "workspace-monorepo",
+        "dir": "apps/api/src",
+        "file": "apps/api/src/server.ts"
+      },
+      {
+        "repo": "workspace-monorepo",
+        "dir": "packages/core/src",
+        "file": "packages/core/src/index.ts"
+      }
+    ]
+  },
+  "varlen/zero-length": {
+    "rows": [
+      {
+        "a": ".",
+        "b": "."
+      },
+      {
+        "a": ".",
+        "b": "apps"
+      },
+      {
+        "a": ".",
+        "b": "packages"
+      },
+      {
+        "a": "apps",
+        "b": "apps"
+      },
+      {
+        "a": "apps",
+        "b": "apps/api"
+      },
+      {
+        "a": "apps/api",
+        "b": "apps/api"
+      },
+      {
+        "a": "apps/api",
+        "b": "apps/api/src"
+      },
+      {
+        "a": "apps/api/src",
+        "b": "apps/api/src"
+      },
+      {
+        "a": "packages",
+        "b": "packages"
+      },
+      {
+        "a": "packages",
+        "b": "packages/core"
+      },
+      {
+        "a": "packages/core",
+        "b": "packages/core"
+      },
+      {
+        "a": "packages/core",
+        "b": "packages/core/src"
+      },
+      {
+        "a": "packages/core/src",
+        "b": "packages/core/src"
+      }
+    ]
+  },
+  "varlen/incoming": {
+    "rows": [
+      {
+        "a": ".",
+        "b": "apps"
+      },
+      {
+        "a": ".",
+        "b": "apps/api"
+      },
+      {
+        "a": ".",
+        "b": "apps/api/src"
+      },
+      {
+        "a": ".",
+        "b": "packages"
+      },
+      {
+        "a": ".",
+        "b": "packages/core"
+      },
+      {
+        "a": ".",
+        "b": "packages/core/src"
+      },
+      {
+        "a": "apps",
+        "b": "apps/api"
+      },
+      {
+        "a": "apps",
+        "b": "apps/api/src"
+      },
+      {
+        "a": "apps/api",
+        "b": "apps/api/src"
+      },
+      {
+        "a": "packages",
+        "b": "packages/core"
+      },
+      {
+        "a": "packages",
+        "b": "packages/core/src"
+      },
+      {
+        "a": "packages/core",
+        "b": "packages/core/src"
+      }
+    ]
+  },
+  "varlen/undirected": {
+    "rows": [
+      {
+        "a": ".",
+        "b": "."
+      },
+      {
+        "a": ".",
+        "b": "."
+      },
+      {
+        "a": ".",
+        "b": "apps"
+      },
+      {
+        "a": ".",
+        "b": "apps/api"
+      },
+      {
+        "a": ".",
+        "b": "packages"
+      },
+      {
+        "a": ".",
+        "b": "packages/core"
+      },
+      {
+        "a": "apps",
+        "b": "."
+      },
+      {
+        "a": "apps",
+        "b": "apps"
+      },
+      {
+        "a": "apps",
+        "b": "apps"
+      },
+      {
+        "a": "apps",
+        "b": "apps/api"
+      },
+      {
+        "a": "apps",
+        "b": "apps/api/src"
+      },
+      {
+        "a": "apps",
+        "b": "packages"
+      },
+      {
+        "a": "apps/api",
+        "b": "."
+      },
+      {
+        "a": "apps/api",
+        "b": "apps"
+      },
+      {
+        "a": "apps/api",
+        "b": "apps/api"
+      },
+      {
+        "a": "apps/api",
+        "b": "apps/api"
+      },
+      {
+        "a": "apps/api",
+        "b": "apps/api/src"
+      },
+      {
+        "a": "apps/api/src",
+        "b": "apps"
+      },
+      {
+        "a": "apps/api/src",
+        "b": "apps/api"
+      },
+      {
+        "a": "apps/api/src",
+        "b": "apps/api/src"
+      },
+      {
+        "a": "packages",
+        "b": "."
+      },
+      {
+        "a": "packages",
+        "b": "apps"
+      },
+      {
+        "a": "packages",
+        "b": "packages"
+      },
+      {
+        "a": "packages",
+        "b": "packages"
+      },
+      {
+        "a": "packages",
+        "b": "packages/core"
+      },
+      {
+        "a": "packages",
+        "b": "packages/core/src"
+      },
+      {
+        "a": "packages/core",
+        "b": "."
+      },
+      {
+        "a": "packages/core",
+        "b": "packages"
+      },
+      {
+        "a": "packages/core",
+        "b": "packages/core"
+      },
+      {
+        "a": "packages/core",
+        "b": "packages/core"
+      },
+      {
+        "a": "packages/core",
+        "b": "packages/core/src"
+      },
+      {
+        "a": "packages/core/src",
+        "b": "packages"
+      },
+      {
+        "a": "packages/core/src",
+        "b": "packages/core"
+      },
+      {
+        "a": "packages/core/src",
+        "b": "packages/core/src"
+      }
+    ]
+  },
+  "varlen/extends-chain": {
+    "rows": []
+  },
+  "varlen/call-chain": {
+    "rows": [
+      {
+        "a": "start",
+        "b": "buildMessage"
+      }
+    ]
+  },
+  "varlen/import-chain": {
+    "rows": [
+      {
+        "a": "apps/api/src/server.ts",
+        "b": "packages/core/src/index.ts"
+      }
+    ]
+  },
+  "varlen/count-paths": {
+    "rows": [
+      {
+        "paths": 12
+      }
+    ]
+  },
+  "varlen/distinct-targets": {
+    "rows": [
+      {
+        "b": "apps"
+      },
+      {
+        "b": "apps/api"
+      },
+      {
+        "b": "apps/api/src"
+      },
+      {
+        "b": "packages"
+      },
+      {
+        "b": "packages/core"
+      },
+      {
+        "b": "packages/core/src"
+      }
+    ]
+  },
+  "varlen/no-type": {
+    "rows": [
+      {
+        "repo": "workspace-monorepo",
+        "dir": "."
+      },
+      {
+        "repo": "workspace-monorepo",
+        "dir": "apps"
+      },
+      {
+        "repo": "workspace-monorepo",
+        "dir": "packages"
+      }
+    ]
+  },
+  "optional/no-match-null": {
+    "rows": [
+      {
+        "file": "apps/api/src/server.ts",
+        "route": null
+      },
+      {
+        "file": "packages/core/src/index.ts",
+        "route": null
+      }
+    ]
+  },
+  "optional/count-optional": {
+    "rows": [
+      {
+        "file": "apps/api/src/server.ts",
+        "routes": 0
+      },
+      {
+        "file": "packages/core/src/index.ts",
+        "routes": 0
+      }
+    ]
+  },
+  "optional/where-on-optional": {
+    "rows": [
+      {
+        "file": "apps/api/src/server.ts",
+        "route": null
+      },
+      {
+        "file": "packages/core/src/index.ts",
+        "route": null
+      }
+    ]
+  },
+  "optional/where-on-outer-var": {
+    "rows": []
+  },
+  "optional/where-false": {
+    "rows": [
+      {
+        "file": "apps/api/src/server.ts",
+        "fn": null
+      },
+      {
+        "file": "packages/core/src/index.ts",
+        "fn": null
+      }
+    ]
+  },
+  "optional/chain": {
+    "rows": []
+  },
+  "optional/two-optionals": {
+    "rows": [
+      {
+        "file": "apps/api/src/server.ts",
+        "fn": "start",
+        "cls": null
+      },
+      {
+        "file": "packages/core/src/index.ts",
+        "fn": "buildMessage",
+        "cls": null
+      }
+    ]
+  },
+  "optional/first-clause": {
+    "rows": [
+      {
+        "path": null
+      }
+    ]
+  },
+  "optional/then-match": {
+    "rows": []
+  },
+  "optional/is-null-filter": {
+    "rows": [
+      {
+        "fn": "buildMessage"
+      }
+    ]
+  },
+  "where/equality-string": {
+    "rows": []
+  },
+  "where/inequality": {
+    "rows": [
+      {
+        "name": "buildMessage"
+      },
+      {
+        "name": "start"
+      }
+    ]
+  },
+  "where/int-compare": {
+    "rows": []
+  },
+  "where/bool-compare": {
+    "rows": []
+  },
+  "where/bool-bare": {
+    "rows": []
+  },
+  "where/not": {
+    "rows": []
+  },
+  "where/or": {
+    "rows": [
+      {
+        "name": "buildMessage"
+      },
+      {
+        "name": "start"
+      }
+    ]
+  },
+  "where/xor": {
+    "rows": [
+      {
+        "name": "buildMessage"
+      },
+      {
+        "name": "start"
+      }
+    ]
+  },
+  "where/precedence": {
+    "rows": []
+  },
+  "where/parentheses": {
+    "rows": []
+  },
+  "where/contains-op": {
+    "rows": []
+  },
+  "where/contains-fn": {
+    "rows": []
+  },
+  "where/starts-with": {
+    "rows": []
+  },
+  "where/ends-with": {
+    "rows": [
+      {
+        "path": "apps/api/src/server.ts"
+      },
+      {
+        "path": "packages/core/src/index.ts"
+      }
+    ]
+  },
+  "where/in-list": {
+    "rows": []
+  },
+  "where/in-empty-list": {
+    "rows": []
+  },
+  "where/not-in": {
+    "rows": []
+  },
+  "where/is-null": {
+    "rows": [
+      {
+        "name": "buildMessage"
+      },
+      {
+        "name": "start"
+      }
+    ]
+  },
+  "where/is-not-null": {
+    "rows": []
+  },
+  "where/null-equality": {
+    "rows": []
+  },
+  "where/null-in-or": {
+    "rows": [
+      {
+        "name": "buildMessage"
+      },
+      {
+        "name": "start"
+      }
+    ]
+  },
+  "where/null-not": {
+    "rows": []
+  },
+  "where/string-compare": {
+    "rows": [
+      {
+        "name": "start"
+      }
+    ]
+  },
+  "where/case-sensitive": {
+    "rows": []
+  },
+  "where/to-lower": {
+    "rows": []
+  },
+  "where/upper": {
+    "rows": []
+  },
+  "where/cross-variable": {
+    "rows": [
+      {
+        "fn": "start",
+        "call": "buildMessage"
+      }
+    ]
+  },
+  "where/after-multi-match": {
+    "rows": [
+      {
+        "file": "apps/api/src/server.ts",
+        "fn": "start"
+      },
+      {
+        "file": "packages/core/src/index.ts",
+        "fn": "buildMessage"
+      }
+    ]
+  },
+  "where/arithmetic": {
+    "rows": [
+      {
+        "name": "buildMessage",
+        "span": 2
+      },
+      {
+        "name": "start",
+        "span": 2
+      }
+    ]
+  },
+  "where/param-string": {
+    "rows": []
+  },
+  "where/param-int": {
+    "rows": []
+  },
+  "where/param-in-return": {
+    "rows": []
+  },
+  "return/literals": {
+    "rows": [
+      {
+        "one": 1,
+        "two": "two",
+        "yes": true,
+        "nothing": null,
+        "half": 1.5
+      }
+    ]
+  },
+  "return/arithmetic": {
+    "rows": [
+      {
+        "div": 3,
+        "mod": 1,
+        "expr": 14,
+        "neg": -5,
+        "fdiv": 3.5
+      }
+    ]
+  },
+  "return/string-concat": {
+    "rows": []
+  },
+  "return/list-literal": {
+    "rows": [
+      {
+        "list": [
+          1,
+          2,
+          3
+        ],
+        "n": 2
+      }
+    ]
+  },
+  "return/string-functions": {
+    "rows": [
+      {
+        "name": "buildMessage",
+        "lower": "buildmessage",
+        "upper": "BUILDMESSAGE",
+        "length": 12
+      },
+      {
+        "name": "start",
+        "lower": "start",
+        "upper": "START",
+        "length": 5
+      }
+    ]
+  },
+  "return/coalesce": {
+    "rows": [
+      {
+        "name": "buildMessage",
+        "cls": "none"
+      },
+      {
+        "name": "start",
+        "cls": "none"
+      }
+    ]
+  },
+  "return/case": {
+    "rows": [
+      {
+        "name": "buildMessage",
+        "visibility": "private"
+      },
+      {
+        "name": "start",
+        "visibility": "public"
+      }
+    ]
+  },
+  "return/case-simple": {
+    "rows": []
+  },
+  "return/label-function": {
+    "rows": [
+      {
+        "name": "buildMessage",
+        "label": "Function"
+      },
+      {
+        "name": "start",
+        "label": "Function"
+      }
+    ]
+  },
+  "return/missing-property-null": {
+    "rows": []
+  },
+  "return/distinct": {
+    "rows": []
+  },
+  "return/distinct-multi": {
+    "rows": [
+      {
+        "file": "apps/api/src/server.ts",
+        "exported": true
+      },
+      {
+        "file": "packages/core/src/index.ts",
+        "exported": true
+      }
+    ]
+  },
+  "return/unaliased": {
+    "rows": []
+  },
+  "return/property-unlabeled-mixed": {
+    "rows": [
+      {
+        "name": "buildMessage",
+        "kind": "function_declaration"
+      },
+      {
+        "name": "start",
+        "kind": "function_declaration"
+      }
+    ]
+  },
+  "agg/count-group": {
+    "rows": [
+      {
+        "file": "apps/api/src/server.ts",
+        "functions": 1
+      },
+      {
+        "file": "packages/core/src/index.ts",
+        "functions": 1
+      }
+    ]
+  },
+  "agg/count-distinct": {
+    "rows": [
+      {
+        "methods": 0,
+        "total": 0
+      }
+    ]
+  },
+  "agg/count-nulls": {
+    "rows": [
+      {
+        "withClass": 0,
+        "total": 2
+      }
+    ]
+  },
+  "agg/min-max": {
+    "rows": [
+      {
+        "first": 4,
+        "last": 4
+      }
+    ]
+  },
+  "agg/min-max-string": {
+    "rows": [
+      {
+        "first": "buildMessage",
+        "last": "start"
+      }
+    ]
+  },
+  "agg/sum-avg": {
+    "rows": [
+      {
+        "total": 4,
+        "mean": 4
+      }
+    ]
+  },
+  "agg/collect-sorted": {
+    "rows": [
+      {
+        "paths": null
+      }
+    ]
+  },
+  "agg/collect-size": {
+    "rows": [
+      {
+        "file": "apps/api/src/server.ts",
+        "n": 1
+      },
+      {
+        "file": "packages/core/src/index.ts",
+        "n": 1
+      }
+    ]
+  },
+  "agg/collect-skips-null": {
+    "rows": [
+      {
+        "n": null
+      }
+    ]
+  },
+  "agg/empty-input": {
+    "rows": [
+      {
+        "count": 0,
+        "first": null,
+        "names": null
+      }
+    ]
+  },
+  "agg/empty-input-grouped": {
+    "rows": []
+  },
+  "agg/expression-of-aggregates": {
+    "rows": [
+      {
+        "span": 0
+      }
+    ]
+  },
+  "agg/order-by-aggregate": {
+    "rows": []
+  },
+  "with/projection": {
+    "rows": [
+      {
+        "name": "buildMessage",
+        "line": 1
+      },
+      {
+        "name": "start",
+        "line": 3
+      }
+    ]
+  },
+  "with/rename-node": {
+    "rows": [
+      {
+        "file": "apps/api/src/server.ts",
+        "source": "apps/api/src/server.ts",
+        "fn": "start"
+      },
+      {
+        "file": "packages/core/src/index.ts",
+        "source": "packages/core/src/index.ts",
+        "fn": "buildMessage"
+      }
+    ]
+  },
+  "with/where-after": {
+    "rows": []
+  },
+  "with/distinct": {
+    "rows": []
+  },
+  "with/order-limit": {
+    "rows": [
+      {
+        "name": "buildMessage",
+        "line": 4
+      }
+    ]
+  },
+  "with/chain": {
+    "rows": [
+      {
+        "name": "buildMessage"
+      },
+      {
+        "name": "start"
+      }
+    ]
+  },
+  "with/then-match": {
+    "rows": [
+      {
+        "file": "apps/api/src/server.ts",
+        "fn": "start"
+      },
+      {
+        "file": "packages/core/src/index.ts",
+        "fn": "buildMessage"
+      }
+    ]
+  },
+  "order/single-asc": {
+    "rows": [
+      {
+        "name": "buildMessage",
+        "line": 4,
+        "col": 9
+      }
+    ]
+  },
+  "order/desc": {
+    "rows": [
+      {
+        "name": "buildMessage",
+        "line": 4,
+        "col": 9
+      }
+    ]
+  },
+  "order/by-alias": {
+    "rows": [
+      {
+        "name": "buildMessage"
+      },
+      {
+        "name": "start"
+      }
+    ]
+  },
+  "order/nulls-asc": {
+    "rows": [
+      {
+        "name": "buildMessage",
+        "cls": null
+      },
+      {
+        "name": "start",
+        "cls": null
+      }
+    ]
+  },
+  "order/nulls-desc": {
+    "rows": [
+      {
+        "name": "buildMessage",
+        "cls": null
+      },
+      {
+        "name": "start",
+        "cls": null
+      }
+    ]
+  },
+  "order/booleans": {
+    "rows": [
+      {
+        "name": "buildMessage",
+        "e": true
+      },
+      {
+        "name": "start",
+        "e": true
+      }
+    ]
+  },
+  "order/string-case": {
+    "rows": [
+      {
+        "name": "@sample/api"
+      },
+      {
+        "name": "@sample/core"
+      },
+      {
+        "name": "api"
+      },
+      {
+        "name": "apps"
+      },
+      {
+        "name": "buildMessage"
+      },
+      {
+        "name": "core"
+      },
+      {
+        "name": "package.json:name"
+      },
+      {
+        "name": "package.json:private"
+      },
+      {
+        "name": "package.json:version"
+      },
+      {
+        "name": "packages"
+      },
+      {
+        "name": "src"
+      },
+      {
+        "name": "start"
+      },
+      {
+        "name": "workspace-monorepo"
+      }
+    ]
+  },
+  "order/skip-limit": {
+    "rows": []
+  },
+  "order/limit-zero": {
+    "rows": []
+  },
+  "order/skip-past-end": {
+    "rows": []
+  },
+  "order/expression": {
+    "rows": [
+      {
+        "name": "buildMessage"
+      },
+      {
+        "name": "start"
+      }
+    ]
+  },
+  "order/not-in-return": {
+    "rows": [
+      {
+        "name": "buildMessage"
+      },
+      {
+        "name": "start"
+      }
+    ]
+  },
+  "syntax/case-insensitive-keywords": {
+    "rows": [
+      {
+        "path": "apps/api/src/server.ts"
+      },
+      {
+        "path": "packages/core/src/index.ts"
+      }
+    ]
+  },
+  "syntax/double-quoted-string": {
+    "rows": []
+  },
+  "syntax/escaped-string": {
+    "rows": [
+      {
+        "a": "it's",
+        "b": "say \"hi\"",
+        "c": "tabtnewlinen"
+      }
+    ]
+  },
+  "syntax/backtick-identifier": {
+    "rows": [
+      {
+        "the path": "apps/api/src/server.ts"
+      },
+      {
+        "the path": "packages/core/src/index.ts"
+      }
+    ]
+  },
+  "syntax/comments": {
+    "rows": [
+      {
+        "n": 2
+      }
+    ]
+  },
+  "syntax/trailing-semicolon": {
+    "rows": [
+      {
+        "n": 2
+      }
+    ]
+  },
+  "error/unknown-label": {
+    "error": "binder"
+  },
+  "error/unknown-rel-type": {
+    "error": "binder"
+  },
+  "error/unknown-property": {
+    "error": "binder"
+  },
+  "error/unbound-variable": {
+    "error": "binder"
+  },
+  "error/syntax": {
+    "error": "parser"
+  },
+  "error/missing-return": {
+    "error": "parser"
+  },
+  "error/wrong-endpoint-labels": {
+    "rows": []
+  },
+  "error/aggregate-in-where": {
+    "error": "binder"
+  },
+  "error/missing-param": {
+    "error": "binder"
+  },
+  "error/create": {
+    "error": "unsupported"
+  },
+  "error/delete": {
+    "error": "unsupported"
+  },
+  "error/set": {
+    "error": "unsupported"
+  },
+  "error/merge": {
+    "error": "unsupported"
+  },
+  "error/unwind": {
+    "error": "unsupported"
+  },
+  "error/union": {
+    "error": "unsupported"
+  }
+}

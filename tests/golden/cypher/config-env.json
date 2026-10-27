@@ -1,0 +1,1433 @@
+{
+  "match/all-files": {
+    "rows": [
+      {
+        "path": "config.ts",
+        "language": "typescript",
+        "isTest": false
+      },
+      {
+        "path": "server.ts",
+        "language": "typescript",
+        "isTest": false
+      }
+    ]
+  },
+  "match/label-count": {
+    "rows": [
+      {
+        "count": 2
+      }
+    ]
+  },
+  "match/count-star": {
+    "rows": [
+      {
+        "count": 4
+      }
+    ]
+  },
+  "match/two-hop": {
+    "rows": [
+      {
+        "file": "server.ts",
+        "fn": "listUsers",
+        "call": "res.json",
+        "line": 11
+      },
+      {
+        "file": "server.ts",
+        "fn": "listUsers",
+        "call": "res.set",
+        "line": 9
+      }
+    ]
+  },
+  "match/comma-patterns": {
+    "rows": [
+      {
+        "file": "config.ts",
+        "repo": "config-env"
+      },
+      {
+        "file": "server.ts",
+        "repo": "config-env"
+      }
+    ]
+  },
+  "match/shared-variable": {
+    "rows": [
+      {
+        "file": "server.ts",
+        "fn": "listUsers",
+        "source": "./config"
+      }
+    ]
+  },
+  "match/repeated-match": {
+    "rows": [
+      {
+        "fn": "listUsers",
+        "calls": 2
+      }
+    ]
+  },
+  "match/inline-properties": {
+    "rows": [
+      {
+        "name": "readInternal",
+        "line": 7
+      }
+    ]
+  },
+  "match/inline-properties-string": {
+    "rows": [
+      {
+        "path": "/users",
+        "framework": "express-koa"
+      }
+    ]
+  },
+  "match/anonymous-node": {
+    "rows": [
+      {
+        "source": "server.ts",
+        "target": "config.ts"
+      }
+    ]
+  },
+  "match/anonymous-rel": {
+    "rows": [
+      {
+        "file": "server.ts",
+        "source": "./config"
+      }
+    ]
+  },
+  "match/unlabeled-start": {
+    "rows": [
+      {
+        "caller": "listUsers",
+        "callee": "res.json"
+      },
+      {
+        "caller": "listUsers",
+        "callee": "res.set"
+      }
+    ]
+  },
+  "match/unlabeled-end": {
+    "rows": [
+      {
+        "file": "config.ts",
+        "name": "ENABLE_CACHE",
+        "kind": "const"
+      },
+      {
+        "file": "config.ts",
+        "name": "FEATURE_FLAG",
+        "kind": "const"
+      },
+      {
+        "file": "config.ts",
+        "name": "INTERNAL_ONLY",
+        "kind": "const"
+      },
+      {
+        "file": "config.ts",
+        "name": "RETRY_LIMIT",
+        "kind": "const"
+      },
+      {
+        "file": "server.ts",
+        "name": "app",
+        "kind": "const"
+      },
+      {
+        "file": "server.ts",
+        "name": "token",
+        "kind": "const"
+      }
+    ]
+  },
+  "match/unlabeled-both": {
+    "rows": [
+      {
+        "path": "/users",
+        "handler": "listUsers"
+      }
+    ]
+  },
+  "match/incoming": {
+    "rows": [
+      {
+        "fn": "listUsers",
+        "file": "server.ts"
+      },
+      {
+        "fn": "readInternal",
+        "file": "config.ts"
+      }
+    ]
+  },
+  "match/undirected": {
+    "rows": [
+      {
+        "fn": "listUsers",
+        "file": "server.ts"
+      },
+      {
+        "fn": "readInternal",
+        "file": "config.ts"
+      }
+    ]
+  },
+  "match/rel-alternatives": {
+    "rows": [
+      {
+        "file": "config.ts",
+        "name": "ENABLE_CACHE"
+      },
+      {
+        "file": "config.ts",
+        "name": "FEATURE_FLAG"
+      },
+      {
+        "file": "config.ts",
+        "name": "INTERNAL_ONLY"
+      },
+      {
+        "file": "config.ts",
+        "name": "RETRY_LIMIT"
+      },
+      {
+        "file": "config.ts",
+        "name": "readInternal"
+      },
+      {
+        "file": "server.ts",
+        "name": "app"
+      },
+      {
+        "file": "server.ts",
+        "name": "listUsers"
+      },
+      {
+        "file": "server.ts",
+        "name": "token"
+      }
+    ]
+  },
+  "match/rel-variable-properties": {
+    "rows": [
+      {
+        "path": "/users",
+        "fn": "listUsers",
+        "role": "handler",
+        "scope": "route",
+        "hook": "handler",
+        "orderIndex": 0
+      }
+    ]
+  },
+  "match/rel-inline-properties": {
+    "rows": []
+  },
+  "match/self-join-distinct-rels": {
+    "rows": [
+      {
+        "a": "listUsers",
+        "b": "listUsers"
+      },
+      {
+        "a": "readInternal",
+        "b": "readInternal"
+      }
+    ]
+  },
+  "match/same-rel-twice": {
+    "rows": [
+      {
+        "a": "config.ts",
+        "b": "config.ts"
+      },
+      {
+        "a": "config.ts",
+        "b": "server.ts"
+      },
+      {
+        "a": "server.ts",
+        "b": "config.ts"
+      },
+      {
+        "a": "server.ts",
+        "b": "server.ts"
+      }
+    ]
+  },
+  "match/cycle-back": {
+    "rows": []
+  },
+  "match/package-hierarchy": {
+    "rows": [
+      {
+        "package": "config-env-fixture",
+        "packagePath": ".",
+        "file": "config.ts"
+      },
+      {
+        "package": "config-env-fixture",
+        "packagePath": ".",
+        "file": "server.ts"
+      }
+    ]
+  },
+  "match/physical-rel-types": {
+    "rows": [
+      {
+        "file": "config.ts",
+        "name": "ENABLE_CACHE",
+        "value": "true",
+        "valueType": "boolean"
+      },
+      {
+        "file": "config.ts",
+        "name": "FEATURE_FLAG",
+        "value": "FEATURE_USERS",
+        "valueType": "string"
+      },
+      {
+        "file": "config.ts",
+        "name": "RETRY_LIMIT",
+        "value": "3",
+        "valueType": "number"
+      }
+    ]
+  },
+  "match/physical-rel-types-function": {
+    "rows": []
+  },
+  "match/mounts": {
+    "rows": []
+  },
+  "varlen/directories-1-3": {
+    "rows": []
+  },
+  "varlen/directories-exact-2": {
+    "rows": []
+  },
+  "varlen/directories-unbounded": {
+    "rows": []
+  },
+  "varlen/directories-upper-only": {
+    "rows": []
+  },
+  "varlen/root-to-file": {
+    "rows": [
+      {
+        "repo": "config-env",
+        "dir": ".",
+        "file": "config.ts"
+      },
+      {
+        "repo": "config-env",
+        "dir": ".",
+        "file": "server.ts"
+      }
+    ]
+  },
+  "varlen/zero-length": {
+    "rows": [
+      {
+        "a": ".",
+        "b": "."
+      }
+    ]
+  },
+  "varlen/incoming": {
+    "rows": []
+  },
+  "varlen/undirected": {
+    "rows": []
+  },
+  "varlen/extends-chain": {
+    "rows": []
+  },
+  "varlen/call-chain": {
+    "rows": []
+  },
+  "varlen/import-chain": {
+    "rows": [
+      {
+        "a": "server.ts",
+        "b": "config.ts"
+      }
+    ]
+  },
+  "varlen/count-paths": {
+    "rows": [
+      {
+        "paths": 0
+      }
+    ]
+  },
+  "varlen/distinct-targets": {
+    "rows": []
+  },
+  "varlen/no-type": {
+    "rows": [
+      {
+        "repo": "config-env",
+        "dir": "."
+      }
+    ]
+  },
+  "optional/no-match-null": {
+    "rows": [
+      {
+        "file": "config.ts",
+        "route": null
+      },
+      {
+        "file": "server.ts",
+        "route": "/users"
+      }
+    ]
+  },
+  "optional/count-optional": {
+    "rows": [
+      {
+        "file": "config.ts",
+        "routes": 0
+      },
+      {
+        "file": "server.ts",
+        "routes": 1
+      }
+    ]
+  },
+  "optional/where-on-optional": {
+    "rows": [
+      {
+        "file": "config.ts",
+        "route": null
+      },
+      {
+        "file": "server.ts",
+        "route": "/users"
+      }
+    ]
+  },
+  "optional/where-on-outer-var": {
+    "rows": [
+      {
+        "path": "/users",
+        "method": "GET",
+        "handler": null
+      }
+    ]
+  },
+  "optional/where-false": {
+    "rows": [
+      {
+        "file": "config.ts",
+        "fn": null
+      },
+      {
+        "file": "server.ts",
+        "fn": null
+      }
+    ]
+  },
+  "optional/chain": {
+    "rows": [
+      {
+        "path": "/users",
+        "handler": "listUsers",
+        "call": "res.json"
+      },
+      {
+        "path": "/users",
+        "handler": "listUsers",
+        "call": "res.set"
+      }
+    ]
+  },
+  "optional/two-optionals": {
+    "rows": [
+      {
+        "file": "config.ts",
+        "fn": "readInternal",
+        "cls": null
+      },
+      {
+        "file": "server.ts",
+        "fn": "listUsers",
+        "cls": null
+      }
+    ]
+  },
+  "optional/first-clause": {
+    "rows": [
+      {
+        "path": "/users"
+      }
+    ]
+  },
+  "optional/then-match": {
+    "rows": [
+      {
+        "file": "config.ts",
+        "route": null,
+        "variable": "ENABLE_CACHE"
+      },
+      {
+        "file": "config.ts",
+        "route": null,
+        "variable": "FEATURE_FLAG"
+      },
+      {
+        "file": "config.ts",
+        "route": null,
+        "variable": "INTERNAL_ONLY"
+      },
+      {
+        "file": "config.ts",
+        "route": null,
+        "variable": "RETRY_LIMIT"
+      },
+      {
+        "file": "server.ts",
+        "route": "/users",
+        "variable": "app"
+      },
+      {
+        "file": "server.ts",
+        "route": "/users",
+        "variable": "token"
+      }
+    ]
+  },
+  "optional/is-null-filter": {
+    "rows": [
+      {
+        "fn": "readInternal"
+      }
+    ]
+  },
+  "where/equality-string": {
+    "rows": [
+      {
+        "name": "listUsers",
+        "line": 6
+      }
+    ]
+  },
+  "where/inequality": {
+    "rows": [
+      {
+        "name": "readInternal"
+      }
+    ]
+  },
+  "where/int-compare": {
+    "rows": [
+      {
+        "name": "app.get",
+        "line": 14
+      },
+      {
+        "name": "res.json",
+        "line": 11
+      },
+      {
+        "name": "res.set",
+        "line": 9
+      }
+    ]
+  },
+  "where/bool-compare": {
+    "rows": [
+      {
+        "name": "listUsers"
+      }
+    ]
+  },
+  "where/bool-bare": {
+    "rows": []
+  },
+  "where/not": {
+    "rows": [
+      {
+        "name": "listUsers"
+      }
+    ]
+  },
+  "where/or": {
+    "rows": [
+      {
+        "name": "readInternal"
+      }
+    ]
+  },
+  "where/xor": {
+    "rows": [
+      {
+        "name": "readInternal"
+      }
+    ]
+  },
+  "where/precedence": {
+    "rows": [
+      {
+        "name": "readInternal"
+      }
+    ]
+  },
+  "where/parentheses": {
+    "rows": [
+      {
+        "name": "readInternal"
+      }
+    ]
+  },
+  "where/contains-op": {
+    "rows": [
+      {
+        "name": "listUsers"
+      }
+    ]
+  },
+  "where/contains-fn": {
+    "rows": [
+      {
+        "name": "listUsers"
+      }
+    ]
+  },
+  "where/starts-with": {
+    "rows": []
+  },
+  "where/ends-with": {
+    "rows": [
+      {
+        "path": "config.ts"
+      },
+      {
+        "path": "server.ts"
+      }
+    ]
+  },
+  "where/in-list": {
+    "rows": [
+      {
+        "method": "GET",
+        "path": "/users"
+      }
+    ]
+  },
+  "where/in-empty-list": {
+    "rows": []
+  },
+  "where/not-in": {
+    "rows": []
+  },
+  "where/is-null": {
+    "rows": [
+      {
+        "name": "listUsers"
+      },
+      {
+        "name": "readInternal"
+      }
+    ]
+  },
+  "where/is-not-null": {
+    "rows": []
+  },
+  "where/null-equality": {
+    "rows": []
+  },
+  "where/null-in-or": {
+    "rows": [
+      {
+        "name": "listUsers"
+      },
+      {
+        "name": "readInternal"
+      }
+    ]
+  },
+  "where/null-not": {
+    "rows": []
+  },
+  "where/string-compare": {
+    "rows": [
+      {
+        "name": "readInternal"
+      }
+    ]
+  },
+  "where/case-sensitive": {
+    "rows": []
+  },
+  "where/to-lower": {
+    "rows": [
+      {
+        "name": "listUsers"
+      }
+    ]
+  },
+  "where/upper": {
+    "rows": [
+      {
+        "name": "listUsers"
+      }
+    ]
+  },
+  "where/cross-variable": {
+    "rows": [
+      {
+        "fn": "listUsers",
+        "call": "res.json"
+      },
+      {
+        "fn": "listUsers",
+        "call": "res.set"
+      }
+    ]
+  },
+  "where/after-multi-match": {
+    "rows": [
+      {
+        "file": "config.ts",
+        "fn": "readInternal"
+      }
+    ]
+  },
+  "where/arithmetic": {
+    "rows": [
+      {
+        "name": "listUsers",
+        "span": 6
+      },
+      {
+        "name": "readInternal",
+        "span": 2
+      }
+    ]
+  },
+  "where/param-string": {
+    "rows": [
+      {
+        "name": "listUsers"
+      }
+    ]
+  },
+  "where/param-int": {
+    "rows": [
+      {
+        "name": "app.get",
+        "line": 14
+      },
+      {
+        "name": "res.json",
+        "line": 11
+      }
+    ]
+  },
+  "where/param-in-return": {
+    "rows": [
+      {
+        "kind": "route",
+        "path": "/users"
+      }
+    ]
+  },
+  "return/literals": {
+    "rows": [
+      {
+        "one": 1,
+        "two": "two",
+        "yes": true,
+        "nothing": null,
+        "half": 1.5
+      }
+    ]
+  },
+  "return/arithmetic": {
+    "rows": [
+      {
+        "div": 3,
+        "mod": 1,
+        "expr": 14,
+        "neg": -5,
+        "fdiv": 3.5
+      }
+    ]
+  },
+  "return/string-concat": {
+    "rows": [
+      {
+        "route": "GET /users"
+      }
+    ]
+  },
+  "return/list-literal": {
+    "rows": [
+      {
+        "list": [
+          1,
+          2,
+          3
+        ],
+        "n": 2
+      }
+    ]
+  },
+  "return/string-functions": {
+    "rows": [
+      {
+        "name": "listUsers",
+        "lower": "listusers",
+        "upper": "LISTUSERS",
+        "length": 9
+      },
+      {
+        "name": "readInternal",
+        "lower": "readinternal",
+        "upper": "READINTERNAL",
+        "length": 12
+      }
+    ]
+  },
+  "return/coalesce": {
+    "rows": [
+      {
+        "name": "listUsers",
+        "cls": "none"
+      },
+      {
+        "name": "readInternal",
+        "cls": "none"
+      }
+    ]
+  },
+  "return/case": {
+    "rows": [
+      {
+        "name": "listUsers",
+        "visibility": "private"
+      },
+      {
+        "name": "readInternal",
+        "visibility": "public"
+      }
+    ]
+  },
+  "return/case-simple": {
+    "rows": [
+      {
+        "path": "/users",
+        "kind": "read"
+      }
+    ]
+  },
+  "return/label-function": {
+    "rows": [
+      {
+        "name": "ENABLE_CACHE",
+        "label": "Variable"
+      },
+      {
+        "name": "FEATURE_FLAG",
+        "label": "Variable"
+      },
+      {
+        "name": "INTERNAL_ONLY",
+        "label": "Variable"
+      },
+      {
+        "name": "RETRY_LIMIT",
+        "label": "Variable"
+      },
+      {
+        "name": "app",
+        "label": "Variable"
+      },
+      {
+        "name": "listUsers",
+        "label": "Function"
+      },
+      {
+        "name": "readInternal",
+        "label": "Function"
+      },
+      {
+        "name": "token",
+        "label": "Variable"
+      }
+    ]
+  },
+  "return/missing-property-null": {
+    "rows": [
+      {
+        "fn": "listUsers",
+        "hook": "handler"
+      }
+    ]
+  },
+  "return/distinct": {
+    "rows": [
+      {
+        "method": "GET"
+      }
+    ]
+  },
+  "return/distinct-multi": {
+    "rows": [
+      {
+        "file": "config.ts",
+        "exported": true
+      },
+      {
+        "file": "server.ts",
+        "exported": false
+      }
+    ]
+  },
+  "return/unaliased": {
+    "rows": [
+      {
+        "r.path": "/users",
+        "r.method": "GET"
+      }
+    ]
+  },
+  "return/property-unlabeled-mixed": {
+    "rows": [
+      {
+        "name": "ENABLE_CACHE",
+        "kind": "const"
+      },
+      {
+        "name": "FEATURE_FLAG",
+        "kind": "const"
+      },
+      {
+        "name": "INTERNAL_ONLY",
+        "kind": "const"
+      },
+      {
+        "name": "RETRY_LIMIT",
+        "kind": "const"
+      },
+      {
+        "name": "app",
+        "kind": "const"
+      },
+      {
+        "name": "listUsers",
+        "kind": "function_declaration"
+      },
+      {
+        "name": "readInternal",
+        "kind": "function_declaration"
+      },
+      {
+        "name": "token",
+        "kind": "const"
+      }
+    ]
+  },
+  "agg/count-group": {
+    "rows": [
+      {
+        "file": "config.ts",
+        "functions": 1
+      },
+      {
+        "file": "server.ts",
+        "functions": 1
+      }
+    ]
+  },
+  "agg/count-distinct": {
+    "rows": [
+      {
+        "methods": 1,
+        "total": 1
+      }
+    ]
+  },
+  "agg/count-nulls": {
+    "rows": [
+      {
+        "withClass": 0,
+        "total": 2
+      }
+    ]
+  },
+  "agg/min-max": {
+    "rows": [
+      {
+        "first": 3,
+        "last": 14
+      }
+    ]
+  },
+  "agg/min-max-string": {
+    "rows": [
+      {
+        "first": "listUsers",
+        "last": "readInternal"
+      }
+    ]
+  },
+  "agg/sum-avg": {
+    "rows": [
+      {
+        "total": 37,
+        "mean": 9.25
+      }
+    ]
+  },
+  "agg/collect-sorted": {
+    "rows": [
+      {
+        "paths": [
+          "/users"
+        ]
+      }
+    ]
+  },
+  "agg/collect-size": {
+    "rows": [
+      {
+        "file": "config.ts",
+        "n": 1
+      },
+      {
+        "file": "server.ts",
+        "n": 1
+      }
+    ]
+  },
+  "agg/collect-skips-null": {
+    "rows": [
+      {
+        "n": null
+      }
+    ]
+  },
+  "agg/empty-input": {
+    "rows": [
+      {
+        "count": 0,
+        "first": null,
+        "names": null
+      }
+    ]
+  },
+  "agg/empty-input-grouped": {
+    "rows": []
+  },
+  "agg/expression-of-aggregates": {
+    "rows": [
+      {
+        "span": 11
+      }
+    ]
+  },
+  "agg/order-by-aggregate": {
+    "rows": [
+      {
+        "file": "config.ts",
+        "n": 4
+      },
+      {
+        "file": "server.ts",
+        "n": 2
+      }
+    ]
+  },
+  "with/projection": {
+    "rows": [
+      {
+        "name": "listUsers",
+        "line": 6
+      },
+      {
+        "name": "readInternal",
+        "line": 7
+      }
+    ]
+  },
+  "with/rename-node": {
+    "rows": [
+      {
+        "file": "config.ts",
+        "source": "config.ts",
+        "fn": "readInternal"
+      },
+      {
+        "file": "server.ts",
+        "source": "server.ts",
+        "fn": "listUsers"
+      }
+    ]
+  },
+  "with/where-after": {
+    "rows": []
+  },
+  "with/distinct": {
+    "rows": [
+      {
+        "method": "GET"
+      }
+    ]
+  },
+  "with/order-limit": {
+    "rows": [
+      {
+        "name": "app.get",
+        "line": 14
+      },
+      {
+        "name": "res.json",
+        "line": 11
+      },
+      {
+        "name": "res.set",
+        "line": 9
+      }
+    ]
+  },
+  "with/chain": {
+    "rows": [
+      {
+        "name": "readInternal"
+      }
+    ]
+  },
+  "with/then-match": {
+    "rows": [
+      {
+        "file": "config.ts",
+        "fn": "readInternal"
+      },
+      {
+        "file": "server.ts",
+        "fn": "listUsers"
+      }
+    ]
+  },
+  "order/single-asc": {
+    "rows": [
+      {
+        "name": "express",
+        "line": 3,
+        "col": 12
+      },
+      {
+        "name": "res.set",
+        "line": 9,
+        "col": 4
+      },
+      {
+        "name": "res.json",
+        "line": 11,
+        "col": 2
+      },
+      {
+        "name": "app.get",
+        "line": 14,
+        "col": 0
+      }
+    ]
+  },
+  "order/desc": {
+    "rows": [
+      {
+        "name": "app.get",
+        "line": 14,
+        "col": 0
+      },
+      {
+        "name": "res.json",
+        "line": 11,
+        "col": 2
+      },
+      {
+        "name": "res.set",
+        "line": 9,
+        "col": 4
+      },
+      {
+        "name": "express",
+        "line": 3,
+        "col": 12
+      }
+    ]
+  },
+  "order/by-alias": {
+    "rows": [
+      {
+        "name": "listUsers"
+      },
+      {
+        "name": "readInternal"
+      }
+    ]
+  },
+  "order/nulls-asc": {
+    "rows": [
+      {
+        "name": "listUsers",
+        "cls": null
+      },
+      {
+        "name": "readInternal",
+        "cls": null
+      }
+    ]
+  },
+  "order/nulls-desc": {
+    "rows": [
+      {
+        "name": "listUsers",
+        "cls": null
+      },
+      {
+        "name": "readInternal",
+        "cls": null
+      }
+    ]
+  },
+  "order/booleans": {
+    "rows": [
+      {
+        "name": "listUsers",
+        "e": false
+      },
+      {
+        "name": "readInternal",
+        "e": true
+      }
+    ]
+  },
+  "order/string-case": {
+    "rows": [
+      {
+        "name": "API_TOKEN"
+      },
+      {
+        "name": "DATABASE_URL"
+      },
+      {
+        "name": "ENABLE_CACHE"
+      },
+      {
+        "name": "FEATURE_FLAG"
+      },
+      {
+        "name": "INTERNAL_ONLY"
+      },
+      {
+        "name": "NODE_ENV"
+      },
+      {
+        "name": "RETRY_LIMIT"
+      },
+      {
+        "name": "app"
+      },
+      {
+        "name": "app.get"
+      },
+      {
+        "name": "config-env"
+      },
+      {
+        "name": "config-env-fixture"
+      },
+      {
+        "name": "express"
+      },
+      {
+        "name": "listUsers"
+      },
+      {
+        "name": "package.json:main"
+      },
+      {
+        "name": "package.json:name"
+      },
+      {
+        "name": "package.json:private"
+      },
+      {
+        "name": "package.json:type"
+      },
+      {
+        "name": "package.json:version"
+      },
+      {
+        "name": "readInternal"
+      },
+      {
+        "name": "res.json"
+      },
+      {
+        "name": "res.set"
+      },
+      {
+        "name": "token"
+      },
+      {
+        "name": "tsconfig.json:compilerOptions.baseUrl"
+      },
+      {
+        "name": "tsconfig.json:compilerOptions.module"
+      },
+      {
+        "name": "tsconfig.json:compilerOptions.target"
+      }
+    ]
+  },
+  "order/skip-limit": {
+    "rows": [
+      {
+        "name": "res.json",
+        "line": 11,
+        "col": 2
+      },
+      {
+        "name": "app.get",
+        "line": 14,
+        "col": 0
+      }
+    ]
+  },
+  "order/limit-zero": {
+    "rows": []
+  },
+  "order/skip-past-end": {
+    "rows": []
+  },
+  "order/expression": {
+    "rows": [
+      {
+        "name": "readInternal"
+      },
+      {
+        "name": "listUsers"
+      }
+    ]
+  },
+  "order/not-in-return": {
+    "rows": [
+      {
+        "name": "listUsers"
+      },
+      {
+        "name": "readInternal"
+      }
+    ]
+  },
+  "syntax/case-insensitive-keywords": {
+    "rows": [
+      {
+        "path": "config.ts"
+      },
+      {
+        "path": "server.ts"
+      }
+    ]
+  },
+  "syntax/double-quoted-string": {
+    "rows": [
+      {
+        "path": "/users"
+      }
+    ]
+  },
+  "syntax/escaped-string": {
+    "rows": [
+      {
+        "a": "it's",
+        "b": "say \"hi\"",
+        "c": "tabtnewlinen"
+      }
+    ]
+  },
+  "syntax/backtick-identifier": {
+    "rows": [
+      {
+        "the path": "config.ts"
+      },
+      {
+        "the path": "server.ts"
+      }
+    ]
+  },
+  "syntax/comments": {
+    "rows": [
+      {
+        "n": 2
+      }
+    ]
+  },
+  "syntax/trailing-semicolon": {
+    "rows": [
+      {
+        "n": 2
+      }
+    ]
+  },
+  "error/unknown-label": {
+    "error": "binder"
+  },
+  "error/unknown-rel-type": {
+    "error": "binder"
+  },
+  "error/unknown-property": {
+    "error": "binder"
+  },
+  "error/unbound-variable": {
+    "error": "binder"
+  },
+  "error/syntax": {
+    "error": "parser"
+  },
+  "error/missing-return": {
+    "error": "parser"
+  },
+  "error/wrong-endpoint-labels": {
+    "rows": []
+  },
+  "error/aggregate-in-where": {
+    "error": "binder"
+  },
+  "error/missing-param": {
+    "error": "binder"
+  },
+  "error/create": {
+    "error": "unsupported"
+  },
+  "error/delete": {
+    "error": "unsupported"
+  },
+  "error/set": {
+    "error": "unsupported"
+  },
+  "error/merge": {
+    "error": "unsupported"
+  },
+  "error/unwind": {
+    "error": "unsupported"
+  },
+  "error/union": {
+    "error": "unsupported"
+  }
+}
