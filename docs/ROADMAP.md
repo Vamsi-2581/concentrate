@@ -108,35 +108,35 @@ commander is used only in `src/index.ts`; fast-glob in `core/scan/discover-files
 
 ### CLI argument parsing (commander → `node:util` parseArgs)
 
-- [ ] Add `src/adapters/cli/args.ts`: sub-command router on top of `parseArgs`
-- [ ] Support repeatable flags (`--include a --include b`), number validation and defaults
-- [ ] Generate `--help` output for the root command and every sub-command
-- [ ] Port every command in `src/commands/*` to the new router without changing flags
-- [ ] Add CLI parsing tests (unknown flag, missing value, repeatable flags, help)
+- [x] Add `src/adapters/cli/args.ts`: sub-command router on top of `parseArgs`
+- [x] Support repeatable flags (`--include a --include b`), number validation and defaults
+- [x] Generate `--help` output for the root command and every sub-command
+- [x] Port every command in `src/commands/*` to the new router without changing flags
+- [x] Add CLI parsing tests (unknown flag, missing value, repeatable flags, help)
 
 ### Glob matching (fast-glob → own walker)
 
-- [ ] Add `src/core/scan/glob.ts` supporting `**`, `*`, `?`, `{a,b}`, `[...]` and `!` negation with cached RegExps
-- [ ] Walk directories with `fs.readdir` and prune ignored directories early
-- [ ] Port `discover-files.ts`, `workspace-packages.ts` and `package-json.ts` to the new glob
-- [ ] Add a spec-table test suite for glob semantics
+- [x] Add `src/core/scan/glob.ts` supporting `**`, `*`, `?`, `{a,b}`, `[...]` and `!` negation with cached RegExps
+- [x] Walk directories with `fs.readdir` and prune ignored directories early
+- [x] Port `discover-files.ts`, `workspace-packages.ts` and `package-json.ts` to the new glob
+- [x] Add a spec-table test suite for glob semantics
 
 ### Ignore rules (ignore → own gitignore matcher)
 
-- [ ] Add `src/core/scan/gitignore.ts` implementing anchors, `dir/`, `**`, negation and escapes
-- [ ] Respect nested `.gitignore` files (behavior improvement over today)
-- [ ] Add a spec-table test suite inspired by git's own ignore test cases
+- [x] Add `src/core/scan/gitignore.ts` implementing anchors, `dir/`, `**`, negation and escapes
+- [x] Respect nested `.gitignore` files (behavior improvement over today)
+- [x] Add a spec-table test suite inspired by git's own ignore test cases
 
 ### Cleanup
 
-- [ ] Remove commander, fast-glob and ignore from `package.json` and the guardrail allow-list
-- [ ] Confirm golden graph diff is empty (or document intentional changes from nested `.gitignore`)
+- [x] Remove commander, fast-glob and ignore from `package.json` and the guardrail allow-list
+- [x] Confirm golden graph diff is empty (or document intentional changes from nested `.gitignore`)
 
 ### Acceptance criteria
 
-- [ ] `commander`, `fast-glob` and `ignore` no longer appear in `package.json` or `src/`
-- [ ] All CLI commands behave as before (help, flags, exit codes)
-- [ ] Golden tests pass; any diff is explained in the PR
+- [x] `commander`, `fast-glob` and `ignore` no longer appear in `package.json` or `src/`
+- [x] All CLI commands behave as before (help, flags, exit codes)
+- [x] Golden tests pass; any diff is explained in the PR
 
 ## Phase 2: Own in-memory graph engine and Cypher subset (remove kuzu) ([#4](https://github.com/fatihserhatturan/concentrate/issues/4))
 
