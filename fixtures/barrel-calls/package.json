@@ -1,0 +1,7 @@
+{
+  "name": "barrel-calls",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ]
+}

@@ -4,7 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import { after, before, describe, it } from "node:test";
 import { matchName, words } from "../src/adapters/mcp/analysis-tools/search.js";
-import { parseReExportNames } from "../src/adapters/mcp/analysis-tools/model.js";
+import { parseReExportNames } from "../src/core/graph/re-exports.js";
 import { callMcpTool } from "../src/adapters/mcp/tools.js";
 import { GraphStore } from "../src/adapters/store/store.js";
 import { buildCodeGraph } from "../src/composition/orchestrator.js";
@@ -114,11 +114,12 @@ describe("analysis MCP tools", () => {
   });
 
   it("find_references follows imports through barrels and renames", async () => {
-    // The add(1, 2) call goes through the export * barrel, which call
-    // resolution does not follow; the import is still found.
+    // The add(1, 2) call goes through the export * barrel; call resolution
+    // follows it to math.ts.
     const add = await tool("find_references", { symbol: "add" });
     assert.deepEqual(add.references.map((reference: any) => `${reference.kind} ${reference.file}:${reference.line}`), [
       "import packages/app/src/main.ts:1",
+      "call packages/app/src/main.ts:7",
       "re-export packages/core/src/index.ts:1",
     ]);
     const helper = await tool("find_references", { symbol: "usedHelper" });
@@ -132,6 +133,7 @@ describe("analysis MCP tools", () => {
     const kinds = greet.references.map((reference: any) => `${reference.kind}:${reference.detail}`);
     assert.ok(kinds.includes("import:sayHello"), JSON.stringify(greet.references));
     assert.ok(kinds.includes("re-export:greet as sayHello"));
+    assert.ok(kinds.includes("call:sayHello"), "the renamed re-export resolves the call");
 
     const value = await tool("find_references", { symbol: "value" });
     assert.equal(value.references[0].kind, "namespace-import");

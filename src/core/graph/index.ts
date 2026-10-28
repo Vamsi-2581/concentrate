@@ -14,3 +14,4 @@ export {
   type NormalizedGraphRecord,
   type NormalizeGraphInput,
 } from "./normalize.js";
+export { parseNamespaceReExport, parseReExportNames, type ReExportName } from "./re-exports.js";

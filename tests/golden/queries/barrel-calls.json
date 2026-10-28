@@ -1,0 +1,1261 @@
+[
+  {
+    "tool": "graph_stats",
+    "args": {},
+    "calls": [
+      {
+        "method": "schemaVersion",
+        "result": 37
+      },
+      {
+        "method": "stats",
+        "options": {},
+        "rows": [
+          {
+            "table": "Repo",
+            "count": 1
+          },
+          {
+            "table": "Package",
+            "count": 3
+          },
+          {
+            "table": "Directory",
+            "count": 7
+          },
+          {
+            "table": "File",
+            "count": 7
+          },
+          {
+            "table": "Import",
+            "count": 7
+          },
+          {
+            "table": "Function",
+            "count": 5
+          },
+          {
+            "table": "Class",
+            "count": 0
+          },
+          {
+            "table": "Field",
+            "count": 0
+          },
+          {
+            "table": "Variable",
+            "count": 0
+          },
+          {
+            "table": "Decorator",
+            "count": 0
+          },
+          {
+            "table": "Interface",
+            "count": 0
+          },
+          {
+            "table": "TypeAlias",
+            "count": 0
+          },
+          {
+            "table": "Enum",
+            "count": 0
+          },
+          {
+            "table": "Call",
+            "count": 8
+          },
+          {
+            "table": "Route",
+            "count": 0
+          },
+          {
+            "table": "EntryPoint",
+            "count": 0
+          },
+          {
+            "table": "EnvVar",
+            "count": 0
+          },
+          {
+            "table": "ConfigValue",
+            "count": 9
+          },
+          {
+            "table": "DataModel",
+            "count": 0
+          }
+        ]
+      }
+    ],
+    "output": {
+      "schemaVersion": 37,
+      "stats": [
+        {
+          "table": "Repo",
+          "count": 1
+        },
+        {
+          "table": "Package",
+          "count": 3
+        },
+        {
+          "table": "Directory",
+          "count": 7
+        },
+        {
+          "table": "File",
+          "count": 7
+        },
+        {
+          "table": "Import",
+          "count": 7
+        },
+        {
+          "table": "Function",
+          "count": 5
+        },
+        {
+          "table": "Class",
+          "count": 0
+        },
+        {
+          "table": "Field",
+          "count": 0
+        },
+        {
+          "table": "Variable",
+          "count": 0
+        },
+        {
+          "table": "Decorator",
+          "count": 0
+        },
+        {
+          "table": "Interface",
+          "count": 0
+        },
+        {
+          "table": "TypeAlias",
+          "count": 0
+        },
+        {
+          "table": "Enum",
+          "count": 0
+        },
+        {
+          "table": "Call",
+          "count": 8
+        },
+        {
+          "table": "Route",
+          "count": 0
+        },
+        {
+          "table": "EntryPoint",
+          "count": 0
+        },
+        {
+          "table": "EnvVar",
+          "count": 0
+        },
+        {
+          "table": "ConfigValue",
+          "count": 9
+        },
+        {
+          "table": "DataModel",
+          "count": 0
+        }
+      ]
+    }
+  },
+  {
+    "tool": "find_definitions",
+    "args": {
+      "name": "e"
+    },
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_FUNCTION]->(n:Function) WHERE contains(lower(n.name), lower(\"e\")) RETURN n.name AS name, 'Function' AS kind, file.relativePath AS file, n.line AS line, n.isExported AS isExported, 'DEFINES_FUNCTION' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 21",
+        "rows": [
+          {
+            "name": "greet",
+            "kind": "Function",
+            "file": "packages/core/src/greet.ts",
+            "line": 1,
+            "isExported": true,
+            "relationship": "DEFINES_FUNCTION"
+          },
+          {
+            "name": "report",
+            "kind": "Function",
+            "file": "packages/core/src/report.ts",
+            "line": 3,
+            "isExported": true,
+            "relationship": "DEFINES_FUNCTION"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(n:Class) WHERE contains(lower(n.name), lower(\"e\")) RETURN n.name AS name, 'Class' AS kind, file.relativePath AS file, n.line AS line, n.isExported AS isExported, 'DEFINES_CLASS' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 21",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_VARIABLE]->(n:Variable) WHERE contains(lower(n.name), lower(\"e\")) RETURN n.name AS name, 'Variable' AS kind, file.relativePath AS file, n.line AS line, n.isExported AS isExported, 'DEFINES_VARIABLE' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 21",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_INTERFACE]->(n:Interface) WHERE contains(lower(n.name), lower(\"e\")) RETURN n.name AS name, 'Interface' AS kind, file.relativePath AS file, n.line AS line, n.isExported AS isExported, 'DEFINES_INTERFACE' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 21",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_TYPE_ALIAS]->(n:TypeAlias) WHERE contains(lower(n.name), lower(\"e\")) RETURN n.name AS name, 'TypeAlias' AS kind, file.relativePath AS file, n.line AS line, n.isExported AS isExported, 'DEFINES_TYPE_ALIAS' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 21",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_ENUM]->(n:Enum) WHERE contains(lower(n.name), lower(\"e\")) RETURN n.name AS name, 'Enum' AS kind, file.relativePath AS file, n.line AS line, n.isExported AS isExported, 'DEFINES_ENUM' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 21",
+        "rows": []
+      }
+    ],
+    "output": {
+      "query": {
+        "name": "e",
+        "exact": false,
+        "limit": 20
+      },
+      "definitions": [
+        {
+          "name": "greet",
+          "kind": "Function",
+          "file": "packages/core/src/greet.ts",
+          "line": 1,
+          "isExported": true,
+          "relationship": "DEFINES_FUNCTION"
+        },
+        {
+          "name": "report",
+          "kind": "Function",
+          "file": "packages/core/src/report.ts",
+          "line": 3,
+          "isExported": true,
+          "relationship": "DEFINES_FUNCTION"
+        }
+      ],
+      "page": {
+        "offset": 0,
+        "returned": 2
+      }
+    }
+  },
+  {
+    "tool": "list_exports",
+    "args": {},
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_FUNCTION]->(n:Function) WHERE n.isExported = true RETURN file.relativePath AS file, n.name AS name, 'Function' AS kind, n.line AS line, 'DEFINES_FUNCTION' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 51",
+        "rows": [
+          {
+            "file": "packages/app/src/main.ts",
+            "name": "run",
+            "kind": "Function",
+            "line": 4,
+            "relationship": "DEFINES_FUNCTION"
+          },
+          {
+            "file": "packages/core/src/greet.ts",
+            "name": "greet",
+            "kind": "Function",
+            "line": 1,
+            "relationship": "DEFINES_FUNCTION"
+          },
+          {
+            "file": "packages/core/src/math.ts",
+            "name": "add",
+            "kind": "Function",
+            "line": 1,
+            "relationship": "DEFINES_FUNCTION"
+          },
+          {
+            "file": "packages/core/src/nested/multiply.ts",
+            "name": "multiply",
+            "kind": "Function",
+            "line": 1,
+            "relationship": "DEFINES_FUNCTION"
+          },
+          {
+            "file": "packages/core/src/report.ts",
+            "name": "report",
+            "kind": "Function",
+            "line": 3,
+            "relationship": "DEFINES_FUNCTION"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(n:Class) WHERE n.isExported = true RETURN file.relativePath AS file, n.name AS name, 'Class' AS kind, n.line AS line, 'DEFINES_CLASS' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 51",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_VARIABLE]->(n:Variable) WHERE n.isExported = true RETURN file.relativePath AS file, n.name AS name, 'Variable' AS kind, n.line AS line, 'DEFINES_VARIABLE' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 51",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_INTERFACE]->(n:Interface) WHERE n.isExported = true RETURN file.relativePath AS file, n.name AS name, 'Interface' AS kind, n.line AS line, 'DEFINES_INTERFACE' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 51",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_TYPE_ALIAS]->(n:TypeAlias) WHERE n.isExported = true RETURN file.relativePath AS file, n.name AS name, 'TypeAlias' AS kind, n.line AS line, 'DEFINES_TYPE_ALIAS' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 51",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_ENUM]->(n:Enum) WHERE n.isExported = true RETURN file.relativePath AS file, n.name AS name, 'Enum' AS kind, n.line AS line, 'DEFINES_ENUM' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 51",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:RE_EXPORTS]->(target:Import) WHERE true RETURN file.relativePath AS file, target.source AS name, 'Import' AS kind, target.line AS line, 'RE_EXPORTS' AS relationship ORDER BY file.relativePath, target.line, target.source LIMIT 51",
+        "rows": [
+          {
+            "file": "packages/core/src/index.ts",
+            "name": "./math",
+            "kind": "Import",
+            "line": 1,
+            "relationship": "RE_EXPORTS"
+          },
+          {
+            "file": "packages/core/src/index.ts",
+            "name": "./nested",
+            "kind": "Import",
+            "line": 3,
+            "relationship": "RE_EXPORTS"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:RE_EXPORTS_FUNCTION]->(target:Function) WHERE true RETURN file.relativePath AS file, target.name AS name, 'Function' AS kind, target.line AS line, 'RE_EXPORTS_FUNCTION' AS relationship ORDER BY file.relativePath, target.line, target.name LIMIT 51",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:RE_EXPORTS_CLASS]->(target:Class) WHERE true RETURN file.relativePath AS file, target.name AS name, 'Class' AS kind, target.line AS line, 'RE_EXPORTS_CLASS' AS relationship ORDER BY file.relativePath, target.line, target.name LIMIT 51",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:RE_EXPORTS_VARIABLE]->(target:Variable) WHERE true RETURN file.relativePath AS file, target.name AS name, 'Variable' AS kind, target.line AS line, 'RE_EXPORTS_VARIABLE' AS relationship ORDER BY file.relativePath, target.line, target.name LIMIT 51",
+        "rows": []
+      }
+    ],
+    "output": {
+      "query": {
+        "limit": 50
+      },
+      "exports": [
+        {
+          "file": "packages/app/src/main.ts",
+          "name": "run",
+          "kind": "Function",
+          "line": 4,
+          "relationship": "DEFINES_FUNCTION"
+        },
+        {
+          "file": "packages/core/src/greet.ts",
+          "name": "greet",
+          "kind": "Function",
+          "line": 1,
+          "relationship": "DEFINES_FUNCTION"
+        },
+        {
+          "file": "packages/core/src/math.ts",
+          "name": "add",
+          "kind": "Function",
+          "line": 1,
+          "relationship": "DEFINES_FUNCTION"
+        },
+        {
+          "file": "packages/core/src/nested/multiply.ts",
+          "name": "multiply",
+          "kind": "Function",
+          "line": 1,
+          "relationship": "DEFINES_FUNCTION"
+        },
+        {
+          "file": "packages/core/src/report.ts",
+          "name": "report",
+          "kind": "Function",
+          "line": 3,
+          "relationship": "DEFINES_FUNCTION"
+        },
+        {
+          "file": "packages/core/src/index.ts",
+          "name": "./math",
+          "kind": "Import",
+          "line": 1,
+          "relationship": "RE_EXPORTS"
+        },
+        {
+          "file": "packages/core/src/index.ts",
+          "name": "./nested",
+          "kind": "Import",
+          "line": 3,
+          "relationship": "RE_EXPORTS"
+        }
+      ],
+      "page": {
+        "offset": 0,
+        "returned": 7
+      }
+    }
+  },
+  {
+    "tool": "list_routes",
+    "args": {},
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_ROUTE]->(route:Route) WHERE true OPTIONAL MATCH (route)-[:ROUTE_HANDLED_BY]->(handler:Function) RETURN file.relativePath AS file, route.line AS line, route.method AS method, route.path AS path, route.fullPath AS fullPath, route.framework AS framework, route.handlerName AS handlerName, handler.name AS handler ORDER BY file.relativePath, route.line, route.method, route.path, handler.name LIMIT 51",
+        "rows": []
+      }
+    ],
+    "output": {
+      "query": {
+        "limit": 50
+      },
+      "routes": [],
+      "page": {
+        "offset": 0,
+        "returned": 0
+      }
+    }
+  },
+  {
+    "tool": "list_entrypoints",
+    "args": {},
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(entrypoint:EntryPoint) WHERE true OPTIONAL MATCH (entrypoint)-[:ENTRYPOINT_HANDLED_BY]->(handler:Function) RETURN file.relativePath AS file, entrypoint.line AS line, entrypoint.kind AS kind, entrypoint.trigger AS trigger, entrypoint.library AS library, entrypoint.handlerName AS handlerName, handler.name AS handler ORDER BY file.relativePath, entrypoint.line, entrypoint.kind, entrypoint.trigger, handler.name LIMIT 51",
+        "rows": []
+      }
+    ],
+    "output": {
+      "query": {
+        "limit": 50
+      },
+      "entrypoints": [],
+      "page": {
+        "offset": 0,
+        "returned": 0
+      }
+    }
+  },
+  {
+    "tool": "list_env_config",
+    "args": {},
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[rel:USES_ENV_FILE]->(env:EnvVar) WHERE true RETURN 'env' AS kind, file.relativePath AS file, rel.line AS line, env.name AS name, rel.access AS value, NULL AS valueType, file.relativePath AS consumer, 'File' AS consumerKind ORDER BY file.relativePath, rel.line LIMIT 51",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_CONFIG_FILE]->(config:ConfigValue) WHERE true RETURN 'config' AS kind, file.relativePath AS file, config.line AS line, config.name AS name, config.value AS value, config.valueType AS valueType, file.relativePath AS consumer, 'File' AS consumerKind ORDER BY file.relativePath, config.line LIMIT 51",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[rel:CONSUMES_CONFIG_FILE]->(config:ConfigValue) WHERE true RETURN 'config-consumer' AS kind, file.relativePath AS file, config.line AS line, config.name AS name, config.value AS value, config.valueType AS valueType, rel.localName AS consumer, 'File' AS consumerKind ORDER BY file.relativePath, config.line LIMIT 51",
+        "rows": []
+      }
+    ],
+    "output": {
+      "query": {
+        "limit": 50
+      },
+      "envConfig": [],
+      "page": {
+        "offset": 0,
+        "returned": 0
+      }
+    }
+  },
+  {
+    "tool": "list_data_access",
+    "args": {},
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (source:File)-[rel:ACCESSES_DATA_FILE]->(model:DataModel) WHERE true WITH source AS file, source, rel, model RETURN 'File' AS sourceKind, source.relativePath AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 51",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (source:Function)-[rel:ACCESSES_DATA_FUNCTION]->(model:DataModel) WHERE true OPTIONAL MATCH (file:File)-[:DEFINES_FUNCTION]->(source) RETURN 'Function' AS sourceKind, source.name AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 51",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (source:Route)-[rel:ACCESSES_DATA_ROUTE]->(model:DataModel) WHERE true OPTIONAL MATCH (file:File)-[:DECLARES_ROUTE]->(source) RETURN 'Route' AS sourceKind, source.path AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 51",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (source:EntryPoint)-[rel:ACCESSES_DATA_ENTRYPOINT]->(model:DataModel) WHERE true OPTIONAL MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(source) RETURN 'EntryPoint' AS sourceKind, source.trigger AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 51",
+        "rows": []
+      }
+    ],
+    "output": {
+      "query": {
+        "limit": 50
+      },
+      "dataAccess": [],
+      "page": {
+        "offset": 0,
+        "returned": 0
+      }
+    }
+  },
+  {
+    "tool": "find_callers",
+    "args": {
+      "name": "add"
+    },
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (call:Call)-[:CALL_RESOLVES_TO]->(target:Function) MATCH (caller:Function)-[:CALLS]->(call) MATCH (file:File)-[:DEFINES_FUNCTION]->(caller) WHERE target.name = \"add\" RETURN target.name AS target, caller.name AS caller, 'Function' AS callerKind, file.relativePath AS file, call.line AS line, call.expression AS expression, 'CALLS' AS relationship ORDER BY file.relativePath, call.line LIMIT 21",
+        "rows": [
+          {
+            "target": "add",
+            "caller": "run",
+            "callerKind": "Function",
+            "file": "packages/app/src/main.ts",
+            "line": 5,
+            "expression": "add",
+            "relationship": "CALLS"
+          },
+          {
+            "target": "add",
+            "caller": "run",
+            "callerKind": "Function",
+            "file": "packages/app/src/main.ts",
+            "line": 5,
+            "expression": "core.add",
+            "relationship": "CALLS"
+          },
+          {
+            "target": "add",
+            "caller": "report",
+            "callerKind": "Function",
+            "file": "packages/core/src/report.ts",
+            "line": 4,
+            "expression": "add",
+            "relationship": "CALLS"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (call:Call)-[:CALL_RESOLVES_TO]->(target:Function) MATCH (caller:Function)-[:CALLS]->(call) MATCH (file:File)-[:DEFINES_CLASS]->(class:Class)-[:DEFINES_METHOD]->(caller) WHERE target.name = \"add\" RETURN target.name AS target, caller.name AS caller, 'Method' AS callerKind, class.name AS className, file.relativePath AS file, call.line AS line, call.expression AS expression, 'CALLS' AS relationship ORDER BY file.relativePath, call.line LIMIT 21",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (call:Call)-[:CALL_RESOLVES_TO]->(target:Function) MATCH (file:File)-[:MODULE_CALLS]->(call) WHERE target.name = \"add\" RETURN target.name AS target, file.relativePath AS caller, 'File' AS callerKind, file.relativePath AS file, call.line AS line, call.expression AS expression, 'MODULE_CALLS' AS relationship ORDER BY file.relativePath, call.line LIMIT 21",
+        "rows": []
+      }
+    ],
+    "output": {
+      "query": {
+        "name": "add",
+        "exact": true,
+        "limit": 20
+      },
+      "callers": [
+        {
+          "target": "add",
+          "caller": "run",
+          "callerKind": "Function",
+          "file": "packages/app/src/main.ts",
+          "line": 5,
+          "expression": "add",
+          "relationship": "CALLS"
+        },
+        {
+          "target": "add",
+          "caller": "run",
+          "callerKind": "Function",
+          "file": "packages/app/src/main.ts",
+          "line": 5,
+          "expression": "core.add",
+          "relationship": "CALLS"
+        },
+        {
+          "target": "add",
+          "caller": "report",
+          "callerKind": "Function",
+          "file": "packages/core/src/report.ts",
+          "line": 4,
+          "expression": "add",
+          "relationship": "CALLS"
+        }
+      ],
+      "page": {
+        "offset": 0,
+        "returned": 3
+      }
+    }
+  },
+  {
+    "tool": "find_callers",
+    "args": {
+      "name": "multiply"
+    },
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (call:Call)-[:CALL_RESOLVES_TO]->(target:Function) MATCH (caller:Function)-[:CALLS]->(call) MATCH (file:File)-[:DEFINES_FUNCTION]->(caller) WHERE target.name = \"multiply\" RETURN target.name AS target, caller.name AS caller, 'Function' AS callerKind, file.relativePath AS file, call.line AS line, call.expression AS expression, 'CALLS' AS relationship ORDER BY file.relativePath, call.line LIMIT 21",
+        "rows": [
+          {
+            "target": "multiply",
+            "caller": "run",
+            "callerKind": "Function",
+            "file": "packages/app/src/main.ts",
+            "line": 5,
+            "expression": "times",
+            "relationship": "CALLS"
+          },
+          {
+            "target": "multiply",
+            "caller": "report",
+            "callerKind": "Function",
+            "file": "packages/core/src/report.ts",
+            "line": 4,
+            "expression": "times",
+            "relationship": "CALLS"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (call:Call)-[:CALL_RESOLVES_TO]->(target:Function) MATCH (caller:Function)-[:CALLS]->(call) MATCH (file:File)-[:DEFINES_CLASS]->(class:Class)-[:DEFINES_METHOD]->(caller) WHERE target.name = \"multiply\" RETURN target.name AS target, caller.name AS caller, 'Method' AS callerKind, class.name AS className, file.relativePath AS file, call.line AS line, call.expression AS expression, 'CALLS' AS relationship ORDER BY file.relativePath, call.line LIMIT 21",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (call:Call)-[:CALL_RESOLVES_TO]->(target:Function) MATCH (file:File)-[:MODULE_CALLS]->(call) WHERE target.name = \"multiply\" RETURN target.name AS target, file.relativePath AS caller, 'File' AS callerKind, file.relativePath AS file, call.line AS line, call.expression AS expression, 'MODULE_CALLS' AS relationship ORDER BY file.relativePath, call.line LIMIT 21",
+        "rows": []
+      }
+    ],
+    "output": {
+      "query": {
+        "name": "multiply",
+        "exact": true,
+        "limit": 20
+      },
+      "callers": [
+        {
+          "target": "multiply",
+          "caller": "run",
+          "callerKind": "Function",
+          "file": "packages/app/src/main.ts",
+          "line": 5,
+          "expression": "times",
+          "relationship": "CALLS"
+        },
+        {
+          "target": "multiply",
+          "caller": "report",
+          "callerKind": "Function",
+          "file": "packages/core/src/report.ts",
+          "line": 4,
+          "expression": "times",
+          "relationship": "CALLS"
+        }
+      ],
+      "page": {
+        "offset": 0,
+        "returned": 2
+      }
+    }
+  },
+  {
+    "tool": "find_references",
+    "args": {
+      "symbol": "greet"
+    },
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:RE_EXPORTS_FUNCTION|RE_EXPORTS_CLASS|RE_EXPORTS_VARIABLE]->(n) RETURN id(n) AS id",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_FUNCTION]->(n:Function) RETURN id(n) AS id, n.name AS name, n.className AS className, file.relativePath AS file, n.line AS line, n.isExported AS isExported",
+        "rows": [
+          {
+            "id": "file:packages/app/src/main.ts:function:4:run",
+            "name": "run",
+            "className": null,
+            "file": "packages/app/src/main.ts",
+            "line": 4,
+            "isExported": true
+          },
+          {
+            "id": "file:packages/core/src/greet.ts:function:1:greet",
+            "name": "greet",
+            "className": null,
+            "file": "packages/core/src/greet.ts",
+            "line": 1,
+            "isExported": true
+          },
+          {
+            "id": "file:packages/core/src/math.ts:function:1:add",
+            "name": "add",
+            "className": null,
+            "file": "packages/core/src/math.ts",
+            "line": 1,
+            "isExported": true
+          },
+          {
+            "id": "file:packages/core/src/nested/multiply.ts:function:1:multiply",
+            "name": "multiply",
+            "className": null,
+            "file": "packages/core/src/nested/multiply.ts",
+            "line": 1,
+            "isExported": true
+          },
+          {
+            "id": "file:packages/core/src/report.ts:function:3:report",
+            "name": "report",
+            "className": null,
+            "file": "packages/core/src/report.ts",
+            "line": 3,
+            "isExported": true
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(class:Class)-[:DEFINES_METHOD]->(n:Function) RETURN id(n) AS id, n.name AS name, class.name AS className, file.relativePath AS file, n.line AS line, false AS isExported",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(n:Class) RETURN id(n) AS id, n.name AS name, NULL AS className, file.relativePath AS file, n.line AS line, n.isExported AS isExported",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_INTERFACE]->(n:Interface) RETURN id(n) AS id, n.name AS name, NULL AS className, file.relativePath AS file, n.line AS line, n.isExported AS isExported",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_TYPE_ALIAS]->(n:TypeAlias) RETURN id(n) AS id, n.name AS name, NULL AS className, file.relativePath AS file, n.line AS line, n.isExported AS isExported",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_ENUM]->(n:Enum) RETURN id(n) AS id, n.name AS name, NULL AS className, file.relativePath AS file, n.line AS line, n.isExported AS isExported",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_VARIABLE]->(n:Variable) RETURN id(n) AS id, n.name AS name, NULL AS className, file.relativePath AS file, n.line AS line, n.isExported AS isExported",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:IMPORTS]->(imp:Import) OPTIONAL MATCH (imp)-[:RESOLVES_TO]->(target:File) RETURN id(imp) AS id, file.relativePath AS file, target.relativePath AS target, imp.source AS source, imp.specifier AS specifier, imp.line AS line, imp.isReExport AS isReExport, imp.isWildcard AS isWildcard, imp.isDynamic AS isDynamic, imp.isCjs AS isCjs, imp.isTypeOnly AS isTypeOnly, imp.bindings AS bindings",
+        "rows": [
+          {
+            "id": "file:packages/app/src/main.ts:import:1:@barrel/core",
+            "file": "packages/app/src/main.ts",
+            "target": "packages/core/src/index.ts",
+            "source": "@barrel/core",
+            "specifier": "import { add, sayHello as hello, times } from \"@barrel/core\";",
+            "line": 1,
+            "isReExport": false,
+            "isWildcard": false,
+            "isDynamic": false,
+            "isCjs": false,
+            "isTypeOnly": false,
+            "bindings": "[{\"imported\":\"add\",\"local\":\"add\",\"kind\":\"named\"},{\"imported\":\"sayHello\",\"local\":\"hello\",\"kind\":\"named\"},{\"imported\":\"times\",\"local\":\"times\",\"kind\":\"named\"}]"
+          },
+          {
+            "id": "file:packages/app/src/main.ts:import:2:@barrel/core",
+            "file": "packages/app/src/main.ts",
+            "target": "packages/core/src/index.ts",
+            "source": "@barrel/core",
+            "specifier": "import * as core from \"@barrel/core\";",
+            "line": 2,
+            "isReExport": false,
+            "isWildcard": false,
+            "isDynamic": false,
+            "isCjs": false,
+            "isTypeOnly": false,
+            "bindings": "[{\"imported\":\"*\",\"local\":\"core\",\"kind\":\"namespace\"}]"
+          },
+          {
+            "id": "file:packages/core/src/index.ts:import:1:./math",
+            "file": "packages/core/src/index.ts",
+            "target": "packages/core/src/math.ts",
+            "source": "./math",
+            "specifier": "export * from \"./math\";",
+            "line": 1,
+            "isReExport": true,
+            "isWildcard": true,
+            "isDynamic": false,
+            "isCjs": false,
+            "isTypeOnly": false,
+            "bindings": null
+          },
+          {
+            "id": "file:packages/core/src/index.ts:import:2:./greet",
+            "file": "packages/core/src/index.ts",
+            "target": "packages/core/src/greet.ts",
+            "source": "./greet",
+            "specifier": "export { greet as sayHello } from \"./greet\";",
+            "line": 2,
+            "isReExport": true,
+            "isWildcard": false,
+            "isDynamic": false,
+            "isCjs": false,
+            "isTypeOnly": false,
+            "bindings": null
+          },
+          {
+            "id": "file:packages/core/src/index.ts:import:3:./nested",
+            "file": "packages/core/src/index.ts",
+            "target": "packages/core/src/nested/index.ts",
+            "source": "./nested",
+            "specifier": "export * from \"./nested\";",
+            "line": 3,
+            "isReExport": true,
+            "isWildcard": true,
+            "isDynamic": false,
+            "isCjs": false,
+            "isTypeOnly": false,
+            "bindings": null
+          },
+          {
+            "id": "file:packages/core/src/nested/index.ts:import:1:./multiply",
+            "file": "packages/core/src/nested/index.ts",
+            "target": "packages/core/src/nested/multiply.ts",
+            "source": "./multiply",
+            "specifier": "export { multiply as times } from \"./multiply\";",
+            "line": 1,
+            "isReExport": true,
+            "isWildcard": false,
+            "isDynamic": false,
+            "isCjs": false,
+            "isTypeOnly": false,
+            "bindings": null
+          },
+          {
+            "id": "file:packages/core/src/report.ts:import:1:./index",
+            "file": "packages/core/src/report.ts",
+            "target": "packages/core/src/index.ts",
+            "source": "./index",
+            "specifier": "import { add, sayHello, times } from \"./index\";",
+            "line": 1,
+            "isReExport": false,
+            "isWildcard": false,
+            "isDynamic": false,
+            "isCjs": false,
+            "isTypeOnly": false,
+            "bindings": "[{\"imported\":\"add\",\"local\":\"add\",\"kind\":\"named\"},{\"imported\":\"sayHello\",\"local\":\"sayHello\",\"kind\":\"named\"},{\"imported\":\"times\",\"local\":\"times\",\"kind\":\"named\"}]"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (caller:Function)-[:CALLS]->(call:Call)-[:CALL_RESOLVES_TO]->(fn:Function) WHERE id(fn) IN $ids RETURN id(fn) AS target, id(caller) AS caller, call.line AS line, call.expression AS expression",
+        "params": {
+          "ids": [
+            "file:packages/core/src/greet.ts:function:1:greet"
+          ]
+        },
+        "rows": [
+          {
+            "target": "file:packages/core/src/greet.ts:function:1:greet",
+            "caller": "file:packages/app/src/main.ts:function:4:run",
+            "line": 5,
+            "expression": "hello"
+          },
+          {
+            "target": "file:packages/core/src/greet.ts:function:1:greet",
+            "caller": "file:packages/core/src/report.ts:function:3:report",
+            "line": 4,
+            "expression": "sayHello"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:MODULE_CALLS]->(call:Call)-[:CALL_RESOLVES_TO]->(fn:Function) WHERE id(fn) IN $ids RETURN id(fn) AS target, file.relativePath AS file, call.line AS line, call.expression AS expression",
+        "params": {
+          "ids": [
+            "file:packages/core/src/greet.ts:function:1:greet"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (fn:Function)-[:PASSED_TO]->(call:Call) WHERE id(fn) IN $ids OPTIONAL MATCH (caller:Function)-[:CALLS]->(call) OPTIONAL MATCH (file:File)-[:MODULE_CALLS]->(call) RETURN id(fn) AS target, id(caller) AS caller, file.relativePath AS file, call.line AS line, call.expression AS expression",
+        "params": {
+          "ids": [
+            "file:packages/core/src/greet.ts:function:1:greet"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_ROUTE]->(route:Route)-[rel:ROUTE_HANDLED_BY|ROUTE_LIFECYCLE_STEP]->(fn:Function) WHERE id(fn) IN $ids RETURN id(fn) AS target, file.relativePath AS file, route.line AS line, route.method AS method, coalesce(route.fullPath, route.path) AS path, label(rel) AS relType, rel.role AS role",
+        "params": {
+          "ids": [
+            "file:packages/core/src/greet.ts:function:1:greet"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(entrypoint:EntryPoint)-[:ENTRYPOINT_HANDLED_BY]->(fn:Function) WHERE id(fn) IN $ids RETURN id(fn) AS target, file.relativePath AS file, entrypoint.line AS line, entrypoint.kind AS entrypointKind, entrypoint.trigger AS trigger",
+        "params": {
+          "ids": [
+            "file:packages/core/src/greet.ts:function:1:greet"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_FUNCTION]->(fn:Function) WHERE id(fn) IN $ids RETURN id(fn) AS id, fn.name AS name, fn.className AS className, file.relativePath AS file, fn.line AS line, fn.endLine AS endLine",
+        "params": {
+          "ids": [
+            "file:packages/app/src/main.ts:function:4:run",
+            "file:packages/core/src/report.ts:function:3:report"
+          ]
+        },
+        "rows": [
+          {
+            "id": "file:packages/app/src/main.ts:function:4:run",
+            "name": "run",
+            "className": null,
+            "file": "packages/app/src/main.ts",
+            "line": 4,
+            "endLine": 6
+          },
+          {
+            "id": "file:packages/core/src/report.ts:function:3:report",
+            "name": "report",
+            "className": null,
+            "file": "packages/core/src/report.ts",
+            "line": 3,
+            "endLine": 5
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(class:Class)-[:DEFINES_METHOD]->(fn:Function) WHERE id(fn) IN $ids RETURN id(fn) AS id, fn.name AS name, class.name AS className, file.relativePath AS file, fn.line AS line, fn.endLine AS endLine",
+        "params": {
+          "ids": [
+            "file:packages/app/src/main.ts:function:4:run",
+            "file:packages/core/src/report.ts:function:3:report"
+          ]
+        },
+        "rows": []
+      }
+    ],
+    "output": {
+      "symbol": "greet",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "greet",
+          "file": "packages/core/src/greet.ts",
+          "line": 1,
+          "isExported": true
+        }
+      ],
+      "total": 5,
+      "counts": {
+        "import": 2,
+        "call": 2,
+        "re-export": 1
+      },
+      "references": [
+        {
+          "kind": "import",
+          "file": "packages/app/src/main.ts",
+          "line": 1,
+          "detail": "sayHello as hello"
+        },
+        {
+          "kind": "call",
+          "file": "packages/app/src/main.ts",
+          "line": 5,
+          "from": "run",
+          "detail": "hello"
+        },
+        {
+          "kind": "re-export",
+          "file": "packages/core/src/index.ts",
+          "line": 2,
+          "detail": "greet as sayHello"
+        },
+        {
+          "kind": "import",
+          "file": "packages/core/src/report.ts",
+          "line": 1,
+          "detail": "sayHello"
+        },
+        {
+          "kind": "call",
+          "file": "packages/core/src/report.ts",
+          "line": 4,
+          "from": "report",
+          "detail": "sayHello"
+        }
+      ],
+      "note": "Calls come from resolved call edges, so calls the scanner could not resolve are missing; possible: true marks namespace and dynamic imports that may not use the declaration.",
+      "page": {
+        "offset": 0,
+        "returned": 5
+      }
+    }
+  },
+  {
+    "tool": "impact_of",
+    "args": {
+      "symbol": "add"
+    },
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_FUNCTION]->(fn:Function) RETURN id(fn) AS id, fn.name AS name, fn.className AS className, file.relativePath AS file, fn.line AS line, fn.endLine AS endLine",
+        "params": {},
+        "rows": [
+          {
+            "id": "file:packages/app/src/main.ts:function:4:run",
+            "name": "run",
+            "className": null,
+            "file": "packages/app/src/main.ts",
+            "line": 4,
+            "endLine": 6
+          },
+          {
+            "id": "file:packages/core/src/greet.ts:function:1:greet",
+            "name": "greet",
+            "className": null,
+            "file": "packages/core/src/greet.ts",
+            "line": 1,
+            "endLine": 3
+          },
+          {
+            "id": "file:packages/core/src/math.ts:function:1:add",
+            "name": "add",
+            "className": null,
+            "file": "packages/core/src/math.ts",
+            "line": 1,
+            "endLine": 3
+          },
+          {
+            "id": "file:packages/core/src/nested/multiply.ts:function:1:multiply",
+            "name": "multiply",
+            "className": null,
+            "file": "packages/core/src/nested/multiply.ts",
+            "line": 1,
+            "endLine": 3
+          },
+          {
+            "id": "file:packages/core/src/report.ts:function:3:report",
+            "name": "report",
+            "className": null,
+            "file": "packages/core/src/report.ts",
+            "line": 3,
+            "endLine": 5
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(class:Class)-[:DEFINES_METHOD]->(fn:Function) RETURN id(fn) AS id, fn.name AS name, class.name AS className, file.relativePath AS file, fn.line AS line, fn.endLine AS endLine",
+        "params": {},
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (caller:Function)-[:CALLS]->(call:Call)-[:CALL_RESOLVES_TO]->(callee:Function) RETURN id(caller) AS caller, id(callee) AS callee, call.line AS line",
+        "rows": [
+          {
+            "caller": "file:packages/app/src/main.ts:function:4:run",
+            "callee": "file:packages/core/src/math.ts:function:1:add",
+            "line": 5
+          },
+          {
+            "caller": "file:packages/app/src/main.ts:function:4:run",
+            "callee": "file:packages/core/src/nested/multiply.ts:function:1:multiply",
+            "line": 5
+          },
+          {
+            "caller": "file:packages/app/src/main.ts:function:4:run",
+            "callee": "file:packages/core/src/greet.ts:function:1:greet",
+            "line": 5
+          },
+          {
+            "caller": "file:packages/app/src/main.ts:function:4:run",
+            "callee": "file:packages/core/src/math.ts:function:1:add",
+            "line": 5
+          },
+          {
+            "caller": "file:packages/core/src/report.ts:function:3:report",
+            "callee": "file:packages/core/src/math.ts:function:1:add",
+            "line": 4
+          },
+          {
+            "caller": "file:packages/core/src/report.ts:function:3:report",
+            "callee": "file:packages/core/src/nested/multiply.ts:function:1:multiply",
+            "line": 4
+          },
+          {
+            "caller": "file:packages/core/src/report.ts:function:3:report",
+            "callee": "file:packages/core/src/greet.ts:function:1:greet",
+            "line": 4
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:MODULE_CALLS]->(call:Call)-[:CALL_RESOLVES_TO]->(fn:Function) WHERE id(fn) IN $ids RETURN file.relativePath AS file, call.line AS line, call.expression AS expression, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:packages/core/src/math.ts:function:1:add",
+            "file:packages/app/src/main.ts:function:4:run",
+            "file:packages/core/src/report.ts:function:3:report"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_ROUTE]->(route:Route)-[rel:ROUTE_HANDLED_BY|ROUTE_LIFECYCLE_STEP]->(fn:Function) WHERE id(fn) IN $ids RETURN route.method AS method, route.path AS path, route.fullPath AS fullPath, route.framework AS framework, file.relativePath AS file, route.line AS line, label(rel) AS relType, rel.role AS role, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:packages/core/src/math.ts:function:1:add",
+            "file:packages/app/src/main.ts:function:4:run",
+            "file:packages/core/src/report.ts:function:3:report"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(entrypoint:EntryPoint)-[:ENTRYPOINT_HANDLED_BY]->(fn:Function) WHERE id(fn) IN $ids RETURN entrypoint.kind AS kind, entrypoint.trigger AS trigger, entrypoint.library AS library, file.relativePath AS file, entrypoint.line AS line, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:packages/core/src/math.ts:function:1:add",
+            "file:packages/app/src/main.ts:function:4:run",
+            "file:packages/core/src/report.ts:function:3:report"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (fn:Function)-[rel:ACCESSES_DATA_FUNCTION]->(model:DataModel) WHERE id(fn) IN $ids RETURN model.name AS model, model.library AS library, rel.operation AS operation, rel.line AS line, rel.expression AS expression, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:packages/core/src/math.ts:function:1:add"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (fn:Function)-[rel:USES_ENV_FUNCTION]->(env:EnvVar) WHERE id(fn) IN $ids RETURN env.name AS name, rel.access AS access, rel.line AS line, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:packages/core/src/math.ts:function:1:add"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (fn:Function)-[rel:CONSUMES_CONFIG_FUNCTION]->(config:ConfigValue) WHERE id(fn) IN $ids RETURN config.name AS name, rel.localName AS localName, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:packages/core/src/math.ts:function:1:add"
+          ]
+        },
+        "rows": []
+      }
+    ],
+    "output": {
+      "symbol": "add",
+      "file": null,
+      "maxDepth": 5,
+      "seeds": [
+        {
+          "name": "add",
+          "className": null,
+          "file": "packages/core/src/math.ts",
+          "line": 1,
+          "endLine": 3
+        }
+      ],
+      "callers": [
+        {
+          "name": "run",
+          "className": null,
+          "file": "packages/app/src/main.ts",
+          "line": 4,
+          "endLine": 6,
+          "depth": 1
+        },
+        {
+          "name": "report",
+          "className": null,
+          "file": "packages/core/src/report.ts",
+          "line": 3,
+          "endLine": 5,
+          "depth": 1
+        }
+      ],
+      "moduleCallers": [],
+      "routes": [],
+      "entrypoints": [],
+      "dataAccess": [],
+      "envVars": [],
+      "config": [],
+      "page": {
+        "offset": 0,
+        "returned": 2
+      }
+    }
+  }
+]

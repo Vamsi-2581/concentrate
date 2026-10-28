@@ -306,6 +306,32 @@
         "args": {}
       }
     ],
+    "barrel-calls": [
+      {
+        "tool": "find_callers",
+        "args": {
+          "name": "add"
+        }
+      },
+      {
+        "tool": "find_callers",
+        "args": {
+          "name": "multiply"
+        }
+      },
+      {
+        "tool": "find_references",
+        "args": {
+          "symbol": "greet"
+        }
+      },
+      {
+        "tool": "impact_of",
+        "args": {
+          "symbol": "add"
+        }
+      }
+    ],
     "local-re-exports": [
       {
         "tool": "find_definitions",
