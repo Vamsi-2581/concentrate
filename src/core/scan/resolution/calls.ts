@@ -31,13 +31,11 @@ export function addCallResolutionRelationships(graph: IGraphContributor): {
       continue;
     }
 
+    // A call is made either inside a function or by a file's top-level code.
     const callerFunctionId = relationshipIndex.callerFunctionByCallId.get(node.id);
-    if (!callerFunctionId) {
-      unresolved++;
-      continue;
-    }
-
-    const callerFileId = relationshipIndex.fileByFunctionId.get(callerFunctionId);
+    const callerFileId = callerFunctionId
+      ? relationshipIndex.fileByFunctionId.get(callerFunctionId)
+      : relationshipIndex.callerFileByModuleCallId.get(node.id);
     if (!callerFileId) {
       unresolved++;
       continue;

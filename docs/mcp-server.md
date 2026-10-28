@@ -88,6 +88,59 @@ Example `tools/call` request:
 - `list_data_access`: lists data-access operations by source, model, library,
   and operation.
 
+### Agent tools
+
+These answer a whole question in one call instead of a chain of lookups.
+
+- `impact_of({ symbol?, file?, maxDepth = 5, limit = 50 })`: what is affected
+  if a function, method, class or file changes. A symbol selects functions with
+  that name and the methods of a class with that name; a file selects every
+  function in it; both together narrow the symbol to the file. Returns
+  `callers` (transitive, with `depth`), `moduleCallers` (top-level code that
+  calls the seeds or their callers), `routes` and `entrypoints` that run any of
+  them (`reachedThrough` says which function and in which role), and the
+  `dataAccess`, `envVars` and `config` of the seeds themselves. For a route,
+  use `route_details`.
+- `detect_changes({ base = "HEAD", maxDepth = 5, limit = 50 })`: runs
+  `git diff --unified=0 <base>` (no shell; `base` must look like a revision)
+  plus untracked files, maps the changed lines onto declarations whose
+  `line..endLine` span they touch, and returns the impact of the changed
+  functions as in `impact_of`. Changed files the graph does not know are listed
+  under `unscannedFiles`; rescan, or keep `concentrate watch` running, to
+  include them. Fails when the scanned project is not in a git work tree.
+- `route_details({ method, path, limit = 5 })`: for each matching route (method
+  case-insensitive, path matched against the resolved full path or the path as
+  declared): `handlers`, `lifecycle` steps (middleware, guards, hooks, ...) in
+  order, the `callChain` from those functions (up to 4 levels, caller → callee
+  with the call line), and the `dataAccess`, `envVars` and `config` of the
+  route and that chain (`usedBy` lists where each one is used).
+- `get_symbol_source({ name, file?, kind?, limit = 5 })`: source text of a
+  declaration, sliced from the file on disk with the span from the last scan
+  (at most 400 lines each, `truncated: true` beyond). `Class.method` selects
+  one class's method; `kind` is one of function, method, class, interface,
+  type, enum, variable.
+- `get_file_outline({ file })`: the declarations of one file from the graph in
+  line order: imports, functions, classes with their methods and fields,
+  interfaces, types, enums, variables, routes and entrypoints. `file` can be a
+  unique path suffix; several matches return `candidates`.
+
+`file` arguments accept the scan-relative path or a path suffix
+(`users/service.ts` matches `src/users/service.ts`).
+
+Example:
+
+```json
+{ "name": "impact_of", "arguments": { "symbol": "UserService", "maxDepth": 3 } }
+```
+
+### Output budget
+
+Agent tool results are kept under 24,000 characters of JSON. When a result is
+larger, its longest lists are halved until it fits, and a `truncated` object
+lists how many items each list lost (for example `{ "callers": 120 }`). Narrow
+the call (`file`, a lower `maxDepth` or `limit`) to see the rest. The other
+tools are bounded by their `limit` argument instead.
+
 ## Current Limits
 
 - The first server pass is read-only and stdio-only.
@@ -97,7 +150,10 @@ Example `tools/call` request:
   scanner; they do not execute application code or infer runtime framework
   configuration beyond scanned source relationships.
 - Results depend on the existing graph quality and known parser/resolver
-  limitations.
+  limitations. For the agent tools in particular: Express handlers imported
+  from another file are not linked to their routes, and env reads inside class
+  methods are recorded on the file rather than the method, so `impact_of` and
+  `route_details` cannot follow those links yet.
 
 ## Troubleshooting
 

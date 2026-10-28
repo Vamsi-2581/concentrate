@@ -1211,5 +1211,1094 @@
       },
       "routes": []
     }
+  },
+  {
+    "tool": "route_details",
+    "args": {
+      "method": "post",
+      "path": "/users"
+    },
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_ROUTE]->(route:Route) WHERE lower(route.method) = lower($method) AND (route.fullPath = $path OR route.path = $path) RETURN id(route) AS id, route.method AS method, route.path AS path, route.fullPath AS fullPath, route.framework AS framework, route.handlerName AS handlerName, file.relativePath AS file, route.line AS line ORDER BY file, line LIMIT 5",
+        "params": {
+          "method": "post",
+          "path": "/users"
+        },
+        "rows": [
+          {
+            "id": "file:routes.ts:route:27:0:POST:<none>",
+            "method": "POST",
+            "path": "/users",
+            "fullPath": "/api/users",
+            "framework": "express-koa",
+            "handlerName": "authenticate",
+            "file": "routes.ts",
+            "line": 27
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_FUNCTION]->(fn:Function) RETURN id(fn) AS id, fn.name AS name, fn.className AS className, file.relativePath AS file, fn.line AS line, fn.endLine AS endLine",
+        "params": {},
+        "rows": [
+          {
+            "id": "file:routes.ts:function:10:listUsers",
+            "name": "listUsers",
+            "className": null,
+            "file": "routes.ts",
+            "line": 10,
+            "endLine": 12
+          },
+          {
+            "id": "file:routes.ts:function:14:createUser",
+            "name": "createUser",
+            "className": null,
+            "file": "routes.ts",
+            "line": 14,
+            "endLine": 16
+          },
+          {
+            "id": "file:routes.ts:function:18:authenticate",
+            "name": "authenticate",
+            "className": null,
+            "file": "routes.ts",
+            "line": 18,
+            "endLine": 20
+          },
+          {
+            "id": "file:routes.ts:function:22:validateUser",
+            "name": "validateUser",
+            "className": null,
+            "file": "routes.ts",
+            "line": 22,
+            "endLine": 24
+          },
+          {
+            "id": "file:routes.ts:function:29:<router.delete:/users/:id:arg1>",
+            "name": "<router.delete:/users/:id:arg1>",
+            "className": null,
+            "file": "routes.ts",
+            "line": 29,
+            "endLine": 31
+          },
+          {
+            "id": "file:routes.ts:function:34:<adminRouter.get:/dashboard:arg1>",
+            "name": "<adminRouter.get:/dashboard:arg1>",
+            "className": null,
+            "file": "routes.ts",
+            "line": 34,
+            "endLine": 36
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(class:Class)-[:DEFINES_METHOD]->(fn:Function) RETURN id(fn) AS id, fn.name AS name, class.name AS className, file.relativePath AS file, fn.line AS line, fn.endLine AS endLine",
+        "params": {},
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (caller:Function)-[:CALLS]->(call:Call)-[:CALL_RESOLVES_TO]->(callee:Function) RETURN id(caller) AS caller, id(callee) AS callee, call.line AS line",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (route:Route)-[:ROUTE_HANDLED_BY]->(fn:Function) WHERE id(route) IN $ids RETURN id(route) AS route, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:routes.ts:route:27:0:POST:<none>"
+          ]
+        },
+        "rows": [
+          {
+            "route": "file:routes.ts:route:27:0:POST:<none>",
+            "fn": "file:routes.ts:function:14:createUser"
+          },
+          {
+            "route": "file:routes.ts:route:27:0:POST:<none>",
+            "fn": "file:routes.ts:function:18:authenticate"
+          },
+          {
+            "route": "file:routes.ts:route:27:0:POST:<none>",
+            "fn": "file:routes.ts:function:22:validateUser"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (route:Route)-[step:ROUTE_LIFECYCLE_STEP]->(fn:Function) WHERE id(route) IN $ids RETURN id(route) AS route, id(fn) AS fn, step.role AS role, step.scope AS scope, step.hook AS hook, step.orderIndex AS orderIndex",
+        "params": {
+          "ids": [
+            "file:routes.ts:route:27:0:POST:<none>"
+          ]
+        },
+        "rows": [
+          {
+            "route": "file:routes.ts:route:27:0:POST:<none>",
+            "fn": "file:routes.ts:function:14:createUser",
+            "role": "handler",
+            "scope": "route",
+            "hook": "handler",
+            "orderIndex": 2
+          },
+          {
+            "route": "file:routes.ts:route:27:0:POST:<none>",
+            "fn": "file:routes.ts:function:18:authenticate",
+            "role": "middleware",
+            "scope": "route",
+            "hook": null,
+            "orderIndex": 0
+          },
+          {
+            "route": "file:routes.ts:route:27:0:POST:<none>",
+            "fn": "file:routes.ts:function:22:validateUser",
+            "role": "middleware",
+            "scope": "route",
+            "hook": null,
+            "orderIndex": 1
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (route:Route)-[rel:ACCESSES_DATA_ROUTE]->(model:DataModel) WHERE id(route) IN $ids RETURN id(route) AS route, model.name AS model, model.library AS library, rel.operation AS operation, rel.line AS line, rel.expression AS expression",
+        "params": {
+          "ids": [
+            "file:routes.ts:route:27:0:POST:<none>"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (route:Route)-[rel:USES_ENV_ROUTE]->(env:EnvVar) WHERE id(route) IN $ids RETURN id(route) AS route, env.name AS name, rel.access AS access, rel.line AS line",
+        "params": {
+          "ids": [
+            "file:routes.ts:route:27:0:POST:<none>"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (route:Route)-[rel:CONSUMES_CONFIG_ROUTE]->(config:ConfigValue) WHERE id(route) IN $ids RETURN id(route) AS route, config.name AS name, rel.localName AS localName",
+        "params": {
+          "ids": [
+            "file:routes.ts:route:27:0:POST:<none>"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (fn:Function)-[rel:ACCESSES_DATA_FUNCTION]->(model:DataModel) WHERE id(fn) IN $ids RETURN model.name AS model, model.library AS library, rel.operation AS operation, rel.line AS line, rel.expression AS expression, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:routes.ts:function:14:createUser",
+            "file:routes.ts:function:18:authenticate",
+            "file:routes.ts:function:22:validateUser"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (fn:Function)-[rel:USES_ENV_FUNCTION]->(env:EnvVar) WHERE id(fn) IN $ids RETURN env.name AS name, rel.access AS access, rel.line AS line, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:routes.ts:function:14:createUser",
+            "file:routes.ts:function:18:authenticate",
+            "file:routes.ts:function:22:validateUser"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (fn:Function)-[rel:CONSUMES_CONFIG_FUNCTION]->(config:ConfigValue) WHERE id(fn) IN $ids RETURN config.name AS name, rel.localName AS localName, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:routes.ts:function:14:createUser",
+            "file:routes.ts:function:18:authenticate",
+            "file:routes.ts:function:22:validateUser"
+          ]
+        },
+        "rows": []
+      }
+    ],
+    "output": {
+      "method": "post",
+      "path": "/users",
+      "routes": [
+        {
+          "method": "POST",
+          "path": "/users",
+          "fullPath": "/api/users",
+          "framework": "express-koa",
+          "handlerName": "authenticate",
+          "file": "routes.ts",
+          "line": 27,
+          "handlers": [
+            {
+              "name": "createUser",
+              "className": null,
+              "file": "routes.ts",
+              "line": 14,
+              "endLine": 16
+            }
+          ],
+          "lifecycle": [
+            {
+              "role": "middleware",
+              "scope": "route",
+              "hook": null,
+              "orderIndex": 0,
+              "name": "authenticate",
+              "className": null,
+              "file": "routes.ts",
+              "line": 18,
+              "endLine": 20
+            },
+            {
+              "role": "middleware",
+              "scope": "route",
+              "hook": null,
+              "orderIndex": 1,
+              "name": "validateUser",
+              "className": null,
+              "file": "routes.ts",
+              "line": 22,
+              "endLine": 24
+            },
+            {
+              "role": "handler",
+              "scope": "route",
+              "hook": "handler",
+              "orderIndex": 2,
+              "name": "createUser",
+              "className": null,
+              "file": "routes.ts",
+              "line": 14,
+              "endLine": 16
+            }
+          ],
+          "callChain": [],
+          "dataAccess": [],
+          "envVars": [],
+          "config": []
+        }
+      ]
+    }
+  },
+  {
+    "tool": "impact_of",
+    "args": {
+      "symbol": "authenticate"
+    },
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_FUNCTION]->(fn:Function) RETURN id(fn) AS id, fn.name AS name, fn.className AS className, file.relativePath AS file, fn.line AS line, fn.endLine AS endLine",
+        "params": {},
+        "rows": [
+          {
+            "id": "file:routes.ts:function:10:listUsers",
+            "name": "listUsers",
+            "className": null,
+            "file": "routes.ts",
+            "line": 10,
+            "endLine": 12
+          },
+          {
+            "id": "file:routes.ts:function:14:createUser",
+            "name": "createUser",
+            "className": null,
+            "file": "routes.ts",
+            "line": 14,
+            "endLine": 16
+          },
+          {
+            "id": "file:routes.ts:function:18:authenticate",
+            "name": "authenticate",
+            "className": null,
+            "file": "routes.ts",
+            "line": 18,
+            "endLine": 20
+          },
+          {
+            "id": "file:routes.ts:function:22:validateUser",
+            "name": "validateUser",
+            "className": null,
+            "file": "routes.ts",
+            "line": 22,
+            "endLine": 24
+          },
+          {
+            "id": "file:routes.ts:function:29:<router.delete:/users/:id:arg1>",
+            "name": "<router.delete:/users/:id:arg1>",
+            "className": null,
+            "file": "routes.ts",
+            "line": 29,
+            "endLine": 31
+          },
+          {
+            "id": "file:routes.ts:function:34:<adminRouter.get:/dashboard:arg1>",
+            "name": "<adminRouter.get:/dashboard:arg1>",
+            "className": null,
+            "file": "routes.ts",
+            "line": 34,
+            "endLine": 36
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(class:Class)-[:DEFINES_METHOD]->(fn:Function) RETURN id(fn) AS id, fn.name AS name, class.name AS className, file.relativePath AS file, fn.line AS line, fn.endLine AS endLine",
+        "params": {},
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (caller:Function)-[:CALLS]->(call:Call)-[:CALL_RESOLVES_TO]->(callee:Function) RETURN id(caller) AS caller, id(callee) AS callee, call.line AS line",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:MODULE_CALLS]->(call:Call)-[:CALL_RESOLVES_TO]->(fn:Function) WHERE id(fn) IN $ids RETURN file.relativePath AS file, call.line AS line, call.expression AS expression, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:routes.ts:function:18:authenticate"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_ROUTE]->(route:Route)-[rel:ROUTE_HANDLED_BY|ROUTE_LIFECYCLE_STEP]->(fn:Function) WHERE id(fn) IN $ids RETURN route.method AS method, route.path AS path, route.fullPath AS fullPath, route.framework AS framework, file.relativePath AS file, route.line AS line, label(rel) AS relType, rel.role AS role, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:routes.ts:function:18:authenticate"
+          ]
+        },
+        "rows": [
+          {
+            "method": "POST",
+            "path": "/users",
+            "fullPath": "/api/users",
+            "framework": "express-koa",
+            "file": "routes.ts",
+            "line": 27,
+            "relType": "ROUTE_HANDLED_BY",
+            "role": null,
+            "fn": "file:routes.ts:function:18:authenticate"
+          },
+          {
+            "method": "POST",
+            "path": "/users",
+            "fullPath": "/api/users",
+            "framework": "express-koa",
+            "file": "routes.ts",
+            "line": 27,
+            "relType": "ROUTE_LIFECYCLE_STEP",
+            "role": "middleware",
+            "fn": "file:routes.ts:function:18:authenticate"
+          },
+          {
+            "method": "PUT",
+            "path": "/users/:id",
+            "fullPath": "/api/users/:id",
+            "framework": "express-koa",
+            "file": "routes.ts",
+            "line": 28,
+            "relType": "ROUTE_LIFECYCLE_STEP",
+            "role": "middleware",
+            "fn": "file:routes.ts:function:18:authenticate"
+          },
+          {
+            "method": "USE",
+            "path": "/admin",
+            "fullPath": "/api/admin",
+            "framework": "express-koa",
+            "file": "routes.ts",
+            "line": 32,
+            "relType": "ROUTE_HANDLED_BY",
+            "role": null,
+            "fn": "file:routes.ts:function:18:authenticate"
+          },
+          {
+            "method": "USE",
+            "path": "/admin",
+            "fullPath": "/api/admin",
+            "framework": "express-koa",
+            "file": "routes.ts",
+            "line": 32,
+            "relType": "ROUTE_LIFECYCLE_STEP",
+            "role": "middleware",
+            "fn": "file:routes.ts:function:18:authenticate"
+          },
+          {
+            "method": "USE",
+            "path": null,
+            "fullPath": null,
+            "framework": "express-koa",
+            "file": "routes.ts",
+            "line": 33,
+            "relType": "ROUTE_HANDLED_BY",
+            "role": null,
+            "fn": "file:routes.ts:function:18:authenticate"
+          },
+          {
+            "method": "USE",
+            "path": null,
+            "fullPath": null,
+            "framework": "express-koa",
+            "file": "routes.ts",
+            "line": 33,
+            "relType": "ROUTE_LIFECYCLE_STEP",
+            "role": "middleware",
+            "fn": "file:routes.ts:function:18:authenticate"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(entrypoint:EntryPoint)-[:ENTRYPOINT_HANDLED_BY]->(fn:Function) WHERE id(fn) IN $ids RETURN entrypoint.kind AS kind, entrypoint.trigger AS trigger, entrypoint.library AS library, file.relativePath AS file, entrypoint.line AS line, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:routes.ts:function:18:authenticate"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (fn:Function)-[rel:ACCESSES_DATA_FUNCTION]->(model:DataModel) WHERE id(fn) IN $ids RETURN model.name AS model, model.library AS library, rel.operation AS operation, rel.line AS line, rel.expression AS expression, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:routes.ts:function:18:authenticate"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (fn:Function)-[rel:USES_ENV_FUNCTION]->(env:EnvVar) WHERE id(fn) IN $ids RETURN env.name AS name, rel.access AS access, rel.line AS line, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:routes.ts:function:18:authenticate"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (fn:Function)-[rel:CONSUMES_CONFIG_FUNCTION]->(config:ConfigValue) WHERE id(fn) IN $ids RETURN config.name AS name, rel.localName AS localName, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:routes.ts:function:18:authenticate"
+          ]
+        },
+        "rows": []
+      }
+    ],
+    "output": {
+      "symbol": "authenticate",
+      "file": null,
+      "maxDepth": 5,
+      "seeds": [
+        {
+          "name": "authenticate",
+          "className": null,
+          "file": "routes.ts",
+          "line": 18,
+          "endLine": 20
+        }
+      ],
+      "callers": [],
+      "moduleCallers": [],
+      "routes": [
+        {
+          "method": "POST",
+          "path": "/users",
+          "fullPath": "/api/users",
+          "framework": "express-koa",
+          "file": "routes.ts",
+          "line": 27,
+          "reachedThrough": [
+            {
+              "function": "authenticate",
+              "functionFile": "routes.ts",
+              "as": "middleware"
+            }
+          ]
+        },
+        {
+          "method": "PUT",
+          "path": "/users/:id",
+          "fullPath": "/api/users/:id",
+          "framework": "express-koa",
+          "file": "routes.ts",
+          "line": 28,
+          "reachedThrough": [
+            {
+              "function": "authenticate",
+              "functionFile": "routes.ts",
+              "as": "middleware"
+            }
+          ]
+        },
+        {
+          "method": "USE",
+          "path": "/admin",
+          "fullPath": "/api/admin",
+          "framework": "express-koa",
+          "file": "routes.ts",
+          "line": 32,
+          "reachedThrough": [
+            {
+              "function": "authenticate",
+              "functionFile": "routes.ts",
+              "as": "middleware"
+            }
+          ]
+        },
+        {
+          "method": "USE",
+          "path": null,
+          "fullPath": null,
+          "framework": "express-koa",
+          "file": "routes.ts",
+          "line": 33,
+          "reachedThrough": [
+            {
+              "function": "authenticate",
+              "functionFile": "routes.ts",
+              "as": "middleware"
+            }
+          ]
+        }
+      ],
+      "entrypoints": [],
+      "dataAccess": [],
+      "envVars": [],
+      "config": []
+    }
+  },
+  {
+    "tool": "get_symbol_source",
+    "args": {
+      "name": "createUser"
+    },
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_FUNCTION]->(n:Function) WHERE n.name = $name RETURN id(n) AS id, n.name AS name, n.className AS className, file.relativePath AS file, file.path AS path, n.line AS line, n.endLine AS endLine",
+        "params": {
+          "files": [],
+          "name": "createUser"
+        },
+        "rows": [
+          {
+            "id": "file:routes.ts:function:14:createUser",
+            "name": "createUser",
+            "className": null,
+            "file": "routes.ts",
+            "path": "<root>/routes.ts",
+            "line": 14,
+            "endLine": 16
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(class:Class)-[:DEFINES_METHOD]->(n:Function) WHERE n.name = $name RETURN id(n) AS id, n.name AS name, class.name AS className, file.relativePath AS file, file.path AS path, n.line AS line, n.endLine AS endLine",
+        "params": {
+          "files": [],
+          "name": "createUser"
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(n:Class) WHERE n.name = $name RETURN id(n) AS id, n.name AS name, file.relativePath AS file, file.path AS path, n.line AS line, n.endLine AS endLine",
+        "params": {
+          "files": [],
+          "name": "createUser"
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_INTERFACE]->(n:Interface) WHERE n.name = $name RETURN id(n) AS id, n.name AS name, file.relativePath AS file, file.path AS path, n.line AS line, n.endLine AS endLine",
+        "params": {
+          "files": [],
+          "name": "createUser"
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_TYPE_ALIAS]->(n:TypeAlias) WHERE n.name = $name RETURN id(n) AS id, n.name AS name, file.relativePath AS file, file.path AS path, n.line AS line, n.endLine AS endLine",
+        "params": {
+          "files": [],
+          "name": "createUser"
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_ENUM]->(n:Enum) WHERE n.name = $name RETURN id(n) AS id, n.name AS name, file.relativePath AS file, file.path AS path, n.line AS line, n.endLine AS endLine",
+        "params": {
+          "files": [],
+          "name": "createUser"
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_VARIABLE]->(n:Variable) WHERE n.name = $name RETURN id(n) AS id, n.name AS name, file.relativePath AS file, file.path AS path, n.line AS line",
+        "params": {
+          "files": [],
+          "name": "createUser"
+        },
+        "rows": []
+      }
+    ],
+    "output": {
+      "name": "createUser",
+      "matches": [
+        {
+          "kind": "function",
+          "name": "createUser",
+          "className": null,
+          "file": "routes.ts",
+          "line": 14,
+          "endLine": 16,
+          "source": "function createUser(req, res) {\n  res.status(201).json({})\n}"
+        }
+      ],
+      "note": "Source is read from disk using line spans from the last scan; it may differ if the file changed since."
+    }
+  },
+  {
+    "tool": "get_file_outline",
+    "args": {
+      "file": "routes.ts"
+    },
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File) RETURN file.relativePath AS file",
+        "rows": [
+          {
+            "file": "paths.ts"
+          },
+          {
+            "file": "routes.ts"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_FUNCTION]->(n:Function) WHERE file.relativePath IN $files RETURN id(n) AS id, n.name AS name, n.className AS className, file.relativePath AS file, file.path AS path, n.line AS line, n.endLine AS endLine",
+        "params": {
+          "files": [
+            "routes.ts"
+          ],
+          "name": ""
+        },
+        "rows": [
+          {
+            "id": "file:routes.ts:function:10:listUsers",
+            "name": "listUsers",
+            "className": null,
+            "file": "routes.ts",
+            "path": "<root>/routes.ts",
+            "line": 10,
+            "endLine": 12
+          },
+          {
+            "id": "file:routes.ts:function:14:createUser",
+            "name": "createUser",
+            "className": null,
+            "file": "routes.ts",
+            "path": "<root>/routes.ts",
+            "line": 14,
+            "endLine": 16
+          },
+          {
+            "id": "file:routes.ts:function:18:authenticate",
+            "name": "authenticate",
+            "className": null,
+            "file": "routes.ts",
+            "path": "<root>/routes.ts",
+            "line": 18,
+            "endLine": 20
+          },
+          {
+            "id": "file:routes.ts:function:22:validateUser",
+            "name": "validateUser",
+            "className": null,
+            "file": "routes.ts",
+            "path": "<root>/routes.ts",
+            "line": 22,
+            "endLine": 24
+          },
+          {
+            "id": "file:routes.ts:function:29:<router.delete:/users/:id:arg1>",
+            "name": "<router.delete:/users/:id:arg1>",
+            "className": null,
+            "file": "routes.ts",
+            "path": "<root>/routes.ts",
+            "line": 29,
+            "endLine": 31
+          },
+          {
+            "id": "file:routes.ts:function:34:<adminRouter.get:/dashboard:arg1>",
+            "name": "<adminRouter.get:/dashboard:arg1>",
+            "className": null,
+            "file": "routes.ts",
+            "path": "<root>/routes.ts",
+            "line": 34,
+            "endLine": 36
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(class:Class)-[:DEFINES_METHOD]->(n:Function) WHERE file.relativePath IN $files RETURN id(n) AS id, n.name AS name, class.name AS className, file.relativePath AS file, file.path AS path, n.line AS line, n.endLine AS endLine",
+        "params": {
+          "files": [
+            "routes.ts"
+          ],
+          "name": ""
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(n:Class) WHERE file.relativePath IN $files RETURN id(n) AS id, n.name AS name, file.relativePath AS file, file.path AS path, n.line AS line, n.endLine AS endLine",
+        "params": {
+          "files": [
+            "routes.ts"
+          ],
+          "name": ""
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_INTERFACE]->(n:Interface) WHERE file.relativePath IN $files RETURN id(n) AS id, n.name AS name, file.relativePath AS file, file.path AS path, n.line AS line, n.endLine AS endLine",
+        "params": {
+          "files": [
+            "routes.ts"
+          ],
+          "name": ""
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_TYPE_ALIAS]->(n:TypeAlias) WHERE file.relativePath IN $files RETURN id(n) AS id, n.name AS name, file.relativePath AS file, file.path AS path, n.line AS line, n.endLine AS endLine",
+        "params": {
+          "files": [
+            "routes.ts"
+          ],
+          "name": ""
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_ENUM]->(n:Enum) WHERE file.relativePath IN $files RETURN id(n) AS id, n.name AS name, file.relativePath AS file, file.path AS path, n.line AS line, n.endLine AS endLine",
+        "params": {
+          "files": [
+            "routes.ts"
+          ],
+          "name": ""
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_VARIABLE]->(n:Variable) WHERE file.relativePath IN $files RETURN id(n) AS id, n.name AS name, file.relativePath AS file, file.path AS path, n.line AS line",
+        "params": {
+          "files": [
+            "routes.ts"
+          ],
+          "name": ""
+        },
+        "rows": [
+          {
+            "id": "file:routes.ts:variable:4:API_PREFIX",
+            "name": "API_PREFIX",
+            "file": "routes.ts",
+            "path": "<root>/routes.ts",
+            "line": 4
+          },
+          {
+            "id": "file:routes.ts:variable:5:app",
+            "name": "app",
+            "file": "routes.ts",
+            "path": "<root>/routes.ts",
+            "line": 5
+          },
+          {
+            "id": "file:routes.ts:variable:6:router",
+            "name": "router",
+            "file": "routes.ts",
+            "path": "<root>/routes.ts",
+            "line": 6
+          },
+          {
+            "id": "file:routes.ts:variable:7:adminRouter",
+            "name": "adminRouter",
+            "file": "routes.ts",
+            "path": "<root>/routes.ts",
+            "line": 7
+          },
+          {
+            "id": "file:routes.ts:variable:8:cache",
+            "name": "cache",
+            "file": "routes.ts",
+            "path": "<root>/routes.ts",
+            "line": 8
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_ROUTE]->(n:Route) WHERE file.relativePath IN $files RETURN id(n) AS id, n.method AS method, coalesce(n.fullPath, n.path) AS routePath, file.relativePath AS file, file.path AS path, n.line AS line",
+        "params": {
+          "files": [
+            "routes.ts"
+          ],
+          "name": ""
+        },
+        "rows": [
+          {
+            "id": "file:routes.ts:route:26:0:GET:<none>",
+            "method": "GET",
+            "routePath": "/api/users",
+            "file": "routes.ts",
+            "path": "<root>/routes.ts",
+            "line": 26
+          },
+          {
+            "id": "file:routes.ts:route:27:0:POST:<none>",
+            "method": "POST",
+            "routePath": "/api/users",
+            "file": "routes.ts",
+            "path": "<root>/routes.ts",
+            "line": 27
+          },
+          {
+            "id": "file:routes.ts:route:28:0:PUT:/users/:id",
+            "method": "PUT",
+            "routePath": "/api/users/:id",
+            "file": "routes.ts",
+            "path": "<root>/routes.ts",
+            "line": 28
+          },
+          {
+            "id": "file:routes.ts:route:29:0:DELETE:/users/:id",
+            "method": "DELETE",
+            "routePath": "/api/users/:id",
+            "file": "routes.ts",
+            "path": "<root>/routes.ts",
+            "line": 29
+          },
+          {
+            "id": "file:routes.ts:route:32:0:USE:<none>",
+            "method": "USE",
+            "routePath": "/api/admin",
+            "file": "routes.ts",
+            "path": "<root>/routes.ts",
+            "line": 32
+          },
+          {
+            "id": "file:routes.ts:route:33:0:USE:<none>",
+            "method": "USE",
+            "routePath": null,
+            "file": "routes.ts",
+            "path": "<root>/routes.ts",
+            "line": 33
+          },
+          {
+            "id": "file:routes.ts:route:34:0:GET:/dashboard",
+            "method": "GET",
+            "routePath": "/api/admin/dashboard",
+            "file": "routes.ts",
+            "path": "<root>/routes.ts",
+            "line": 34
+          },
+          {
+            "id": "file:routes.ts:route:39:0:USE:/api",
+            "method": "USE",
+            "routePath": "/api",
+            "file": "routes.ts",
+            "path": "<root>/routes.ts",
+            "line": 39
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(class:Class)-[:DEFINES_FIELD]->(field:Field) WHERE file.relativePath = $file RETURN class.name AS className, field.name AS name, field.typeName AS typeName, field.line AS line",
+        "params": {
+          "file": "routes.ts"
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:IMPORTS]->(imp:Import) WHERE file.relativePath = $file RETURN imp.source AS source, imp.line AS line, imp.isTypeOnly AS isTypeOnly",
+        "params": {
+          "file": "routes.ts"
+        },
+        "rows": [
+          {
+            "source": "express",
+            "line": 1,
+            "isTypeOnly": false
+          },
+          {
+            "source": "./paths",
+            "line": 2,
+            "isTypeOnly": false
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(entrypoint:EntryPoint) WHERE file.relativePath = $file RETURN entrypoint.kind AS kind, entrypoint.trigger AS trigger, entrypoint.handlerName AS handlerName, entrypoint.line AS line",
+        "params": {
+          "file": "routes.ts"
+        },
+        "rows": []
+      }
+    ],
+    "output": {
+      "file": "routes.ts",
+      "imports": [
+        {
+          "source": "express",
+          "line": 1,
+          "isTypeOnly": false
+        },
+        {
+          "source": "./paths",
+          "line": 2,
+          "isTypeOnly": false
+        }
+      ],
+      "outline": [
+        {
+          "kind": "variable",
+          "name": "API_PREFIX",
+          "line": 4
+        },
+        {
+          "kind": "variable",
+          "name": "app",
+          "line": 5
+        },
+        {
+          "kind": "variable",
+          "name": "router",
+          "line": 6
+        },
+        {
+          "kind": "variable",
+          "name": "adminRouter",
+          "line": 7
+        },
+        {
+          "kind": "variable",
+          "name": "cache",
+          "line": 8
+        },
+        {
+          "kind": "function",
+          "name": "listUsers",
+          "line": 10,
+          "endLine": 12
+        },
+        {
+          "kind": "function",
+          "name": "createUser",
+          "line": 14,
+          "endLine": 16
+        },
+        {
+          "kind": "function",
+          "name": "authenticate",
+          "line": 18,
+          "endLine": 20
+        },
+        {
+          "kind": "function",
+          "name": "validateUser",
+          "line": 22,
+          "endLine": 24
+        },
+        {
+          "kind": "route",
+          "name": "GET /api/users",
+          "line": 26
+        },
+        {
+          "kind": "route",
+          "name": "POST /api/users",
+          "line": 27
+        },
+        {
+          "kind": "route",
+          "name": "PUT /api/users/:id",
+          "line": 28
+        },
+        {
+          "kind": "function",
+          "name": "<router.delete:/users/:id:arg1>",
+          "line": 29,
+          "endLine": 31
+        },
+        {
+          "kind": "route",
+          "name": "DELETE /api/users/:id",
+          "line": 29
+        },
+        {
+          "kind": "route",
+          "name": "USE /api/admin",
+          "line": 32
+        },
+        {
+          "kind": "route",
+          "name": "USE",
+          "line": 33
+        },
+        {
+          "kind": "function",
+          "name": "<adminRouter.get:/dashboard:arg1>",
+          "line": 34,
+          "endLine": 36
+        },
+        {
+          "kind": "route",
+          "name": "GET /api/admin/dashboard",
+          "line": 34
+        },
+        {
+          "kind": "route",
+          "name": "USE /api",
+          "line": 39
+        }
+      ]
+    }
   }
 ]

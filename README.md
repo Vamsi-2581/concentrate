@@ -53,7 +53,9 @@ first (`--no-retry-lock` makes it fail instead).
 
 `npm run dev -- mcp` starts a stdio MCP server exposing: `graph_stats`,
 `find_definitions`, `find_callers`, `list_exports`, `trace_import_chain`,
-`list_routes`, `list_entrypoints`, `list_env_config`, `list_data_access`.
+`list_routes`, `list_entrypoints`, `list_env_config`, `list_data_access`, and
+the agent tools `impact_of`, `detect_changes`, `route_details`,
+`get_symbol_source`, `get_file_outline` that answer a whole question in one call.
 See [docs/mcp-server.md](docs/mcp-server.md).
 
 ## Architecture

@@ -73,6 +73,31 @@
           "from": "utils.ts",
           "to": "main.ts"
         }
+      },
+      {
+        "tool": "impact_of",
+        "args": {
+          "symbol": "add"
+        }
+      },
+      {
+        "tool": "impact_of",
+        "args": {
+          "file": "utils.ts",
+          "maxDepth": 1
+        }
+      },
+      {
+        "tool": "get_symbol_source",
+        "args": {
+          "name": "run"
+        }
+      },
+      {
+        "tool": "get_file_outline",
+        "args": {
+          "file": "main.ts"
+        }
       }
     ],
     "backend-entrypoints": [
@@ -184,6 +209,31 @@
         "tool": "list_routes",
         "args": {
           "framework": "fastify"
+        }
+      },
+      {
+        "tool": "route_details",
+        "args": {
+          "method": "post",
+          "path": "/users"
+        }
+      },
+      {
+        "tool": "impact_of",
+        "args": {
+          "symbol": "authenticate"
+        }
+      },
+      {
+        "tool": "get_symbol_source",
+        "args": {
+          "name": "createUser"
+        }
+      },
+      {
+        "tool": "get_file_outline",
+        "args": {
+          "file": "routes.ts"
         }
       }
     ],

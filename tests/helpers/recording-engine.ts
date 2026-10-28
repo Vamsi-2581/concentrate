@@ -1,7 +1,7 @@
 import type { GraphStatsOptions, GraphStatsRow, IQueryEngine } from "../../src/core/contracts/query-engine.js";
 
 export type RecordedCall =
-  | { method: "query"; cypher: string; rows: unknown[] }
+  | { method: "query"; cypher: string; params?: Record<string, unknown>; rows: unknown[] }
   | { method: "stats"; options: GraphStatsOptions; rows: GraphStatsRow[] }
   | { method: "schemaVersion"; result: number | null };
 
@@ -14,11 +14,11 @@ export class RecordingQueryEngine implements IQueryEngine {
 
   constructor(private readonly inner: IQueryEngine) {}
 
-  async query(cypher: string): Promise<unknown[]> {
+  async query(cypher: string, params?: Record<string, unknown>): Promise<unknown[]> {
     // Reserve the slot synchronously so concurrent queries keep issue order.
-    const call: RecordedCall = { method: "query", cypher: normalizeCypher(cypher), rows: [] };
+    const call: RecordedCall = { method: "query", cypher: normalizeCypher(cypher), ...(params ? { params } : {}), rows: [] };
     this.calls.push(call);
-    call.rows = await this.inner.query(cypher);
+    call.rows = await this.inner.query(cypher, params);
     return call.rows;
   }
 

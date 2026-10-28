@@ -351,24 +351,24 @@ Before this phase, `createParsePlan` always returned `effectiveMode: "full"`, an
 
 **Goal:** Answer the questions agents actually ask with a single tool call.
 
-MCP currently exposes 9 tools: graph_stats, find_definitions, find_callers, list_exports, trace_import_chain, list_routes, list_entrypoints, list_env_config and list_data_access.
+MCP exposed 9 tools before this phase: graph_stats, find_definitions, find_callers, list_exports, trace_import_chain, list_routes, list_entrypoints, list_env_config and list_data_access. This phase adds 5 more (see [mcp-server.md](mcp-server.md#agent-tools)).
 
 ### New tools
 
-- [ ] `impact_of(symbol | file | route)`: transitive callers plus affected routes, entrypoints, tables and env vars
-- [ ] `detect_changes`: `git diff` via `node:child_process` → changed line ranges → symbols → impact report
-- [ ] `route_details(method, path)`: handler → middleware → call chain → data access → env/config
-- [ ] `get_symbol_source` and `get_file_outline` using `startLine`/`endLine`
+- [x] `impact_of(symbol | file)`: transitive callers plus affected routes, entrypoints, tables and env vars (for a route, `route_details` gives its downstream)
+- [x] `detect_changes`: `git diff` via `node:child_process` → changed line ranges → symbols → impact report
+- [x] `route_details(method, path)`: handler → middleware → call chain → data access → env/config
+- [x] `get_symbol_source` and `get_file_outline` using `line`/`endLine`
 
 ### Tests
 
-- [ ] Unit tests for each tool against fixtures
-- [ ] End-to-end JSON-RPC test over stdio for each new tool
+- [x] Unit tests for each tool against fixtures (`tests/mcp-agent-tools.test.ts`, golden recordings in `tests/golden/queries/`)
+- [x] End-to-end JSON-RPC test over stdio for each new tool
 
 ### Acceptance criteria
 
-- [ ] All four tools are listed by `tools/list` and covered by tests
-- [ ] Tool output stays within a documented size budget
+- [x] All new tools are listed by `tools/list` and covered by tests
+- [x] Tool output stays within a documented size budget (24,000 characters, see [mcp-server.md](mcp-server.md#output-budget))
 
 ## Phase 6b: Analysis tools and MCP protocol quality ([#13](https://github.com/fatihserhatturan/concentrate/issues/13))
 

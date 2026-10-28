@@ -764,5 +764,640 @@
       "found": false,
       "chain": null
     }
+  },
+  {
+    "tool": "impact_of",
+    "args": {
+      "symbol": "add"
+    },
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_FUNCTION]->(fn:Function) RETURN id(fn) AS id, fn.name AS name, fn.className AS className, file.relativePath AS file, fn.line AS line, fn.endLine AS endLine",
+        "params": {},
+        "rows": [
+          {
+            "id": "file:main.ts:function:4:helper",
+            "name": "helper",
+            "className": null,
+            "file": "main.ts",
+            "line": 4,
+            "endLine": 6
+          },
+          {
+            "id": "file:main.ts:function:8:run",
+            "name": "run",
+            "className": null,
+            "file": "main.ts",
+            "line": 8,
+            "endLine": 13
+          },
+          {
+            "id": "file:utils.ts:function:1:add",
+            "name": "add",
+            "className": null,
+            "file": "utils.ts",
+            "line": 1,
+            "endLine": 3
+          },
+          {
+            "id": "file:utils.ts:function:5:multiply",
+            "name": "multiply",
+            "className": null,
+            "file": "utils.ts",
+            "line": 5,
+            "endLine": 7
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(class:Class)-[:DEFINES_METHOD]->(fn:Function) RETURN id(fn) AS id, fn.name AS name, class.name AS className, file.relativePath AS file, fn.line AS line, fn.endLine AS endLine",
+        "params": {},
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (caller:Function)-[:CALLS]->(call:Call)-[:CALL_RESOLVES_TO]->(callee:Function) RETURN id(caller) AS caller, id(callee) AS callee, call.line AS line",
+        "rows": [
+          {
+            "caller": "file:main.ts:function:8:run",
+            "callee": "file:main.ts:function:4:helper",
+            "line": 9
+          },
+          {
+            "caller": "file:main.ts:function:8:run",
+            "callee": "file:utils.ts:function:5:multiply",
+            "line": 10
+          },
+          {
+            "caller": "file:main.ts:function:8:run",
+            "callee": "file:utils.ts:function:1:add",
+            "line": 11
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:MODULE_CALLS]->(call:Call)-[:CALL_RESOLVES_TO]->(fn:Function) WHERE id(fn) IN $ids RETURN file.relativePath AS file, call.line AS line, call.expression AS expression, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:utils.ts:function:1:add",
+            "file:main.ts:function:8:run"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_ROUTE]->(route:Route)-[rel:ROUTE_HANDLED_BY|ROUTE_LIFECYCLE_STEP]->(fn:Function) WHERE id(fn) IN $ids RETURN route.method AS method, route.path AS path, route.fullPath AS fullPath, route.framework AS framework, file.relativePath AS file, route.line AS line, label(rel) AS relType, rel.role AS role, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:utils.ts:function:1:add",
+            "file:main.ts:function:8:run"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(entrypoint:EntryPoint)-[:ENTRYPOINT_HANDLED_BY]->(fn:Function) WHERE id(fn) IN $ids RETURN entrypoint.kind AS kind, entrypoint.trigger AS trigger, entrypoint.library AS library, file.relativePath AS file, entrypoint.line AS line, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:utils.ts:function:1:add",
+            "file:main.ts:function:8:run"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (fn:Function)-[rel:ACCESSES_DATA_FUNCTION]->(model:DataModel) WHERE id(fn) IN $ids RETURN model.name AS model, model.library AS library, rel.operation AS operation, rel.line AS line, rel.expression AS expression, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:utils.ts:function:1:add"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (fn:Function)-[rel:USES_ENV_FUNCTION]->(env:EnvVar) WHERE id(fn) IN $ids RETURN env.name AS name, rel.access AS access, rel.line AS line, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:utils.ts:function:1:add"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (fn:Function)-[rel:CONSUMES_CONFIG_FUNCTION]->(config:ConfigValue) WHERE id(fn) IN $ids RETURN config.name AS name, rel.localName AS localName, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:utils.ts:function:1:add"
+          ]
+        },
+        "rows": []
+      }
+    ],
+    "output": {
+      "symbol": "add",
+      "file": null,
+      "maxDepth": 5,
+      "seeds": [
+        {
+          "name": "add",
+          "className": null,
+          "file": "utils.ts",
+          "line": 1,
+          "endLine": 3
+        }
+      ],
+      "callers": [
+        {
+          "name": "run",
+          "className": null,
+          "file": "main.ts",
+          "line": 8,
+          "endLine": 13,
+          "depth": 1
+        }
+      ],
+      "moduleCallers": [],
+      "routes": [],
+      "entrypoints": [],
+      "dataAccess": [],
+      "envVars": [],
+      "config": []
+    }
+  },
+  {
+    "tool": "impact_of",
+    "args": {
+      "file": "utils.ts",
+      "maxDepth": 1
+    },
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_FUNCTION]->(fn:Function) RETURN id(fn) AS id, fn.name AS name, fn.className AS className, file.relativePath AS file, fn.line AS line, fn.endLine AS endLine",
+        "params": {},
+        "rows": [
+          {
+            "id": "file:main.ts:function:4:helper",
+            "name": "helper",
+            "className": null,
+            "file": "main.ts",
+            "line": 4,
+            "endLine": 6
+          },
+          {
+            "id": "file:main.ts:function:8:run",
+            "name": "run",
+            "className": null,
+            "file": "main.ts",
+            "line": 8,
+            "endLine": 13
+          },
+          {
+            "id": "file:utils.ts:function:1:add",
+            "name": "add",
+            "className": null,
+            "file": "utils.ts",
+            "line": 1,
+            "endLine": 3
+          },
+          {
+            "id": "file:utils.ts:function:5:multiply",
+            "name": "multiply",
+            "className": null,
+            "file": "utils.ts",
+            "line": 5,
+            "endLine": 7
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(class:Class)-[:DEFINES_METHOD]->(fn:Function) RETURN id(fn) AS id, fn.name AS name, class.name AS className, file.relativePath AS file, fn.line AS line, fn.endLine AS endLine",
+        "params": {},
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (caller:Function)-[:CALLS]->(call:Call)-[:CALL_RESOLVES_TO]->(callee:Function) RETURN id(caller) AS caller, id(callee) AS callee, call.line AS line",
+        "rows": [
+          {
+            "caller": "file:main.ts:function:8:run",
+            "callee": "file:main.ts:function:4:helper",
+            "line": 9
+          },
+          {
+            "caller": "file:main.ts:function:8:run",
+            "callee": "file:utils.ts:function:5:multiply",
+            "line": 10
+          },
+          {
+            "caller": "file:main.ts:function:8:run",
+            "callee": "file:utils.ts:function:1:add",
+            "line": 11
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:MODULE_CALLS]->(call:Call)-[:CALL_RESOLVES_TO]->(fn:Function) WHERE id(fn) IN $ids RETURN file.relativePath AS file, call.line AS line, call.expression AS expression, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:utils.ts:function:1:add",
+            "file:utils.ts:function:5:multiply",
+            "file:main.ts:function:8:run"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_ROUTE]->(route:Route)-[rel:ROUTE_HANDLED_BY|ROUTE_LIFECYCLE_STEP]->(fn:Function) WHERE id(fn) IN $ids RETURN route.method AS method, route.path AS path, route.fullPath AS fullPath, route.framework AS framework, file.relativePath AS file, route.line AS line, label(rel) AS relType, rel.role AS role, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:utils.ts:function:1:add",
+            "file:utils.ts:function:5:multiply",
+            "file:main.ts:function:8:run"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(entrypoint:EntryPoint)-[:ENTRYPOINT_HANDLED_BY]->(fn:Function) WHERE id(fn) IN $ids RETURN entrypoint.kind AS kind, entrypoint.trigger AS trigger, entrypoint.library AS library, file.relativePath AS file, entrypoint.line AS line, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:utils.ts:function:1:add",
+            "file:utils.ts:function:5:multiply",
+            "file:main.ts:function:8:run"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (fn:Function)-[rel:ACCESSES_DATA_FUNCTION]->(model:DataModel) WHERE id(fn) IN $ids RETURN model.name AS model, model.library AS library, rel.operation AS operation, rel.line AS line, rel.expression AS expression, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:utils.ts:function:1:add",
+            "file:utils.ts:function:5:multiply"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (fn:Function)-[rel:USES_ENV_FUNCTION]->(env:EnvVar) WHERE id(fn) IN $ids RETURN env.name AS name, rel.access AS access, rel.line AS line, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:utils.ts:function:1:add",
+            "file:utils.ts:function:5:multiply"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (fn:Function)-[rel:CONSUMES_CONFIG_FUNCTION]->(config:ConfigValue) WHERE id(fn) IN $ids RETURN config.name AS name, rel.localName AS localName, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:utils.ts:function:1:add",
+            "file:utils.ts:function:5:multiply"
+          ]
+        },
+        "rows": []
+      }
+    ],
+    "output": {
+      "symbol": null,
+      "file": "utils.ts",
+      "maxDepth": 1,
+      "seeds": [
+        {
+          "name": "add",
+          "className": null,
+          "file": "utils.ts",
+          "line": 1,
+          "endLine": 3
+        },
+        {
+          "name": "multiply",
+          "className": null,
+          "file": "utils.ts",
+          "line": 5,
+          "endLine": 7
+        }
+      ],
+      "callers": [
+        {
+          "name": "run",
+          "className": null,
+          "file": "main.ts",
+          "line": 8,
+          "endLine": 13,
+          "depth": 1
+        }
+      ],
+      "moduleCallers": [],
+      "routes": [],
+      "entrypoints": [],
+      "dataAccess": [],
+      "envVars": [],
+      "config": []
+    }
+  },
+  {
+    "tool": "get_symbol_source",
+    "args": {
+      "name": "run"
+    },
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_FUNCTION]->(n:Function) WHERE n.name = $name RETURN id(n) AS id, n.name AS name, n.className AS className, file.relativePath AS file, file.path AS path, n.line AS line, n.endLine AS endLine",
+        "params": {
+          "files": [],
+          "name": "run"
+        },
+        "rows": [
+          {
+            "id": "file:main.ts:function:8:run",
+            "name": "run",
+            "className": null,
+            "file": "main.ts",
+            "path": "<root>/main.ts",
+            "line": 8,
+            "endLine": 13
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(class:Class)-[:DEFINES_METHOD]->(n:Function) WHERE n.name = $name RETURN id(n) AS id, n.name AS name, class.name AS className, file.relativePath AS file, file.path AS path, n.line AS line, n.endLine AS endLine",
+        "params": {
+          "files": [],
+          "name": "run"
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(n:Class) WHERE n.name = $name RETURN id(n) AS id, n.name AS name, file.relativePath AS file, file.path AS path, n.line AS line, n.endLine AS endLine",
+        "params": {
+          "files": [],
+          "name": "run"
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_INTERFACE]->(n:Interface) WHERE n.name = $name RETURN id(n) AS id, n.name AS name, file.relativePath AS file, file.path AS path, n.line AS line, n.endLine AS endLine",
+        "params": {
+          "files": [],
+          "name": "run"
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_TYPE_ALIAS]->(n:TypeAlias) WHERE n.name = $name RETURN id(n) AS id, n.name AS name, file.relativePath AS file, file.path AS path, n.line AS line, n.endLine AS endLine",
+        "params": {
+          "files": [],
+          "name": "run"
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_ENUM]->(n:Enum) WHERE n.name = $name RETURN id(n) AS id, n.name AS name, file.relativePath AS file, file.path AS path, n.line AS line, n.endLine AS endLine",
+        "params": {
+          "files": [],
+          "name": "run"
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_VARIABLE]->(n:Variable) WHERE n.name = $name RETURN id(n) AS id, n.name AS name, file.relativePath AS file, file.path AS path, n.line AS line",
+        "params": {
+          "files": [],
+          "name": "run"
+        },
+        "rows": []
+      }
+    ],
+    "output": {
+      "name": "run",
+      "matches": [
+        {
+          "kind": "function",
+          "name": "run",
+          "className": null,
+          "file": "main.ts",
+          "line": 8,
+          "endLine": 13,
+          "source": "export function run(): number {\n  const x = helper();\n  const y = MathUtils.multiply(2, 3);\n  const z = add(1, 2);\n  return x + y + z;\n}"
+        }
+      ],
+      "note": "Source is read from disk using line spans from the last scan; it may differ if the file changed since."
+    }
+  },
+  {
+    "tool": "get_file_outline",
+    "args": {
+      "file": "main.ts"
+    },
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File) RETURN file.relativePath AS file",
+        "rows": [
+          {
+            "file": "main.ts"
+          },
+          {
+            "file": "utils.ts"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_FUNCTION]->(n:Function) WHERE file.relativePath IN $files RETURN id(n) AS id, n.name AS name, n.className AS className, file.relativePath AS file, file.path AS path, n.line AS line, n.endLine AS endLine",
+        "params": {
+          "files": [
+            "main.ts"
+          ],
+          "name": ""
+        },
+        "rows": [
+          {
+            "id": "file:main.ts:function:4:helper",
+            "name": "helper",
+            "className": null,
+            "file": "main.ts",
+            "path": "<root>/main.ts",
+            "line": 4,
+            "endLine": 6
+          },
+          {
+            "id": "file:main.ts:function:8:run",
+            "name": "run",
+            "className": null,
+            "file": "main.ts",
+            "path": "<root>/main.ts",
+            "line": 8,
+            "endLine": 13
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(class:Class)-[:DEFINES_METHOD]->(n:Function) WHERE file.relativePath IN $files RETURN id(n) AS id, n.name AS name, class.name AS className, file.relativePath AS file, file.path AS path, n.line AS line, n.endLine AS endLine",
+        "params": {
+          "files": [
+            "main.ts"
+          ],
+          "name": ""
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(n:Class) WHERE file.relativePath IN $files RETURN id(n) AS id, n.name AS name, file.relativePath AS file, file.path AS path, n.line AS line, n.endLine AS endLine",
+        "params": {
+          "files": [
+            "main.ts"
+          ],
+          "name": ""
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_INTERFACE]->(n:Interface) WHERE file.relativePath IN $files RETURN id(n) AS id, n.name AS name, file.relativePath AS file, file.path AS path, n.line AS line, n.endLine AS endLine",
+        "params": {
+          "files": [
+            "main.ts"
+          ],
+          "name": ""
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_TYPE_ALIAS]->(n:TypeAlias) WHERE file.relativePath IN $files RETURN id(n) AS id, n.name AS name, file.relativePath AS file, file.path AS path, n.line AS line, n.endLine AS endLine",
+        "params": {
+          "files": [
+            "main.ts"
+          ],
+          "name": ""
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_ENUM]->(n:Enum) WHERE file.relativePath IN $files RETURN id(n) AS id, n.name AS name, file.relativePath AS file, file.path AS path, n.line AS line, n.endLine AS endLine",
+        "params": {
+          "files": [
+            "main.ts"
+          ],
+          "name": ""
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_VARIABLE]->(n:Variable) WHERE file.relativePath IN $files RETURN id(n) AS id, n.name AS name, file.relativePath AS file, file.path AS path, n.line AS line",
+        "params": {
+          "files": [
+            "main.ts"
+          ],
+          "name": ""
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_ROUTE]->(n:Route) WHERE file.relativePath IN $files RETURN id(n) AS id, n.method AS method, coalesce(n.fullPath, n.path) AS routePath, file.relativePath AS file, file.path AS path, n.line AS line",
+        "params": {
+          "files": [
+            "main.ts"
+          ],
+          "name": ""
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(class:Class)-[:DEFINES_FIELD]->(field:Field) WHERE file.relativePath = $file RETURN class.name AS className, field.name AS name, field.typeName AS typeName, field.line AS line",
+        "params": {
+          "file": "main.ts"
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:IMPORTS]->(imp:Import) WHERE file.relativePath = $file RETURN imp.source AS source, imp.line AS line, imp.isTypeOnly AS isTypeOnly",
+        "params": {
+          "file": "main.ts"
+        },
+        "rows": [
+          {
+            "source": "./utils.js",
+            "line": 1,
+            "isTypeOnly": false
+          },
+          {
+            "source": "./utils.js",
+            "line": 2,
+            "isTypeOnly": false
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(entrypoint:EntryPoint) WHERE file.relativePath = $file RETURN entrypoint.kind AS kind, entrypoint.trigger AS trigger, entrypoint.handlerName AS handlerName, entrypoint.line AS line",
+        "params": {
+          "file": "main.ts"
+        },
+        "rows": []
+      }
+    ],
+    "output": {
+      "file": "main.ts",
+      "imports": [
+        {
+          "source": "./utils.js",
+          "line": 1,
+          "isTypeOnly": false
+        },
+        {
+          "source": "./utils.js",
+          "line": 2,
+          "isTypeOnly": false
+        }
+      ],
+      "outline": [
+        {
+          "kind": "function",
+          "name": "helper",
+          "line": 4,
+          "endLine": 6
+        },
+        {
+          "kind": "function",
+          "name": "run",
+          "line": 8,
+          "endLine": 13
+        }
+      ]
+    }
   }
 ]
