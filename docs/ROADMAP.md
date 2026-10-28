@@ -377,7 +377,7 @@ MCP exposed 9 tools before this phase: graph_stats, find_definitions, find_calle
 
 **Goal:** Round out the MCP surface and align with the current protocol spec.
 
-The MCP server is a hand-written JSON-RPC layer in `src/adapters/mcp/server.ts`.
+The MCP server is a hand-written JSON-RPC layer in `src/adapters/mcp/server.ts`. It speaks MCP 2026-07-28 (`server/discover`, per-request `_meta` version) and the legacy `initialize` versions back to 2024-11-05; list tools page with cursors and stay under a 24,000-character budget.
 
 ### Search and navigation
 
@@ -392,10 +392,10 @@ The MCP server is a hand-written JSON-RPC layer in `src/adapters/mcp/server.ts`.
 
 ### Protocol quality
 
-- [ ] Output token budget and pagination for every tool
-- [ ] Structured output (`structuredContent`)
-- [ ] Expose a graph summary as an MCP resource
-- [ ] Align the JSON-RPC layer with the current MCP specification version
+- [x] Output token budget and pagination for every tool
+- [x] Structured output (`structuredContent`)
+- [x] Expose a graph summary as an MCP resource
+- [x] Align the JSON-RPC layer with the current MCP specification version
 
 ### Acceptance criteria
 

@@ -1,7 +1,10 @@
 import type { IQueryEngine } from "../../core/contracts/query-engine.js";
 import { quote } from "./cypher.js";
-import { agentToolDefinitions, callAgentTool } from "./agent-tools/index.js";
+import { agentTools, agentToolDefinitions } from "./agent-tools/index.js";
 import { asObject, objectSchema, optionalBoolean, optionalLimit, optionalString, requiredString } from "./args.js";
+import { fitToBudget } from "./budget.js";
+import { INVALID_PARAMS, McpProtocolError } from "./errors.js";
+import { pagedResult, pageWindow, type PageWindow } from "./paging.js";
 
 export type McpToolContent = {
   type: "text";
@@ -10,15 +13,73 @@ export type McpToolContent = {
 
 export type McpToolResult = {
   content: McpToolContent[];
+  structuredContent: Record<string, unknown>;
+  isError?: boolean;
 };
 
 export type McpToolDefinition = {
   name: string;
+  title?: string;
   description: string;
   inputSchema: Record<string, unknown>;
+  annotations?: Record<string, unknown>;
 };
 
 export type GraphQueryEngine = IQueryEngine;
+
+type ToolHandler = (engine: GraphQueryEngine, args: Record<string, unknown>, window: PageWindow) => Promise<Record<string, unknown>>;
+// A paged tool returns its primary list (`listKey`) as `PageWindow.take` cut it.
+export type McpTool = { handler: ToolHandler; listKey?: string; defaultLimit?: number };
+
+const graphTools: Record<string, McpTool> = {
+  graph_stats: { handler: graphStats },
+  find_definitions: { handler: findDefinitions, listKey: "definitions", defaultLimit: 20 },
+  find_callers: { handler: findCallers, listKey: "callers", defaultLimit: 20 },
+  list_exports: { handler: listExports, listKey: "exports", defaultLimit: 50 },
+  trace_import_chain: { handler: traceImportChain },
+  list_routes: { handler: listRoutes, listKey: "routes", defaultLimit: 50 },
+  list_entrypoints: { handler: listEntrypoints, listKey: "entrypoints", defaultLimit: 50 },
+  list_env_config: { handler: listEnvConfig, listKey: "envConfig", defaultLimit: 50 },
+  list_data_access: { handler: listDataAccess, listKey: "dataAccess", defaultLimit: 50 },
+};
+const tools: Record<string, McpTool> = { ...graphTools, ...agentTools };
+
+const titles: Record<string, string> = {
+  graph_stats: "Graph statistics",
+  find_definitions: "Find definitions",
+  find_callers: "Find callers",
+  list_exports: "List exports",
+  trace_import_chain: "Trace import chain",
+  list_routes: "List HTTP routes",
+  list_entrypoints: "List entrypoints",
+  list_env_config: "List env vars and config",
+  list_data_access: "List data access",
+  impact_of: "Impact of a change",
+  detect_changes: "Detect working-tree changes",
+  route_details: "Route details",
+  get_symbol_source: "Get symbol source",
+  get_file_outline: "Get file outline",
+};
+
+// Every tool only reads the graph (detect_changes also reads git), so the
+// hints are the same for all of them.
+const annotations = { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false };
+const cursorProperty = {
+  type: "string",
+  description: "Opaque cursor from page.nextCursor of the previous result, to fetch the next page. Repeat the other arguments unchanged.",
+};
+
+function describeTool(definition: McpToolDefinition): McpToolDefinition {
+  const paged = tools[definition.name]?.listKey !== undefined;
+  const schema = definition.inputSchema as { properties: Record<string, unknown> };
+  return {
+    name: definition.name,
+    title: titles[definition.name],
+    description: definition.description,
+    inputSchema: paged ? { ...schema, properties: { ...schema.properties, cursor: cursorProperty } } : schema,
+    annotations,
+  };
+}
 
 export const mcpToolDefinitions: McpToolDefinition[] = [
   {
@@ -176,44 +237,30 @@ export const mcpToolDefinitions: McpToolDefinition[] = [
     }),
   },
   ...agentToolDefinitions,
-];
+].map(describeTool);
 
+// Runs a tool. An unknown tool is a protocol error; errors the tool itself
+// throws (bad arguments, an invalid cursor, git failing) propagate and the
+// server turns them into `isError` results.
 export async function callMcpTool(
   engine: GraphQueryEngine,
   name: string,
-  args: unknown,
+  rawArgs: unknown,
 ): Promise<McpToolResult> {
-  switch (name) {
-    case "graph_stats":
-      return textResult(await graphStats(engine, asObject(args)));
-    case "find_definitions":
-      return textResult(await findDefinitions(engine, asObject(args)));
-    case "find_callers":
-      return textResult(await findCallers(engine, asObject(args)));
-    case "list_exports":
-      return textResult(await listExports(engine, asObject(args)));
-    case "trace_import_chain":
-      return textResult(await traceImportChain(engine, asObject(args)));
-    case "list_routes":
-      return textResult(await listRoutes(engine, asObject(args)));
-    case "list_entrypoints":
-      return textResult(await listEntrypoints(engine, asObject(args)));
-    case "list_env_config":
-      return textResult(await listEnvConfig(engine, asObject(args)));
-    case "list_data_access":
-      return textResult(await listDataAccess(engine, asObject(args)));
-    default: {
-      const result = await callAgentTool(engine, name, asObject(args));
-      if (result === undefined) throw new Error(`Unknown MCP tool: ${name}`);
-      return textResult(result);
-    }
-  }
+  const tool = Object.hasOwn(tools, name) ? tools[name]! : undefined;
+  if (!tool) throw new McpProtocolError(INVALID_PARAMS, `Unknown tool: ${name}`);
+  const args = asObject(rawArgs);
+  const window = pageWindow(name, args, tool.defaultLimit ?? 50);
+  const result = await tool.handler(engine, args, window);
+  return jsonResult(tool.listKey !== undefined && Array.isArray(result[tool.listKey])
+    ? pagedResult(name, args, window, result, tool.listKey)
+    : fitToBudget(result));
 }
 
 async function graphStats(
   engine: GraphQueryEngine,
   args: Record<string, unknown>,
-): Promise<unknown> {
+): Promise<Record<string, unknown>> {
   const packageName = optionalString(args.packageName);
   return {
     schemaVersion: await engine.schemaVersion(),
@@ -225,13 +272,14 @@ async function graphStats(
 async function findDefinitions(
   engine: GraphQueryEngine,
   args: Record<string, unknown>,
-): Promise<unknown> {
+  window: PageWindow,
+): Promise<Record<string, unknown>> {
   const name = requiredString(args.name, "name");
   const exact = optionalBoolean(args.exact) ?? false;
-  const limit = optionalLimit(args.limit, 20);
-  const rows = await definitionQueries(name, exact, limit);
+  const { limit, fetch } = window;
+  const rows = await definitionQueries(name, exact, fetch);
 
-  return { query: { name, exact, limit }, definitions: rows };
+  return { query: { name, exact, limit }, definitions: window.take(rows) };
 
   async function definitionQueries(symbolName: string, exactMatch: boolean, rowLimit: number): Promise<unknown[]> {
     const queries = [
@@ -243,17 +291,18 @@ async function findDefinitions(
       definitionQuery("Enum", "DEFINES_ENUM", symbolName, exactMatch, rowLimit),
     ];
     const results = await Promise.all(queries.map((query) => engine.query(query)));
-    return results.flat().slice(0, rowLimit);
+    return results.flat();
   }
 }
 
 async function findCallers(
   engine: GraphQueryEngine,
   args: Record<string, unknown>,
-): Promise<unknown> {
+  window: PageWindow,
+): Promise<Record<string, unknown>> {
   const name = requiredString(args.name, "name");
   const exact = optionalBoolean(args.exact) ?? true;
-  const limit = optionalLimit(args.limit, 20);
+  const { limit, fetch } = window;
   const predicate = namePredicate("target.name", name, exact);
   const functionCallers = await engine.query(`
     MATCH (call:Call)-[:CALL_RESOLVES_TO]->(target:Function)
@@ -268,7 +317,7 @@ async function findCallers(
       call.expression AS expression,
       'CALLS' AS relationship
     ORDER BY file.relativePath, call.line
-    LIMIT ${limit}
+    LIMIT ${fetch}
   `);
   // Class methods hang off their class, not off the file.
   const methodCallers = await engine.query(`
@@ -285,7 +334,7 @@ async function findCallers(
       call.expression AS expression,
       'CALLS' AS relationship
     ORDER BY file.relativePath, call.line
-    LIMIT ${limit}
+    LIMIT ${fetch}
   `);
   const moduleCallers = await engine.query(`
     MATCH (call:Call)-[:CALL_RESOLVES_TO]->(target:Function)
@@ -299,43 +348,44 @@ async function findCallers(
       call.expression AS expression,
       'MODULE_CALLS' AS relationship
     ORDER BY file.relativePath, call.line
-    LIMIT ${limit}
+    LIMIT ${fetch}
   `);
 
-  return { query: { name, exact, limit }, callers: [...functionCallers, ...methodCallers, ...moduleCallers].slice(0, limit) };
+  return { query: { name, exact, limit }, callers: window.take([...functionCallers, ...methodCallers, ...moduleCallers]) };
 }
 
 async function listExports(
   engine: GraphQueryEngine,
   args: Record<string, unknown>,
-): Promise<unknown> {
+  window: PageWindow,
+): Promise<Record<string, unknown>> {
   const file = optionalString(args.file);
-  const limit = optionalLimit(args.limit, 50);
+  const { limit, fetch } = window;
   const fileFilter = file ? `AND file.relativePath = ${quote(file)}` : "";
   const queries = [
-    exportQuery("Function", "DEFINES_FUNCTION", fileFilter, limit),
-    exportQuery("Class", "DEFINES_CLASS", fileFilter, limit),
-    exportQuery("Variable", "DEFINES_VARIABLE", fileFilter, limit),
-    exportQuery("Interface", "DEFINES_INTERFACE", fileFilter, limit),
-    exportQuery("TypeAlias", "DEFINES_TYPE_ALIAS", fileFilter, limit),
-    exportQuery("Enum", "DEFINES_ENUM", fileFilter, limit),
-    importReExportQuery(fileFilter, limit),
-    reExportQuery("Function", "RE_EXPORTS_FUNCTION", fileFilter, limit),
-    reExportQuery("Class", "RE_EXPORTS_CLASS", fileFilter, limit),
-    reExportQuery("Variable", "RE_EXPORTS_VARIABLE", fileFilter, limit),
+    exportQuery("Function", "DEFINES_FUNCTION", fileFilter, fetch),
+    exportQuery("Class", "DEFINES_CLASS", fileFilter, fetch),
+    exportQuery("Variable", "DEFINES_VARIABLE", fileFilter, fetch),
+    exportQuery("Interface", "DEFINES_INTERFACE", fileFilter, fetch),
+    exportQuery("TypeAlias", "DEFINES_TYPE_ALIAS", fileFilter, fetch),
+    exportQuery("Enum", "DEFINES_ENUM", fileFilter, fetch),
+    importReExportQuery(fileFilter, fetch),
+    reExportQuery("Function", "RE_EXPORTS_FUNCTION", fileFilter, fetch),
+    reExportQuery("Class", "RE_EXPORTS_CLASS", fileFilter, fetch),
+    reExportQuery("Variable", "RE_EXPORTS_VARIABLE", fileFilter, fetch),
   ];
   const rows = (await Promise.all(queries.map((query) => engine.query(query)))).flat();
 
   return {
     query: { file, limit },
-    exports: rows.slice(0, limit),
+    exports: window.take(rows),
   };
 }
 
 async function traceImportChain(
   engine: GraphQueryEngine,
   args: Record<string, unknown>,
-): Promise<unknown> {
+): Promise<Record<string, unknown>> {
   const from = requiredString(args.from, "from");
   const to = requiredString(args.to, "to");
   const maxDepth = optionalLimit(args.maxDepth, 6);
@@ -355,10 +405,11 @@ async function traceImportChain(
 async function listRoutes(
   engine: GraphQueryEngine,
   args: Record<string, unknown>,
-): Promise<unknown> {
+  window: PageWindow,
+): Promise<Record<string, unknown>> {
   const file = optionalString(args.file);
   const framework = optionalString(args.framework);
-  const limit = optionalLimit(args.limit, 50);
+  const { limit, fetch } = window;
   const fileFilter = file ? `AND file.relativePath = ${quote(file)}` : "";
   const frameworkFilter = framework ? `AND route.framework = ${quote(framework)}` : "";
   const rows = await engine.query(`
@@ -376,19 +427,20 @@ async function listRoutes(
       route.handlerName AS handlerName,
       handler.name AS handler
     ORDER BY file.relativePath, route.line, route.method, route.path, handler.name
-    LIMIT ${limit}
+    LIMIT ${fetch}
   `);
 
-  return { query: { file, framework, limit }, routes: rows };
+  return { query: { file, framework, limit }, routes: window.take(rows) };
 }
 
 async function listEntrypoints(
   engine: GraphQueryEngine,
   args: Record<string, unknown>,
-): Promise<unknown> {
+  window: PageWindow,
+): Promise<Record<string, unknown>> {
   const kind = optionalString(args.kind);
   const file = optionalString(args.file);
-  const limit = optionalLimit(args.limit, 50);
+  const { limit, fetch } = window;
   const kindFilter = kind ? `AND entrypoint.kind = ${quote(kind)}` : "";
   const fileFilter = file ? `AND file.relativePath = ${quote(file)}` : "";
   const rows = await engine.query(`
@@ -405,19 +457,20 @@ async function listEntrypoints(
       entrypoint.handlerName AS handlerName,
       handler.name AS handler
     ORDER BY file.relativePath, entrypoint.line, entrypoint.kind, entrypoint.trigger, handler.name
-    LIMIT ${limit}
+    LIMIT ${fetch}
   `);
 
-  return { query: { kind, file, limit }, entrypoints: rows };
+  return { query: { kind, file, limit }, entrypoints: window.take(rows) };
 }
 
 async function listEnvConfig(
   engine: GraphQueryEngine,
   args: Record<string, unknown>,
-): Promise<unknown> {
+  window: PageWindow,
+): Promise<Record<string, unknown>> {
   const file = optionalString(args.file);
   const name = optionalString(args.name);
-  const limit = optionalLimit(args.limit, 50);
+  const { limit, fetch } = window;
   const fileFilter = file ? `AND file.relativePath = ${quote(file)}` : "";
   const envNameFilter = name ? `AND contains(lower(env.name), lower(${quote(name)}))` : "";
   const configNameFilter = name ? `AND contains(lower(config.name), lower(${quote(name)}))` : "";
@@ -435,7 +488,7 @@ async function listEnvConfig(
       file.relativePath AS consumer,
       'File' AS consumerKind
     ORDER BY file.relativePath, rel.line
-    LIMIT ${limit}
+    LIMIT ${fetch}
   `);
   const configRows = await engine.query(`
     MATCH (file:File)-[:DECLARES_CONFIG_FILE]->(config:ConfigValue)
@@ -451,7 +504,7 @@ async function listEnvConfig(
       file.relativePath AS consumer,
       'File' AS consumerKind
     ORDER BY file.relativePath, config.line
-    LIMIT ${limit}
+    LIMIT ${fetch}
   `);
   const consumedRows = await engine.query(`
     MATCH (file:File)-[rel:CONSUMES_CONFIG_FILE]->(config:ConfigValue)
@@ -467,33 +520,34 @@ async function listEnvConfig(
       rel.localName AS consumer,
       'File' AS consumerKind
     ORDER BY file.relativePath, config.line
-    LIMIT ${limit}
+    LIMIT ${fetch}
   `);
 
   return {
     query: { file, name, limit },
-    envConfig: [...envRows, ...configRows, ...consumedRows].slice(0, limit),
+    envConfig: window.take([...envRows, ...configRows, ...consumedRows]),
   };
 }
 
 async function listDataAccess(
   engine: GraphQueryEngine,
   args: Record<string, unknown>,
-): Promise<unknown> {
+  window: PageWindow,
+): Promise<Record<string, unknown>> {
   const model = optionalString(args.model);
   const operation = optionalString(args.operation);
   const library = optionalString(args.library);
-  const limit = optionalLimit(args.limit, 50);
+  const { limit, fetch } = window;
   const filters = dataAccessFilters(model, operation, library);
   const queries = [
-    dataAccessQuery("File", "ACCESSES_DATA_FILE", filters, limit),
-    dataAccessQuery("Function", "ACCESSES_DATA_FUNCTION", filters, limit),
-    dataAccessQuery("Route", "ACCESSES_DATA_ROUTE", filters, limit),
-    dataAccessQuery("EntryPoint", "ACCESSES_DATA_ENTRYPOINT", filters, limit),
+    dataAccessQuery("File", "ACCESSES_DATA_FILE", filters, fetch),
+    dataAccessQuery("Function", "ACCESSES_DATA_FUNCTION", filters, fetch),
+    dataAccessQuery("Route", "ACCESSES_DATA_ROUTE", filters, fetch),
+    dataAccessQuery("EntryPoint", "ACCESSES_DATA_ENTRYPOINT", filters, fetch),
   ];
-  const rows = (await Promise.all(queries.map((query) => engine.query(query)))).flat().slice(0, limit);
+  const rows = (await Promise.all(queries.map((query) => engine.query(query)))).flat();
 
-  return { query: { model, operation, library, limit }, dataAccess: rows };
+  return { query: { model, operation, library, limit }, dataAccess: window.take(rows) };
 }
 
 function findImportChain(
@@ -528,15 +582,25 @@ function findImportChain(
   return null;
 }
 
-function textResult(value: unknown): McpToolResult {
+// Structured content, plus the same JSON as text for clients that only read
+// `content`. Both are the serialized value, so undefined fields are dropped
+// from each alike. The text is compact JSON, the form the output budget
+// measures.
+function jsonResult(value: Record<string, unknown>): McpToolResult {
+  const text = JSON.stringify(value);
   return {
     content: [
       {
         type: "text",
-        text: JSON.stringify(value, null, 2),
+        text,
       },
     ],
+    structuredContent: JSON.parse(text) as Record<string, unknown>,
   };
+}
+
+export function toolErrorResult(message: string): McpToolResult {
+  return { content: [{ type: "text", text: message }], structuredContent: { error: message }, isError: true };
 }
 
 

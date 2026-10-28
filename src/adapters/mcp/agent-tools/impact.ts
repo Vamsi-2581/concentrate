@@ -3,7 +3,8 @@ import { realpath } from "node:fs/promises";
 import path from "node:path";
 import { promisify } from "node:util";
 import type { IQueryEngine } from "../../../core/contracts/query-engine.js";
-import { optionalInteger, optionalLimit, optionalString } from "../args.js";
+import { optionalInteger, optionalString } from "../args.js";
+import type { PageWindow } from "../paging.js";
 import { computeImpact, loadFunctions, loadSymbols, matchesFile, type SymbolInfo } from "./graph.js";
 
 const run = promisify(execFile);
@@ -11,12 +12,11 @@ const run = promisify(execFile);
 // impact_of: a symbol name selects the functions with that name plus the
 // methods of a class with that name; a file selects every function in it.
 // Both together narrow the symbol to that file.
-export async function impactOf(engine: IQueryEngine, args: Record<string, unknown>) {
+export async function impactOf(engine: IQueryEngine, args: Record<string, unknown>, window: PageWindow) {
   const symbol = optionalString(args.symbol);
   const file = optionalString(args.file);
   if (!symbol && !file) throw new Error("impact_of needs a symbol or a file argument");
   const maxDepth = optionalInteger(args.maxDepth, 5, 1, 20);
-  const limit = optionalLimit(args.limit, 50);
 
   const functions = await loadFunctions(engine);
   const seedIds = [...functions.values()]
@@ -31,7 +31,7 @@ export async function impactOf(engine: IQueryEngine, args: Record<string, unknow
       note: "No function, method or class matched. Use find_definitions to look the name up; for routes use route_details.",
     };
   }
-  return { symbol: symbol ?? null, file: file ?? null, maxDepth, ...await computeImpact(engine, seedIds, maxDepth, limit, functions) };
+  return { symbol: symbol ?? null, file: file ?? null, maxDepth, ...await computeImpact(engine, seedIds, maxDepth, window.limit, functions, window) };
 }
 
 // Revisions are passed to git as a single argv entry, never through a shell;
@@ -43,13 +43,13 @@ type LineRange = { start: number; end: number };
 // detect_changes: diff the working tree against `base` (default HEAD), map
 // the changed lines onto the graph's declarations, and compute the impact of
 // the changed functions. Untracked files count as changed from top to bottom.
-export async function detectChanges(engine: IQueryEngine, args: Record<string, unknown>) {
+export async function detectChanges(engine: IQueryEngine, args: Record<string, unknown>, window: PageWindow) {
   const base = optionalString(args.base) ?? "HEAD";
   if (!BASE_PATTERN.test(base) || base.startsWith("-")) {
     throw new Error(`Invalid base revision: ${JSON.stringify(base)}`);
   }
   const maxDepth = optionalInteger(args.maxDepth, 5, 1, 20);
-  const limit = optionalLimit(args.limit, 50);
+  const { limit } = window;
 
   const [repo] = await engine.query("MATCH (repo:Repo) RETURN repo.path AS path LIMIT 1") as Array<{ path?: unknown }>;
   if (typeof repo?.path !== "string") throw new Error("The graph has no Repo node; scan the project first");
@@ -117,7 +117,7 @@ export async function detectChanges(engine: IQueryEngine, args: Record<string, u
   const impact = changedFunctionIds.length > 0 ? await computeImpact(engine, changedFunctionIds, maxDepth, limit) : null;
   return {
     base,
-    changedFiles: changedFiles.slice(0, limit),
+    changedFiles: window.take(changedFiles),
     unscannedFiles: unscannedFiles.slice(0, limit),
     ...(unscannedFiles.length > 0
       ? { note: "Some changed files are not in the graph (new, unsupported or excluded). Rescan, or keep `concentrate watch` running, to include new files." }

@@ -37,38 +37,60 @@ The server writes JSON-RPC responses to stdout and keeps graph access read-only.
 Use an absolute database path in long-running editor/client configurations so
 the MCP process does not depend on the client's working directory.
 
-## Compatibility Smoke
+## Protocol
 
-After scanning a graph, verify the stdio protocol with:
+The server speaks both eras of MCP over newline-delimited JSON-RPC on stdio
+and keeps no session state.
+
+- **Modern (2026-07-28).** There is no handshake. Every request carries the
+  protocol version in `params._meta["io.modelcontextprotocol/protocolVersion"]`.
+  `server/discover` returns `supportedVersions`, `capabilities`
+  (`tools`, `resources`) and short `instructions`. Every result has
+  `resultType: "complete"` and names the server in
+  `_meta["io.modelcontextprotocol/serverInfo"]`. List and read results carry
+  `ttlMs` and `cacheScope`: the tool and resource lists are `public` and change
+  only with the build; resource contents are `private` with `ttlMs: 0`, since
+  every scan changes them. A version other than 2026-07-28 gets error `-32022`
+  with `data: { supported, requested }`. `ping` is not part of this era.
+- **Legacy (2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05).** `initialize`
+  echoes the client's `protocolVersion` when it is one of these and otherwise
+  answers `2025-11-25`. Requests without the `_meta` version, `ping` among
+  them, get the legacy result shapes.
+
+Errors:
+
+- Unknown methods return `-32601`. An unknown tool, an unknown resource or a
+  malformed `tools/call` (no name, non-object arguments) returns `-32602`.
+- Failures inside a tool (a missing argument, an invalid cursor, git failing
+  in `detect_changes`) are tool results with `isError: true` and the message
+  as text, so the model can read and correct them.
+
+Tool results return the JSON twice: as `structuredContent` and as a compact
+JSON text block for clients that only read `content`. Every tool has a
+`title` and the annotations `readOnlyHint: true`, `destructiveHint: false`,
+`idempotentHint: true` and `openWorldHint: false`.
+
+Smoke test after scanning a graph:
 
 ```bash
 printf '%s\n%s\n' \
-  '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{}}' \
-  '{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}' \
+  '{"jsonrpc":"2.0","id":1,"method":"server/discover","params":{"_meta":{"io.modelcontextprotocol/protocolVersion":"2026-07-28"}}}' \
+  '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"graph_stats","arguments":{},"_meta":{"io.modelcontextprotocol/protocolVersion":"2026-07-28"}}}' \
   | npm run mcp -- --database /absolute/path/to/.concentrate/graph
 ```
 
-Expected behavior:
+A legacy client starts with
+`{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-11-25","capabilities":{},"clientInfo":{"name":"client","version":"1"}}}`
+and sends the same `tools/call` without `_meta`.
 
-- `initialize` returns the MCP protocol version, tool capability, and server
-  info.
-- `tools/list` returns all Concentrate tools.
-- `tools/call` responses return MCP `content` blocks containing compact JSON
-  text.
+## Resources
 
-Example `tools/call` request:
-
-```json
-{
-  "jsonrpc": "2.0",
-  "id": 3,
-  "method": "tools/call",
-  "params": {
-    "name": "graph_stats",
-    "arguments": {}
-  }
-}
-```
+`resources/list` returns one resource, `concentrate://graph/summary`
+(`application/json`): schema version, the repo root, file counts, languages,
+packages with their file counts, the 15 largest directories (first two path
+segments), routes by framework, entrypoints by kind, data models by library,
+env var and config counts, and node counts per label. It is a few kilobytes
+even for large repositories; read it first to decide which tools to call.
 
 ## Tools
 
@@ -133,18 +155,34 @@ Example:
 { "name": "impact_of", "arguments": { "symbol": "UserService", "maxDepth": 3 } }
 ```
 
-### Output budget
+### Paging and output budget
 
-Agent tool results are kept under 24,000 characters of JSON. When a result is
-larger, its longest lists are halved until it fits, and a `truncated` object
-lists how many items each list lost (for example `{ "callers": 120 }`). Narrow
-the call (`file`, a lower `maxDepth` or `limit`) to see the rest. The other
-tools are bounded by their `limit` argument instead.
+Every tool that returns a list pages one primary list: `definitions`,
+`callers`, `exports`, `routes`, `entrypoints`, `envConfig`, `dataAccess`, and
+for the agent tools `callers` (`impact_of`), `changedFiles`
+(`detect_changes`), `routes` (`route_details`), `matches`
+(`get_symbol_source`) and `outline` (`get_file_outline`, `limit` defaults to
+200). `limit` is the page size (at most 200). The result has a
+`page: { offset, returned, nextCursor? }` field; pass `nextCursor` back as
+`cursor` with the other arguments unchanged to get the next page. `limit` may
+change between pages. A cursor from a different call, or one that was
+altered, is rejected as a tool error. Pages follow each tool's fixed ordering;
+if the graph is rescanned between pages, items can shift across a page
+boundary.
+
+`graph_stats` and `trace_import_chain` return a single answer and are not
+paged.
+
+Results are kept under 24,000 characters of JSON. A page that would be larger
+ends early, with `page.shortenedToFit: true` and a `nextCursor` that continues
+right after it. Other lists in a result (for example `routes` in `impact_of`)
+are capped by `limit`; when they are still too large, the longest are halved
+and a `truncated` object lists how many items each lost (for example
+`{ "routes": 12 }`). Narrow the call (`file`, a lower `maxDepth`) to see them.
 
 ## Current Limits
 
 - The first server pass is read-only and stdio-only.
-- Tool responses are compact JSON text payloads.
 - `trace_import_chain` follows resolved file-to-file import edges only.
 - Backend semantic tools reflect the graph semantics already produced by the
   scanner; they do not execute application code or infer runtime framework

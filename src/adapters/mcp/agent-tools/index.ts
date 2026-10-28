@@ -1,15 +1,15 @@
-import type { IQueryEngine } from "../../../core/contracts/query-engine.js";
 import { objectSchema } from "../args.js";
-import { fitToBudget, OUTPUT_BUDGET_CHARS } from "./budget.js";
+import { OUTPUT_BUDGET_CHARS } from "../budget.js";
+import type { McpTool } from "../tools.js";
 import { detectChanges, impactOf } from "./impact.js";
 import { routeDetails } from "./route.js";
 import { getFileOutline, getSymbolSource } from "./source.js";
 
 // Tools that answer an agent's question in one call ("what breaks if I change
 // this?", "what does this endpoint do?") instead of a chain of lookups. Their
-// results are capped at OUTPUT_BUDGET_CHARS.
+// results are capped at OUTPUT_BUDGET_CHARS; each pages one primary list.
 
-const budgetNote = `Results over ${OUTPUT_BUDGET_CHARS} characters are shortened; \`truncated\` then lists how many items each list lost.`;
+const budgetNote = `Results over ${OUTPUT_BUDGET_CHARS} characters are shortened: the paged list ends early with page.nextCursor, and \`truncated\` lists how many items each other list lost.`;
 
 const maxDepth = { type: "number", description: "How many call levels to follow upward. Defaults to 5." };
 const limit = (fallback: number) => ({ type: "number", description: `Maximum items per list. Defaults to ${fallback}.` });
@@ -58,24 +58,15 @@ export const agentToolDefinitions = [
     description: `Declarations of one file from the graph in line order: imports, functions, classes with their methods and fields, interfaces, types, enums, variables, routes and entrypoints. ${budgetNote}`,
     inputSchema: objectSchema({
       file: { type: "string", description: "Scan-relative file path or a unique path suffix." },
+      limit: limit(200),
     }, ["file"]),
   },
 ];
 
-const handlers: Record<string, (engine: IQueryEngine, args: Record<string, unknown>) => Promise<Record<string, unknown>>> = {
-  impact_of: impactOf,
-  detect_changes: detectChanges,
-  route_details: routeDetails,
-  get_symbol_source: getSymbolSource,
-  get_file_outline: getFileOutline,
+export const agentTools: Record<string, McpTool> = {
+  impact_of: { handler: impactOf, listKey: "callers", defaultLimit: 50 },
+  detect_changes: { handler: detectChanges, listKey: "changedFiles", defaultLimit: 50 },
+  route_details: { handler: routeDetails, listKey: "routes", defaultLimit: 5 },
+  get_symbol_source: { handler: getSymbolSource, listKey: "matches", defaultLimit: 5 },
+  get_file_outline: { handler: getFileOutline, listKey: "outline", defaultLimit: 200 },
 };
-
-// Runs an agent tool, or returns undefined when `name` is not one.
-export async function callAgentTool(
-  engine: IQueryEngine,
-  name: string,
-  args: Record<string, unknown>,
-): Promise<Record<string, unknown> | undefined> {
-  const handler = Object.hasOwn(handlers, name) ? handlers[name] : undefined;
-  return handler && fitToBudget(await handler(engine, args));
-}

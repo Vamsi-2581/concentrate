@@ -1,5 +1,6 @@
 import type { IQueryEngine } from "../../../core/contracts/query-engine.js";
-import { optionalLimit, requiredString } from "../args.js";
+import { requiredString } from "../args.js";
+import type { PageWindow } from "../paging.js";
 import { describeFunction, functionResources, loadCallEdges, loadFunctions, mergeRows, walkCalls } from "./graph.js";
 
 type Row = Record<string, unknown>;
@@ -9,19 +10,18 @@ const CHAIN_DEPTH = 4;
 // route_details: everything that runs for one route, in one call. The method
 // matches case-insensitively; the path matches the resolved full path or the
 // path as written.
-export async function routeDetails(engine: IQueryEngine, args: Record<string, unknown>) {
+export async function routeDetails(engine: IQueryEngine, args: Record<string, unknown>, window: PageWindow) {
   const method = requiredString(args.method, "method");
   const routePath = requiredString(args.path, "path");
-  const limit = optionalLimit(args.limit, 5);
 
-  const routes = await engine.query(`
+  const routes = (await engine.query(`
     MATCH (file:File)-[:DECLARES_ROUTE]->(route:Route)
     WHERE lower(route.method) = lower($method) AND (route.fullPath = $path OR route.path = $path)
     RETURN id(route) AS id, route.method AS method, route.path AS path, route.fullPath AS fullPath,
       route.framework AS framework, route.handlerName AS handlerName, file.relativePath AS file, route.line AS line
     ORDER BY file, line
-    LIMIT ${limit}
-  `, { method, path: routePath }) as Row[];
+    LIMIT ${window.fetch}
+  `, { method, path: routePath }) as Row[]).slice(window.offset);
   if (routes.length === 0) {
     return { method, path: routePath, routes: [], note: "No route matched. Use list_routes to see the declared routes." };
   }

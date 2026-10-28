@@ -29,7 +29,7 @@ describe("MCP tools", () => {
         capabilities?: { tools?: unknown };
         serverInfo?: { name?: string };
       };
-      assert.equal(initialize.protocolVersion, "2024-11-05");
+      assert.equal(initialize.protocolVersion, "2025-11-25");
       assert.ok(initialize.capabilities?.tools);
       assert.equal(initialize.serverInfo?.name, "concentrate");
       assert.equal(opened, 0, "initialize should not open the graph database");
@@ -61,10 +61,10 @@ describe("MCP tools", () => {
         () => handleMcpRequest({
           jsonrpc: "2.0",
           id: 4,
-          method: "resources/list",
+          method: "prompts/list",
           params: {},
         }, engineFactory),
-        /Unsupported MCP method/,
+        /Method not found/,
       );
     } finally {
       await writer.close();
