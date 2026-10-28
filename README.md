@@ -59,7 +59,8 @@ first (`--no-retry-lock` makes it fail instead).
 `list_routes`, `list_entrypoints`, `list_env_config`, `list_data_access`, and
 the agent tools `impact_of`, `detect_changes`, `route_details`,
 `get_symbol_source`, `get_file_outline` that answer a whole question in one call,
-plus a `concentrate://graph/summary` resource. It speaks MCP 2026-07-28 and the
+the search and analysis tools `search_symbols`, `find_references`,
+`find_import_cycles`, `find_unused_exports`, `architecture_overview`, plus a `concentrate://graph/summary` resource. It speaks MCP 2026-07-28 and the
 legacy `initialize` versions; list results are paged with cursors and return
 `structuredContent`. See [docs/mcp-server.md](docs/mcp-server.md).
 

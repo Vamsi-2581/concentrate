@@ -549,5 +549,347 @@
         "packages/core/src/index.ts"
       ]
     }
+  },
+  {
+    "tool": "architecture_overview",
+    "args": {},
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File) RETURN file.relativePath AS file, file.language AS language, file.isTest AS isTest",
+        "rows": [
+          {
+            "file": "apps/api/src/server.ts",
+            "language": "typescript",
+            "isTest": false
+          },
+          {
+            "file": "packages/core/src/index.ts",
+            "language": "typescript",
+            "isTest": false
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (package:Package)-[:PACKAGE_CONTAINS_FILE]->(file:File) RETURN file.relativePath AS file, coalesce(package.name, package.relativePath) AS package",
+        "rows": [
+          {
+            "file": "apps/api/src/server.ts",
+            "package": "@sample/api"
+          },
+          {
+            "file": "packages/core/src/index.ts",
+            "package": "@sample/core"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_FUNCTION]->(n:Function) RETURN file.relativePath AS file, count(n) AS count",
+        "rows": [
+          {
+            "file": "apps/api/src/server.ts",
+            "count": 1
+          },
+          {
+            "file": "packages/core/src/index.ts",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(:Class)-[:DEFINES_METHOD]->(n:Function) RETURN file.relativePath AS file, count(n) AS count",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(n:Class) RETURN file.relativePath AS file, count(n) AS count",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_ROUTE]->(n:Route) RETURN file.relativePath AS file, count(n) AS count",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(n:EntryPoint) RETURN file.relativePath AS file, count(n) AS count",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:ACCESSES_DATA_FILE]->(model:DataModel) RETURN DISTINCT file.relativePath AS file, model.name AS model",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_FUNCTION]->(:Function)-[:ACCESSES_DATA_FUNCTION]->(model:DataModel) RETURN DISTINCT file.relativePath AS file, model.name AS model",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (from:Package)-[rel:PACKAGE_IMPORTS_PACKAGE]->(to:Package) RETURN coalesce(from.name, from.relativePath) AS source, coalesce(to.name, to.relativePath) AS target, rel.dependencyType AS dependencyType",
+        "rows": [
+          {
+            "source": "@sample/api",
+            "target": "@sample/core",
+            "dependencyType": "dependencies"
+          },
+          {
+            "source": "@sample/api",
+            "target": "@sample/core",
+            "dependencyType": "internalImport"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:IMPORTS]->(imp:Import) OPTIONAL MATCH (imp)-[:RESOLVES_TO]->(target:File) RETURN id(imp) AS id, file.relativePath AS file, target.relativePath AS target, imp.source AS source, imp.specifier AS specifier, imp.line AS line, imp.isReExport AS isReExport, imp.isWildcard AS isWildcard, imp.isDynamic AS isDynamic, imp.isCjs AS isCjs, imp.isTypeOnly AS isTypeOnly, imp.bindings AS bindings",
+        "rows": [
+          {
+            "id": "file:apps/api/src/server.ts:import:1:@sample/core",
+            "file": "apps/api/src/server.ts",
+            "target": "packages/core/src/index.ts",
+            "source": "@sample/core",
+            "specifier": "import { buildMessage } from \"@sample/core\";",
+            "line": 1,
+            "isReExport": false,
+            "isWildcard": false,
+            "isDynamic": false,
+            "isCjs": false,
+            "isTypeOnly": false,
+            "bindings": "[{\"imported\":\"buildMessage\",\"local\":\"buildMessage\",\"kind\":\"named\"}]"
+          }
+        ]
+      }
+    ],
+    "output": {
+      "level": "package",
+      "groups": [
+        {
+          "name": "@sample/api",
+          "files": 1,
+          "testFiles": 0,
+          "languages": {
+            "typescript": 1
+          },
+          "functions": 1,
+          "classes": 0,
+          "routes": 0,
+          "entrypoints": 0,
+          "dataModels": 0,
+          "dependsOn": 1,
+          "usedBy": 0
+        },
+        {
+          "name": "@sample/core",
+          "files": 1,
+          "testFiles": 0,
+          "languages": {
+            "typescript": 1
+          },
+          "functions": 1,
+          "classes": 0,
+          "routes": 0,
+          "entrypoints": 0,
+          "dataModels": 0,
+          "dependsOn": 0,
+          "usedBy": 1
+        }
+      ],
+      "totalEdges": 1,
+      "edges": [
+        {
+          "from": "@sample/api",
+          "to": "@sample/core",
+          "imports": 1,
+          "typeOnlyImports": 0,
+          "dependencyTypes": [
+            "dependencies",
+            "internalImport"
+          ]
+        }
+      ],
+      "note": "Groups are workspace packages; edges count resolved file imports between them (dependencyTypes: manifest entries and source imports the scanner recorded). Files outside every package are counted under ungroupedFiles.",
+      "page": {
+        "offset": 0,
+        "returned": 1
+      }
+    }
+  },
+  {
+    "tool": "architecture_overview",
+    "args": {
+      "level": "directory",
+      "depth": 1
+    },
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File) RETURN file.relativePath AS file, file.language AS language, file.isTest AS isTest",
+        "rows": [
+          {
+            "file": "apps/api/src/server.ts",
+            "language": "typescript",
+            "isTest": false
+          },
+          {
+            "file": "packages/core/src/index.ts",
+            "language": "typescript",
+            "isTest": false
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_FUNCTION]->(n:Function) RETURN file.relativePath AS file, count(n) AS count",
+        "rows": [
+          {
+            "file": "apps/api/src/server.ts",
+            "count": 1
+          },
+          {
+            "file": "packages/core/src/index.ts",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(:Class)-[:DEFINES_METHOD]->(n:Function) RETURN file.relativePath AS file, count(n) AS count",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(n:Class) RETURN file.relativePath AS file, count(n) AS count",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_ROUTE]->(n:Route) RETURN file.relativePath AS file, count(n) AS count",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(n:EntryPoint) RETURN file.relativePath AS file, count(n) AS count",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:ACCESSES_DATA_FILE]->(model:DataModel) RETURN DISTINCT file.relativePath AS file, model.name AS model",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_FUNCTION]->(:Function)-[:ACCESSES_DATA_FUNCTION]->(model:DataModel) RETURN DISTINCT file.relativePath AS file, model.name AS model",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:IMPORTS]->(imp:Import) OPTIONAL MATCH (imp)-[:RESOLVES_TO]->(target:File) RETURN id(imp) AS id, file.relativePath AS file, target.relativePath AS target, imp.source AS source, imp.specifier AS specifier, imp.line AS line, imp.isReExport AS isReExport, imp.isWildcard AS isWildcard, imp.isDynamic AS isDynamic, imp.isCjs AS isCjs, imp.isTypeOnly AS isTypeOnly, imp.bindings AS bindings",
+        "rows": [
+          {
+            "id": "file:apps/api/src/server.ts:import:1:@sample/core",
+            "file": "apps/api/src/server.ts",
+            "target": "packages/core/src/index.ts",
+            "source": "@sample/core",
+            "specifier": "import { buildMessage } from \"@sample/core\";",
+            "line": 1,
+            "isReExport": false,
+            "isWildcard": false,
+            "isDynamic": false,
+            "isCjs": false,
+            "isTypeOnly": false,
+            "bindings": "[{\"imported\":\"buildMessage\",\"local\":\"buildMessage\",\"kind\":\"named\"}]"
+          }
+        ]
+      }
+    ],
+    "output": {
+      "level": "directory",
+      "depth": 1,
+      "groups": [
+        {
+          "name": "apps",
+          "files": 1,
+          "testFiles": 0,
+          "languages": {
+            "typescript": 1
+          },
+          "functions": 1,
+          "classes": 0,
+          "routes": 0,
+          "entrypoints": 0,
+          "dataModels": 0,
+          "dependsOn": 1,
+          "usedBy": 0
+        },
+        {
+          "name": "packages",
+          "files": 1,
+          "testFiles": 0,
+          "languages": {
+            "typescript": 1
+          },
+          "functions": 1,
+          "classes": 0,
+          "routes": 0,
+          "entrypoints": 0,
+          "dataModels": 0,
+          "dependsOn": 0,
+          "usedBy": 1
+        }
+      ],
+      "totalEdges": 1,
+      "edges": [
+        {
+          "from": "apps",
+          "to": "packages",
+          "imports": 1,
+          "typeOnlyImports": 0
+        }
+      ],
+      "note": "Groups are directories cut at 1 path segments (\".\" is the root); edges count resolved file imports between them.",
+      "page": {
+        "offset": 0,
+        "returned": 1
+      }
+    }
+  },
+  {
+    "tool": "find_import_cycles",
+    "args": {
+      "scope": "package"
+    },
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (from:Package)-[rel:PACKAGE_IMPORTS_PACKAGE]->(to:Package) RETURN coalesce(from.name, from.relativePath) AS source, coalesce(to.name, to.relativePath) AS target, rel.dependencyType AS dependencyType",
+        "rows": [
+          {
+            "source": "@sample/api",
+            "target": "@sample/core",
+            "dependencyType": "dependencies"
+          },
+          {
+            "source": "@sample/api",
+            "target": "@sample/core",
+            "dependencyType": "internalImport"
+          }
+        ]
+      }
+    ],
+    "output": {
+      "scope": "package",
+      "total": 0,
+      "cycles": [],
+      "note": "Each entry is a group of workspace packages that depend on each other; dependencyTypes lists the dependency kinds on the example cycle (internalImport means a source import without a manifest entry).",
+      "page": {
+        "offset": 0,
+        "returned": 0
+      }
+    }
   }
 ]

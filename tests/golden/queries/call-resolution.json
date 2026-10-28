@@ -1455,5 +1455,614 @@
         "returned": 2
       }
     }
+  },
+  {
+    "tool": "search_symbols",
+    "args": {
+      "query": "mul"
+    },
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:RE_EXPORTS_FUNCTION|RE_EXPORTS_CLASS|RE_EXPORTS_VARIABLE]->(n) RETURN id(n) AS id",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_FUNCTION]->(n:Function) RETURN id(n) AS id, n.name AS name, n.className AS className, file.relativePath AS file, n.line AS line, n.isExported AS isExported",
+        "rows": [
+          {
+            "id": "file:main.ts:function:4:helper",
+            "name": "helper",
+            "className": null,
+            "file": "main.ts",
+            "line": 4,
+            "isExported": false
+          },
+          {
+            "id": "file:main.ts:function:8:run",
+            "name": "run",
+            "className": null,
+            "file": "main.ts",
+            "line": 8,
+            "isExported": true
+          },
+          {
+            "id": "file:utils.ts:function:1:add",
+            "name": "add",
+            "className": null,
+            "file": "utils.ts",
+            "line": 1,
+            "isExported": true
+          },
+          {
+            "id": "file:utils.ts:function:5:multiply",
+            "name": "multiply",
+            "className": null,
+            "file": "utils.ts",
+            "line": 5,
+            "isExported": true
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(class:Class)-[:DEFINES_METHOD]->(n:Function) RETURN id(n) AS id, n.name AS name, class.name AS className, file.relativePath AS file, n.line AS line, false AS isExported",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(n:Class) RETURN id(n) AS id, n.name AS name, NULL AS className, file.relativePath AS file, n.line AS line, n.isExported AS isExported",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_INTERFACE]->(n:Interface) RETURN id(n) AS id, n.name AS name, NULL AS className, file.relativePath AS file, n.line AS line, n.isExported AS isExported",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_TYPE_ALIAS]->(n:TypeAlias) RETURN id(n) AS id, n.name AS name, NULL AS className, file.relativePath AS file, n.line AS line, n.isExported AS isExported",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_ENUM]->(n:Enum) RETURN id(n) AS id, n.name AS name, NULL AS className, file.relativePath AS file, n.line AS line, n.isExported AS isExported",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_VARIABLE]->(n:Variable) RETURN id(n) AS id, n.name AS name, NULL AS className, file.relativePath AS file, n.line AS line, n.isExported AS isExported",
+        "rows": []
+      }
+    ],
+    "output": {
+      "query": {
+        "query": "mul",
+        "kind": null,
+        "file": null
+      },
+      "total": 1,
+      "symbols": [
+        {
+          "kind": "function",
+          "name": "multiply",
+          "file": "utils.ts",
+          "line": 5,
+          "isExported": true,
+          "match": "prefix",
+          "score": 4949
+        }
+      ],
+      "page": {
+        "offset": 0,
+        "returned": 1
+      }
+    }
+  },
+  {
+    "tool": "find_references",
+    "args": {
+      "symbol": "add"
+    },
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:RE_EXPORTS_FUNCTION|RE_EXPORTS_CLASS|RE_EXPORTS_VARIABLE]->(n) RETURN id(n) AS id",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_FUNCTION]->(n:Function) RETURN id(n) AS id, n.name AS name, n.className AS className, file.relativePath AS file, n.line AS line, n.isExported AS isExported",
+        "rows": [
+          {
+            "id": "file:main.ts:function:4:helper",
+            "name": "helper",
+            "className": null,
+            "file": "main.ts",
+            "line": 4,
+            "isExported": false
+          },
+          {
+            "id": "file:main.ts:function:8:run",
+            "name": "run",
+            "className": null,
+            "file": "main.ts",
+            "line": 8,
+            "isExported": true
+          },
+          {
+            "id": "file:utils.ts:function:1:add",
+            "name": "add",
+            "className": null,
+            "file": "utils.ts",
+            "line": 1,
+            "isExported": true
+          },
+          {
+            "id": "file:utils.ts:function:5:multiply",
+            "name": "multiply",
+            "className": null,
+            "file": "utils.ts",
+            "line": 5,
+            "isExported": true
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(class:Class)-[:DEFINES_METHOD]->(n:Function) RETURN id(n) AS id, n.name AS name, class.name AS className, file.relativePath AS file, n.line AS line, false AS isExported",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(n:Class) RETURN id(n) AS id, n.name AS name, NULL AS className, file.relativePath AS file, n.line AS line, n.isExported AS isExported",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_INTERFACE]->(n:Interface) RETURN id(n) AS id, n.name AS name, NULL AS className, file.relativePath AS file, n.line AS line, n.isExported AS isExported",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_TYPE_ALIAS]->(n:TypeAlias) RETURN id(n) AS id, n.name AS name, NULL AS className, file.relativePath AS file, n.line AS line, n.isExported AS isExported",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_ENUM]->(n:Enum) RETURN id(n) AS id, n.name AS name, NULL AS className, file.relativePath AS file, n.line AS line, n.isExported AS isExported",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_VARIABLE]->(n:Variable) RETURN id(n) AS id, n.name AS name, NULL AS className, file.relativePath AS file, n.line AS line, n.isExported AS isExported",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:IMPORTS]->(imp:Import) OPTIONAL MATCH (imp)-[:RESOLVES_TO]->(target:File) RETURN id(imp) AS id, file.relativePath AS file, target.relativePath AS target, imp.source AS source, imp.specifier AS specifier, imp.line AS line, imp.isReExport AS isReExport, imp.isWildcard AS isWildcard, imp.isDynamic AS isDynamic, imp.isCjs AS isCjs, imp.isTypeOnly AS isTypeOnly, imp.bindings AS bindings",
+        "rows": [
+          {
+            "id": "file:main.ts:import:1:./utils.js",
+            "file": "main.ts",
+            "target": "utils.ts",
+            "source": "./utils.js",
+            "specifier": "import * as MathUtils from './utils.js';",
+            "line": 1,
+            "isReExport": false,
+            "isWildcard": false,
+            "isDynamic": false,
+            "isCjs": false,
+            "isTypeOnly": false,
+            "bindings": "[{\"imported\":\"*\",\"local\":\"MathUtils\",\"kind\":\"namespace\"}]"
+          },
+          {
+            "id": "file:main.ts:import:2:./utils.js",
+            "file": "main.ts",
+            "target": "utils.ts",
+            "source": "./utils.js",
+            "specifier": "import { add } from './utils.js';",
+            "line": 2,
+            "isReExport": false,
+            "isWildcard": false,
+            "isDynamic": false,
+            "isCjs": false,
+            "isTypeOnly": false,
+            "bindings": "[{\"imported\":\"add\",\"local\":\"add\",\"kind\":\"named\"}]"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (caller:Function)-[:CALLS]->(call:Call)-[:CALL_RESOLVES_TO]->(fn:Function) WHERE id(fn) IN $ids RETURN id(fn) AS target, id(caller) AS caller, call.line AS line, call.expression AS expression",
+        "params": {
+          "ids": [
+            "file:utils.ts:function:1:add"
+          ]
+        },
+        "rows": [
+          {
+            "target": "file:utils.ts:function:1:add",
+            "caller": "file:main.ts:function:8:run",
+            "line": 11,
+            "expression": "add"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:MODULE_CALLS]->(call:Call)-[:CALL_RESOLVES_TO]->(fn:Function) WHERE id(fn) IN $ids RETURN id(fn) AS target, file.relativePath AS file, call.line AS line, call.expression AS expression",
+        "params": {
+          "ids": [
+            "file:utils.ts:function:1:add"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (fn:Function)-[:PASSED_TO]->(call:Call) WHERE id(fn) IN $ids OPTIONAL MATCH (caller:Function)-[:CALLS]->(call) OPTIONAL MATCH (file:File)-[:MODULE_CALLS]->(call) RETURN id(fn) AS target, id(caller) AS caller, file.relativePath AS file, call.line AS line, call.expression AS expression",
+        "params": {
+          "ids": [
+            "file:utils.ts:function:1:add"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_ROUTE]->(route:Route)-[rel:ROUTE_HANDLED_BY|ROUTE_LIFECYCLE_STEP]->(fn:Function) WHERE id(fn) IN $ids RETURN id(fn) AS target, file.relativePath AS file, route.line AS line, route.method AS method, coalesce(route.fullPath, route.path) AS path, label(rel) AS relType, rel.role AS role",
+        "params": {
+          "ids": [
+            "file:utils.ts:function:1:add"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(entrypoint:EntryPoint)-[:ENTRYPOINT_HANDLED_BY]->(fn:Function) WHERE id(fn) IN $ids RETURN id(fn) AS target, file.relativePath AS file, entrypoint.line AS line, entrypoint.kind AS entrypointKind, entrypoint.trigger AS trigger",
+        "params": {
+          "ids": [
+            "file:utils.ts:function:1:add"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_FUNCTION]->(fn:Function) WHERE id(fn) IN $ids RETURN id(fn) AS id, fn.name AS name, fn.className AS className, file.relativePath AS file, fn.line AS line, fn.endLine AS endLine",
+        "params": {
+          "ids": [
+            "file:main.ts:function:8:run"
+          ]
+        },
+        "rows": [
+          {
+            "id": "file:main.ts:function:8:run",
+            "name": "run",
+            "className": null,
+            "file": "main.ts",
+            "line": 8,
+            "endLine": 13
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(class:Class)-[:DEFINES_METHOD]->(fn:Function) WHERE id(fn) IN $ids RETURN id(fn) AS id, fn.name AS name, class.name AS className, file.relativePath AS file, fn.line AS line, fn.endLine AS endLine",
+        "params": {
+          "ids": [
+            "file:main.ts:function:8:run"
+          ]
+        },
+        "rows": []
+      }
+    ],
+    "output": {
+      "symbol": "add",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "add",
+          "file": "utils.ts",
+          "line": 1,
+          "isExported": true
+        }
+      ],
+      "total": 3,
+      "counts": {
+        "namespace-import": 1,
+        "import": 1,
+        "call": 1
+      },
+      "references": [
+        {
+          "kind": "namespace-import",
+          "file": "main.ts",
+          "line": 1,
+          "detail": "MathUtils from ./utils.js",
+          "possible": true
+        },
+        {
+          "kind": "import",
+          "file": "main.ts",
+          "line": 2,
+          "detail": "add"
+        },
+        {
+          "kind": "call",
+          "file": "main.ts",
+          "line": 11,
+          "from": "run",
+          "detail": "add"
+        }
+      ],
+      "note": "Calls come from resolved call edges, so calls the scanner could not resolve are missing; possible: true marks namespace and dynamic imports that may not use the declaration.",
+      "page": {
+        "offset": 0,
+        "returned": 3
+      }
+    }
+  },
+  {
+    "tool": "find_unused_exports",
+    "args": {},
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:RE_EXPORTS_FUNCTION|RE_EXPORTS_CLASS|RE_EXPORTS_VARIABLE]->(n) RETURN id(n) AS id",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_FUNCTION]->(n:Function) RETURN id(n) AS id, n.name AS name, n.className AS className, file.relativePath AS file, n.line AS line, n.isExported AS isExported",
+        "rows": [
+          {
+            "id": "file:main.ts:function:4:helper",
+            "name": "helper",
+            "className": null,
+            "file": "main.ts",
+            "line": 4,
+            "isExported": false
+          },
+          {
+            "id": "file:main.ts:function:8:run",
+            "name": "run",
+            "className": null,
+            "file": "main.ts",
+            "line": 8,
+            "isExported": true
+          },
+          {
+            "id": "file:utils.ts:function:1:add",
+            "name": "add",
+            "className": null,
+            "file": "utils.ts",
+            "line": 1,
+            "isExported": true
+          },
+          {
+            "id": "file:utils.ts:function:5:multiply",
+            "name": "multiply",
+            "className": null,
+            "file": "utils.ts",
+            "line": 5,
+            "isExported": true
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(class:Class)-[:DEFINES_METHOD]->(n:Function) RETURN id(n) AS id, n.name AS name, class.name AS className, file.relativePath AS file, n.line AS line, false AS isExported",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(n:Class) RETURN id(n) AS id, n.name AS name, NULL AS className, file.relativePath AS file, n.line AS line, n.isExported AS isExported",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_INTERFACE]->(n:Interface) RETURN id(n) AS id, n.name AS name, NULL AS className, file.relativePath AS file, n.line AS line, n.isExported AS isExported",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_TYPE_ALIAS]->(n:TypeAlias) RETURN id(n) AS id, n.name AS name, NULL AS className, file.relativePath AS file, n.line AS line, n.isExported AS isExported",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_ENUM]->(n:Enum) RETURN id(n) AS id, n.name AS name, NULL AS className, file.relativePath AS file, n.line AS line, n.isExported AS isExported",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_VARIABLE]->(n:Variable) RETURN id(n) AS id, n.name AS name, NULL AS className, file.relativePath AS file, n.line AS line, n.isExported AS isExported",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:IMPORTS]->(imp:Import) OPTIONAL MATCH (imp)-[:RESOLVES_TO]->(target:File) RETURN id(imp) AS id, file.relativePath AS file, target.relativePath AS target, imp.source AS source, imp.specifier AS specifier, imp.line AS line, imp.isReExport AS isReExport, imp.isWildcard AS isWildcard, imp.isDynamic AS isDynamic, imp.isCjs AS isCjs, imp.isTypeOnly AS isTypeOnly, imp.bindings AS bindings",
+        "rows": [
+          {
+            "id": "file:main.ts:import:1:./utils.js",
+            "file": "main.ts",
+            "target": "utils.ts",
+            "source": "./utils.js",
+            "specifier": "import * as MathUtils from './utils.js';",
+            "line": 1,
+            "isReExport": false,
+            "isWildcard": false,
+            "isDynamic": false,
+            "isCjs": false,
+            "isTypeOnly": false,
+            "bindings": "[{\"imported\":\"*\",\"local\":\"MathUtils\",\"kind\":\"namespace\"}]"
+          },
+          {
+            "id": "file:main.ts:import:2:./utils.js",
+            "file": "main.ts",
+            "target": "utils.ts",
+            "source": "./utils.js",
+            "specifier": "import { add } from './utils.js';",
+            "line": 2,
+            "isReExport": false,
+            "isWildcard": false,
+            "isDynamic": false,
+            "isCjs": false,
+            "isTypeOnly": false,
+            "bindings": "[{\"imported\":\"add\",\"local\":\"add\",\"kind\":\"named\"}]"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File) RETURN file.relativePath AS file, file.language AS language, file.isTest AS isTest, file.isFixture AS isFixture, file.isGenerated AS isGenerated",
+        "rows": [
+          {
+            "file": "main.ts",
+            "language": "typescript",
+            "isTest": false,
+            "isFixture": false,
+            "isGenerated": false
+          },
+          {
+            "file": "utils.ts",
+            "language": "typescript",
+            "isTest": false,
+            "isFixture": false,
+            "isGenerated": false
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (package:Package) RETURN package.path AS path, package.relativePath AS relativePath",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_FUNCTION]->(fn:Function) RETURN id(fn) AS id, fn.name AS name, fn.className AS className, file.relativePath AS file, fn.line AS line, fn.endLine AS endLine",
+        "params": {},
+        "rows": [
+          {
+            "id": "file:main.ts:function:4:helper",
+            "name": "helper",
+            "className": null,
+            "file": "main.ts",
+            "line": 4,
+            "endLine": 6
+          },
+          {
+            "id": "file:main.ts:function:8:run",
+            "name": "run",
+            "className": null,
+            "file": "main.ts",
+            "line": 8,
+            "endLine": 13
+          },
+          {
+            "id": "file:utils.ts:function:1:add",
+            "name": "add",
+            "className": null,
+            "file": "utils.ts",
+            "line": 1,
+            "endLine": 3
+          },
+          {
+            "id": "file:utils.ts:function:5:multiply",
+            "name": "multiply",
+            "className": null,
+            "file": "utils.ts",
+            "line": 5,
+            "endLine": 7
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(class:Class)-[:DEFINES_METHOD]->(fn:Function) RETURN id(fn) AS id, fn.name AS name, class.name AS className, file.relativePath AS file, fn.line AS line, fn.endLine AS endLine",
+        "params": {},
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (caller:Function)-[:CALLS]->(:Call)-[:CALL_RESOLVES_TO]->(fn:Function) RETURN id(caller) AS source, id(fn) AS target",
+        "rows": [
+          {
+            "source": "file:main.ts:function:8:run",
+            "target": "file:main.ts:function:4:helper"
+          },
+          {
+            "source": "file:main.ts:function:8:run",
+            "target": "file:utils.ts:function:5:multiply"
+          },
+          {
+            "source": "file:main.ts:function:8:run",
+            "target": "file:utils.ts:function:1:add"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:MODULE_CALLS]->(:Call)-[:CALL_RESOLVES_TO]->(fn:Function) RETURN file.relativePath AS file, id(fn) AS target",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (fn:Function)-[:PASSED_TO]->(call:Call) OPTIONAL MATCH (caller:Function)-[:CALLS]->(call) OPTIONAL MATCH (file:File)-[:MODULE_CALLS]->(call) RETURN id(fn) AS target, id(caller) AS source, file.relativePath AS file",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (from:Class)-[:EXTENDS|IMPLEMENTS|INJECTS|MODULE_IMPORTS|MODULE_PROVIDES|MODULE_CONTROLS|MODULE_EXPORTS]->(to) RETURN id(from) AS source, id(to) AS target",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (owner)-[:ROUTE_HANDLED_BY|ROUTE_LIFECYCLE_STEP|ENTRYPOINT_HANDLED_BY|MOUNTS_FUNCTION]->(fn:Function) RETURN id(fn) AS target",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (repo:Repo) RETURN repo.path AS path LIMIT 1",
+        "rows": [
+          {
+            "path": "<root>"
+          }
+        ]
+      }
+    ],
+    "output": {
+      "query": {
+        "file": null,
+        "includeTests": false
+      },
+      "total": 1,
+      "unusedExports": [
+        {
+          "kind": "function",
+          "name": "run",
+          "file": "main.ts",
+          "line": 8
+        }
+      ],
+      "deadFunctions": [],
+      "skipped": {
+        "packageEntry": 0,
+        "wholeFileImported": 0,
+        "defaultExports": 0,
+        "tests": 0,
+        "generated": 0,
+        "handlers": 0
+      },
+      "note": "Candidates only. An export counts as used when another file imports it by name (through barrels too) or calls, passes, extends, implements or injects it. Files imported whole (namespace, dynamic or default imports), package entry points and exports named default are skipped; uses outside the scanned repository, string-based lookups and framework conventions are not seen. usedInFile: the export is only used inside its own file. deadFunctions are unexported file-level functions with no calls and no other mention of their name in the file. JavaScript and TypeScript only.",
+      "page": {
+        "offset": 0,
+        "returned": 1
+      }
+    }
   }
 ]

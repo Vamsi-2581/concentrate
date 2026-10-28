@@ -155,6 +155,71 @@ Example:
 { "name": "impact_of", "arguments": { "symbol": "UserService", "maxDepth": 3 } }
 ```
 
+### Search and analysis tools
+
+- `search_symbols({ query, kind?, file?, limit = 20 })`: fuzzy search over
+  declarations (functions, methods, classes, interfaces, types, enums,
+  variables). Matches rank by type: `exact`, `exact-ignore-case`, `prefix`,
+  `initials` (`gUS` → `getUserService`), `substring` (higher at a word
+  start), then `fuzzy` (the query's letters in order, as fzf does:
+  `injctr` → `Injector`). Within a type, closer and shorter names score
+  higher; ties go to the shorter name, then exported declarations, then file
+  and line. Each result has `match` and `score`. A query with a dot
+  (`Service.find`) is matched against `Class.method`.
+- `find_references({ symbol, file?, kind?, limit = 50 })`: where a
+  declaration is used, as references with `kind`, `file` and `line`:
+  - `call` and `callback` from resolved call edges (`from` names the calling
+    function or `(module)`);
+  - `import` and `type-import` by name, followed through
+    `export { a as b } from` and `export * from` barrels; `namespace-import`
+    and `dynamic-import` of the declaration's file (or of a barrel that
+    includes it) are marked `possible: true`;
+  - `re-export` statements that pass the declaration on;
+  - `route` and `entrypoint` for functions that handle them (`detail` is the
+    role);
+  - `extends`, `implements` and `injects` for classes and interfaces.
+  `Class.method` selects one class's method (calls only). `counts` sums the
+  references by kind.
+- `find_import_cycles({ scope = "file", limit = 20 })`: strongly connected
+  components of the resolved file import graph (`scope: "package"`: of the
+  workspace package dependency graph), largest first. Each has `size`, its
+  `members` (the first 30), and `cycle`, one shortest loop through its first
+  member. File cycles whose every loop passes a type-only import
+  (`import type`) are `typeOnly: true`; `runtimeCycles` counts the others.
+  Package cycles list the `dependencyTypes` on the example loop.
+- `find_unused_exports({ file?, includeTests = false, limit = 50 })`:
+  candidate dead code in JavaScript and TypeScript files.
+  - `unusedExports`: exported declarations that no other file imports by name
+    (through barrels too), calls, passes as a callback, extends, implements,
+    injects or lists in a NestJS module. `usedInFile: true` marks exports only
+    used inside their own file.
+  - `deadFunctions` (at most 100): unexported file-level functions with no
+    resolved calls, not passed as callbacks, not handlers, and whose name is
+    not mentioned anywhere else in their file (read from disk).
+  - `skipped` counts what is not judged: exports of package entry points
+    (`package.json` `main`, `module`, `types`, `browser`, `bin` and `exports`,
+    mapped from build output back to sources, plus `index` and `src/index`;
+    the scan root when there is no manifest) and of files imported whole
+    (namespace, dynamic, CommonJS default, or a name that resolves to nothing,
+    such as a default export), exports named `default`, route and entrypoint
+    handlers, generated files, and test and fixture files unless
+    `includeTests` is set.
+- `architecture_overview({ level = "package", depth = 2, limit = 50 })`: the
+  repository as `groups` (workspace packages, or with `level: "directory"`
+  directories cut at `depth` path segments) with file, test file, language,
+  function, class, route, entrypoint and data model counts and how many
+  groups each depends on and is used by; `edges` between groups weighted by
+  resolved file imports (`typeOnlyImports` among them) and, for packages, the
+  manifest `dependencyTypes`, heaviest first. Files outside every package are
+  counted under `ungroupedFiles`.
+
+These tools work from the graph only. Calls the scanner could not resolve
+(for example calls through an `export *` barrel to another package) are
+missing from `find_references` and can make an export look unused; uses
+from outside the repository, string-based lookups and framework conventions
+are not seen, so `find_unused_exports` reports candidates to check, not
+verdicts.
+
 ### Paging and output budget
 
 Every tool that returns a list pages one primary list: `definitions`,
@@ -162,7 +227,8 @@ Every tool that returns a list pages one primary list: `definitions`,
 for the agent tools `callers` (`impact_of`), `changedFiles`
 (`detect_changes`), `routes` (`route_details`), `matches`
 (`get_symbol_source`) and `outline` (`get_file_outline`, `limit` defaults to
-200). `limit` is the page size (at most 200). The result has a
+200), and for the analysis tools `symbols`, `references`, `cycles`,
+`unusedExports` and `edges` (`architecture_overview`). `limit` is the page size (at most 200). The result has a
 `page: { offset, returned, nextCursor? }` field; pass `nextCursor` back as
 `cursor` with the other arguments unchanged to get the next page. `limit` may
 change between pages. A cursor from a different call, or one that was

@@ -381,14 +381,14 @@ The MCP server is a hand-written JSON-RPC layer in `src/adapters/mcp/server.ts`.
 
 ### Search and navigation
 
-- [ ] `search_symbols`: fuzzy name search with ranking
-- [ ] `find_references`
+- [x] `search_symbols`: fuzzy name search with ranking
+- [x] `find_references`
 
 ### Analysis
 
-- [ ] Import cycle detection
-- [ ] Unused exports / dead code
-- [ ] Architecture overview at package and directory level
+- [x] Import cycle detection
+- [x] Unused exports / dead code
+- [x] Architecture overview at package and directory level
 
 ### Protocol quality
 
@@ -399,8 +399,8 @@ The MCP server is a hand-written JSON-RPC layer in `src/adapters/mcp/server.ts`.
 
 ### Acceptance criteria
 
-- [ ] New tools are covered by unit and stdio end-to-end tests
-- [ ] Every tool supports pagination and respects the output budget
+- [x] New tools are covered by unit and stdio end-to-end tests
+- [x] Every tool supports pagination and respects the output budget
 
 ## Phase 7: Niche depth – Node.js/TS backend semantics ([#14](https://github.com/fatihserhatturan/concentrate/issues/14))
 
