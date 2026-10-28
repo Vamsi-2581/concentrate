@@ -272,16 +272,16 @@ Extractors use only a narrow tree-sitter API: `type`, `id`, `text`, `startPositi
 ### Measurement
 
 - [x] Record native and WASM scan time and peak memory on each standing sample
-- [ ] Add a repeatable parser benchmark script to `scripts/`
+- [x] Add a repeatable parser benchmark script to `scripts/` (`npm run bench:parser`, `scripts/bench-parser.ts`)
 
 ### Optimization
 
-- [ ] Add an optional `node:worker_threads` pool for per-file parsing if profiles show parsing dominates
+- [x] Add an optional `node:worker_threads` pool for per-file parsing if profiles show parsing dominates (parse plus extraction is 80–90% of a scan; automatic from 100 files to parse, `--workers`; see [benchmarks.md](benchmarks.md#parser-benchmark-and-parse-workers))
 
 ### Acceptance criteria
 
 - [x] Benchmark results are documented
-- [ ] Scan time on `internet-nest` does not regress across grammar upgrades
+- [x] Scan time on `internet-nest` does not regress across grammar upgrades (`npm run bench:parser -- --baseline`, see [benchmarks.md](benchmarks.md#grammar-upgrades))
 
 ## Phase 4: Move framework route knowledge out of the language layer ([#10](https://github.com/fatihserhatturan/concentrate/issues/10))
 

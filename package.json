@@ -12,6 +12,7 @@
     "scan": "tsx src/index.ts scan",
     "smoke:samples": "tsx src/index.ts smoke",
     "bench:store": "tsx scripts/bench-store.ts",
+    "bench:parser": "npm run build && tsx scripts/bench-parser.ts --dist",
     "benchmark:incremental": "npm run smoke:samples -- --suite all --incremental-benchmark --report .concentrate/incremental-benchmark-report.json --semantic-samples 5",
     "stats": "tsx src/index.ts stats",
     "query": "tsx src/index.ts query",

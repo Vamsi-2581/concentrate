@@ -109,3 +109,56 @@ scan's graph exactly.
   parsed on every scan.
 - From the CLI, `scan` of express goes from 0.49 s to 0.22 s wall time with a
   warm cache.
+
+## Parser benchmark and parse workers
+
+`npm run bench:parser` (Phase 3e) builds, then measures `dist/` on every
+sample: tree-sitter alone, the language parsers (parse plus extraction, run
+once per file), and a full scan without the parse cache, on the main thread
+and with the default parse workers. Apple M4, Node v24.13.0, recorded
+2026-10-28; medians of 5 runs in milliseconds.
+
+| Sample | Files | KB | Parse | Extract | Scan, main thread | Extract / scan | Scan, workers |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| express | 141 | 532 | 63 | 236 | 264 | 89% | 220 (4) |
+| fastify | 18 | 18 | 2 | 8 | 10 | 80% | 10 (0) |
+| nestjs-starter | 7 | 3 | 0 | 2 | 3 | 67% | 3 (0) |
+| ky | 52 | 448 | 51 | 164 | 186 | 88% | 187 (0) |
+| internet-node-express-firebase-mongodb | 24 | 40 | 5 | 16 | 18 | 89% | 18 (0) |
+| internet-node-express-realworld | 39 | 53 | 6 | 20 | 24 | 83% | 24 (0) |
+| internet-nest | 1714 | 3215 | 333 | 1163 | 1417 | 82% | 851 (4) |
+
+- **Per-file work dominates.** Parsing and extraction are 80–90% of a scan;
+  tree-sitter itself is about a quarter of that, the rest is walking the trees
+  in JavaScript. Cross-file resolvers and semantic contributors are the
+  remaining 10–20%.
+- **Parse workers.** Files the parse cache does not have are parsed on
+  `node:worker_threads` once there are 100 or more of them: up to 4 workers,
+  leaving a core for the main thread. `internet-nest` scans 1.7× faster
+  (1417 → 851 ms) and `express` 1.2×; more than 4 workers did not help.
+  `--workers <n>` sets the count, `--workers 0` parses on the main thread. A
+  warm-cache rescan (watch) with few changes stays on the main thread. Worker
+  results are structured-cloned copies, and the graph is identical either way
+  (`tests/parse-workers.test.ts`, and byte-identical normalized exports of
+  `internet-nest`). From the TypeScript sources (`npm run dev`, tests) workers
+  start only when asked for, since each one compiles the sources again.
+- From the CLI, `scan --no-cache` of `internet-nest` goes from 2.3 s to 1.6 s
+  wall time.
+
+### Grammar upgrades
+
+Scan time must not regress when grammars change. Before running
+`npm run grammars:build` with new versions, record a baseline on the same
+machine, then compare after the rebuild:
+
+```bash
+npm run bench:parser -- --json .concentrate/bench-before.json
+# update versions in scripts/build-grammars.mjs, then:
+npm run grammars:build
+npm run bench:parser -- --baseline .concentrate/bench-before.json
+```
+
+The comparison lists the grammars that changed and exits with 1 when a
+sample's parse or scan median is more than 1.15× the baseline and at least
+20 ms slower (`--tolerance`, `--min-delta`), so the small samples' 1–2 ms
+jitter does not count.

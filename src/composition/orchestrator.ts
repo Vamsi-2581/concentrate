@@ -2,12 +2,15 @@ import { buildCodeGraph as coreBuildCodeGraph, createScanOrchestrator } from "..
 import { coreIntegrationRegistry } from "./default-registry.js";
 import type { BuildCodeGraphOptions, BuildCodeGraphResult } from "../core/scan/result.js";
 import { parserFingerprint } from "./parser-fingerprint.js";
+import { autoParseWorkers, createParserPool } from "./parser-pool.js";
 
 const deps = {
   getParser: (language: string) => coreIntegrationRegistry.getLanguageParser(language),
   resolvers: coreIntegrationRegistry.languageResolvers,
   contributors: coreIntegrationRegistry.semanticContributors,
   parserFingerprint,
+  createParserPool,
+  autoParseWorkers,
 };
 
 export const scanOrchestrator = createScanOrchestrator(deps);
