@@ -1,8 +1,7 @@
 import path from "node:path";
 import type { BuildCodeGraphResult } from "./result.js";
 import { createFileClassificationCounts, type FileClassificationCounts } from "./file-classification.js";
-import type { ParsePlan } from "./parse-plan.js";
-import { createUncheckedIncrementalEligibility, type IncrementalEligibility } from "./manifest.js";
+import { createParseCacheReport, type ParseCacheReport } from "./parse-cache.js";
 
 export type ScanStatus = "success" | "partial" | "failed";
 
@@ -15,9 +14,7 @@ export type ScanReport = {
   fileClassifications: FileClassificationCounts;
   resolvedImports: number;
   unresolvedRelativeImports: number;
-  incremental: IncrementalEligibility;
-  parsePlan: ParsePlan;
-  graphPatch: GraphPatchReport;
+  parseCache: ParseCacheReport;
   failedFiles: ScanFailure[];
   warnings: ScanWarning[];
 };
@@ -32,15 +29,6 @@ export type ScanWarning = {
   message: string;
 };
 
-export type GraphPatchReport = {
-  requested: boolean;
-  effectiveMode: "reset" | "patch";
-  reason: string | null;
-  affectedFiles: number;
-  nodesWritten: number;
-  relationshipsWritten: number;
-};
-
 export function createScanReport(discoveredFiles: number, supportedFiles: number): ScanReport {
   return {
     discoveredFiles,
@@ -51,26 +39,7 @@ export function createScanReport(discoveredFiles: number, supportedFiles: number
     fileClassifications: createFileClassificationCounts(),
     resolvedImports: 0,
     unresolvedRelativeImports: 0,
-    incremental: createUncheckedIncrementalEligibility(),
-    parsePlan: {
-      requestedMode: "full",
-      effectiveMode: "full",
-      reason: null,
-      filesToParse: supportedFiles,
-      filesPlannedForReuse: 0,
-      addedFiles: [],
-      changedFiles: [],
-      unchangedFiles: [],
-      deletedFiles: [],
-    },
-    graphPatch: {
-      requested: false,
-      effectiveMode: "reset",
-      reason: null,
-      affectedFiles: 0,
-      nodesWritten: 0,
-      relationshipsWritten: 0,
-    },
+    parseCache: createParseCacheReport(),
     failedFiles: [],
     warnings: [],
   };

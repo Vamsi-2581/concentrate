@@ -1,5 +1,4 @@
 import type { GraphNode, GraphRelationship } from "../graph/model.js";
-import type { IncrementalMode } from "./parse-plan.js";
 import type { ScanReport } from "./report.js";
 import type { ScanManifest } from "./manifest.js";
 
@@ -9,8 +8,8 @@ export type BuildCodeGraphOptions = {
   maxFiles?: number;
   include?: string[];
   exclude?: string[];
-  previousManifestPath?: string;
-  incrementalMode?: IncrementalMode;
+  // Reuse per-file parse results stored here (see parse-cache.ts); unset parses every file.
+  cacheDirectory?: string;
   onProgress?: (current: number, total: number, relativePath: string) => void;
 };
 

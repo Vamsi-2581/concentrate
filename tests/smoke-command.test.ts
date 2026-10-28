@@ -68,9 +68,8 @@ describe("smoke validation", () => {
 
     assert.ok(report.results[0]?.semanticSamples);
     assert.equal(report.results[0]?.incrementalBenchmark?.status, "passed");
-    assert.equal(report.results[0]?.incrementalBenchmark?.incremental.compatible, true);
-    assert.equal(report.results[0]?.incrementalBenchmark?.graphPatch.effectiveMode, "patch");
-    assert.equal(report.results[0]?.incrementalBenchmark?.graphPatch.affectedFiles, 0);
+    assert.equal(report.results[0]?.incrementalBenchmark?.parseCache.misses, 0);
+    assert.equal(report.results[0]?.incrementalBenchmark?.parseCache.hits, 1);
     assert.deepEqual(report.results[0]?.semanticSamples?.review, {
       falsePositiveFindings: [],
       falseNegativeFindings: [],

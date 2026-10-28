@@ -106,7 +106,8 @@ describe("GraphStore", () => {
     const reader = await GraphStore.open(directory);
     assert.deepEqual(await reader.query("MATCH (fn:Function) RETURN fn.name AS name"), [{ name: "run" }]);
 
-    await writer.patch(nodes(["stop"]), relationships(["stop"]), { affectedFiles: ["a.ts"] });
+    await writer.reset();
+    await writer.write(nodes(["stop"]), relationships(["stop"]));
     assert.deepEqual(await reader.query("MATCH (fn:Function) RETURN fn.name AS name"), [{ name: "stop" }]);
   });
 

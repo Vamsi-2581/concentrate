@@ -39,12 +39,6 @@ export class RelationshipRecord {
 /** Properties with a value index; the Cypher planner starts from these when it can. */
 export const INDEXED_PROPERTIES = ["name", "relativePath", "method", "path"] as const;
 
-export type PatchSummary = {
-  affectedFiles: number;
-  nodesWritten: number;
-  relationshipsWritten: number;
-};
-
 /**
  * In-memory code graph: nodes by id and label, adjacency lists on each node,
  * and value indexes for INDEXED_PROPERTIES. Writes are validated against the
@@ -167,36 +161,6 @@ export class MemoryGraph {
     for (const relationship of relationships) {
       this.addRelationship(physicalRelationshipType(relationship, labels), relationship.from, relationship.to, relationship.properties);
     }
-  }
-
-  /**
-   * Replace what the affected files own: delete every node whose id is the
-   * file id or starts with `<file id>:` (with its relationships), then insert
-   * the new owned nodes, any missing endpoint nodes, and every relationship
-   * that touches an owned node.
-   */
-  patch(nodes: readonly GraphNode[], relationships: readonly GraphRelationship[], affectedFiles: readonly string[]): PatchSummary {
-    const affectedFileIds = affectedFiles.map((file) => `file:${file.split(path.sep).join(path.posix.sep)}`);
-    const owned = (id: string) => affectedFileIds.some((fileId) => id === fileId || id.startsWith(`${fileId}:`));
-
-    for (const node of [...this.nodesById.values()]) {
-      if (owned(node.id)) this.deleteNode(node);
-    }
-
-    const relationshipsToWrite = relationships.filter((relationship) => owned(relationship.from) || owned(relationship.to));
-    const endpoints = new Set(relationshipsToWrite.flatMap((relationship) => [relationship.from, relationship.to]));
-    let nodesWritten = 0;
-    for (const node of nodes) {
-      if ((owned(node.id) || endpoints.has(node.id)) && !this.nodesById.has(node.id)) {
-        this.addNode(node.label, node.id, node.properties);
-        nodesWritten += 1;
-      }
-    }
-    const labels = new Map(nodes.map((node) => [node.id, node.label]));
-    for (const relationship of relationshipsToWrite) {
-      this.addRelationship(physicalRelationshipType(relationship, labels), relationship.from, relationship.to, relationship.properties);
-    }
-    return { affectedFiles: affectedFileIds.length, nodesWritten, relationshipsWritten: relationshipsToWrite.length };
   }
 }
 

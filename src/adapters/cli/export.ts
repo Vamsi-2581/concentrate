@@ -4,7 +4,6 @@ import { printScanReport } from "./report.js";
 import { ProgressReporter } from "./progress.js";
 import type { GraphNode, GraphRelationship } from "../../core/graph/model.js";
 import { formatNormalizedGraph, normalizeGraph } from "../../core/graph/normalize.js";
-import type { IncrementalMode } from "../../core/scan/index.js";
 import { didFailFast, didPartiallySucceed } from "../../core/scan/index.js";
 import { scanOrchestrator } from "../../composition/orchestrator.js";
 import type { CliAdapterResult } from "./scan.js";
@@ -16,8 +15,8 @@ export type ExportAdapterOptions = {
   maxFiles?: number;
   include: string[];
   exclude: string[];
-  previousManifest?: string;
-  incremental: string;
+  cacheDir: string;
+  cache?: boolean;
   normalized?: boolean;
 };
 
@@ -31,8 +30,7 @@ export async function runExportAdapter(projectPath: string, options: ExportAdapt
     maxFiles: options.maxFiles,
     include: options.include.length > 0 ? options.include : undefined,
     exclude: options.exclude.length > 0 ? options.exclude : undefined,
-    previousManifestPath: options.previousManifest ? path.resolve(options.previousManifest) : undefined,
-    incrementalMode: parseIncrementalMode(options.incremental),
+    cacheDirectory: options.cache === false ? undefined : path.resolve(options.cacheDir),
     onProgress: (current, total, relativePath) => {
       progress.update(current, total, relativePath);
     },
@@ -79,14 +77,6 @@ export async function runExportAdapter(projectPath: string, options: ExportAdapt
   printExportReport(outputPath, result.nodes.length, result.relationships.length, options.normalized === true);
   printScanReport(result.report, result.nodes.length, result.relationships.length, outputPath);
   return { exitCode: didPartiallySucceed(result) ? 1 : 0 };
-}
-
-function parseIncrementalMode(value: string): IncrementalMode {
-  if (value === "full" || value === "changed-files") {
-    return value;
-  }
-
-  throw new Error(`Unsupported incremental mode: ${value}`);
 }
 
 async function writeJsonl(

@@ -92,46 +92,7 @@ describe("buildCodeGraph", () => {
     );
   });
 
-  it("compares current files with a previous scan manifest without skipping parsing", async () => {
-    const fixturePath = await createManifestDiffFixture();
-    const previousManifestPath = path.join(fixturePath, "previous-manifest.json");
-    const graph = await buildCodeGraph(fixturePath, {
-      continueOnError: false,
-      include: ["src/**/*"],
-      previousManifestPath,
-      incrementalMode: "changed-files",
-    });
-
-    assert.equal(graph.report.status, "success");
-    assert.equal(graph.report.parsedFiles, 3);
-    assert.deepEqual(graph.report.incremental, {
-      checked: true,
-      compatible: true,
-      reason: null,
-      previousManifestPath,
-      added: 1,
-      changed: 1,
-      unchanged: 1,
-      deleted: 1,
-      addedFiles: ["src/added.ts"],
-      changedFiles: ["src/changed.ts"],
-      unchangedFiles: ["src/same.ts"],
-      deletedFiles: ["src/deleted.ts"],
-    });
-    assert.deepEqual(graph.report.parsePlan, {
-      requestedMode: "changed-files",
-      effectiveMode: "full",
-      reason: "Changed-file-only parsing is not implemented yet; running a full parse before patching graph",
-      filesToParse: 3,
-      filesPlannedForReuse: 1,
-      addedFiles: ["src/added.ts"],
-      changedFiles: ["src/changed.ts"],
-      unchangedFiles: ["src/same.ts"],
-      deletedFiles: ["src/deleted.ts"],
-    });
-  });
-
-  it("patches an existing graph for added, changed, and deleted files", async () => {
+  it("rescans with the parse cache after files are added, changed, and deleted", async () => {
     const fixturePath = await createPatchFixture();
     const databasePath = path.join(
       await mkdtemp(path.join(os.tmpdir(), "concentrate-patch-graph-")),
@@ -139,6 +100,7 @@ describe("buildCodeGraph", () => {
     );
     const previousManifestPath = path.join(path.dirname(databasePath), "previous-manifest.json");
     const nextManifestPath = path.join(path.dirname(databasePath), "next-manifest.json");
+    const cacheDir = path.join(path.dirname(databasePath), "cache");
     const previousExitCode = process.exitCode;
 
     await scanCommand(fixturePath, {
@@ -148,7 +110,7 @@ describe("buildCodeGraph", () => {
       exclude: [],
       retryLock: true,
       manifest: previousManifestPath,
-      incremental: "full",
+      cacheDir,
     });
 
     await writeFile(path.join(fixturePath, "src", "changed.ts"), "export function after() { return 22; }\n", "utf8");
@@ -162,8 +124,7 @@ describe("buildCodeGraph", () => {
       exclude: [],
       retryLock: true,
       manifest: nextManifestPath,
-      previousManifest: previousManifestPath,
-      incremental: "changed-files",
+      cacheDir,
     });
 
     process.exitCode = previousExitCode;
@@ -200,7 +161,7 @@ describe("buildCodeGraph", () => {
       exclude: [],
       retryLock: true,
       manifest: manifestPath,
-      incremental: "full",
+      cacheDir: path.join(path.dirname(databasePath), "cache"),
     });
 
     assert.equal(process.exitCode, 1);
@@ -2004,41 +1965,6 @@ async function createScanErrorFixture(): Promise<string> {
     "utf8",
   );
   await writeFile(path.join(fixturePath, "bad.ts"), "export function bad( {\n", "utf8");
-  return fixturePath;
-}
-
-async function createManifestDiffFixture(): Promise<string> {
-  const fixturePath = await mkdtemp(path.join(os.tmpdir(), "concentrate-manifest-diff-"));
-  const srcPath = path.join(fixturePath, "src");
-  await mkdir(srcPath, { recursive: true });
-
-  await writeFile(path.join(srcPath, "same.ts"), "export const same = 1;\n", "utf8");
-  await writeFile(path.join(srcPath, "changed.ts"), "export const changed = 2;\n", "utf8");
-  await writeFile(path.join(srcPath, "added.ts"), "export const added = 3;\n", "utf8");
-
-  const baseline = await buildCodeGraph(fixturePath, {
-    continueOnError: false,
-    include: ["src/same.ts", "src/changed.ts"],
-  });
-  await writeFile(
-    path.join(fixturePath, "previous-manifest.json"),
-    `${JSON.stringify({
-      ...baseline.manifest,
-      files: [
-        ...baseline.manifest.files,
-        {
-          path: "src/deleted.ts",
-          language: "typescript",
-          sizeBytes: 24,
-          mtimeMs: 1,
-          hash: "0".repeat(64),
-        },
-      ],
-    }, null, 2)}\n`,
-    "utf8",
-  );
-
-  await writeFile(path.join(srcPath, "changed.ts"), "export const changed = 22;\n", "utf8");
   return fixturePath;
 }
 

@@ -82,3 +82,30 @@ two builds alternating so neither always runs on a warm file cache.
 - **Install**: `npm ci --omit=dev --ignore-scripts` gives a 4.5 MB
   `node_modules` (only `web-tree-sitter`, was 67 MB with the native binding and
   five grammar packages). The vendored grammars add 3.5 MB.
+
+## Parse cache
+
+`npm run benchmark:incremental` (Phase 5), Apple M4, Node v24.13.0, recorded
+2026-10-28. In-process `buildGraph` times in milliseconds for a full scan (no
+cache), a cold-cache scan (parses everything and writes the cache) and a
+warm-cache scan with no file changes. Every warm scan reproduced the full
+scan's graph exactly.
+
+| Sample | Files | Full | Cold cache | Warm cache | Full / warm |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| express | 141 | 333 | 316 | 61 | 5.4× |
+| fastify | 18 | 15 | 14 | 3.9 | 3.9× |
+| nestjs-starter | 7 | 9.6 | 5.1 | 2.1 | 4.5× |
+| ky | 52 | 194 | 205 | 33 | 5.9× |
+| internet-node-express-firebase-mongodb | 24 | 28 | 23 | 4.0 | 7.1× |
+| internet-node-express-realworld | 39 | 28 | 31 | 5.8 | 4.8× |
+| internet-nest | 1714 | 1433 | 1581 | 402 | 3.6× |
+
+- What remains of a warm scan is file discovery, hashing every file for the
+  manifest, reading cache entries, and the cross-file passes, which always run
+  (about 200 ms of the 400 ms on `internet-nest`).
+- A cold-cache scan costs up to 10% more than a full scan for writing entries.
+- The two `internet-nest` files that fail to parse are never cached and are
+  parsed on every scan.
+- From the CLI, `scan` of express goes from 0.49 s to 0.22 s wall time with a
+  warm cache.
