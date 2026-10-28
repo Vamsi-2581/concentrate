@@ -98,6 +98,22 @@
         "args": {
           "file": "main.ts"
         }
+      },
+      {
+        "tool": "search_symbols",
+        "args": {
+          "query": "mul"
+        }
+      },
+      {
+        "tool": "find_references",
+        "args": {
+          "symbol": "add"
+        }
+      },
+      {
+        "tool": "find_unused_exports",
+        "args": {}
       }
     ],
     "backend-entrypoints": [
@@ -235,6 +251,18 @@
         "args": {
           "file": "routes.ts"
         }
+      },
+      {
+        "tool": "find_references",
+        "args": {
+          "symbol": "createUser"
+        }
+      },
+      {
+        "tool": "search_symbols",
+        "args": {
+          "query": "usr"
+        }
       }
     ],
     "fastify-routes": [
@@ -262,7 +290,22 @@
       }
     ],
     "nestjs-modules": [],
-    "re-exports": [],
+    "re-exports": [
+      {
+        "tool": "find_references",
+        "args": {
+          "symbol": "createClient"
+        }
+      },
+      {
+        "tool": "find_import_cycles",
+        "args": {}
+      },
+      {
+        "tool": "find_unused_exports",
+        "args": {}
+      }
+    ],
     "local-re-exports": [
       {
         "tool": "find_definitions",
@@ -284,6 +327,23 @@
         "args": {
           "from": "apps/api/src/server.ts",
           "to": "packages/core/src/index.ts"
+        }
+      },
+      {
+        "tool": "architecture_overview",
+        "args": {}
+      },
+      {
+        "tool": "architecture_overview",
+        "args": {
+          "level": "directory",
+          "depth": 1
+        }
+      },
+      {
+        "tool": "find_import_cycles",
+        "args": {
+          "scope": "package"
         }
       }
     ]

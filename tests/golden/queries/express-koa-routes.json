@@ -2367,5 +2367,537 @@
         "returned": 19
       }
     }
+  },
+  {
+    "tool": "find_references",
+    "args": {
+      "symbol": "createUser"
+    },
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:RE_EXPORTS_FUNCTION|RE_EXPORTS_CLASS|RE_EXPORTS_VARIABLE]->(n) RETURN id(n) AS id",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_FUNCTION]->(n:Function) RETURN id(n) AS id, n.name AS name, n.className AS className, file.relativePath AS file, n.line AS line, n.isExported AS isExported",
+        "rows": [
+          {
+            "id": "file:routes.ts:function:10:listUsers",
+            "name": "listUsers",
+            "className": null,
+            "file": "routes.ts",
+            "line": 10,
+            "isExported": false
+          },
+          {
+            "id": "file:routes.ts:function:14:createUser",
+            "name": "createUser",
+            "className": null,
+            "file": "routes.ts",
+            "line": 14,
+            "isExported": false
+          },
+          {
+            "id": "file:routes.ts:function:18:authenticate",
+            "name": "authenticate",
+            "className": null,
+            "file": "routes.ts",
+            "line": 18,
+            "isExported": false
+          },
+          {
+            "id": "file:routes.ts:function:22:validateUser",
+            "name": "validateUser",
+            "className": null,
+            "file": "routes.ts",
+            "line": 22,
+            "isExported": false
+          },
+          {
+            "id": "file:routes.ts:function:29:<router.delete:/users/:id:arg1>",
+            "name": "<router.delete:/users/:id:arg1>",
+            "className": null,
+            "file": "routes.ts",
+            "line": 29,
+            "isExported": false
+          },
+          {
+            "id": "file:routes.ts:function:34:<adminRouter.get:/dashboard:arg1>",
+            "name": "<adminRouter.get:/dashboard:arg1>",
+            "className": null,
+            "file": "routes.ts",
+            "line": 34,
+            "isExported": false
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(class:Class)-[:DEFINES_METHOD]->(n:Function) RETURN id(n) AS id, n.name AS name, class.name AS className, file.relativePath AS file, n.line AS line, false AS isExported",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(n:Class) RETURN id(n) AS id, n.name AS name, NULL AS className, file.relativePath AS file, n.line AS line, n.isExported AS isExported",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_INTERFACE]->(n:Interface) RETURN id(n) AS id, n.name AS name, NULL AS className, file.relativePath AS file, n.line AS line, n.isExported AS isExported",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_TYPE_ALIAS]->(n:TypeAlias) RETURN id(n) AS id, n.name AS name, NULL AS className, file.relativePath AS file, n.line AS line, n.isExported AS isExported",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_ENUM]->(n:Enum) RETURN id(n) AS id, n.name AS name, NULL AS className, file.relativePath AS file, n.line AS line, n.isExported AS isExported",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_VARIABLE]->(n:Variable) RETURN id(n) AS id, n.name AS name, NULL AS className, file.relativePath AS file, n.line AS line, n.isExported AS isExported",
+        "rows": [
+          {
+            "id": "file:paths.ts:variable:1:USERS_PATH",
+            "name": "USERS_PATH",
+            "className": null,
+            "file": "paths.ts",
+            "line": 1,
+            "isExported": true
+          },
+          {
+            "id": "file:paths.ts:variable:2:ADMIN_PATH",
+            "name": "ADMIN_PATH",
+            "className": null,
+            "file": "paths.ts",
+            "line": 2,
+            "isExported": true
+          },
+          {
+            "id": "file:routes.ts:variable:4:API_PREFIX",
+            "name": "API_PREFIX",
+            "className": null,
+            "file": "routes.ts",
+            "line": 4,
+            "isExported": false
+          },
+          {
+            "id": "file:routes.ts:variable:5:app",
+            "name": "app",
+            "className": null,
+            "file": "routes.ts",
+            "line": 5,
+            "isExported": false
+          },
+          {
+            "id": "file:routes.ts:variable:6:router",
+            "name": "router",
+            "className": null,
+            "file": "routes.ts",
+            "line": 6,
+            "isExported": false
+          },
+          {
+            "id": "file:routes.ts:variable:7:adminRouter",
+            "name": "adminRouter",
+            "className": null,
+            "file": "routes.ts",
+            "line": 7,
+            "isExported": false
+          },
+          {
+            "id": "file:routes.ts:variable:8:cache",
+            "name": "cache",
+            "className": null,
+            "file": "routes.ts",
+            "line": 8,
+            "isExported": false
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:IMPORTS]->(imp:Import) OPTIONAL MATCH (imp)-[:RESOLVES_TO]->(target:File) RETURN id(imp) AS id, file.relativePath AS file, target.relativePath AS target, imp.source AS source, imp.specifier AS specifier, imp.line AS line, imp.isReExport AS isReExport, imp.isWildcard AS isWildcard, imp.isDynamic AS isDynamic, imp.isCjs AS isCjs, imp.isTypeOnly AS isTypeOnly, imp.bindings AS bindings",
+        "rows": [
+          {
+            "id": "file:routes.ts:import:1:express",
+            "file": "routes.ts",
+            "target": null,
+            "source": "express",
+            "specifier": "import express from 'express'",
+            "line": 1,
+            "isReExport": false,
+            "isWildcard": false,
+            "isDynamic": false,
+            "isCjs": false,
+            "isTypeOnly": false,
+            "bindings": "[{\"imported\":\"default\",\"local\":\"express\",\"kind\":\"default\"}]"
+          },
+          {
+            "id": "file:routes.ts:import:2:./paths",
+            "file": "routes.ts",
+            "target": "paths.ts",
+            "source": "./paths",
+            "specifier": "import { ADMIN_PATH, USERS_PATH } from './paths'",
+            "line": 2,
+            "isReExport": false,
+            "isWildcard": false,
+            "isDynamic": false,
+            "isCjs": false,
+            "isTypeOnly": false,
+            "bindings": "[{\"imported\":\"ADMIN_PATH\",\"local\":\"ADMIN_PATH\",\"kind\":\"named\"},{\"imported\":\"USERS_PATH\",\"local\":\"USERS_PATH\",\"kind\":\"named\"}]"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (caller:Function)-[:CALLS]->(call:Call)-[:CALL_RESOLVES_TO]->(fn:Function) WHERE id(fn) IN $ids RETURN id(fn) AS target, id(caller) AS caller, call.line AS line, call.expression AS expression",
+        "params": {
+          "ids": [
+            "file:routes.ts:function:14:createUser"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:MODULE_CALLS]->(call:Call)-[:CALL_RESOLVES_TO]->(fn:Function) WHERE id(fn) IN $ids RETURN id(fn) AS target, file.relativePath AS file, call.line AS line, call.expression AS expression",
+        "params": {
+          "ids": [
+            "file:routes.ts:function:14:createUser"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (fn:Function)-[:PASSED_TO]->(call:Call) WHERE id(fn) IN $ids OPTIONAL MATCH (caller:Function)-[:CALLS]->(call) OPTIONAL MATCH (file:File)-[:MODULE_CALLS]->(call) RETURN id(fn) AS target, id(caller) AS caller, file.relativePath AS file, call.line AS line, call.expression AS expression",
+        "params": {
+          "ids": [
+            "file:routes.ts:function:14:createUser"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_ROUTE]->(route:Route)-[rel:ROUTE_HANDLED_BY|ROUTE_LIFECYCLE_STEP]->(fn:Function) WHERE id(fn) IN $ids RETURN id(fn) AS target, file.relativePath AS file, route.line AS line, route.method AS method, coalesce(route.fullPath, route.path) AS path, label(rel) AS relType, rel.role AS role",
+        "params": {
+          "ids": [
+            "file:routes.ts:function:14:createUser"
+          ]
+        },
+        "rows": [
+          {
+            "target": "file:routes.ts:function:14:createUser",
+            "file": "routes.ts",
+            "line": 27,
+            "method": "POST",
+            "path": "/api/users",
+            "relType": "ROUTE_HANDLED_BY",
+            "role": null
+          },
+          {
+            "target": "file:routes.ts:function:14:createUser",
+            "file": "routes.ts",
+            "line": 27,
+            "method": "POST",
+            "path": "/api/users",
+            "relType": "ROUTE_LIFECYCLE_STEP",
+            "role": "handler"
+          },
+          {
+            "target": "file:routes.ts:function:14:createUser",
+            "file": "routes.ts",
+            "line": 28,
+            "method": "PUT",
+            "path": "/api/users/:id",
+            "relType": "ROUTE_HANDLED_BY",
+            "role": null
+          },
+          {
+            "target": "file:routes.ts:function:14:createUser",
+            "file": "routes.ts",
+            "line": 28,
+            "method": "PUT",
+            "path": "/api/users/:id",
+            "relType": "ROUTE_LIFECYCLE_STEP",
+            "role": "handler"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(entrypoint:EntryPoint)-[:ENTRYPOINT_HANDLED_BY]->(fn:Function) WHERE id(fn) IN $ids RETURN id(fn) AS target, file.relativePath AS file, entrypoint.line AS line, entrypoint.kind AS entrypointKind, entrypoint.trigger AS trigger",
+        "params": {
+          "ids": [
+            "file:routes.ts:function:14:createUser"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_FUNCTION]->(fn:Function) WHERE id(fn) IN $ids RETURN id(fn) AS id, fn.name AS name, fn.className AS className, file.relativePath AS file, fn.line AS line, fn.endLine AS endLine",
+        "params": {
+          "ids": []
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(class:Class)-[:DEFINES_METHOD]->(fn:Function) WHERE id(fn) IN $ids RETURN id(fn) AS id, fn.name AS name, class.name AS className, file.relativePath AS file, fn.line AS line, fn.endLine AS endLine",
+        "params": {
+          "ids": []
+        },
+        "rows": []
+      }
+    ],
+    "output": {
+      "symbol": "createUser",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "createUser",
+          "file": "routes.ts",
+          "line": 14,
+          "isExported": false
+        }
+      ],
+      "total": 2,
+      "counts": {
+        "route": 2
+      },
+      "references": [
+        {
+          "kind": "route",
+          "file": "routes.ts",
+          "line": 27,
+          "from": "POST /api/users",
+          "detail": "handler"
+        },
+        {
+          "kind": "route",
+          "file": "routes.ts",
+          "line": 28,
+          "from": "PUT /api/users/:id",
+          "detail": "handler"
+        }
+      ],
+      "note": "Calls come from resolved call edges, so calls the scanner could not resolve are missing; possible: true marks namespace and dynamic imports that may not use the declaration.",
+      "page": {
+        "offset": 0,
+        "returned": 2
+      }
+    }
+  },
+  {
+    "tool": "search_symbols",
+    "args": {
+      "query": "usr"
+    },
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:RE_EXPORTS_FUNCTION|RE_EXPORTS_CLASS|RE_EXPORTS_VARIABLE]->(n) RETURN id(n) AS id",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_FUNCTION]->(n:Function) RETURN id(n) AS id, n.name AS name, n.className AS className, file.relativePath AS file, n.line AS line, n.isExported AS isExported",
+        "rows": [
+          {
+            "id": "file:routes.ts:function:10:listUsers",
+            "name": "listUsers",
+            "className": null,
+            "file": "routes.ts",
+            "line": 10,
+            "isExported": false
+          },
+          {
+            "id": "file:routes.ts:function:14:createUser",
+            "name": "createUser",
+            "className": null,
+            "file": "routes.ts",
+            "line": 14,
+            "isExported": false
+          },
+          {
+            "id": "file:routes.ts:function:18:authenticate",
+            "name": "authenticate",
+            "className": null,
+            "file": "routes.ts",
+            "line": 18,
+            "isExported": false
+          },
+          {
+            "id": "file:routes.ts:function:22:validateUser",
+            "name": "validateUser",
+            "className": null,
+            "file": "routes.ts",
+            "line": 22,
+            "isExported": false
+          },
+          {
+            "id": "file:routes.ts:function:29:<router.delete:/users/:id:arg1>",
+            "name": "<router.delete:/users/:id:arg1>",
+            "className": null,
+            "file": "routes.ts",
+            "line": 29,
+            "isExported": false
+          },
+          {
+            "id": "file:routes.ts:function:34:<adminRouter.get:/dashboard:arg1>",
+            "name": "<adminRouter.get:/dashboard:arg1>",
+            "className": null,
+            "file": "routes.ts",
+            "line": 34,
+            "isExported": false
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(class:Class)-[:DEFINES_METHOD]->(n:Function) RETURN id(n) AS id, n.name AS name, class.name AS className, file.relativePath AS file, n.line AS line, false AS isExported",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(n:Class) RETURN id(n) AS id, n.name AS name, NULL AS className, file.relativePath AS file, n.line AS line, n.isExported AS isExported",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_INTERFACE]->(n:Interface) RETURN id(n) AS id, n.name AS name, NULL AS className, file.relativePath AS file, n.line AS line, n.isExported AS isExported",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_TYPE_ALIAS]->(n:TypeAlias) RETURN id(n) AS id, n.name AS name, NULL AS className, file.relativePath AS file, n.line AS line, n.isExported AS isExported",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_ENUM]->(n:Enum) RETURN id(n) AS id, n.name AS name, NULL AS className, file.relativePath AS file, n.line AS line, n.isExported AS isExported",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_VARIABLE]->(n:Variable) RETURN id(n) AS id, n.name AS name, NULL AS className, file.relativePath AS file, n.line AS line, n.isExported AS isExported",
+        "rows": [
+          {
+            "id": "file:paths.ts:variable:1:USERS_PATH",
+            "name": "USERS_PATH",
+            "className": null,
+            "file": "paths.ts",
+            "line": 1,
+            "isExported": true
+          },
+          {
+            "id": "file:paths.ts:variable:2:ADMIN_PATH",
+            "name": "ADMIN_PATH",
+            "className": null,
+            "file": "paths.ts",
+            "line": 2,
+            "isExported": true
+          },
+          {
+            "id": "file:routes.ts:variable:4:API_PREFIX",
+            "name": "API_PREFIX",
+            "className": null,
+            "file": "routes.ts",
+            "line": 4,
+            "isExported": false
+          },
+          {
+            "id": "file:routes.ts:variable:5:app",
+            "name": "app",
+            "className": null,
+            "file": "routes.ts",
+            "line": 5,
+            "isExported": false
+          },
+          {
+            "id": "file:routes.ts:variable:6:router",
+            "name": "router",
+            "className": null,
+            "file": "routes.ts",
+            "line": 6,
+            "isExported": false
+          },
+          {
+            "id": "file:routes.ts:variable:7:adminRouter",
+            "name": "adminRouter",
+            "className": null,
+            "file": "routes.ts",
+            "line": 7,
+            "isExported": false
+          },
+          {
+            "id": "file:routes.ts:variable:8:cache",
+            "name": "cache",
+            "className": null,
+            "file": "routes.ts",
+            "line": 8,
+            "isExported": false
+          }
+        ]
+      }
+    ],
+    "output": {
+      "query": {
+        "query": "usr",
+        "kind": null,
+        "file": null
+      },
+      "total": 4,
+      "symbols": [
+        {
+          "kind": "variable",
+          "name": "USERS_PATH",
+          "file": "paths.ts",
+          "line": 1,
+          "isExported": true,
+          "match": "fuzzy",
+          "score": 1608
+        },
+        {
+          "kind": "function",
+          "name": "listUsers",
+          "file": "routes.ts",
+          "line": 10,
+          "isExported": false,
+          "match": "fuzzy",
+          "score": 1598
+        },
+        {
+          "kind": "function",
+          "name": "createUser",
+          "file": "routes.ts",
+          "line": 14,
+          "isExported": false,
+          "match": "fuzzy",
+          "score": 1578
+        },
+        {
+          "kind": "function",
+          "name": "validateUser",
+          "file": "routes.ts",
+          "line": 22,
+          "isExported": false,
+          "match": "fuzzy",
+          "score": 1548
+        }
+      ],
+      "page": {
+        "offset": 0,
+        "returned": 4
+      }
+    }
   }
 ]

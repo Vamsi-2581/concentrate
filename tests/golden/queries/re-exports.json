@@ -477,5 +477,458 @@
         "returned": 0
       }
     }
+  },
+  {
+    "tool": "find_references",
+    "args": {
+      "symbol": "createClient"
+    },
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:RE_EXPORTS_FUNCTION|RE_EXPORTS_CLASS|RE_EXPORTS_VARIABLE]->(n) RETURN id(n) AS id",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_FUNCTION]->(n:Function) RETURN id(n) AS id, n.name AS name, n.className AS className, file.relativePath AS file, n.line AS line, n.isExported AS isExported",
+        "rows": [
+          {
+            "id": "file:client.ts:function:1:createClient",
+            "name": "createClient",
+            "className": null,
+            "file": "client.ts",
+            "line": 1,
+            "isExported": true
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(class:Class)-[:DEFINES_METHOD]->(n:Function) RETURN id(n) AS id, n.name AS name, class.name AS className, file.relativePath AS file, n.line AS line, false AS isExported",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(n:Class) RETURN id(n) AS id, n.name AS name, NULL AS className, file.relativePath AS file, n.line AS line, n.isExported AS isExported",
+        "rows": [
+          {
+            "id": "file:errors.ts:class:1:ClientError",
+            "name": "ClientError",
+            "className": null,
+            "file": "errors.ts",
+            "line": 1,
+            "isExported": true
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_INTERFACE]->(n:Interface) RETURN id(n) AS id, n.name AS name, NULL AS className, file.relativePath AS file, n.line AS line, n.isExported AS isExported",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_TYPE_ALIAS]->(n:TypeAlias) RETURN id(n) AS id, n.name AS name, NULL AS className, file.relativePath AS file, n.line AS line, n.isExported AS isExported",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_ENUM]->(n:Enum) RETURN id(n) AS id, n.name AS name, NULL AS className, file.relativePath AS file, n.line AS line, n.isExported AS isExported",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_VARIABLE]->(n:Variable) RETURN id(n) AS id, n.name AS name, NULL AS className, file.relativePath AS file, n.line AS line, n.isExported AS isExported",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:IMPORTS]->(imp:Import) OPTIONAL MATCH (imp)-[:RESOLVES_TO]->(target:File) RETURN id(imp) AS id, file.relativePath AS file, target.relativePath AS target, imp.source AS source, imp.specifier AS specifier, imp.line AS line, imp.isReExport AS isReExport, imp.isWildcard AS isWildcard, imp.isDynamic AS isDynamic, imp.isCjs AS isCjs, imp.isTypeOnly AS isTypeOnly, imp.bindings AS bindings",
+        "rows": [
+          {
+            "id": "file:index.ts:import:1:./client.js",
+            "file": "index.ts",
+            "target": "client.ts",
+            "source": "./client.js",
+            "specifier": "export { createClient } from \"./client.js\";",
+            "line": 1,
+            "isReExport": true,
+            "isWildcard": false,
+            "isDynamic": false,
+            "isCjs": false,
+            "isTypeOnly": false,
+            "bindings": null
+          },
+          {
+            "id": "file:index.ts:import:2:./errors.js",
+            "file": "index.ts",
+            "target": "errors.ts",
+            "source": "./errors.js",
+            "specifier": "export * from \"./errors.js\";",
+            "line": 2,
+            "isReExport": true,
+            "isWildcard": true,
+            "isDynamic": false,
+            "isCjs": false,
+            "isTypeOnly": false,
+            "bindings": null
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (caller:Function)-[:CALLS]->(call:Call)-[:CALL_RESOLVES_TO]->(fn:Function) WHERE id(fn) IN $ids RETURN id(fn) AS target, id(caller) AS caller, call.line AS line, call.expression AS expression",
+        "params": {
+          "ids": [
+            "file:client.ts:function:1:createClient"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:MODULE_CALLS]->(call:Call)-[:CALL_RESOLVES_TO]->(fn:Function) WHERE id(fn) IN $ids RETURN id(fn) AS target, file.relativePath AS file, call.line AS line, call.expression AS expression",
+        "params": {
+          "ids": [
+            "file:client.ts:function:1:createClient"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (fn:Function)-[:PASSED_TO]->(call:Call) WHERE id(fn) IN $ids OPTIONAL MATCH (caller:Function)-[:CALLS]->(call) OPTIONAL MATCH (file:File)-[:MODULE_CALLS]->(call) RETURN id(fn) AS target, id(caller) AS caller, file.relativePath AS file, call.line AS line, call.expression AS expression",
+        "params": {
+          "ids": [
+            "file:client.ts:function:1:createClient"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_ROUTE]->(route:Route)-[rel:ROUTE_HANDLED_BY|ROUTE_LIFECYCLE_STEP]->(fn:Function) WHERE id(fn) IN $ids RETURN id(fn) AS target, file.relativePath AS file, route.line AS line, route.method AS method, coalesce(route.fullPath, route.path) AS path, label(rel) AS relType, rel.role AS role",
+        "params": {
+          "ids": [
+            "file:client.ts:function:1:createClient"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(entrypoint:EntryPoint)-[:ENTRYPOINT_HANDLED_BY]->(fn:Function) WHERE id(fn) IN $ids RETURN id(fn) AS target, file.relativePath AS file, entrypoint.line AS line, entrypoint.kind AS entrypointKind, entrypoint.trigger AS trigger",
+        "params": {
+          "ids": [
+            "file:client.ts:function:1:createClient"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_FUNCTION]->(fn:Function) WHERE id(fn) IN $ids RETURN id(fn) AS id, fn.name AS name, fn.className AS className, file.relativePath AS file, fn.line AS line, fn.endLine AS endLine",
+        "params": {
+          "ids": []
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(class:Class)-[:DEFINES_METHOD]->(fn:Function) WHERE id(fn) IN $ids RETURN id(fn) AS id, fn.name AS name, class.name AS className, file.relativePath AS file, fn.line AS line, fn.endLine AS endLine",
+        "params": {
+          "ids": []
+        },
+        "rows": []
+      }
+    ],
+    "output": {
+      "symbol": "createClient",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "createClient",
+          "file": "client.ts",
+          "line": 1,
+          "isExported": true
+        }
+      ],
+      "total": 1,
+      "counts": {
+        "re-export": 1
+      },
+      "references": [
+        {
+          "kind": "re-export",
+          "file": "index.ts",
+          "line": 1,
+          "detail": "createClient"
+        }
+      ],
+      "note": "Calls come from resolved call edges, so calls the scanner could not resolve are missing; possible: true marks namespace and dynamic imports that may not use the declaration.",
+      "page": {
+        "offset": 0,
+        "returned": 1
+      }
+    }
+  },
+  {
+    "tool": "find_import_cycles",
+    "args": {},
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:IMPORTS]->(imp:Import) OPTIONAL MATCH (imp)-[:RESOLVES_TO]->(target:File) RETURN id(imp) AS id, file.relativePath AS file, target.relativePath AS target, imp.source AS source, imp.specifier AS specifier, imp.line AS line, imp.isReExport AS isReExport, imp.isWildcard AS isWildcard, imp.isDynamic AS isDynamic, imp.isCjs AS isCjs, imp.isTypeOnly AS isTypeOnly, imp.bindings AS bindings",
+        "rows": [
+          {
+            "id": "file:index.ts:import:1:./client.js",
+            "file": "index.ts",
+            "target": "client.ts",
+            "source": "./client.js",
+            "specifier": "export { createClient } from \"./client.js\";",
+            "line": 1,
+            "isReExport": true,
+            "isWildcard": false,
+            "isDynamic": false,
+            "isCjs": false,
+            "isTypeOnly": false,
+            "bindings": null
+          },
+          {
+            "id": "file:index.ts:import:2:./errors.js",
+            "file": "index.ts",
+            "target": "errors.ts",
+            "source": "./errors.js",
+            "specifier": "export * from \"./errors.js\";",
+            "line": 2,
+            "isReExport": true,
+            "isWildcard": true,
+            "isDynamic": false,
+            "isCjs": false,
+            "isTypeOnly": false,
+            "bindings": null
+          }
+        ]
+      }
+    ],
+    "output": {
+      "scope": "file",
+      "total": 0,
+      "runtimeCycles": 0,
+      "cycles": [],
+      "note": "Each entry is a group of files that import each other directly or indirectly; cycle is one shortest loop through the group. typeOnly: true means every loop goes through a type-only import, which usually disappears at runtime.",
+      "page": {
+        "offset": 0,
+        "returned": 0
+      }
+    }
+  },
+  {
+    "tool": "find_unused_exports",
+    "args": {},
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:RE_EXPORTS_FUNCTION|RE_EXPORTS_CLASS|RE_EXPORTS_VARIABLE]->(n) RETURN id(n) AS id",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_FUNCTION]->(n:Function) RETURN id(n) AS id, n.name AS name, n.className AS className, file.relativePath AS file, n.line AS line, n.isExported AS isExported",
+        "rows": [
+          {
+            "id": "file:client.ts:function:1:createClient",
+            "name": "createClient",
+            "className": null,
+            "file": "client.ts",
+            "line": 1,
+            "isExported": true
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(class:Class)-[:DEFINES_METHOD]->(n:Function) RETURN id(n) AS id, n.name AS name, class.name AS className, file.relativePath AS file, n.line AS line, false AS isExported",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(n:Class) RETURN id(n) AS id, n.name AS name, NULL AS className, file.relativePath AS file, n.line AS line, n.isExported AS isExported",
+        "rows": [
+          {
+            "id": "file:errors.ts:class:1:ClientError",
+            "name": "ClientError",
+            "className": null,
+            "file": "errors.ts",
+            "line": 1,
+            "isExported": true
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_INTERFACE]->(n:Interface) RETURN id(n) AS id, n.name AS name, NULL AS className, file.relativePath AS file, n.line AS line, n.isExported AS isExported",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_TYPE_ALIAS]->(n:TypeAlias) RETURN id(n) AS id, n.name AS name, NULL AS className, file.relativePath AS file, n.line AS line, n.isExported AS isExported",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_ENUM]->(n:Enum) RETURN id(n) AS id, n.name AS name, NULL AS className, file.relativePath AS file, n.line AS line, n.isExported AS isExported",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_VARIABLE]->(n:Variable) RETURN id(n) AS id, n.name AS name, NULL AS className, file.relativePath AS file, n.line AS line, n.isExported AS isExported",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:IMPORTS]->(imp:Import) OPTIONAL MATCH (imp)-[:RESOLVES_TO]->(target:File) RETURN id(imp) AS id, file.relativePath AS file, target.relativePath AS target, imp.source AS source, imp.specifier AS specifier, imp.line AS line, imp.isReExport AS isReExport, imp.isWildcard AS isWildcard, imp.isDynamic AS isDynamic, imp.isCjs AS isCjs, imp.isTypeOnly AS isTypeOnly, imp.bindings AS bindings",
+        "rows": [
+          {
+            "id": "file:index.ts:import:1:./client.js",
+            "file": "index.ts",
+            "target": "client.ts",
+            "source": "./client.js",
+            "specifier": "export { createClient } from \"./client.js\";",
+            "line": 1,
+            "isReExport": true,
+            "isWildcard": false,
+            "isDynamic": false,
+            "isCjs": false,
+            "isTypeOnly": false,
+            "bindings": null
+          },
+          {
+            "id": "file:index.ts:import:2:./errors.js",
+            "file": "index.ts",
+            "target": "errors.ts",
+            "source": "./errors.js",
+            "specifier": "export * from \"./errors.js\";",
+            "line": 2,
+            "isReExport": true,
+            "isWildcard": true,
+            "isDynamic": false,
+            "isCjs": false,
+            "isTypeOnly": false,
+            "bindings": null
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File) RETURN file.relativePath AS file, file.language AS language, file.isTest AS isTest, file.isFixture AS isFixture, file.isGenerated AS isGenerated",
+        "rows": [
+          {
+            "file": "client.ts",
+            "language": "typescript",
+            "isTest": false,
+            "isFixture": false,
+            "isGenerated": false
+          },
+          {
+            "file": "errors.ts",
+            "language": "typescript",
+            "isTest": false,
+            "isFixture": false,
+            "isGenerated": false
+          },
+          {
+            "file": "index.ts",
+            "language": "typescript",
+            "isTest": false,
+            "isFixture": false,
+            "isGenerated": false
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (package:Package) RETURN package.path AS path, package.relativePath AS relativePath",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_FUNCTION]->(fn:Function) RETURN id(fn) AS id, fn.name AS name, fn.className AS className, file.relativePath AS file, fn.line AS line, fn.endLine AS endLine",
+        "params": {},
+        "rows": [
+          {
+            "id": "file:client.ts:function:1:createClient",
+            "name": "createClient",
+            "className": null,
+            "file": "client.ts",
+            "line": 1,
+            "endLine": 3
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(class:Class)-[:DEFINES_METHOD]->(fn:Function) RETURN id(fn) AS id, fn.name AS name, class.name AS className, file.relativePath AS file, fn.line AS line, fn.endLine AS endLine",
+        "params": {},
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (caller:Function)-[:CALLS]->(:Call)-[:CALL_RESOLVES_TO]->(fn:Function) RETURN id(caller) AS source, id(fn) AS target",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:MODULE_CALLS]->(:Call)-[:CALL_RESOLVES_TO]->(fn:Function) RETURN file.relativePath AS file, id(fn) AS target",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (fn:Function)-[:PASSED_TO]->(call:Call) OPTIONAL MATCH (caller:Function)-[:CALLS]->(call) OPTIONAL MATCH (file:File)-[:MODULE_CALLS]->(call) RETURN id(fn) AS target, id(caller) AS source, file.relativePath AS file",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (from:Class)-[:EXTENDS|IMPLEMENTS|INJECTS|MODULE_IMPORTS|MODULE_PROVIDES|MODULE_CONTROLS|MODULE_EXPORTS]->(to) RETURN id(from) AS source, id(to) AS target",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (owner)-[:ROUTE_HANDLED_BY|ROUTE_LIFECYCLE_STEP|ENTRYPOINT_HANDLED_BY|MOUNTS_FUNCTION]->(fn:Function) RETURN id(fn) AS target",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (repo:Repo) RETURN repo.path AS path LIMIT 1",
+        "rows": [
+          {
+            "path": "<root>"
+          }
+        ]
+      }
+    ],
+    "output": {
+      "query": {
+        "file": null,
+        "includeTests": false
+      },
+      "total": 0,
+      "unusedExports": [],
+      "deadFunctions": [],
+      "skipped": {
+        "packageEntry": 1,
+        "wholeFileImported": 0,
+        "defaultExports": 0,
+        "tests": 0,
+        "generated": 0,
+        "handlers": 0
+      },
+      "note": "Candidates only. An export counts as used when another file imports it by name (through barrels too) or calls, passes, extends, implements or injects it. Files imported whole (namespace, dynamic or default imports), package entry points and exports named default are skipped; uses outside the scanned repository, string-based lookups and framework conventions are not seen. usedInFile: the export is only used inside its own file. deadFunctions are unexported file-level functions with no calls and no other mention of their name in the file. JavaScript and TypeScript only.",
+      "page": {
+        "offset": 0,
+        "returned": 0
+      }
+    }
   }
 ]

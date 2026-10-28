@@ -1,6 +1,7 @@
 import type { IQueryEngine } from "../../core/contracts/query-engine.js";
 import { quote } from "./cypher.js";
 import { agentTools, agentToolDefinitions } from "./agent-tools/index.js";
+import { analysisTools, analysisToolDefinitions } from "./analysis-tools/index.js";
 import { asObject, objectSchema, optionalBoolean, optionalLimit, optionalString, requiredString } from "./args.js";
 import { fitToBudget } from "./budget.js";
 import { INVALID_PARAMS, McpProtocolError } from "./errors.js";
@@ -42,7 +43,7 @@ const graphTools: Record<string, McpTool> = {
   list_env_config: { handler: listEnvConfig, listKey: "envConfig", defaultLimit: 50 },
   list_data_access: { handler: listDataAccess, listKey: "dataAccess", defaultLimit: 50 },
 };
-const tools: Record<string, McpTool> = { ...graphTools, ...agentTools };
+const tools: Record<string, McpTool> = { ...graphTools, ...agentTools, ...analysisTools };
 
 const titles: Record<string, string> = {
   graph_stats: "Graph statistics",
@@ -59,6 +60,11 @@ const titles: Record<string, string> = {
   route_details: "Route details",
   get_symbol_source: "Get symbol source",
   get_file_outline: "Get file outline",
+  search_symbols: "Search symbols",
+  find_references: "Find references",
+  find_import_cycles: "Find import cycles",
+  find_unused_exports: "Find unused exports",
+  architecture_overview: "Architecture overview",
 };
 
 // Every tool only reads the graph (detect_changes also reads git), so the
@@ -237,6 +243,7 @@ export const mcpToolDefinitions: McpToolDefinition[] = [
     }),
   },
   ...agentToolDefinitions,
+  ...analysisToolDefinitions,
 ].map(describeTool);
 
 // Runs a tool. An unknown tool is a protocol error; errors the tool itself
