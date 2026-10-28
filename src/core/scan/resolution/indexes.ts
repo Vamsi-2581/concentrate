@@ -6,6 +6,8 @@ export {
 
 export type ResolutionRelationshipIndex = {
   callerFunctionByCallId: Map<string, string>;
+  // Module-level calls: the file whose top-level code makes the call.
+  callerFileByModuleCallId: Map<string, string>;
   fileByFunctionId: Map<string, string>;
   fileByClassId: Map<string, string>;
   fileByInterfaceId: Map<string, string>;
@@ -18,6 +20,7 @@ export function createResolutionRelationshipIndex(
 ): ResolutionRelationshipIndex {
   const index: ResolutionRelationshipIndex = {
     callerFunctionByCallId: new Map(),
+    callerFileByModuleCallId: new Map(),
     fileByFunctionId: new Map(),
     fileByClassId: new Map(),
     fileByInterfaceId: new Map(),
@@ -29,6 +32,9 @@ export function createResolutionRelationshipIndex(
     switch (rel.type) {
       case "CALLS":
         index.callerFunctionByCallId.set(rel.to, rel.from);
+        break;
+      case "MODULE_CALLS":
+        index.callerFileByModuleCallId.set(rel.to, rel.from);
         break;
       case "DEFINES_FUNCTION":
         index.fileByFunctionId.set(rel.to, rel.from);

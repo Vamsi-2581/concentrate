@@ -1,5 +1,7 @@
 import type { IQueryEngine } from "../../core/contracts/query-engine.js";
 import { quote } from "./cypher.js";
+import { agentToolDefinitions, callAgentTool } from "./agent-tools/index.js";
+import { asObject, objectSchema, optionalBoolean, optionalLimit, optionalString, requiredString } from "./args.js";
 
 export type McpToolContent = {
   type: "text";
@@ -173,6 +175,7 @@ export const mcpToolDefinitions: McpToolDefinition[] = [
       },
     }),
   },
+  ...agentToolDefinitions,
 ];
 
 export async function callMcpTool(
@@ -199,8 +202,11 @@ export async function callMcpTool(
       return textResult(await listEnvConfig(engine, asObject(args)));
     case "list_data_access":
       return textResult(await listDataAccess(engine, asObject(args)));
-    default:
-      throw new Error(`Unknown MCP tool: ${name}`);
+    default: {
+      const result = await callAgentTool(engine, name, asObject(args));
+      if (result === undefined) throw new Error(`Unknown MCP tool: ${name}`);
+      return textResult(result);
+    }
   }
 }
 
@@ -533,17 +539,6 @@ function textResult(value: unknown): McpToolResult {
   };
 }
 
-function objectSchema(
-  properties: Record<string, unknown>,
-  required: string[] = [],
-): Record<string, unknown> {
-  return {
-    type: "object",
-    properties,
-    required,
-    additionalProperties: false,
-  };
-}
 
 function namePredicate(property: string, value: string, exact: boolean): string {
   return exact
@@ -657,33 +652,4 @@ function dataAccessQuery(sourceLabel: string, relationship: string, filters: str
     ORDER BY file.relativePath, rel.line
     LIMIT ${limit}
   `;
-}
-
-function asObject(value: unknown): Record<string, unknown> {
-  if (!value || typeof value !== "object" || Array.isArray(value)) {
-    return {};
-  }
-  return value as Record<string, unknown>;
-}
-
-function requiredString(value: unknown, name: string): string {
-  if (typeof value !== "string" || value.length === 0) {
-    throw new Error(`Missing required string argument: ${name}`);
-  }
-  return value;
-}
-
-function optionalString(value: unknown): string | undefined {
-  return typeof value === "string" && value.length > 0 ? value : undefined;
-}
-
-function optionalBoolean(value: unknown): boolean | undefined {
-  return typeof value === "boolean" ? value : undefined;
-}
-
-function optionalLimit(value: unknown, fallback: number): number {
-  if (typeof value !== "number" || !Number.isFinite(value)) {
-    return fallback;
-  }
-  return Math.max(1, Math.min(200, Math.trunc(value)));
 }
