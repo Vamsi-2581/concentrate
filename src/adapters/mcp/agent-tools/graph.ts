@@ -1,4 +1,5 @@
 import type { IQueryEngine } from "../../../core/contracts/query-engine.js";
+import type { PageWindow } from "../paging.js";
 
 // Graph reads shared by the agent-facing tools. Functions are identified by
 // node id (`id(fn)` in Cypher); everything else is looked up from those ids.
@@ -131,6 +132,8 @@ export async function computeImpact(
   maxDepth: number,
   limit: number,
   loaded?: Map<string, FunctionInfo>,
+  // Pages the callers list; without it, callers are capped at `limit` like the other lists.
+  callersWindow?: PageWindow,
 ) {
   const [functions, edges] = await Promise.all([loaded ?? loadFunctions(engine), loadCallEdges(engine)]);
   const depth = walkCalls(edges, seedIds, "up", maxDepth);
@@ -173,7 +176,7 @@ export async function computeImpact(
       .filter((id) => depth.get(id)! > 0)
       .map((id) => ({ ...name(id), depth: depth.get(id)! }))
       .sort((a, b) => a.depth - b.depth || byFileAndLine(a, b))
-      .slice(0, limit),
+      .slice(callersWindow?.offset ?? 0, callersWindow ? callersWindow.offset + callersWindow.limit + 1 : limit),
     moduleCallers: moduleCallers
       .map(({ fn, ...row }) => ({ ...row, calls: name(String(fn)).name, callsFile: name(String(fn)).file }))
       .sort(byFileAndLine)

@@ -1,15 +1,15 @@
 import assert from "node:assert/strict";
-import { execFileSync, spawn, spawnSync } from "node:child_process";
+import { execFileSync, spawnSync } from "node:child_process";
 import { mkdir, mkdtemp, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { createInterface } from "node:readline";
 import { after, before, describe, it } from "node:test";
-import { fitToBudget } from "../src/adapters/mcp/agent-tools/budget.js";
+import { fitToBudget } from "../src/adapters/mcp/budget.js";
 import { parseDiff } from "../src/adapters/mcp/agent-tools/impact.js";
 import { callMcpTool, mcpToolDefinitions } from "../src/adapters/mcp/tools.js";
 import { GraphStore } from "../src/adapters/store/store.js";
 import { buildCodeGraph } from "../src/composition/orchestrator.js";
+import { startMcpServer } from "./helpers/mcp-stdio.js";
 
 // A small Express app: route (with route-level middleware) -> handler ->
 // service -> prisma, an env read, a class method caller, and a module-level
@@ -281,41 +281,23 @@ describe("agent tools over stdio", () => {
   it("serves all tools through `concentrate mcp`", async () => {
     const project = await createProject();
     await project.store.close();
-    const cli = path.resolve("src/index.ts");
-    const child = spawn(process.execPath, ["--import", "tsx", cli, "mcp", "-d", project.databasePath], {
-      stdio: ["pipe", "pipe", "inherit"],
-    });
-    const lines = createInterface({ input: child.stdout! })[Symbol.asyncIterator]();
-    let nextId = 1;
-    const send = async (method: string, params: Record<string, unknown>) => {
-      const id = nextId++;
-      child.stdin!.write(`${JSON.stringify({ jsonrpc: "2.0", id, method, params })}\n`);
-      const { value } = await lines.next();
-      const response = JSON.parse(String(value)) as { id: number; result?: any; error?: { message: string } };
-      assert.equal(response.id, id);
-      return response;
-    };
-    const request = async (method: string, params: Record<string, unknown>) => {
-      const response = await send(method, params);
-      assert.equal(response.error, undefined, response.error?.message);
-      return response.result;
-    };
+    const server = startMcpServer(project.databasePath);
     const tool = async (name: string, args: Record<string, unknown>) =>
-      JSON.parse((await request("tools/call", { name, arguments: args })).content[0].text);
+      (await server.request("tools/call", { name, arguments: args })).structuredContent;
 
     try {
-      assert.equal((await request("initialize", {})).serverInfo.name, "concentrate");
-      assert.equal((await request("tools/list", {})).tools.length, 14);
+      assert.equal((await server.request("initialize", {})).serverInfo.name, "concentrate");
+      assert.equal((await server.request("tools/list", {})).tools.length, 14);
       assert.deepEqual(names((await tool("impact_of", { symbol: "loadUsers" })).callers), ["listUsers", "refresh"]);
       assert.equal((await tool("route_details", { method: "GET", path: "/users" })).routes[0].lifecycle.length, 2);
       assert.match((await tool("get_symbol_source", { name: "formatName" })).matches[0].source, /name\.trim/);
       assert.equal((await tool("get_file_outline", { file: "src/format.ts" })).outline[0].name, "formatName");
-      // The temp project is not a git repository.
-      const changes = await send("tools/call", { name: "detect_changes", arguments: {} });
-      assert.match(changes.error?.message ?? "", /not inside a git work tree/);
+      // The temp project is not a git repository: a tool error, not a protocol error.
+      const changes = await server.request("tools/call", { name: "detect_changes", arguments: {} });
+      assert.equal(changes.isError, true);
+      assert.match(changes.content[0].text, /not inside a git work tree/);
     } finally {
-      child.stdin!.end();
-      await new Promise((resolve) => child.once("exit", resolve));
+      await server.close();
     }
   });
 });

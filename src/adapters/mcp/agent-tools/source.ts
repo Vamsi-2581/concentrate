@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises";
 import type { IQueryEngine } from "../../../core/contracts/query-engine.js";
-import { optionalLimit, optionalString, requiredString } from "../args.js";
+import { optionalString, requiredString } from "../args.js";
+import type { PageWindow } from "../paging.js";
 import { byFileAndLine, loadSymbols, matchesFile, type SymbolInfo, type SymbolKind } from "./graph.js";
 
 const MAX_SOURCE_LINES = 400;
@@ -9,14 +10,13 @@ const SYMBOL_KINDS: readonly SymbolKind[] = ["function", "method", "class", "int
 // get_symbol_source: the source text of a declaration, sliced from the file
 // on disk with the line span recorded at scan time. "Class.method" selects a
 // method of one class.
-export async function getSymbolSource(engine: IQueryEngine, args: Record<string, unknown>) {
+export async function getSymbolSource(engine: IQueryEngine, args: Record<string, unknown>, window: PageWindow) {
   const name = requiredString(args.name, "name");
   const file = optionalString(args.file);
   const kind = optionalString(args.kind);
   if (kind && !SYMBOL_KINDS.includes(kind as SymbolKind)) {
     throw new Error(`Unknown kind ${JSON.stringify(kind)}; expected one of ${SYMBOL_KINDS.join(", ")}`);
   }
-  const limit = optionalLimit(args.limit, 5);
 
   const dot = name.lastIndexOf(".");
   const [className, member] = dot > 0 ? [name.slice(0, dot), name.slice(dot + 1)] : [null, name];
@@ -36,7 +36,7 @@ export async function getSymbolSource(engine: IQueryEngine, args: Record<string,
   };
 
   const matches = [];
-  for (const symbol of symbols.slice(0, limit)) {
+  for (const symbol of window.take(symbols)) {
     const lines = await linesOf(symbol);
     const start = symbol.line ?? 1;
     const end = symbol.endLine ?? start;
@@ -56,7 +56,6 @@ export async function getSymbolSource(engine: IQueryEngine, args: Record<string,
   return {
     name,
     matches,
-    ...(symbols.length > limit ? { omitted: symbols.length - limit } : {}),
     note: matches.length > 0
       ? "Source is read from disk using line spans from the last scan; it may differ if the file changed since."
       : "No declaration matched. Use find_definitions for a substring search.",
@@ -64,7 +63,7 @@ export async function getSymbolSource(engine: IQueryEngine, args: Record<string,
 }
 
 // get_file_outline: the declarations of one file from the graph, in line order.
-export async function getFileOutline(engine: IQueryEngine, args: Record<string, unknown>) {
+export async function getFileOutline(engine: IQueryEngine, args: Record<string, unknown>, window: PageWindow) {
   const file = requiredString(args.file, "file");
   const files = (await engine.query("MATCH (file:File) RETURN file.relativePath AS file") as Array<{ file?: unknown }>)
     .map((row) => String(row.file))
@@ -115,6 +114,6 @@ export async function getFileOutline(engine: IQueryEngine, args: Record<string, 
   return {
     file: relativePath,
     imports: imports.sort(byFileAndLine),
-    outline: outline.sort(byFileAndLine),
+    outline: window.take(outline.sort(byFileAndLine)),
   };
 }
