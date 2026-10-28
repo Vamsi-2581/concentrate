@@ -30,6 +30,9 @@ npm run dev -- stats
 npm run dev -- query "MATCH (f:File)-[:DEFINES_FUNCTION]->(fn:Function) RETURN f.relativePath, fn.name LIMIT 10"
 npm run dev -- query "MATCH (fn:Function) WHERE fn.name = \$name RETURN fn.line" --param name=main
 
+# Keep the graph current: rescan on every file change (uses the parse cache)
+npm run dev -- watch ./path/to/project
+
 # Export graph as JSONL
 npm run dev -- export ./path/to/project --output .concentrate/export
 

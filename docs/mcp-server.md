@@ -107,6 +107,8 @@ Example `tools/call` request:
   `--database` path.
 - The server never locks the store, so it can stay running while you scan. A
   finished scan is picked up on the next tool call; no restart is needed.
+  Run `concentrate watch <project>` next to the server to keep the graph
+  current while you edit.
 - If the path is an old `.kuzu` database, the server reports it. Delete it and
   scan again (the default store is now the `.concentrate/graph/` directory).
 - If a tool returns fewer semantic rows than expected, verify the graph with

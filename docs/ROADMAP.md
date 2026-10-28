@@ -334,15 +334,15 @@ Before this phase, `createParsePlan` always returned `effectiveMode: "full"`, an
 
 ### Watch mode
 
-- [ ] Add `concentrate watch` using `fs.watch({ recursive: true })` with debouncing
-- [ ] Rescan with the parse cache on changes and rewrite the store
-- [ ] Let a running MCP server reload when the store changes
+- [x] Add `concentrate watch` using `fs.watch({ recursive: true })` with debouncing (`--debounce`, default 200 ms); changes under `.git`, `node_modules`, `.concentrate` and its own outputs are ignored
+- [x] Rescan with the parse cache on changes and rewrite the store; a scan that fails fast keeps the last graph
+- [x] Let a running MCP server reload when the store changes (readers check the store HEAD on every call since Phase 2)
 
 ### Acceptance criteria
 
 - [x] Incremental scan output equals a full scan in all tested scenarios (and on every sample, `npm run benchmark:incremental`)
 - [x] A no-change incremental scan is substantially faster than a full scan on the standing samples (3.5–6×, see [benchmarks.md](benchmarks.md#parse-cache))
-- [ ] `watch` keeps the graph current while files are edited
+- [x] `watch` keeps the graph current while files are edited (`tests/watch.test.ts`)
 
 ## Phase 6a: Agent-facing MCP tools (impact, changes, routes, source) ([#12](https://github.com/fatihserhatturan/concentrate/issues/12))
 
