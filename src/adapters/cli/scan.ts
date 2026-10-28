@@ -10,6 +10,7 @@ export type ScanAdapterOptions = {
   database: string;
   continueOnError: boolean;
   concurrency?: number;
+  workers?: number;
   maxFiles?: number;
   include: string[];
   exclude: string[];
@@ -48,6 +49,7 @@ export async function scanIntoStore(
   const result = await scanOrchestrator.buildGraph(projectPath, {
     continueOnError: options.continueOnError,
     concurrency: options.concurrency,
+    workers: options.workers,
     maxFiles: options.maxFiles,
     include: options.include.length > 0 ? options.include : undefined,
     exclude: options.exclude.length > 0 ? options.exclude : undefined,

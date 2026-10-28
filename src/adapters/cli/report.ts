@@ -24,6 +24,7 @@ export function printScanReport(
     const cache = report.parseCache;
     console.log(`  Parse cache:      ${cache.hits} reused, ${cache.misses} parsed, ${cache.pruned} pruned`);
   }
+  if (report.parseWorkers > 0) console.log(`  Parse workers:    ${report.parseWorkers}`);
   console.log(`  Nodes written:    ${nodeCount}`);
   console.log(`  Rels written:     ${relationshipCount}`);
   console.log(`  Destination:      ${destination}`);

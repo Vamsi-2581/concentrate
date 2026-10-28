@@ -5,6 +5,9 @@ import type { ScanManifest } from "./manifest.js";
 export type BuildCodeGraphOptions = {
   continueOnError: boolean;
   concurrency?: number;
+  // Worker threads for parsing: unset picks a count from the number of files
+  // to parse (see parseWorkerCount), 0 parses on the main thread.
+  workers?: number;
   maxFiles?: number;
   include?: string[];
   exclude?: string[];

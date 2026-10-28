@@ -44,6 +44,9 @@ Repeated scans reuse per-file parse results from `.concentrate/cache/`, so only 
 parsed again; cross-file resolution always runs over the whole graph, so the result is the same as
 a full scan. A code or grammar change invalidates the cache automatically; `--no-cache` skips it.
 
+When 100 or more files need parsing, they are parsed on up to 4 worker threads (`--workers <n>` sets
+the count, `--workers 0` keeps parsing on the main thread); the graph is the same either way.
+
 Scans and the MCP server can run at the same time: a scan takes a writer lock and
 commits a new snapshot atomically, readers never lock, and a running MCP server
 picks up the new snapshot on its next tool call. A second scan waits for the

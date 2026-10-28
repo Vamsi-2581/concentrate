@@ -15,6 +15,8 @@ export type ScanReport = {
   resolvedImports: number;
   unresolvedRelativeImports: number;
   parseCache: ParseCacheReport;
+  // Worker threads that parsed the files the cache did not have; 0 = main thread.
+  parseWorkers: number;
   failedFiles: ScanFailure[];
   warnings: ScanWarning[];
 };
@@ -40,6 +42,7 @@ export function createScanReport(discoveredFiles: number, supportedFiles: number
     resolvedImports: 0,
     unresolvedRelativeImports: 0,
     parseCache: createParseCacheReport(),
+    parseWorkers: 0,
     failedFiles: [],
     warnings: [],
   };
