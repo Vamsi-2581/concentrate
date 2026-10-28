@@ -5,6 +5,7 @@ import { queryCommand } from "./commands/query.js";
 import { exportCommand } from "./commands/export.js";
 import { smokeCommand } from "./commands/smoke.js";
 import { mcpCommand } from "./commands/mcp.js";
+import { watchCommand } from "./commands/watch.js";
 
 /** Command-line surface of `concentrate`: every command, argument and flag. */
 export const program: ProgramSpec = {
@@ -29,6 +30,25 @@ export const program: ProgramSpec = {
         { flags: "--manifest <path>", description: "Scan manifest (file hashes) output path", default: ".concentrate/scan-manifest.json" },
       ],
       action: scanCommand,
+    },
+    {
+      name: "watch",
+      description: "Scan a project, then rescan and rewrite the graph store whenever its files change.",
+      args: [{ name: "path", description: "Project path to watch" }],
+      options: [
+        { flags: "-d, --database <path>", description: "Graph store directory", default: ".concentrate/graph" },
+        { flags: "--continue-on-error", description: "Write a partial graph when a file fails to parse instead of keeping the last one", type: "boolean" },
+        { flags: "--concurrency <n>", description: "Files to parse in parallel (default: CPU count)", type: "number" },
+        { flags: "--max-files <n>", description: "Maximum number of files to parse", type: "number" },
+        { flags: "--include <pattern>", description: "Include glob pattern, repeatable", multiple: true },
+        { flags: "--exclude <pattern>", description: "Exclude glob pattern, repeatable", multiple: true },
+        { flags: "--no-retry-lock", description: "Fail at once if another scan is writing the store instead of waiting for it" },
+        { flags: "--cache-dir <path>", description: "Parse cache directory; unchanged files are not parsed again", default: ".concentrate/cache" },
+        { flags: "--no-cache", description: "Parse every file on every rescan" },
+        { flags: "--manifest <path>", description: "Scan manifest (file hashes) output path", default: ".concentrate/scan-manifest.json" },
+        { flags: "--debounce <ms>", description: "Quiet period after the last change before rescanning", type: "number", default: 200 },
+      ],
+      action: watchCommand,
     },
     {
       name: "stats",
