@@ -175,7 +175,7 @@ export function walkJsTsNodes(
         if (classNode) {
           nodes.push(classNode);
           relationships.push({ from: fileNodeId, to: classNode.id, type: "DEFINES_CLASS", properties: {} });
-          appendClassMembers(fileNodeId, classNode, valueChild!, nodes, relationships, callbackKeys);
+          appendClassMembers(fileNodeId, classNode, valueChild!, nodes, relationships, callbackKeys, functionAstPairs);
         }
       } else if (isVariableFunctionValue(valueChild)) {
         const functionNode = createVariableFunctionNode(fileNodeId, node, valueChild!);
@@ -212,7 +212,7 @@ export function walkJsTsNodes(
       if (classNode) {
         nodes.push(classNode);
         relationships.push({ from: fileNodeId, to: classNode.id, type: "DEFINES_CLASS", properties: {} });
-        appendClassMembers(fileNodeId, classNode, node, nodes, relationships, callbackKeys);
+        appendClassMembers(fileNodeId, classNode, node, nodes, relationships, callbackKeys, functionAstPairs);
       }
     }
 

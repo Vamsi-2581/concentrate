@@ -1,5 +1,5 @@
 import { indexOfNode, type SyntaxNode } from "../../languages/syntax/tree-sitter.js";
-import type { GraphNode, GraphRelationship } from "../../../core/graph/model.js";
+import type { GraphNode, GraphRelationship, ImportBinding } from "../../../core/graph/model.js";
 import { analyzeMemberCallExpression } from "../../languages/tree-sitter-utils.js";
 import {
   firstDecoratorArg,
@@ -42,12 +42,19 @@ type RouteCandidate = {
   lifecycleSteps: RouteLifecycleStep[];
 };
 
-type RouteLifecycleStep = {
+export type RouteLifecycleStep = {
   name: string;
   role: string;
   scope: string;
   hook: string | null;
   orderIndex: number;
+};
+
+// Route references that did not resolve to a function in the declaring file:
+// handler identifiers, and the full lifecycle step list when any step is unresolved.
+export type PendingHandlerRefs = {
+  handlers: string[];
+  steps: RouteLifecycleStep[];
 };
 
 export function createExpressKoaRouteGraph(
@@ -82,6 +89,7 @@ function createHttpRouteGraph(
   const stringConstantsByName = indexFileStringConstants(fileNodeId, nodes, relationships);
   const functionIdsByPassedToCallId = indexPassedToHandlers(relationships);
   const functionIdsByName = functionsByName;
+  const importedNames = indexFileNamedImports(fileNodeId, nodes, relationships);
 
   for (const callExpr of moduleLevelCallExpressions(programNode)) {
     const routes = createRouteNodes(fileNodeId, callExpr, stringConstantsByName, frameworkFilter);
@@ -105,9 +113,13 @@ function createHttpRouteGraph(
         });
       }
 
+      const unresolvedHandlerNames: string[] = [];
       for (const handlerName of route.referencedHandlerNames) {
         const functionId = functionsByName.get(handlerName);
-        if (!functionId) continue;
+        if (!functionId) {
+          if (importedNames.has(handlerName)) unresolvedHandlerNames.push(handlerName);
+          continue;
+        }
         routeRelationships.push({
           from: route.node.id,
           to: functionId,
@@ -127,7 +139,22 @@ function createHttpRouteGraph(
         });
       }
 
-      routeRelationships.push(...createLifecycleRelationships(route.node.id, route.lifecycleSteps, functionIdsByName));
+      // Handlers and middleware imported from another file resolve after the
+      // parse (resolution/route-handlers.ts). The lifecycle chain is built
+      // there in one piece so LIFECYCLE_PRECEDES links across both kinds.
+      const hasUnresolvedSteps = route.lifecycleSteps.some((step) => (
+        !functionIdsByName.has(step.name) && importedNames.has(step.name)
+      ));
+      if (unresolvedHandlerNames.length > 0 || hasUnresolvedSteps) {
+        const pending: PendingHandlerRefs = {
+          handlers: unresolvedHandlerNames,
+          steps: hasUnresolvedSteps ? route.lifecycleSteps : [],
+        };
+        route.node.properties.pendingHandlerRefs = JSON.stringify(pending);
+      }
+      if (!hasUnresolvedSteps) {
+        routeRelationships.push(...createLifecycleRelationships(route.node.id, route.lifecycleSteps, functionIdsByName));
+      }
     }
 
     routeRelationships.push(...createMountRelationships(callExpr, variablesByName, functionsByName, stringConstantsByName, frameworkFilter));
@@ -363,7 +390,7 @@ function createFastifyObjectRouteNodes(
   }));
 }
 
-function createLifecycleRelationships(
+export function createLifecycleRelationships(
   routeNodeId: string,
   steps: RouteLifecycleStep[],
   functionsByName: Map<string, string>,
@@ -706,6 +733,33 @@ function indexFileVariables(
     }
   }
   return variables;
+}
+
+// Local names bound by `import { a } from ...` or `const { a } = require(...)`.
+function indexFileNamedImports(
+  fileNodeId: string,
+  nodes: GraphNode[],
+  relationships: GraphRelationship[],
+): Set<string> {
+  const importIds = new Set(
+    relationships
+      .filter((rel) => rel.from === fileNodeId && rel.type === "IMPORTS")
+      .map((rel) => rel.to),
+  );
+
+  const names = new Set<string>();
+  for (const node of nodes) {
+    if (!importIds.has(node.id) || node.label !== "Import" || typeof node.properties.bindings !== "string") continue;
+    try {
+      const bindings = JSON.parse(node.properties.bindings) as ImportBinding[];
+      for (const binding of bindings) {
+        if (binding.kind === "named") names.add(binding.local);
+      }
+    } catch {
+      continue;
+    }
+  }
+  return names;
 }
 
 function indexFileStringConstants(

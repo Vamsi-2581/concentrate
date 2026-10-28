@@ -12,6 +12,7 @@ import {
   instanceMethodContributor,
 } from "../integrations/frameworks/js-ts/nestjs.js";
 import { routePathContributor } from "../integrations/frameworks/js-ts/fastify.js";
+import { routeHandlerContributor } from "../integrations/frameworks/js-ts/express-koa.js";
 import { envConfigContributor } from "../integrations/frameworks/js-ts/env-config.js";
 import { dataAccessContributor } from "../integrations/frameworks/js-ts/data-access.js";
 import type { ILanguageResolver } from "../core/contracts/language-resolver.js";
@@ -34,6 +35,7 @@ export function createDefaultCoreIntegrationRegistry(): CoreIntegrationRegistry 
     nestjsModulesContributor,
     nestjsInjectionContributor,
     instanceMethodContributor,
+    routeHandlerContributor,
     routePathContributor,
     envConfigContributor,
     dataAccessContributor,
