@@ -150,10 +150,10 @@ tools are bounded by their `limit` argument instead.
   scanner; they do not execute application code or infer runtime framework
   configuration beyond scanned source relationships.
 - Results depend on the existing graph quality and known parser/resolver
-  limitations. For the agent tools in particular: Express handlers imported
-  from another file are not linked to their routes, and env reads inside class
-  methods are recorded on the file rather than the method, so `impact_of` and
-  `route_details` cannot follow those links yet.
+  limitations. Route handlers and middleware imported from another file are
+  linked when they are bound by name (`import { listUsers } from './users'`,
+  `const { auth } = require('./auth')`); default imports, namespace members
+  (`handlers.list`) and re-export barrels are not followed yet.
 
 ## Troubleshooting
 

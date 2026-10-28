@@ -60,6 +60,7 @@ export function appendClassMembers(
   nodes: GraphNode[],
   relationships: GraphRelationship[],
   callbackKeys: ReadonlySet<string>,
+  functionAstPairs: Array<{ functionNodeId: string; astNode: SyntaxNode }> = [],
 ): void {
   const decoratorSource = classSyntaxNode.parent?.type === "export_statement"
     || classSyntaxNode.parent?.type === "decorated_definition"
@@ -134,6 +135,9 @@ export function appendClassMembers(
           properties: {},
         })),
       );
+      if (child.type === "method_definition") {
+        functionAstPairs.push({ functionNodeId: methodNode.id, astNode: child });
+      }
       for (const dec of pendingDecorators) {
         const decoratorNode = createDecoratorNode(methodNode.id, dec);
         nodes.push(decoratorNode);
