@@ -92,8 +92,8 @@ describe("agent MCP tools", () => {
 
   it("registers the five agent tools after the graph tools", () => {
     const toolNames = mcpToolDefinitions.map((tool) => tool.name);
-    assert.equal(toolNames.length, 19);
-    assert.deepEqual(toolNames.slice(9, 14), ["impact_of", "detect_changes", "route_details", "get_symbol_source", "get_file_outline"]);
+    assert.equal(toolNames.length, 20);
+    assert.deepEqual(toolNames.slice(10, 15), ["impact_of", "detect_changes", "route_details", "get_symbol_source", "get_file_outline"]);
   });
 
   it("impact_of walks callers with depth and reaches routes and module code", async () => {
@@ -287,7 +287,7 @@ describe("agent tools over stdio", () => {
 
     try {
       assert.equal((await server.request("initialize", {})).serverInfo.name, "concentrate");
-      assert.equal((await server.request("tools/list", {})).tools.length, 19);
+      assert.equal((await server.request("tools/list", {})).tools.length, 20);
       assert.deepEqual(names((await tool("impact_of", { symbol: "loadUsers" })).callers), ["listUsers", "refresh"]);
       assert.equal((await tool("route_details", { method: "GET", path: "/users" })).routes[0].lifecycle.length, 2);
       assert.match((await tool("get_symbol_source", { name: "formatName" })).matches[0].source, /name\.trim/);

@@ -17,7 +17,8 @@ export type GraphNodeLabel =
   | "EntryPoint"
   | "EnvVar"
   | "ConfigValue"
-  | "DataModel";
+  | "DataModel"
+  | "Table";
 
 export type GraphRelationshipType =
   | "CONTAINS_ROOT"
@@ -63,7 +64,11 @@ export type GraphRelationshipType =
   | "CONSUMES_CONFIG"
   | "DECLARES_ENTRYPOINT"
   | "ENTRYPOINT_HANDLED_BY"
-  | "ACCESSES_DATA";
+  | "ACCESSES_DATA"
+  | "MAPS_TO_TABLE"
+  | "RELATES_TO"
+  | "READS"
+  | "WRITES";
 
 export type GraphProperties = Record<string, string | number | boolean | null>;
 

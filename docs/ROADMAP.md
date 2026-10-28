@@ -422,10 +422,10 @@ Concentrate already models Express/Koa/Fastify/NestJS routes, NestJS DI, env usa
 
 ### Data layer
 
-- [ ] Parse `schema.prisma` (models → tables, relations)
+- [x] Parse `schema.prisma` (models → tables, relations)
 - [ ] Drizzle ORM
 - [ ] Table nodes for TypeORM entities and Mongoose schemas
-- [ ] Unified `Table` node with `READS` / `WRITES` edges
+- [ ] Unified `Table` node with `READS` / `WRITES` edges (in place for Prisma and Knex; TypeORM, Mongoose and Drizzle still to come)
 
 ### Cross-service
 

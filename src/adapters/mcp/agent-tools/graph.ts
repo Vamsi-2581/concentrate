@@ -187,6 +187,7 @@ export async function computeImpact(
       .slice(0, limit),
     entrypoints: mergeRows(entrypoints, ["fn"], "reachedThrough", via).sort(byFileAndLine).slice(0, limit),
     dataAccess: mergeRows(resources.dataAccess, ["fn"], "usedBy", via).slice(0, limit),
+    tables: summarizeTables(resources.tables, via).slice(0, limit),
     envVars: mergeRows(resources.envVars, ["fn"], "usedBy", via).slice(0, limit),
     config: mergeRows(resources.config, ["fn"], "usedBy", via).slice(0, limit),
   };
@@ -229,18 +230,23 @@ export function mergeRows(
   return [...merged.values()].map(({ row, items }) => ({ ...row, [into]: items }));
 }
 
-export type FunctionResources = { dataAccess: Row[]; envVars: Row[]; config: Row[] };
+export type FunctionResources = { dataAccess: Row[]; tables: Row[]; envVars: Row[]; config: Row[] };
 
-// Data models, env vars and config values used directly by the `ids`
+// Data models, tables, env vars and config values used directly by the `ids`
 // functions. Each row carries the using function's id as `fn`.
 export async function functionResources(engine: IQueryEngine, ids: readonly string[]): Promise<FunctionResources> {
   const params = { ids: [...ids] };
-  const [dataAccess, envVars, config] = await Promise.all([
+  const [dataAccess, tables, envVars, config] = await Promise.all([
     engine.query(`
       MATCH (fn:Function)-[rel:ACCESSES_DATA_FUNCTION]->(model:DataModel)
       WHERE id(fn) IN $ids
       RETURN model.name AS model, model.library AS library, rel.operation AS operation,
         rel.line AS line, rel.expression AS expression, id(fn) AS fn
+    `, params),
+    engine.query(`
+      MATCH (fn:Function)-[rel:READS_FUNCTION|WRITES_FUNCTION]->(table:Table)
+      WHERE id(fn) IN $ids
+      RETURN ${tableAccessColumns}, id(fn) AS fn
     `, params),
     engine.query(`
       MATCH (fn:Function)-[rel:USES_ENV_FUNCTION]->(env:EnvVar)
@@ -253,7 +259,31 @@ export async function functionResources(engine: IQueryEngine, ids: readonly stri
       RETURN config.name AS name, rel.localName AS localName, id(fn) AS fn
     `, params),
   ]) as Row[][];
-  return { dataAccess, envVars, config };
+  return { dataAccess, tables, envVars, config };
+}
+
+// Columns of a READS_* / WRITES_* row, bound as `rel` to `table`.
+export const tableAccessColumns = `id(table) AS tableId, table.name AS table, table.kind AS kind, table.library AS library,
+  label(rel) AS tableAccess, rel.operation AS operation`;
+
+// One entry per table: the read and write operations on it and who performs
+// them (`describe(row)`, without repeats).
+export function summarizeTables(rows: readonly Row[], describe: (row: Row) => Row): Row[] {
+  const tables = new Map<string, { entry: { table: unknown; kind: unknown; library: unknown }; reads: Set<string>; writes: Set<string>; usedBy: Map<string, Row> }>();
+  for (const row of rows) {
+    const id = String(row.tableId);
+    let table = tables.get(id);
+    if (!table) {
+      table = { entry: { table: row.table, kind: row.kind, library: row.library }, reads: new Set(), writes: new Set(), usedBy: new Map() };
+      tables.set(id, table);
+    }
+    (String(row.tableAccess).startsWith("READS") ? table.reads : table.writes).add(String(row.operation));
+    const item = describe(row);
+    table.usedBy.set(JSON.stringify(item), item);
+  }
+  return [...tables.values()]
+    .map(({ entry, reads, writes, usedBy }) => ({ ...entry, reads: [...reads].sort(), writes: [...writes].sort(), usedBy: [...usedBy.values()] }))
+    .sort((a, b) => String(a.table).localeCompare(String(b.table)) || String(a.library).localeCompare(String(b.library)));
 }
 
 // A file argument matches a graph file by its scan-relative path, or by a

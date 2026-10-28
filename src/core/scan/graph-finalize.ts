@@ -9,12 +9,13 @@ export async function finalizeGraphRelationships(
   report: ScanReport,
   resolvers: readonly ILanguageResolver[],
   contributors: readonly ISemanticContributor[],
+  files: readonly string[],
 ): Promise<void> {
   for (const resolver of resolvers) {
     await resolver.resolve(graph, rootPath, report);
   }
 
   for (const contributor of contributors) {
-    await contributor.contribute(graph, rootPath, report);
+    await contributor.contribute(graph, rootPath, report, files);
   }
 }

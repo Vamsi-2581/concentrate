@@ -27,7 +27,7 @@ export async function readResource(engine: IQueryEngine, uri: string): Promise<{
 }
 
 export async function graphSummary(engine: IQueryEngine): Promise<Record<string, unknown>> {
-  const [schemaVersion, stats, repos, files, packages, routes, entrypoints, dataModels, envVars, configValues] = await Promise.all([
+  const [schemaVersion, stats, repos, files, packages, routes, entrypoints, dataModels, tables, envVars, configValues] = await Promise.all([
     engine.schemaVersion(),
     engine.stats(),
     engine.query("MATCH (repo:Repo) RETURN repo.path AS path, repo.name AS name LIMIT 1"),
@@ -41,9 +41,10 @@ export async function graphSummary(engine: IQueryEngine): Promise<Record<string,
     engine.query("MATCH (route:Route) RETURN route.framework AS key, count(route) AS count ORDER BY key"),
     engine.query("MATCH (entrypoint:EntryPoint) RETURN entrypoint.kind AS key, count(entrypoint) AS count ORDER BY key"),
     engine.query("MATCH (model:DataModel) RETURN model.library AS key, count(model) AS count ORDER BY key"),
+    engine.query("MATCH (table:Table) RETURN table.library AS key, count(table) AS count ORDER BY key"),
     engine.query("MATCH (env:EnvVar) RETURN count(env) AS count"),
     engine.query("MATCH (config:ConfigValue) RETURN count(config) AS count"),
-  ]) as [number | null, unknown, Row[], Row[], Row[], Row[], Row[], Row[], Row[], Row[]];
+  ]) as [number | null, unknown, Row[], Row[], Row[], Row[], Row[], Row[], Row[], Row[], Row[]];
 
   const languages = new Map<string, number>();
   const directories = new Map<string, number>();
@@ -71,6 +72,7 @@ export async function graphSummary(engine: IQueryEngine): Promise<Record<string,
     routesByFramework: counts(routes),
     entrypointsByKind: counts(entrypoints),
     dataModelsByLibrary: counts(dataModels),
+    tablesByLibrary: counts(tables),
     envVars: Number(envVars[0]?.count ?? 0),
     configValues: Number(configValues[0]?.count ?? 0),
     stats,

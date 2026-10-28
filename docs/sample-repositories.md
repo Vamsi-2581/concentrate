@@ -205,7 +205,8 @@ standing smoke samples.
 - File classification counts: 20 production files, 3 test files, 0 fixture
   files, 0 support files, 1 generated file.
 - Expected smoke counts: schema version 36, 7 `Route` nodes, 2 `EnvVar`
-  nodes, 14 `ConfigValue` nodes, 1 `DataModel` node.
+  nodes, 14 `ConfigValue` nodes, 1 `DataModel` node, 1 `Table` node (a
+  MongoDB collection from `prisma/schema.prisma`).
 - Notes: exposed a `tsconfig.json` parsing bug where glob strings such as
   `@/*` and `**/*.test.ts` were incorrectly treated as comments; fixed by
   making JSONC comment stripping string-aware.
@@ -222,7 +223,8 @@ standing smoke samples.
 - File classification counts: 29 production files, 7 test files, 0 fixture
   files, 3 support files, 0 generated files.
 - Expected smoke counts: schema version 36, 26 `Route` nodes, 4 `EnvVar`
-  nodes, 9 `ConfigValue` nodes, 4 `DataModel` nodes.
+  nodes, 9 `ConfigValue` nodes, 4 `DataModel` nodes, 4 `Table` nodes (from
+  `src/prisma/schema.prisma`).
 
 ### Nest
 
@@ -236,7 +238,8 @@ standing smoke samples.
 - File classification counts: 985 production files, 351 test files, 376 fixture
   files, 0 support files, 0 generated files.
 - Expected smoke counts: schema version 36, 309 `Route` nodes, 3 `EntryPoint`
-  nodes, 9 `EnvVar` nodes, 144 `ConfigValue` nodes, 4 `DataModel` nodes.
+  nodes, 9 `EnvVar` nodes, 144 `ConfigValue` nodes, 5 `DataModel` nodes, 1
+  `Table` node (`Post`, from `sample/22-graphql-prisma`).
 - Data-access validation, 2026-05-02: detected large Nest models `Cat`
   (Mongoose), `Photo`, `User`, and `Mongo` (TypeORM) and propagated accesses
   from repository/service methods to controllers where call resolution was

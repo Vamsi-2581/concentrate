@@ -70,6 +70,8 @@
 {"kind":"node","id":"file:service.ts:variable:8:AuditModel","label":"Variable","properties":{"isExported":false,"kind":"const","line":8,"name":"AuditModel","stringValue":null}}
 {"kind":"node","id":"file:service.ts:variable:9:Job","label":"Variable","properties":{"isExported":false,"kind":"const","line":9,"name":"Job","stringValue":null}}
 {"kind":"node","id":"repo:<root>","label":"Repo","properties":{"name":"data-access","path":"<root>"}}
+{"kind":"node","id":"table:knex:-:users","label":"Table","properties":{"columns":"[]","declaredIn":null,"kind":"table","library":"knex","line":null,"name":"users","provider":null,"schemaName":null}}
+{"kind":"rel","from":"datamodel:knex:users","type":"MAPS_TO_TABLE","to":"table:knex:-:users","properties":{}}
 {"kind":"rel","from":"dir:.","type":"CONTAINS_FILE","to":"file:service.ts","properties":{}}
 {"kind":"rel","from":"file:service.ts","type":"DECLARES_ENTRYPOINT","to":"file:service.ts:entrypoint:75:0:queue:cleanup","properties":{}}
 {"kind":"rel","from":"file:service.ts","type":"DECLARES_ROUTE","to":"file:service.ts:route:73:0:GET:/users","properties":{}}
@@ -136,6 +138,7 @@
 {"kind":"rel","from":"file:service.ts:function:55:listUsers","type":"ACCESSES_DATA","to":"datamodel:knex:users","properties":{"expression":"knex('users').select","library":"knex","line":56,"operation":"read"}}
 {"kind":"rel","from":"file:service.ts:function:55:listUsers","type":"CALLS","to":"file:service.ts:function:55:listUsers:call:56:11:knex","properties":{}}
 {"kind":"rel","from":"file:service.ts:function:55:listUsers","type":"CALLS","to":"file:service.ts:function:55:listUsers:call:56:11:knex('users').select","properties":{}}
+{"kind":"rel","from":"file:service.ts:function:55:listUsers","type":"READS","to":"table:knex:-:users","properties":{"expression":"knex('users').select","line":56,"model":"users","operation":"read"}}
 {"kind":"rel","from":"file:service.ts:function:63:listViaRepository","type":"ACCESSES_DATA","to":"datamodel:prisma:user","properties":{"expression":"this.prisma.user.findMany","library":"prisma","line":34,"operation":"read"}}
 {"kind":"rel","from":"file:service.ts:function:63:listViaRepository","type":"CALLS","to":"file:service.ts:function:63:listViaRepository:call:64:11:this.repository.findUsers","properties":{}}
 {"kind":"rel","from":"file:service.ts:function:63:listViaRepository:call:64:11:this.repository.findUsers","type":"CALL_RESOLVES_TO","to":"file:service.ts:function:33:findUsers","properties":{}}

@@ -77,6 +77,18 @@ audits.
 - Data-access propagation follows resolved calls, injection fields, and
   repository/service methods, but complex factory containers or runtime DI
   registration can still hide relationships.
+- `schema.prisma` files (and folders of `.prisma` files, read as one schema)
+  add every model and view as a `DataModel` and a `Table` named after
+  `@@map`. A Prisma call links to a declared model when its accessor
+  (`prisma.user`) is the model name with a lowercase first letter, and the
+  schema is the one in the calling file's nearest package (by `package.json`),
+  or the repository's only schema. Otherwise the call keeps a model named after
+  the accessor, with no table. Fields typed as `PrismaClient` or a class that
+  extends it are treated as Prisma clients.
+- Tables are known only for Prisma schemas and `knex('table')` calls. TypeORM
+  entities, Mongoose schemas, Sequelize models and Drizzle tables have models
+  but no `Table` yet, so their accesses have no `READS` / `WRITES` edges.
+  `$queryRaw` and other raw SQL are not read.
 - Current false-positive guards avoid broad framework factories, but review
   findings from `semanticSamples.dataAccess` should be fed back into resolver
   rules.

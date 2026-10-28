@@ -6,6 +6,7 @@ import { asObject, objectSchema, optionalBoolean, optionalLimit, optionalString,
 import { fitToBudget } from "./budget.js";
 import { INVALID_PARAMS, McpProtocolError } from "./errors.js";
 import { pagedResult, pageWindow, type PageWindow } from "./paging.js";
+import { listTables } from "./tables.js";
 
 export type McpToolContent = {
   type: "text";
@@ -42,6 +43,7 @@ const graphTools: Record<string, McpTool> = {
   list_entrypoints: { handler: listEntrypoints, listKey: "entrypoints", defaultLimit: 50 },
   list_env_config: { handler: listEnvConfig, listKey: "envConfig", defaultLimit: 50 },
   list_data_access: { handler: listDataAccess, listKey: "dataAccess", defaultLimit: 50 },
+  list_tables: { handler: listTables, listKey: "tables", defaultLimit: 20 },
 };
 const tools: Record<string, McpTool> = { ...graphTools, ...agentTools, ...analysisTools };
 
@@ -55,6 +57,7 @@ const titles: Record<string, string> = {
   list_entrypoints: "List entrypoints",
   list_env_config: "List env vars and config",
   list_data_access: "List data access",
+  list_tables: "List database tables",
   impact_of: "Impact of a change",
   detect_changes: "Detect working-tree changes",
   route_details: "Route details",
@@ -240,6 +243,15 @@ export const mcpToolDefinitions: McpToolDefinition[] = [
         type: "number",
         description: "Maximum rows to return. Defaults to 50.",
       },
+    }),
+  },
+  {
+    name: "list_tables",
+    description: "Database tables, views and collections (from Prisma schema files and Knex calls) with their columns, the ORM models that map to them and those models' relations, and the routes and entrypoints that read or write each table. Answers \"which endpoints write the users table?\".",
+    inputSchema: objectSchema({
+      name: { type: "string", description: "Optional table name substring." },
+      library: { type: "string", description: "Optional library filter: prisma or knex." },
+      limit: { type: "number", description: "Page size. Defaults to 20, at most 200." },
     }),
   },
   ...agentToolDefinitions,
@@ -712,12 +724,14 @@ function dataAccessQuery(sourceLabel: string, relationship: string, filters: str
     WHERE true
       ${filters}
     ${fileMatch}
+    OPTIONAL MATCH (model)-[:MAPS_TO_TABLE]->(table:Table)
     RETURN '${sourceLabel}' AS sourceKind,
       ${sourceName} AS sourceName,
       file.relativePath AS file,
       rel.line AS line,
       model.name AS model,
       model.library AS library,
+      table.name AS table,
       rel.operation AS operation,
       rel.expression AS expression
     ORDER BY file.relativePath, rel.line

@@ -1,0 +1,50 @@
+// Fixture schema: a mapped table, relations both ways, a self relation,
+// an enum, a view and a model nothing accesses.
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL") // not a comment: "//" inside the string
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+/// Application users.
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String?  @map("display_name")
+  role      Role     @default(USER)
+  posts     Post[]   @relation("AuthoredPosts")
+  invitedBy User?    @relation("Invites", fields: [inviterId], references: [id])
+  inviterId Int?     @map("inviter_id")
+  invited   User[]   @relation("Invites")
+
+  @@map("users")
+}
+
+model Post {
+  id       Int     @id @default(autoincrement())
+  title    String
+  tags     String[]
+  author   User    @relation("AuthoredPosts", fields: [authorId], references: [id], onDelete: Cascade)
+  authorId Int     @map("author_id")
+
+  @@unique([authorId, title])
+  @@map("posts")
+}
+
+model Setting {
+  key   String @id
+  value String
+}
+
+view PostStats {
+  authorId Int @unique
+  posts    Int
+}

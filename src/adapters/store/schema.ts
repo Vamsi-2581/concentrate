@@ -5,7 +5,7 @@
  */
 
 /** Bump when tables or properties change; scans of an older version are rewritten, never patched. */
-export const SCHEMA_VERSION = 37;
+export const SCHEMA_VERSION = 38;
 
 export type PropertyType = "STRING" | "INT64" | "BOOLEAN";
 
@@ -40,7 +40,8 @@ export const nodeTables: readonly NodeTable[] = [
   { label: "EntryPoint", properties: { kind: "STRING", trigger: "STRING", receiverName: "STRING", library: "STRING", line: "INT64", handlerName: "STRING" } },
   { label: "EnvVar", properties: { name: "STRING" } },
   { label: "ConfigValue", properties: { name: "STRING", value: "STRING", valueType: "STRING", line: "INT64" } },
-  { label: "DataModel", properties: { name: "STRING", library: "STRING" } },
+  { label: "DataModel", properties: { name: "STRING", library: "STRING", declaredIn: "STRING", line: "INT64" } },
+  { label: "Table", properties: { name: "STRING", kind: "STRING", library: "STRING", schemaName: "STRING", provider: "STRING", declaredIn: "STRING", line: "INT64", columns: "STRING" } },
 ];
 
 export const relationshipTables: readonly RelationshipTable[] = [
@@ -100,6 +101,16 @@ export const relationshipTables: readonly RelationshipTable[] = [
   { type: "ACCESSES_DATA_FUNCTION", from: "Function", to: "DataModel", properties: { operation: "STRING", library: "STRING", line: "INT64", expression: "STRING" } },
   { type: "ACCESSES_DATA_ROUTE", from: "Route", to: "DataModel", properties: { operation: "STRING", library: "STRING", line: "INT64", expression: "STRING" } },
   { type: "ACCESSES_DATA_ENTRYPOINT", from: "EntryPoint", to: "DataModel", properties: { operation: "STRING", library: "STRING", line: "INT64", expression: "STRING" } },
+  { type: "MAPS_TO_TABLE", from: "DataModel", to: "Table", properties: {} },
+  { type: "RELATES_TO", from: "DataModel", to: "DataModel", properties: { field: "STRING", kind: "STRING", fields: "STRING", references: "STRING", relationName: "STRING", onDelete: "STRING" } },
+  { type: "READS_FILE", from: "File", to: "Table", properties: { operation: "STRING", line: "INT64", expression: "STRING", model: "STRING" } },
+  { type: "READS_FUNCTION", from: "Function", to: "Table", properties: { operation: "STRING", line: "INT64", expression: "STRING", model: "STRING" } },
+  { type: "READS_ROUTE", from: "Route", to: "Table", properties: { operation: "STRING", line: "INT64", expression: "STRING", model: "STRING" } },
+  { type: "READS_ENTRYPOINT", from: "EntryPoint", to: "Table", properties: { operation: "STRING", line: "INT64", expression: "STRING", model: "STRING" } },
+  { type: "WRITES_FILE", from: "File", to: "Table", properties: { operation: "STRING", line: "INT64", expression: "STRING", model: "STRING" } },
+  { type: "WRITES_FUNCTION", from: "Function", to: "Table", properties: { operation: "STRING", line: "INT64", expression: "STRING", model: "STRING" } },
+  { type: "WRITES_ROUTE", from: "Route", to: "Table", properties: { operation: "STRING", line: "INT64", expression: "STRING", model: "STRING" } },
+  { type: "WRITES_ENTRYPOINT", from: "EntryPoint", to: "Table", properties: { operation: "STRING", line: "INT64", expression: "STRING", model: "STRING" } },
 ];
 
 /** Node labels in `graph_stats` order. */
@@ -123,6 +134,7 @@ export const nodeLabels = [
   "EnvVar",
   "ConfigValue",
   "DataModel",
+  "Table",
 ] as const;
 export const relationshipTypes = relationshipTables.map((table) => table.type);
 

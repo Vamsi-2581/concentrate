@@ -6,5 +6,8 @@ export interface ISemanticContributor {
     graph: IGraphContributor,
     rootPath: string,
     report: ScanReport,
+    // Every file the scan discovered (absolute paths, include/exclude and
+    // .gitignore applied), source or not.
+    files: readonly string[],
   ): Promise<void> | void;
 }

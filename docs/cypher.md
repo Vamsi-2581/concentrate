@@ -37,6 +37,7 @@ The graph is written only by `concentrate scan`.
   - If no table connects the given labels, the result is empty rather than an error (`(a:Function)-[:DEFINES_FUNCTION]->(b:File)`).
 - Relationships in one pattern need not be distinct. `(a)-[r1]-(d)-[r2]-(b)` can use the same relationship for r1 and r2.
 - Relationship types are the physical table names: `DEFINES_FUNCTION`, `ACCESSES_DATA_FUNCTION`, `RE_EXPORTS_CLASS`, and so on. See `src/adapters/store/schema.ts`.
+- The data layer: `(:DataModel)-[:MAPS_TO_TABLE]->(:Table)`, `(:DataModel)-[:RELATES_TO]->(:DataModel)`, and `READS_*` / `WRITES_*` (`_FILE`, `_FUNCTION`, `_ROUTE`, `_ENTRYPOINT`) from the accessing source to the `Table`, next to its `ACCESSES_DATA_*` edge. For example, the routes that write `users`: `MATCH (route:Route)-[:WRITES_ROUTE]->(table:Table {name: 'users'}) RETURN route.method, route.path`.
 
 `WHERE` after `OPTIONAL MATCH` filters only the optional part. Outer rows are never removed: when nothing passes, the optional variables are `null`.
 
