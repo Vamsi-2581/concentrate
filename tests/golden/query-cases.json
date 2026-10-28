@@ -346,6 +346,38 @@
           "scope": "package"
         }
       }
+    ],
+    "prisma-schema": [
+      {
+        "tool": "list_tables",
+        "args": {}
+      },
+      {
+        "tool": "list_tables",
+        "args": {
+          "name": "user",
+          "library": "prisma"
+        }
+      },
+      {
+        "tool": "list_data_access",
+        "args": {
+          "model": "user"
+        }
+      },
+      {
+        "tool": "route_details",
+        "args": {
+          "method": "PATCH",
+          "path": "/users/:id"
+        }
+      },
+      {
+        "tool": "impact_of",
+        "args": {
+          "symbol": "renameUser"
+        }
+      }
     ]
   }
 }

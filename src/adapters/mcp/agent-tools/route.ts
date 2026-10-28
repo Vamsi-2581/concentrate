@@ -1,7 +1,7 @@
 import type { IQueryEngine } from "../../../core/contracts/query-engine.js";
 import { requiredString } from "../args.js";
 import type { PageWindow } from "../paging.js";
-import { describeFunction, functionResources, loadCallEdges, loadFunctions, mergeRows, walkCalls } from "./graph.js";
+import { describeFunction, functionResources, loadCallEdges, loadFunctions, mergeRows, summarizeTables, tableAccessColumns, walkCalls } from "./graph.js";
 
 type Row = Record<string, unknown>;
 
@@ -27,7 +27,7 @@ export async function routeDetails(engine: IQueryEngine, args: Record<string, un
   }
 
   const routeIds = routes.map((route) => String(route.id));
-  const [functions, edges, handlers, steps, routeData, routeEnv, routeConfig] = await Promise.all([
+  const [functions, edges, handlers, steps, routeData, routeTables, routeEnv, routeConfig] = await Promise.all([
     loadFunctions(engine),
     loadCallEdges(engine),
     engine.query(`
@@ -48,6 +48,11 @@ export async function routeDetails(engine: IQueryEngine, args: Record<string, un
         rel.line AS line, rel.expression AS expression
     `, { ids: routeIds }),
     engine.query(`
+      MATCH (route:Route)-[rel:READS_ROUTE|WRITES_ROUTE]->(table:Table)
+      WHERE id(route) IN $ids
+      RETURN id(route) AS route, ${tableAccessColumns}
+    `, { ids: routeIds }),
+    engine.query(`
       MATCH (route:Route)-[rel:USES_ENV_ROUTE]->(env:EnvVar)
       WHERE id(route) IN $ids
       RETURN id(route) AS route, env.name AS name, rel.access AS access, rel.line AS line
@@ -57,7 +62,7 @@ export async function routeDetails(engine: IQueryEngine, args: Record<string, un
       WHERE id(route) IN $ids
       RETURN id(route) AS route, config.name AS name, rel.localName AS localName
     `, { ids: routeIds }),
-  ]) as [Awaited<ReturnType<typeof loadFunctions>>, Awaited<ReturnType<typeof loadCallEdges>>, Row[], Row[], Row[], Row[], Row[]];
+  ]) as [Awaited<ReturnType<typeof loadFunctions>>, Awaited<ReturnType<typeof loadCallEdges>>, Row[], Row[], Row[], Row[], Row[], Row[]];
   const describe = (id: unknown) => describeFunction(functions.get(String(id)), String(id));
 
   const details = [];
@@ -98,6 +103,7 @@ export async function routeDetails(engine: IQueryEngine, args: Record<string, un
       lifecycle: routeSteps.map(({ fn, ...step }) => ({ ...step, ...describe(fn) })),
       callChain: callChain.slice(0, 100),
       dataAccess: uses(routeData, resources.dataAccess),
+      tables: summarizeTables([...ofRoute(routeTables), ...resources.tables], usedBy),
       envVars: uses(routeEnv, resources.envVars),
       config: uses(routeConfig, resources.config),
     });

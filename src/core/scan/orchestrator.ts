@@ -155,7 +155,7 @@ export async function buildCodeGraph(
 
   await cache?.prune();
   await addWorkspacePackageGraph(graph, repoNodeId, rootPath, report);
-  await finalizeGraphRelationships(graph, rootPath, report, deps.resolvers, deps.contributors);
+  await finalizeGraphRelationships(graph, rootPath, report, deps.resolvers, deps.contributors, files);
   report.status = report.failedFiles.length > 0 ? "partial" : "success";
 
   return createResult(rootPath, graph, report, manifest);
