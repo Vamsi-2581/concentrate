@@ -37,6 +37,10 @@ npm run dev -- export ./path/to/project --output .concentrate/export
 npm run dev -- mcp
 ```
 
+Repeated scans reuse per-file parse results from `.concentrate/cache/`, so only changed files are
+parsed again; cross-file resolution always runs over the whole graph, so the result is the same as
+a full scan. A code or grammar change invalidates the cache automatically; `--no-cache` skips it.
+
 Scans and the MCP server can run at the same time: a scan takes a writer lock and
 commits a new snapshot atomically, readers never lock, and a running MCP server
 picks up the new snapshot on its next tool call. A second scan waits for the

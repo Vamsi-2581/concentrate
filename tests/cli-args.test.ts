@@ -170,10 +170,12 @@ describe("concentrate program spec", () => {
         include: [],
         exclude: [],
         retryLock: true,
+        cacheDir: ".concentrate/cache",
+        cache: true,
         manifest: ".concentrate/scan-manifest.json",
-        incremental: "full",
       },
     });
+    assert.equal(parseCommandArgs(scan, [".", "--no-cache"]).options.cache, false);
 
     const smoke = concentrate.commands.find((command) => command.name === "smoke")!;
     assert.deepEqual(parseCommandArgs(smoke, []).options, {

@@ -1,6 +1,6 @@
 import { readdir, stat } from "node:fs/promises";
 import type { GraphNode, GraphRelationship } from "../../core/graph/model.js";
-import type { GraphPatchOptions, GraphPatchSummary, IGraphStore } from "../../core/contracts/graph-store.js";
+import type { IGraphStore } from "../../core/contracts/graph-store.js";
 import type { GraphStatsOptions, GraphStatsRow } from "../../core/contracts/query-engine.js";
 import { executeCypher, type QueryParameters } from "./cypher/executor.js";
 import { MemoryGraph } from "./graph.js";
@@ -36,7 +36,7 @@ export class GraphStore implements IGraphStore {
     return new GraphStore(directory, graph, head, options.retryLock ?? false);
   }
 
-  /** Start from an empty graph. Committed by the next write, patch or close. */
+  /** Start from an empty graph. Committed by the next write or close. */
   async reset(): Promise<void> {
     this.graph = new MemoryGraph();
     this.pendingReset = true;
@@ -44,10 +44,6 @@ export class GraphStore implements IGraphStore {
 
   async write(nodes: GraphNode[], relationships: GraphRelationship[]): Promise<void> {
     await this.mutate((graph) => graph.write(nodes, relationships));
-  }
-
-  async patch(nodes: GraphNode[], relationships: GraphRelationship[], options: GraphPatchOptions): Promise<GraphPatchSummary> {
-    return this.mutate((graph) => graph.patch(nodes, relationships, options.affectedFiles));
   }
 
   async query(cypher: string, params: QueryParameters = {}): Promise<unknown[]> {

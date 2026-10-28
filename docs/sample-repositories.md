@@ -51,8 +51,9 @@ npm run smoke:samples -- --suite standing --report .concentrate/smoke-standing-r
 npm run smoke:samples -- --suite internet --report .concentrate/smoke-internet-report.json
 ```
 
-Run full-versus-incremental no-change benchmarks across standing and internet
-samples with:
+Run no-change parse-cache benchmarks (full scan, cold cache, warm cache; the
+warm scan must reproduce the full graph) across standing and internet samples
+with:
 
 ```bash
 npm run benchmark:incremental

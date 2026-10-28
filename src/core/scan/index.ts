@@ -3,17 +3,11 @@ export type {
   FileSourceType,
 } from "./file-classification.js";
 export type {
-  IncrementalEligibility,
-  ManifestDiff,
   ScanManifest,
   ScanManifestFile,
 } from "./manifest.js";
+export type { ParseCacheReport } from "./parse-cache.js";
 export type {
-  IncrementalMode,
-  ParsePlan,
-} from "./parse-plan.js";
-export type {
-  GraphPatchReport,
   ScanFailure,
   ScanReport,
   ScanStatus,

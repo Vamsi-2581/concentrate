@@ -33,8 +33,10 @@ Use `npm run verify:rc` for ordinary local release-candidate checks. Add the
 internet smoke command when a change touches architecture, resolver behavior, or
 large-repository performance.
 
-Run the incremental benchmark after changes to manifests, parse planning, graph
-patch writes, or large-repository performance:
+Run the incremental benchmark after changes to the parse cache, the scan
+pipeline, or large-repository performance. Each sample is rescanned with a cold
+and then a warm parse cache; the warm scan must parse nothing (except files that
+fail to parse) and produce exactly the full scan's graph:
 
 ```bash
 npm run benchmark:incremental
@@ -48,7 +50,7 @@ npm run smoke:samples -- --suite standing --incremental-benchmark --report .conc
 
 ## Current Baseline
 
-- Schema version: 35.
+- Schema version: 36.
 - Node runtime: Node.js 22 or newer.
 - Standing smoke report: `.concentrate/smoke-standing-report.json`.
 - Internet smoke report: `.concentrate/smoke-internet-report.json`.
@@ -70,25 +72,16 @@ The `.concentrate/*.graph` stores, `.concentrate/*report.json` files, and
 are useful for manual inspection and regression triage, but they are not source
 files and should not be committed.
 
-Incremental scan work currently uses manifests and parse plans for eligibility
-and graph patching. Pass `--previous-manifest <path>` to `scan` or `export` to
-compare the current file hashes with a prior run. Pass `--incremental
-changed-files` to request changed-file-only planning. The `scan` command can
-patch an existing compatible graph store by deleting stale file-owned nodes and
-writing graph slices for added and changed files. Parsing still runs over the
-full supported file set until unchanged graph slice preservation is implemented.
-
-Incremental patching is safe to use when:
-
-- The previous manifest came from the same project root and include/exclude
-  scope as the current scan.
-- The target graph store was produced by the same schema version.
-- The previous graph has not been manually edited between scans.
-- You can tolerate full parsing still running while graph writes are patched.
-
-Use a full scan when the schema changed, the previous manifest is missing or
-incompatible, include/exclude scope changed, or the graph store may be stale.
-The CLI reports these cases as `Graph write: reset`.
+`scan` and `export` reuse per-file parse results from `.concentrate/cache/`
+(`--cache-dir <path>`, `--no-cache` to parse everything). An entry is keyed by
+the parser fingerprint (a hash of Concentrate's own code, the vendored grammars
+and the schema version), the file path and its content hash, so changed files
+and any code change miss automatically; nothing has to be invalidated by hand.
+Cross-file passes (import, call and inheritance resolution, route paths,
+NestJS modules, env/config) run over the whole graph on every scan, and the
+store is always rewritten as a whole, so a cached scan writes exactly the graph
+a full scan would. Entries the scan did not use are pruned. The cache directory
+is safe to delete at any time.
 
 ## Expected Green Baseline
 

@@ -321,26 +321,27 @@ Before this phase, `src/integrations/languages/js-ts/routes.ts` (830 lines) and 
 
 **Goal:** Re-parse only what changed and keep the graph fresh automatically.
 
-`createParsePlan` in `src/core/scan/parse-plan.ts` always returns `effectiveMode: "full"` ("Changed-file-only parsing is not implemented yet"). Manifest diffing and graph patching already exist.
+Before this phase, `createParsePlan` always returned `effectiveMode: "full"`, and `scan --incremental changed-files` parsed every file and then patched the store per file, which left cross-file results (resolved calls, route paths from imported constants) stale in unchanged files.
 
 ### Changed-file parsing
 
-- [ ] Add a per-file parse cache at `.concentrate/cache/<content-hash>.json`
-- [ ] Implement `changed-files` mode in `createParsePlan`: parse added/changed files, reuse cached results for unchanged files
-- [ ] Re-run global resolution passes over the merged graph
-- [ ] Invalidate the cache on parser or schema version changes
-- [ ] Test: incremental result equals a full scan for add, change, delete and rename scenarios
+- [x] Per-file parse cache at `.concentrate/cache/<project>/<key>.json` (`src/core/scan/parse-cache.ts`); on by default, `--cache-dir`, `--no-cache`
+- [x] Unchanged files reuse cached results, added/changed files are parsed; unused entries are pruned
+- [x] Global resolution passes and contributors re-run over the merged graph on every scan, and the store is rewritten as a whole
+- [x] Invalidation by key: the parser fingerprint hashes Concentrate's code, the vendored grammars and the schema version (`src/composition/parser-fingerprint.ts`)
+- [x] `tests/parse-cache.test.ts`: cached scan equals a full scan for add, change, delete and rename, including a route whose path comes from another file, and on every fixture
+- [x] Removed the manifest diff, parse plan, `--previous-manifest`, `--incremental` and the store's per-file `patch`
 
 ### Watch mode
 
 - [ ] Add `concentrate watch` using `fs.watch({ recursive: true })` with debouncing
-- [ ] Patch the graph store on changes
+- [ ] Rescan with the parse cache on changes and rewrite the store
 - [ ] Let a running MCP server reload when the store changes
 
 ### Acceptance criteria
 
-- [ ] Incremental scan output equals a full scan in all tested scenarios
-- [ ] A no-change incremental scan is substantially faster than a full scan on the standing samples
+- [x] Incremental scan output equals a full scan in all tested scenarios (and on every sample, `npm run benchmark:incremental`)
+- [x] A no-change incremental scan is substantially faster than a full scan on the standing samples (3.5–6×, see [benchmarks.md](benchmarks.md#parse-cache))
 - [ ] `watch` keeps the graph current while files are edited
 
 ## Phase 6a: Agent-facing MCP tools (impact, changes, routes, source) ([#12](https://github.com/fatihserhatturan/concentrate/issues/12))

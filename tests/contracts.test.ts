@@ -4,7 +4,7 @@ import { describe, it } from "node:test";
 import type { IGraphContributor } from "../src/core/contracts/graph-contributor.js";
 import type { ILanguageParser } from "../src/core/contracts/language-parser.js";
 import type { GraphNode as CoreGraphNode, ParsedSourceFile as CoreParsedSourceFile } from "../src/core/graph/model.js";
-import type { BuildCodeGraphResult, IncrementalMode, ScanManifest, ScanReport } from "../src/core/scan/index.js";
+import type { BuildCodeGraphResult, ScanManifest, ScanReport } from "../src/core/scan/index.js";
 import { coreBuildCodeGraph, createScanOrchestrator, createScanReport } from "../src/core/scan/index.js";
 import { CoreIntegrationRegistry } from "../src/core/integrations/index.js";
 import { GraphBuilder } from "../src/core/graph/builder.js";
@@ -49,7 +49,6 @@ describe("Core contract conformance", () => {
   });
 
   it("core scan DTO exports provide the scan report and result surface", () => {
-    const incrementalMode: IncrementalMode = "full";
     const report: ScanReport = createScanReport(1, 1);
     const manifest: ScanManifest = {
       version: 1,
@@ -66,7 +65,7 @@ describe("Core contract conformance", () => {
       manifest,
     };
 
-    assert.equal(incrementalMode, "full");
+    assert.equal(result.report.parseCache.enabled, false);
     assert.equal(result.report.status, "success");
   });
 

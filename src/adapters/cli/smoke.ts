@@ -1,10 +1,11 @@
-import { access, mkdir, readFile, writeFile } from "node:fs/promises";
+import { access, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { performance } from "node:perf_hooks";
 import os from "node:os";
 import path from "node:path";
 import { GRAPH_SCHEMA_VERSION, openGraphStore } from "../../composition/graph-store.js";
 import type { IQueryEngine } from "../../core/contracts/query-engine.js";
-import type { FileClassificationCounts, ScanReport, ScanStatus } from "../../core/scan/index.js";
+import type { BuildCodeGraphResult, FileClassificationCounts, ScanReport, ScanStatus } from "../../core/scan/index.js";
+import { formatNormalizedGraph, normalizeGraph } from "../../core/graph/normalize.js";
 import { scanOrchestrator } from "../../composition/orchestrator.js";
 
 export type SmokeSuite = "standing" | "internet";
@@ -131,15 +132,14 @@ export type SemanticReviewNotes = {
   notes: string[];
 };
 
+// A no-change rescan with a warm parse cache: it must produce the same graph
+// as the full scan while parsing nothing.
 export type IncrementalBenchmarkResult = {
   status: "passed" | "failed";
   fullScanMs: number;
-  fullWriteMs: number;
-  incrementalScanMs: number;
-  incrementalWriteMs: number;
-  incremental: ScanReport["incremental"];
-  parsePlan: ScanReport["parsePlan"];
-  graphPatch: ScanReport["graphPatch"];
+  coldCacheScanMs: number;
+  warmCacheScanMs: number;
+  parseCache: ScanReport["parseCache"];
   failures: string[];
 };
 
@@ -458,7 +458,7 @@ async function runSmokeSample(
   compareScan(sample.expected, graph.report, graph.nodes.length, graph.relationships.length, failures);
   compareGraph(sample.expected.graph, graphMetrics, failures);
   const incrementalBenchmarkResult = incrementalBenchmark
-    ? await runIncrementalBenchmark(sample, projectPath, databasePath, graph.manifest, graphMetrics, fullScanMs, fullWriteMs)
+    ? await runIncrementalBenchmark(sample, projectPath, graph, fullScanMs)
     : undefined;
   if (incrementalBenchmarkResult?.status === "failed") {
     failures.push(...incrementalBenchmarkResult.failures.map((failure) => `incrementalBenchmark.${failure}`));
@@ -483,78 +483,47 @@ async function runSmokeSample(
 async function runIncrementalBenchmark(
   sample: SmokeSample,
   projectPath: string,
-  databasePath: string,
-  previousManifest: unknown,
-  expectedGraphMetrics: Partial<Record<SmokeMetricName, number>>,
+  fullGraph: BuildCodeGraphResult,
   fullScanMs: number,
-  fullWriteMs: number,
 ): Promise<IncrementalBenchmarkResult> {
   const failures: string[] = [];
-  const previousManifestPath = `${databasePath}.previous-manifest.json`;
-  await writeFile(previousManifestPath, `${JSON.stringify(previousManifest, null, 2)}\n`, "utf8");
-
-  const incrementalScanStartedAt = performance.now();
-  const incrementalGraph = await scanOrchestrator.buildGraph(projectPath, {
+  const cacheDirectory = await mkdtemp(path.join(os.tmpdir(), "concentrate-parse-cache-"));
+  const scan = () => scanOrchestrator.buildGraph(projectPath, {
     continueOnError: sample.continueOnError ?? false,
     exclude: sample.exclude,
-    previousManifestPath,
-    incrementalMode: "changed-files",
+    cacheDirectory,
   });
-  const incrementalScanMs = elapsedMs(incrementalScanStartedAt);
 
-  const writer = await openGraphStore(databasePath);
-  const incrementalWriteStartedAt = performance.now();
   try {
-    if (await writer.schemaVersion() === GRAPH_SCHEMA_VERSION && incrementalGraph.report.incremental.compatible) {
-      const affectedFiles = [
-        ...incrementalGraph.report.parsePlan.addedFiles,
-        ...incrementalGraph.report.parsePlan.changedFiles,
-        ...incrementalGraph.report.parsePlan.deletedFiles,
-      ];
-      const patch = await writer.patch(incrementalGraph.nodes, incrementalGraph.relationships, { affectedFiles });
-      incrementalGraph.report.graphPatch = {
-        requested: true,
-        effectiveMode: "patch",
-        reason: null,
-        affectedFiles: patch.affectedFiles,
-        nodesWritten: patch.nodesWritten,
-        relationshipsWritten: patch.relationshipsWritten,
-      };
-    } else {
-      incrementalGraph.report.graphPatch = {
-        ...incrementalGraph.report.graphPatch,
-        requested: true,
-        effectiveMode: "reset",
-        reason: incrementalGraph.report.incremental.reason ?? "Previous graph is not compatible",
-      };
-      await writer.reset();
-      await writer.write(incrementalGraph.nodes, incrementalGraph.relationships);
+    const coldStartedAt = performance.now();
+    await scan();
+    const coldCacheScanMs = elapsedMs(coldStartedAt);
+
+    const warmStartedAt = performance.now();
+    const warmGraph = await scan();
+    const warmCacheScanMs = elapsedMs(warmStartedAt);
+
+    // Files that fail to parse are never cached, so they are parsed again.
+    const cache = warmGraph.report.parseCache;
+    const expectedMisses = warmGraph.report.failedFiles.length;
+    if (cache.misses !== expectedMisses) {
+      failures.push(`parseCache.misses: expected ${expectedMisses}, got ${cache.misses}`);
     }
+    if (formatNormalizedGraph(normalizeGraph(warmGraph)) !== formatNormalizedGraph(normalizeGraph(fullGraph))) {
+      failures.push("graph: warm-cache scan differs from the full scan");
+    }
+
+    return {
+      status: failures.length === 0 ? "passed" : "failed",
+      fullScanMs,
+      coldCacheScanMs,
+      warmCacheScanMs,
+      parseCache: cache,
+      failures,
+    };
   } finally {
-    await writer.close();
+    await rm(cacheDirectory, { recursive: true, force: true });
   }
-  const incrementalWriteMs = elapsedMs(incrementalWriteStartedAt);
-
-  const actualGraphMetrics = await readGraphMetrics(databasePath, expectedGraphMetrics);
-  compareGraph(expectedGraphMetrics, actualGraphMetrics, failures);
-  if (!incrementalGraph.report.incremental.compatible) {
-    failures.push(incrementalGraph.report.incremental.reason ?? "incremental comparison was not compatible");
-  }
-  if (incrementalGraph.report.graphPatch.effectiveMode !== "patch") {
-    failures.push(`graphPatch.effectiveMode: expected patch, got ${incrementalGraph.report.graphPatch.effectiveMode}`);
-  }
-
-  return {
-    status: failures.length === 0 ? "passed" : "failed",
-    fullScanMs,
-    fullWriteMs,
-    incrementalScanMs,
-    incrementalWriteMs,
-    incremental: incrementalGraph.report.incremental,
-    parsePlan: incrementalGraph.report.parsePlan,
-    graphPatch: incrementalGraph.report.graphPatch,
-    failures,
-  };
 }
 
 async function readSemanticSamples(databasePath: string, limit: number): Promise<SemanticSamples> {
@@ -837,7 +806,7 @@ function printSmokeReport(report: SmokeReport): void {
     if (result.incrementalBenchmark) {
       const benchmark = result.incrementalBenchmark;
       console.log(
-        `      incremental: ${benchmark.status}; full scan/write ${benchmark.fullScanMs}ms/${benchmark.fullWriteMs}ms, incremental scan/write ${benchmark.incrementalScanMs}ms/${benchmark.incrementalWriteMs}ms`,
+        `      incremental: ${benchmark.status}; full scan ${benchmark.fullScanMs}ms, cold cache ${benchmark.coldCacheScanMs}ms, warm cache ${benchmark.warmCacheScanMs}ms (${benchmark.parseCache.hits} reused)`,
       );
     }
     for (const failure of result.failures) {

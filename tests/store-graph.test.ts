@@ -64,46 +64,4 @@ describe("MemoryGraph", () => {
     assert.equal(graph.lookup("Class", "name", "run")!.size, 1);
     assert.equal(graph.lookup("Function", "line", 1), undefined);
   });
-
-  it("patch replaces what the affected files own", () => {
-    const graph = new MemoryGraph();
-    graph.write(
-      [fileNode("a.ts"), functionNode("a.ts", "old"), fileNode("b.ts"), functionNode("b.ts", "keep")],
-      [defines("a.ts", "old"), defines("b.ts", "keep")],
-    );
-    const summary = graph.patch(
-      [fileNode("a.ts"), functionNode("a.ts", "new"), fileNode("b.ts"), functionNode("b.ts", "keep")],
-      [defines("a.ts", "new"), defines("b.ts", "keep")],
-      ["a.ts"],
-    );
-    assert.deepEqual(summary, { affectedFiles: 1, nodesWritten: 2, relationshipsWritten: 1 });
-    assert.equal(graph.node("file:a.ts:function:1:old"), undefined);
-    assert.ok(graph.node("file:a.ts:function:1:new"));
-    assert.ok(graph.node("file:b.ts:function:1:keep"));
-    assert.equal(graph.relationshipCount, 2);
-  });
-});
-
-describe("patch equals a full write", async () => {
-  const fixtures = (await readdir(fixturesRoot, { withFileTypes: true })).filter((entry) => entry.isDirectory()).map((entry) => entry.name);
-  for (const fixture of fixtures) {
-    it(fixture, async () => {
-      const scanned = await buildCodeGraph(path.join(fixturesRoot, fixture), { continueOnError: true, concurrency: 4 });
-      const full = new MemoryGraph();
-      full.write(scanned.nodes, scanned.relationships);
-      const expected = canonical(full);
-
-      const files = scanned.nodes.filter((node) => node.label === "File").map((node) => String(node.properties.relativePath));
-      for (const file of files) {
-        const patched = new MemoryGraph();
-        patched.write(scanned.nodes, scanned.relationships);
-        patched.patch(scanned.nodes, scanned.relationships, [file]);
-        assert.equal(canonical(patched), expected, `patching ${file}`);
-      }
-      const all = new MemoryGraph();
-      all.write(scanned.nodes, scanned.relationships);
-      all.patch(scanned.nodes, scanned.relationships, files);
-      assert.equal(canonical(all), expected, "patching every file");
-    });
-  }
 });
