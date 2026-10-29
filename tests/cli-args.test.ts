@@ -21,6 +21,7 @@ function fakeProgram(calls: unknown[][]): ProgramSpec {
           { flags: "--verbose", description: "Talk more", type: "boolean" },
           { flags: "--max-files <n>", description: "File limit", type: "number" },
           { flags: "--include <pattern>", description: "Include pattern, repeatable", multiple: true },
+          { flags: "--exclude <pattern>", description: "Exclude pattern", multiple: true },
           { flags: "--no-retry-lock", description: "Do not retry" },
         ],
         action: record,
@@ -60,6 +61,18 @@ describe("CLI argument router", () => {
       include: ["a/**", "b"],
       retryLock: false,
     }]]);
+  });
+
+  it("suggests a close command name", async () => {
+    const { code, stderr } = await run(["scna", "."]);
+    assert.equal(code, 1);
+    assert.equal(stderr, "error: unknown command 'scna'. Did you mean 'scan'?\\n");
+  });
+
+  it("suggests a close option name", async () => {
+    const { code, stderr } = await run(["scan", "src", "--exlude", "dist"]);
+    assert.equal(code, 1);
+    assert.equal(stderr, "error: unknown option '--exlude'. Did you mean '--exclude'?\\n");
   });
 
   for (const [argv, message] of [
@@ -129,6 +142,7 @@ describe("CLI argument router", () => {
       "  --verbose              Talk more (default: false)",
       "  --max-files <n>        File limit",
       "  --include <pattern>    Include pattern, repeatable (default: [])",
+      "  --exclude <pattern>    Exclude pattern (default: [])",
       "  --no-retry-lock        Do not retry",
       "  -h, --help             display help for command",
       "",
