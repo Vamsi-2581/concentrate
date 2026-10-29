@@ -108,7 +108,16 @@ even for large repositories; read it first to decide which tools to call.
 - `list_env_config`: lists environment variable usage and config declarations
   or consumers.
 - `list_data_access`: lists data-access operations by source, model, library,
-  and operation.
+  and operation. Each row has the model's `table` when one is known.
+- `list_tables({ name?, library?, limit = 20 })`: database tables, views and
+  collections from Prisma schema files, TypeORM entities, Mongoose schemas,
+  Drizzle table definitions and Knex calls. Each table has its
+  `columns` (with the database `column` name when `@map` renames it, and
+  `isId` / `isUnique` / `optional` / `list` flags), the `models` that map to it
+  with their `relations` (`field`, `kind` one or many, target `model`,
+  `relationName`, `onDelete`), `readBy` / `writtenBy` counts of routes,
+  entrypoints and functions, and up to 20 `routes` and `entrypoints` with the
+  operations they perform. Answers "which endpoints write the users table?".
 
 ### Agent tools
 
@@ -121,7 +130,7 @@ These answer a whole question in one call instead of a chain of lookups.
   `callers` (transitive, with `depth`), `moduleCallers` (top-level code that
   calls the seeds or their callers), `routes` and `entrypoints` that run any of
   them (`reachedThrough` says which function and in which role), and the
-  `dataAccess`, `envVars` and `config` of the seeds themselves. For a route,
+  `dataAccess`, `tables`, `envVars` and `config` of the seeds themselves. For a route,
   use `route_details`.
 - `detect_changes({ base = "HEAD", maxDepth = 5, limit = 50 })`: runs
   `git diff --unified=0 <base>` (no shell; `base` must look like a revision)
@@ -134,8 +143,10 @@ These answer a whole question in one call instead of a chain of lookups.
   case-insensitive, path matched against the resolved full path or the path as
   declared): `handlers`, `lifecycle` steps (middleware, guards, hooks, ...) in
   order, the `callChain` from those functions (up to 4 levels, caller → callee
-  with the call line), and the `dataAccess`, `envVars` and `config` of the
-  route and that chain (`usedBy` lists where each one is used).
+  with the call line), and the `dataAccess`, `tables`, `envVars` and `config`
+  of the route and that chain (`usedBy` lists where each one is used). A
+  `tables` entry has the table, its `kind` and `library`, and the `reads` and
+  `writes` operations on it.
 - `get_symbol_source({ name, file?, kind?, limit = 5 })`: source text of a
   declaration, sliced from the file on disk with the span from the last scan
   (at most 400 lines each, `truncated: true` beyond). `Class.method` selects

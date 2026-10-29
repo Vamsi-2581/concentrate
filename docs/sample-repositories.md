@@ -205,7 +205,8 @@ standing smoke samples.
 - File classification counts: 20 production files, 3 test files, 0 fixture
   files, 0 support files, 1 generated file.
 - Expected smoke counts: schema version 36, 7 `Route` nodes, 2 `EnvVar`
-  nodes, 14 `ConfigValue` nodes, 1 `DataModel` node.
+  nodes, 14 `ConfigValue` nodes, 1 `DataModel` node, 1 `Table` node (a
+  MongoDB collection from `prisma/schema.prisma`).
 - Notes: exposed a `tsconfig.json` parsing bug where glob strings such as
   `@/*` and `**/*.test.ts` were incorrectly treated as comments; fixed by
   making JSONC comment stripping string-aware.
@@ -222,7 +223,8 @@ standing smoke samples.
 - File classification counts: 29 production files, 7 test files, 0 fixture
   files, 3 support files, 0 generated files.
 - Expected smoke counts: schema version 36, 26 `Route` nodes, 4 `EnvVar`
-  nodes, 9 `ConfigValue` nodes, 4 `DataModel` nodes.
+  nodes, 9 `ConfigValue` nodes, 4 `DataModel` nodes, 4 `Table` nodes (from
+  `src/prisma/schema.prisma`).
 
 ### Nest
 
@@ -236,11 +238,15 @@ standing smoke samples.
 - File classification counts: 985 production files, 351 test files, 376 fixture
   files, 0 support files, 0 generated files.
 - Expected smoke counts: schema version 36, 309 `Route` nodes, 3 `EntryPoint`
-  nodes, 9 `EnvVar` nodes, 144 `ConfigValue` nodes, 4 `DataModel` nodes.
+  nodes, 9 `EnvVar` nodes, 144 `ConfigValue` nodes, 7 `DataModel` nodes, 7
+  `Table` nodes (three Mongoose `cats` collections, two TypeORM `photo`
+  entities, TypeORM `user`, and Prisma `Post`).
 - Data-access validation, 2026-05-02: detected large Nest models `Cat`
   (Mongoose), `Photo`, `User`, and `Mongo` (TypeORM) and propagated accesses
   from repository/service methods to controllers where call resolution was
-  available.
+  available. `Mongo` came from `MongoRepository<Photo>` read as a model name;
+  since 2026-10-29 that is the `Photo` entity, and each access links to the
+  entity or schema declared in its own sample.
 - Write benchmark, 2026-05-01: transaction write mode completed the full scan
   and write in 24.60 seconds; the legacy individual write mode completed the
   same scan and write in 333.45 seconds.

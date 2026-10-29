@@ -28,6 +28,10 @@ export function physicalRelationshipType(
     return sourceLabelRelationshipType("ACCESSES_DATA", relationship, nodeLabelById);
   }
 
+  if (relationship.type === "READS" || relationship.type === "WRITES") {
+    return sourceLabelRelationshipType(relationship.type, relationship, nodeLabelById);
+  }
+
   return relationship.type;
 }
 

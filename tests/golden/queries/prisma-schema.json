@@ -1,0 +1,2614 @@
+[
+  {
+    "tool": "graph_stats",
+    "args": {},
+    "calls": [
+      {
+        "method": "schemaVersion",
+        "result": 38
+      },
+      {
+        "method": "stats",
+        "options": {},
+        "rows": [
+          {
+            "table": "Repo",
+            "count": 1
+          },
+          {
+            "table": "Package",
+            "count": 1
+          },
+          {
+            "table": "Directory",
+            "count": 2
+          },
+          {
+            "table": "File",
+            "count": 2
+          },
+          {
+            "table": "Import",
+            "count": 5
+          },
+          {
+            "table": "Function",
+            "count": 6
+          },
+          {
+            "table": "Class",
+            "count": 0
+          },
+          {
+            "table": "Field",
+            "count": 0
+          },
+          {
+            "table": "Variable",
+            "count": 5
+          },
+          {
+            "table": "Decorator",
+            "count": 0
+          },
+          {
+            "table": "Interface",
+            "count": 0
+          },
+          {
+            "table": "TypeAlias",
+            "count": 0
+          },
+          {
+            "table": "Enum",
+            "count": 0
+          },
+          {
+            "table": "Call",
+            "count": 22
+          },
+          {
+            "table": "Route",
+            "count": 4
+          },
+          {
+            "table": "EntryPoint",
+            "count": 0
+          },
+          {
+            "table": "EnvVar",
+            "count": 0
+          },
+          {
+            "table": "ConfigValue",
+            "count": 3
+          },
+          {
+            "table": "DataModel",
+            "count": 5
+          },
+          {
+            "table": "Table",
+            "count": 5
+          }
+        ]
+      }
+    ],
+    "output": {
+      "schemaVersion": 38,
+      "stats": [
+        {
+          "table": "Repo",
+          "count": 1
+        },
+        {
+          "table": "Package",
+          "count": 1
+        },
+        {
+          "table": "Directory",
+          "count": 2
+        },
+        {
+          "table": "File",
+          "count": 2
+        },
+        {
+          "table": "Import",
+          "count": 5
+        },
+        {
+          "table": "Function",
+          "count": 6
+        },
+        {
+          "table": "Class",
+          "count": 0
+        },
+        {
+          "table": "Field",
+          "count": 0
+        },
+        {
+          "table": "Variable",
+          "count": 5
+        },
+        {
+          "table": "Decorator",
+          "count": 0
+        },
+        {
+          "table": "Interface",
+          "count": 0
+        },
+        {
+          "table": "TypeAlias",
+          "count": 0
+        },
+        {
+          "table": "Enum",
+          "count": 0
+        },
+        {
+          "table": "Call",
+          "count": 22
+        },
+        {
+          "table": "Route",
+          "count": 4
+        },
+        {
+          "table": "EntryPoint",
+          "count": 0
+        },
+        {
+          "table": "EnvVar",
+          "count": 0
+        },
+        {
+          "table": "ConfigValue",
+          "count": 3
+        },
+        {
+          "table": "DataModel",
+          "count": 5
+        },
+        {
+          "table": "Table",
+          "count": 5
+        }
+      ]
+    }
+  },
+  {
+    "tool": "find_definitions",
+    "args": {
+      "name": "e"
+    },
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_FUNCTION]->(n:Function) WHERE contains(lower(n.name), lower(\"e\")) RETURN n.name AS name, 'Function' AS kind, file.relativePath AS file, n.line AS line, n.isExported AS isExported, 'DEFINES_FUNCTION' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 21",
+        "rows": [
+          {
+            "name": "<app.get:/users:arg1>",
+            "kind": "Function",
+            "file": "src/routes.ts",
+            "line": 10,
+            "isExported": false,
+            "relationship": "DEFINES_FUNCTION"
+          },
+          {
+            "name": "<app.patch:/users/:id:arg1>",
+            "kind": "Function",
+            "file": "src/routes.ts",
+            "line": 14,
+            "isExported": false,
+            "relationship": "DEFINES_FUNCTION"
+          },
+          {
+            "name": "<app.get:/stats:arg1>",
+            "kind": "Function",
+            "file": "src/routes.ts",
+            "line": 25,
+            "isExported": false,
+            "relationship": "DEFINES_FUNCTION"
+          },
+          {
+            "name": "findUsers",
+            "kind": "Function",
+            "file": "src/users.ts",
+            "line": 5,
+            "isExported": true,
+            "relationship": "DEFINES_FUNCTION"
+          },
+          {
+            "name": "renameUser",
+            "kind": "Function",
+            "file": "src/users.ts",
+            "line": 9,
+            "isExported": true,
+            "relationship": "DEFINES_FUNCTION"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(n:Class) WHERE contains(lower(n.name), lower(\"e\")) RETURN n.name AS name, 'Class' AS kind, file.relativePath AS file, n.line AS line, n.isExported AS isExported, 'DEFINES_CLASS' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 21",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_VARIABLE]->(n:Variable) WHERE contains(lower(n.name), lower(\"e\")) RETURN n.name AS name, 'Variable' AS kind, file.relativePath AS file, n.line AS line, n.isExported AS isExported, 'DEFINES_VARIABLE' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 21",
+        "rows": [
+          {
+            "name": "default",
+            "kind": "Variable",
+            "file": "src/routes.ts",
+            "line": 29,
+            "isExported": true,
+            "relationship": "DEFINES_VARIABLE"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_INTERFACE]->(n:Interface) WHERE contains(lower(n.name), lower(\"e\")) RETURN n.name AS name, 'Interface' AS kind, file.relativePath AS file, n.line AS line, n.isExported AS isExported, 'DEFINES_INTERFACE' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 21",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_TYPE_ALIAS]->(n:TypeAlias) WHERE contains(lower(n.name), lower(\"e\")) RETURN n.name AS name, 'TypeAlias' AS kind, file.relativePath AS file, n.line AS line, n.isExported AS isExported, 'DEFINES_TYPE_ALIAS' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 21",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_ENUM]->(n:Enum) WHERE contains(lower(n.name), lower(\"e\")) RETURN n.name AS name, 'Enum' AS kind, file.relativePath AS file, n.line AS line, n.isExported AS isExported, 'DEFINES_ENUM' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 21",
+        "rows": []
+      }
+    ],
+    "output": {
+      "query": {
+        "name": "e",
+        "exact": false,
+        "limit": 20
+      },
+      "definitions": [
+        {
+          "name": "<app.get:/users:arg1>",
+          "kind": "Function",
+          "file": "src/routes.ts",
+          "line": 10,
+          "isExported": false,
+          "relationship": "DEFINES_FUNCTION"
+        },
+        {
+          "name": "<app.patch:/users/:id:arg1>",
+          "kind": "Function",
+          "file": "src/routes.ts",
+          "line": 14,
+          "isExported": false,
+          "relationship": "DEFINES_FUNCTION"
+        },
+        {
+          "name": "<app.get:/stats:arg1>",
+          "kind": "Function",
+          "file": "src/routes.ts",
+          "line": 25,
+          "isExported": false,
+          "relationship": "DEFINES_FUNCTION"
+        },
+        {
+          "name": "findUsers",
+          "kind": "Function",
+          "file": "src/users.ts",
+          "line": 5,
+          "isExported": true,
+          "relationship": "DEFINES_FUNCTION"
+        },
+        {
+          "name": "renameUser",
+          "kind": "Function",
+          "file": "src/users.ts",
+          "line": 9,
+          "isExported": true,
+          "relationship": "DEFINES_FUNCTION"
+        },
+        {
+          "name": "default",
+          "kind": "Variable",
+          "file": "src/routes.ts",
+          "line": 29,
+          "isExported": true,
+          "relationship": "DEFINES_VARIABLE"
+        }
+      ],
+      "page": {
+        "offset": 0,
+        "returned": 6
+      }
+    }
+  },
+  {
+    "tool": "list_exports",
+    "args": {},
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_FUNCTION]->(n:Function) WHERE n.isExported = true RETURN file.relativePath AS file, n.name AS name, 'Function' AS kind, n.line AS line, 'DEFINES_FUNCTION' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 51",
+        "rows": [
+          {
+            "file": "src/users.ts",
+            "name": "findUsers",
+            "kind": "Function",
+            "line": 5,
+            "relationship": "DEFINES_FUNCTION"
+          },
+          {
+            "file": "src/users.ts",
+            "name": "renameUser",
+            "kind": "Function",
+            "line": 9,
+            "relationship": "DEFINES_FUNCTION"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(n:Class) WHERE n.isExported = true RETURN file.relativePath AS file, n.name AS name, 'Class' AS kind, n.line AS line, 'DEFINES_CLASS' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 51",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_VARIABLE]->(n:Variable) WHERE n.isExported = true RETURN file.relativePath AS file, n.name AS name, 'Variable' AS kind, n.line AS line, 'DEFINES_VARIABLE' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 51",
+        "rows": [
+          {
+            "file": "src/routes.ts",
+            "name": "default",
+            "kind": "Variable",
+            "line": 29,
+            "relationship": "DEFINES_VARIABLE"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_INTERFACE]->(n:Interface) WHERE n.isExported = true RETURN file.relativePath AS file, n.name AS name, 'Interface' AS kind, n.line AS line, 'DEFINES_INTERFACE' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 51",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_TYPE_ALIAS]->(n:TypeAlias) WHERE n.isExported = true RETURN file.relativePath AS file, n.name AS name, 'TypeAlias' AS kind, n.line AS line, 'DEFINES_TYPE_ALIAS' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 51",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_ENUM]->(n:Enum) WHERE n.isExported = true RETURN file.relativePath AS file, n.name AS name, 'Enum' AS kind, n.line AS line, 'DEFINES_ENUM' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 51",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:RE_EXPORTS]->(target:Import) WHERE true RETURN file.relativePath AS file, target.source AS name, 'Import' AS kind, target.line AS line, 'RE_EXPORTS' AS relationship ORDER BY file.relativePath, target.line, target.source LIMIT 51",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:RE_EXPORTS_FUNCTION]->(target:Function) WHERE true RETURN file.relativePath AS file, target.name AS name, 'Function' AS kind, target.line AS line, 'RE_EXPORTS_FUNCTION' AS relationship ORDER BY file.relativePath, target.line, target.name LIMIT 51",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:RE_EXPORTS_CLASS]->(target:Class) WHERE true RETURN file.relativePath AS file, target.name AS name, 'Class' AS kind, target.line AS line, 'RE_EXPORTS_CLASS' AS relationship ORDER BY file.relativePath, target.line, target.name LIMIT 51",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:RE_EXPORTS_VARIABLE]->(target:Variable) WHERE true RETURN file.relativePath AS file, target.name AS name, 'Variable' AS kind, target.line AS line, 'RE_EXPORTS_VARIABLE' AS relationship ORDER BY file.relativePath, target.line, target.name LIMIT 51",
+        "rows": []
+      }
+    ],
+    "output": {
+      "query": {
+        "limit": 50
+      },
+      "exports": [
+        {
+          "file": "src/users.ts",
+          "name": "findUsers",
+          "kind": "Function",
+          "line": 5,
+          "relationship": "DEFINES_FUNCTION"
+        },
+        {
+          "file": "src/users.ts",
+          "name": "renameUser",
+          "kind": "Function",
+          "line": 9,
+          "relationship": "DEFINES_FUNCTION"
+        },
+        {
+          "file": "src/routes.ts",
+          "name": "default",
+          "kind": "Variable",
+          "line": 29,
+          "relationship": "DEFINES_VARIABLE"
+        }
+      ],
+      "page": {
+        "offset": 0,
+        "returned": 3
+      }
+    }
+  },
+  {
+    "tool": "list_routes",
+    "args": {},
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_ROUTE]->(route:Route) WHERE true OPTIONAL MATCH (route)-[:ROUTE_HANDLED_BY]->(handler:Function) RETURN file.relativePath AS file, route.line AS line, route.method AS method, route.path AS path, route.fullPath AS fullPath, route.framework AS framework, route.handlerName AS handlerName, handler.name AS handler ORDER BY file.relativePath, route.line, route.method, route.path, handler.name LIMIT 51",
+        "rows": [
+          {
+            "file": "src/routes.ts",
+            "line": 10,
+            "method": "GET",
+            "path": "/users",
+            "fullPath": "/users",
+            "framework": "express-koa",
+            "handlerName": null,
+            "handler": "<app.get:/users:arg1>"
+          },
+          {
+            "file": "src/routes.ts",
+            "line": 14,
+            "method": "PATCH",
+            "path": "/users/:id",
+            "fullPath": "/users/:id",
+            "framework": "express-koa",
+            "handlerName": null,
+            "handler": "<app.patch:/users/:id:arg1>"
+          },
+          {
+            "file": "src/routes.ts",
+            "line": 20,
+            "method": "POST",
+            "path": "/posts",
+            "fullPath": "/posts",
+            "framework": "express-koa",
+            "handlerName": null,
+            "handler": "<app.post:/posts:arg1>"
+          },
+          {
+            "file": "src/routes.ts",
+            "line": 25,
+            "method": "GET",
+            "path": "/stats",
+            "fullPath": "/stats",
+            "framework": "express-koa",
+            "handlerName": null,
+            "handler": "<app.get:/stats:arg1>"
+          }
+        ]
+      }
+    ],
+    "output": {
+      "query": {
+        "limit": 50
+      },
+      "routes": [
+        {
+          "file": "src/routes.ts",
+          "line": 10,
+          "method": "GET",
+          "path": "/users",
+          "fullPath": "/users",
+          "framework": "express-koa",
+          "handlerName": null,
+          "handler": "<app.get:/users:arg1>"
+        },
+        {
+          "file": "src/routes.ts",
+          "line": 14,
+          "method": "PATCH",
+          "path": "/users/:id",
+          "fullPath": "/users/:id",
+          "framework": "express-koa",
+          "handlerName": null,
+          "handler": "<app.patch:/users/:id:arg1>"
+        },
+        {
+          "file": "src/routes.ts",
+          "line": 20,
+          "method": "POST",
+          "path": "/posts",
+          "fullPath": "/posts",
+          "framework": "express-koa",
+          "handlerName": null,
+          "handler": "<app.post:/posts:arg1>"
+        },
+        {
+          "file": "src/routes.ts",
+          "line": 25,
+          "method": "GET",
+          "path": "/stats",
+          "fullPath": "/stats",
+          "framework": "express-koa",
+          "handlerName": null,
+          "handler": "<app.get:/stats:arg1>"
+        }
+      ],
+      "page": {
+        "offset": 0,
+        "returned": 4
+      }
+    }
+  },
+  {
+    "tool": "list_entrypoints",
+    "args": {},
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(entrypoint:EntryPoint) WHERE true OPTIONAL MATCH (entrypoint)-[:ENTRYPOINT_HANDLED_BY]->(handler:Function) RETURN file.relativePath AS file, entrypoint.line AS line, entrypoint.kind AS kind, entrypoint.trigger AS trigger, entrypoint.library AS library, entrypoint.handlerName AS handlerName, handler.name AS handler ORDER BY file.relativePath, entrypoint.line, entrypoint.kind, entrypoint.trigger, handler.name LIMIT 51",
+        "rows": []
+      }
+    ],
+    "output": {
+      "query": {
+        "limit": 50
+      },
+      "entrypoints": [],
+      "page": {
+        "offset": 0,
+        "returned": 0
+      }
+    }
+  },
+  {
+    "tool": "list_env_config",
+    "args": {},
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[rel:USES_ENV_FILE]->(env:EnvVar) WHERE true RETURN 'env' AS kind, file.relativePath AS file, rel.line AS line, env.name AS name, rel.access AS value, NULL AS valueType, file.relativePath AS consumer, 'File' AS consumerKind ORDER BY file.relativePath, rel.line LIMIT 51",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_CONFIG_FILE]->(config:ConfigValue) WHERE true RETURN 'config' AS kind, file.relativePath AS file, config.line AS line, config.name AS name, config.value AS value, config.valueType AS valueType, file.relativePath AS consumer, 'File' AS consumerKind ORDER BY file.relativePath, config.line LIMIT 51",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[rel:CONSUMES_CONFIG_FILE]->(config:ConfigValue) WHERE true RETURN 'config-consumer' AS kind, file.relativePath AS file, config.line AS line, config.name AS name, config.value AS value, config.valueType AS valueType, rel.localName AS consumer, 'File' AS consumerKind ORDER BY file.relativePath, config.line LIMIT 51",
+        "rows": []
+      }
+    ],
+    "output": {
+      "query": {
+        "limit": 50
+      },
+      "envConfig": [],
+      "page": {
+        "offset": 0,
+        "returned": 0
+      }
+    }
+  },
+  {
+    "tool": "list_data_access",
+    "args": {},
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (source:File)-[rel:ACCESSES_DATA_FILE]->(model:DataModel) WHERE true WITH source AS file, source, rel, model OPTIONAL MATCH (model)-[:MAPS_TO_TABLE]->(table:Table) RETURN 'File' AS sourceKind, source.relativePath AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, table.name AS table, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 51",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (source:Function)-[rel:ACCESSES_DATA_FUNCTION]->(model:DataModel) WHERE true OPTIONAL MATCH (file:File)-[:DEFINES_FUNCTION]->(source) OPTIONAL MATCH (model)-[:MAPS_TO_TABLE]->(table:Table) RETURN 'Function' AS sourceKind, source.name AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, table.name AS table, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 51",
+        "rows": [
+          {
+            "sourceKind": "Function",
+            "sourceName": "<app.get:/users:arg1>",
+            "file": "src/routes.ts",
+            "line": 6,
+            "model": "User",
+            "library": "prisma",
+            "table": "users",
+            "operation": "read",
+            "expression": "prisma.user.findMany"
+          },
+          {
+            "sourceKind": "Function",
+            "sourceName": "<app.patch:/users/:id:arg1>",
+            "file": "src/routes.ts",
+            "line": 10,
+            "model": "User",
+            "library": "prisma",
+            "table": "users",
+            "operation": "update",
+            "expression": "prisma.user.update"
+          },
+          {
+            "sourceKind": "Function",
+            "sourceName": "<app.patch:/users/:id:arg1>",
+            "file": "src/routes.ts",
+            "line": 16,
+            "model": "audit_log",
+            "library": "knex",
+            "table": "audit_log",
+            "operation": "create",
+            "expression": "knex('audit_log').insert"
+          },
+          {
+            "sourceKind": "Function",
+            "sourceName": "<app.post:/posts:arg1>",
+            "file": "src/routes.ts",
+            "line": 21,
+            "model": "Post",
+            "library": "prisma",
+            "table": "posts",
+            "operation": "create",
+            "expression": "prisma.post.create"
+          },
+          {
+            "sourceKind": "Function",
+            "sourceName": "<app.get:/stats:arg1>",
+            "file": "src/routes.ts",
+            "line": 26,
+            "model": "PostStats",
+            "library": "prisma",
+            "table": "PostStats",
+            "operation": "read",
+            "expression": "prisma.postStats.findMany"
+          },
+          {
+            "sourceKind": "Function",
+            "sourceName": "findUsers",
+            "file": "src/users.ts",
+            "line": 6,
+            "model": "User",
+            "library": "prisma",
+            "table": "users",
+            "operation": "read",
+            "expression": "prisma.user.findMany"
+          },
+          {
+            "sourceKind": "Function",
+            "sourceName": "renameUser",
+            "file": "src/users.ts",
+            "line": 10,
+            "model": "User",
+            "library": "prisma",
+            "table": "users",
+            "operation": "update",
+            "expression": "prisma.user.update"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (source:Route)-[rel:ACCESSES_DATA_ROUTE]->(model:DataModel) WHERE true OPTIONAL MATCH (file:File)-[:DECLARES_ROUTE]->(source) OPTIONAL MATCH (model)-[:MAPS_TO_TABLE]->(table:Table) RETURN 'Route' AS sourceKind, source.path AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, table.name AS table, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 51",
+        "rows": [
+          {
+            "sourceKind": "Route",
+            "sourceName": "/users",
+            "file": "src/routes.ts",
+            "line": 6,
+            "model": "User",
+            "library": "prisma",
+            "table": "users",
+            "operation": "read",
+            "expression": "prisma.user.findMany"
+          },
+          {
+            "sourceKind": "Route",
+            "sourceName": "/users/:id",
+            "file": "src/routes.ts",
+            "line": 10,
+            "model": "User",
+            "library": "prisma",
+            "table": "users",
+            "operation": "update",
+            "expression": "prisma.user.update"
+          },
+          {
+            "sourceKind": "Route",
+            "sourceName": "/users/:id",
+            "file": "src/routes.ts",
+            "line": 16,
+            "model": "audit_log",
+            "library": "knex",
+            "table": "audit_log",
+            "operation": "create",
+            "expression": "knex('audit_log').insert"
+          },
+          {
+            "sourceKind": "Route",
+            "sourceName": "/posts",
+            "file": "src/routes.ts",
+            "line": 21,
+            "model": "Post",
+            "library": "prisma",
+            "table": "posts",
+            "operation": "create",
+            "expression": "prisma.post.create"
+          },
+          {
+            "sourceKind": "Route",
+            "sourceName": "/stats",
+            "file": "src/routes.ts",
+            "line": 26,
+            "model": "PostStats",
+            "library": "prisma",
+            "table": "PostStats",
+            "operation": "read",
+            "expression": "prisma.postStats.findMany"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (source:EntryPoint)-[rel:ACCESSES_DATA_ENTRYPOINT]->(model:DataModel) WHERE true OPTIONAL MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(source) OPTIONAL MATCH (model)-[:MAPS_TO_TABLE]->(table:Table) RETURN 'EntryPoint' AS sourceKind, source.trigger AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, table.name AS table, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 51",
+        "rows": []
+      }
+    ],
+    "output": {
+      "query": {
+        "limit": 50
+      },
+      "dataAccess": [
+        {
+          "sourceKind": "Function",
+          "sourceName": "<app.get:/users:arg1>",
+          "file": "src/routes.ts",
+          "line": 6,
+          "model": "User",
+          "library": "prisma",
+          "table": "users",
+          "operation": "read",
+          "expression": "prisma.user.findMany"
+        },
+        {
+          "sourceKind": "Function",
+          "sourceName": "<app.patch:/users/:id:arg1>",
+          "file": "src/routes.ts",
+          "line": 10,
+          "model": "User",
+          "library": "prisma",
+          "table": "users",
+          "operation": "update",
+          "expression": "prisma.user.update"
+        },
+        {
+          "sourceKind": "Function",
+          "sourceName": "<app.patch:/users/:id:arg1>",
+          "file": "src/routes.ts",
+          "line": 16,
+          "model": "audit_log",
+          "library": "knex",
+          "table": "audit_log",
+          "operation": "create",
+          "expression": "knex('audit_log').insert"
+        },
+        {
+          "sourceKind": "Function",
+          "sourceName": "<app.post:/posts:arg1>",
+          "file": "src/routes.ts",
+          "line": 21,
+          "model": "Post",
+          "library": "prisma",
+          "table": "posts",
+          "operation": "create",
+          "expression": "prisma.post.create"
+        },
+        {
+          "sourceKind": "Function",
+          "sourceName": "<app.get:/stats:arg1>",
+          "file": "src/routes.ts",
+          "line": 26,
+          "model": "PostStats",
+          "library": "prisma",
+          "table": "PostStats",
+          "operation": "read",
+          "expression": "prisma.postStats.findMany"
+        },
+        {
+          "sourceKind": "Function",
+          "sourceName": "findUsers",
+          "file": "src/users.ts",
+          "line": 6,
+          "model": "User",
+          "library": "prisma",
+          "table": "users",
+          "operation": "read",
+          "expression": "prisma.user.findMany"
+        },
+        {
+          "sourceKind": "Function",
+          "sourceName": "renameUser",
+          "file": "src/users.ts",
+          "line": 10,
+          "model": "User",
+          "library": "prisma",
+          "table": "users",
+          "operation": "update",
+          "expression": "prisma.user.update"
+        },
+        {
+          "sourceKind": "Route",
+          "sourceName": "/users",
+          "file": "src/routes.ts",
+          "line": 6,
+          "model": "User",
+          "library": "prisma",
+          "table": "users",
+          "operation": "read",
+          "expression": "prisma.user.findMany"
+        },
+        {
+          "sourceKind": "Route",
+          "sourceName": "/users/:id",
+          "file": "src/routes.ts",
+          "line": 10,
+          "model": "User",
+          "library": "prisma",
+          "table": "users",
+          "operation": "update",
+          "expression": "prisma.user.update"
+        },
+        {
+          "sourceKind": "Route",
+          "sourceName": "/users/:id",
+          "file": "src/routes.ts",
+          "line": 16,
+          "model": "audit_log",
+          "library": "knex",
+          "table": "audit_log",
+          "operation": "create",
+          "expression": "knex('audit_log').insert"
+        },
+        {
+          "sourceKind": "Route",
+          "sourceName": "/posts",
+          "file": "src/routes.ts",
+          "line": 21,
+          "model": "Post",
+          "library": "prisma",
+          "table": "posts",
+          "operation": "create",
+          "expression": "prisma.post.create"
+        },
+        {
+          "sourceKind": "Route",
+          "sourceName": "/stats",
+          "file": "src/routes.ts",
+          "line": 26,
+          "model": "PostStats",
+          "library": "prisma",
+          "table": "PostStats",
+          "operation": "read",
+          "expression": "prisma.postStats.findMany"
+        }
+      ],
+      "page": {
+        "offset": 0,
+        "returned": 12
+      }
+    }
+  },
+  {
+    "tool": "list_tables",
+    "args": {},
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (table:Table) RETURN id(table) AS id, table.name AS name, table.kind AS kind, table.library AS library, table.schemaName AS schemaName, table.provider AS provider, table.declaredIn AS declaredIn, table.line AS line, table.columns AS columns",
+        "params": {
+          "name": "",
+          "library": ""
+        },
+        "rows": [
+          {
+            "id": "table:prisma:prisma/schema.prisma:users",
+            "name": "users",
+            "kind": "table",
+            "library": "prisma",
+            "schemaName": null,
+            "provider": "postgresql",
+            "declaredIn": "prisma/schema.prisma",
+            "line": 18,
+            "columns": "[{\"name\":\"id\",\"column\":\"id\",\"type\":\"Int\",\"optional\":false,\"list\":false,\"isId\":true,\"isUnique\":false},{\"name\":\"email\",\"column\":\"email\",\"type\":\"String\",\"optional\":false,\"list\":false,\"isId\":false,\"isUnique\":true},{\"name\":\"name\",\"column\":\"display_name\",\"type\":\"String\",\"optional\":true,\"list\":false,\"isId\":false,\"isUnique\":false},{\"name\":\"role\",\"column\":\"role\",\"type\":\"Role\",\"optional\":false,\"list\":false,\"isId\":false,\"isUnique\":false},{\"name\":\"inviterId\",\"column\":\"inviter_id\",\"type\":\"Int\",\"optional\":true,\"list\":false,\"isId\":false,\"isUnique\":false}]"
+          },
+          {
+            "id": "table:prisma:prisma/schema.prisma:posts",
+            "name": "posts",
+            "kind": "table",
+            "library": "prisma",
+            "schemaName": null,
+            "provider": "postgresql",
+            "declaredIn": "prisma/schema.prisma",
+            "line": 31,
+            "columns": "[{\"name\":\"id\",\"column\":\"id\",\"type\":\"Int\",\"optional\":false,\"list\":false,\"isId\":true,\"isUnique\":false},{\"name\":\"title\",\"column\":\"title\",\"type\":\"String\",\"optional\":false,\"list\":false,\"isId\":false,\"isUnique\":false},{\"name\":\"tags\",\"column\":\"tags\",\"type\":\"String\",\"optional\":false,\"list\":true,\"isId\":false,\"isUnique\":false},{\"name\":\"authorId\",\"column\":\"author_id\",\"type\":\"Int\",\"optional\":false,\"list\":false,\"isId\":false,\"isUnique\":false}]"
+          },
+          {
+            "id": "table:prisma:prisma/schema.prisma:Setting",
+            "name": "Setting",
+            "kind": "table",
+            "library": "prisma",
+            "schemaName": null,
+            "provider": "postgresql",
+            "declaredIn": "prisma/schema.prisma",
+            "line": 42,
+            "columns": "[{\"name\":\"key\",\"column\":\"key\",\"type\":\"String\",\"optional\":false,\"list\":false,\"isId\":true,\"isUnique\":false},{\"name\":\"value\",\"column\":\"value\",\"type\":\"String\",\"optional\":false,\"list\":false,\"isId\":false,\"isUnique\":false}]"
+          },
+          {
+            "id": "table:prisma:prisma/schema.prisma:PostStats",
+            "name": "PostStats",
+            "kind": "view",
+            "library": "prisma",
+            "schemaName": null,
+            "provider": "postgresql",
+            "declaredIn": "prisma/schema.prisma",
+            "line": 47,
+            "columns": "[{\"name\":\"authorId\",\"column\":\"authorId\",\"type\":\"Int\",\"optional\":false,\"list\":false,\"isId\":false,\"isUnique\":true},{\"name\":\"posts\",\"column\":\"posts\",\"type\":\"Int\",\"optional\":false,\"list\":false,\"isId\":false,\"isUnique\":false}]"
+          },
+          {
+            "id": "table:knex:-:audit_log",
+            "name": "audit_log",
+            "kind": "table",
+            "library": "knex",
+            "schemaName": null,
+            "provider": null,
+            "declaredIn": null,
+            "line": null,
+            "columns": "[]"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (model:DataModel)-[:MAPS_TO_TABLE]->(table:Table) RETURN id(table) AS table, id(model) AS modelId, model.name AS model",
+        "params": {
+          "name": "",
+          "library": ""
+        },
+        "rows": [
+          {
+            "table": "table:prisma:prisma/schema.prisma:users",
+            "modelId": "datamodel:prisma:prisma/schema.prisma:User",
+            "model": "User"
+          },
+          {
+            "table": "table:prisma:prisma/schema.prisma:posts",
+            "modelId": "datamodel:prisma:prisma/schema.prisma:Post",
+            "model": "Post"
+          },
+          {
+            "table": "table:prisma:prisma/schema.prisma:Setting",
+            "modelId": "datamodel:prisma:prisma/schema.prisma:Setting",
+            "model": "Setting"
+          },
+          {
+            "table": "table:prisma:prisma/schema.prisma:PostStats",
+            "modelId": "datamodel:prisma:prisma/schema.prisma:PostStats",
+            "model": "PostStats"
+          },
+          {
+            "table": "table:knex:-:audit_log",
+            "modelId": "datamodel:knex:audit_log",
+            "model": "audit_log"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (model:DataModel)-[rel:RELATES_TO]->(target:DataModel) RETURN id(model) AS modelId, rel.field AS field, rel.kind AS kind, target.name AS target, rel.relationName AS relationName, rel.onDelete AS onDelete",
+        "rows": [
+          {
+            "modelId": "datamodel:prisma:prisma/schema.prisma:User",
+            "field": "posts",
+            "kind": "many",
+            "target": "Post",
+            "relationName": "AuthoredPosts",
+            "onDelete": null
+          },
+          {
+            "modelId": "datamodel:prisma:prisma/schema.prisma:User",
+            "field": "invitedBy",
+            "kind": "one",
+            "target": "User",
+            "relationName": "Invites",
+            "onDelete": null
+          },
+          {
+            "modelId": "datamodel:prisma:prisma/schema.prisma:User",
+            "field": "invited",
+            "kind": "many",
+            "target": "User",
+            "relationName": "Invites",
+            "onDelete": null
+          },
+          {
+            "modelId": "datamodel:prisma:prisma/schema.prisma:Post",
+            "field": "author",
+            "kind": "one",
+            "target": "User",
+            "relationName": "AuthoredPosts",
+            "onDelete": "Cascade"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (route:Route)-[rel:READS_ROUTE|WRITES_ROUTE]->(table:Table) OPTIONAL MATCH (file:File)-[:DECLARES_ROUTE]->(route) RETURN id(table) AS table, id(route) AS id, route.method AS method, route.fullPath AS fullPath, route.path AS path, file.relativePath AS file, route.line AS line, label(rel) AS relType, rel.operation AS operation",
+        "params": {
+          "name": "",
+          "library": ""
+        },
+        "rows": [
+          {
+            "table": "table:prisma:prisma/schema.prisma:users",
+            "id": "file:src/routes.ts:route:10:0:GET:/users",
+            "method": "GET",
+            "fullPath": "/users",
+            "path": "/users",
+            "file": "src/routes.ts",
+            "line": 10,
+            "relType": "READS_ROUTE",
+            "operation": "read"
+          },
+          {
+            "table": "table:knex:-:audit_log",
+            "id": "file:src/routes.ts:route:14:0:PATCH:/users/:id",
+            "method": "PATCH",
+            "fullPath": "/users/:id",
+            "path": "/users/:id",
+            "file": "src/routes.ts",
+            "line": 14,
+            "relType": "WRITES_ROUTE",
+            "operation": "create"
+          },
+          {
+            "table": "table:prisma:prisma/schema.prisma:users",
+            "id": "file:src/routes.ts:route:14:0:PATCH:/users/:id",
+            "method": "PATCH",
+            "fullPath": "/users/:id",
+            "path": "/users/:id",
+            "file": "src/routes.ts",
+            "line": 14,
+            "relType": "WRITES_ROUTE",
+            "operation": "update"
+          },
+          {
+            "table": "table:prisma:prisma/schema.prisma:posts",
+            "id": "file:src/routes.ts:route:20:0:POST:/posts",
+            "method": "POST",
+            "fullPath": "/posts",
+            "path": "/posts",
+            "file": "src/routes.ts",
+            "line": 20,
+            "relType": "WRITES_ROUTE",
+            "operation": "create"
+          },
+          {
+            "table": "table:prisma:prisma/schema.prisma:PostStats",
+            "id": "file:src/routes.ts:route:25:0:GET:/stats",
+            "method": "GET",
+            "fullPath": "/stats",
+            "path": "/stats",
+            "file": "src/routes.ts",
+            "line": 25,
+            "relType": "READS_ROUTE",
+            "operation": "read"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (entrypoint:EntryPoint)-[rel:READS_ENTRYPOINT|WRITES_ENTRYPOINT]->(table:Table) OPTIONAL MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(entrypoint) RETURN id(table) AS table, id(entrypoint) AS id, entrypoint.kind AS kind, entrypoint.trigger AS trigger, file.relativePath AS file, entrypoint.line AS line, label(rel) AS relType, rel.operation AS operation",
+        "params": {
+          "name": "",
+          "library": ""
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (fn:Function)-[rel:READS_FUNCTION|WRITES_FUNCTION]->(table:Table) RETURN id(table) AS table, id(fn) AS id, label(rel) AS relType",
+        "params": {
+          "name": "",
+          "library": ""
+        },
+        "rows": [
+          {
+            "table": "table:prisma:prisma/schema.prisma:users",
+            "id": "file:src/users.ts:function:5:findUsers",
+            "relType": "READS_FUNCTION"
+          },
+          {
+            "table": "table:prisma:prisma/schema.prisma:users",
+            "id": "file:src/users.ts:function:9:renameUser",
+            "relType": "WRITES_FUNCTION"
+          },
+          {
+            "table": "table:prisma:prisma/schema.prisma:users",
+            "id": "file:src/routes.ts:function:10:<app.get:/users:arg1>",
+            "relType": "READS_FUNCTION"
+          },
+          {
+            "table": "table:prisma:prisma/schema.prisma:users",
+            "id": "file:src/routes.ts:function:14:<app.patch:/users/:id:arg1>",
+            "relType": "WRITES_FUNCTION"
+          },
+          {
+            "table": "table:prisma:prisma/schema.prisma:posts",
+            "id": "file:src/routes.ts:function:20:<app.post:/posts:arg1>",
+            "relType": "WRITES_FUNCTION"
+          },
+          {
+            "table": "table:prisma:prisma/schema.prisma:PostStats",
+            "id": "file:src/routes.ts:function:25:<app.get:/stats:arg1>",
+            "relType": "READS_FUNCTION"
+          },
+          {
+            "table": "table:knex:-:audit_log",
+            "id": "file:src/routes.ts:function:14:<app.patch:/users/:id:arg1>",
+            "relType": "WRITES_FUNCTION"
+          }
+        ]
+      }
+    ],
+    "output": {
+      "query": {},
+      "totalTables": 5,
+      "tables": [
+        {
+          "name": "audit_log",
+          "kind": "table",
+          "library": "knex",
+          "declaredIn": null,
+          "line": null,
+          "columns": [],
+          "models": [
+            {
+              "name": "audit_log",
+              "relations": []
+            }
+          ],
+          "readBy": {
+            "routes": 0,
+            "entrypoints": 0,
+            "functions": 0
+          },
+          "writtenBy": {
+            "routes": 1,
+            "entrypoints": 0,
+            "functions": 1
+          },
+          "routes": [
+            {
+              "method": "PATCH",
+              "path": "/users/:id",
+              "file": "src/routes.ts",
+              "line": 14,
+              "writes": [
+                "create"
+              ]
+            }
+          ],
+          "entrypoints": []
+        },
+        {
+          "name": "posts",
+          "kind": "table",
+          "library": "prisma",
+          "provider": "postgresql",
+          "declaredIn": "prisma/schema.prisma",
+          "line": 31,
+          "columns": [
+            {
+              "name": "id",
+              "type": "Int",
+              "isId": true
+            },
+            {
+              "name": "title",
+              "type": "String"
+            },
+            {
+              "name": "tags",
+              "type": "String",
+              "list": true
+            },
+            {
+              "name": "authorId",
+              "type": "Int",
+              "column": "author_id"
+            }
+          ],
+          "models": [
+            {
+              "name": "Post",
+              "relations": [
+                {
+                  "field": "author",
+                  "kind": "one",
+                  "model": "User",
+                  "relationName": "AuthoredPosts",
+                  "onDelete": "Cascade"
+                }
+              ]
+            }
+          ],
+          "readBy": {
+            "routes": 0,
+            "entrypoints": 0,
+            "functions": 0
+          },
+          "writtenBy": {
+            "routes": 1,
+            "entrypoints": 0,
+            "functions": 1
+          },
+          "routes": [
+            {
+              "method": "POST",
+              "path": "/posts",
+              "file": "src/routes.ts",
+              "line": 20,
+              "writes": [
+                "create"
+              ]
+            }
+          ],
+          "entrypoints": []
+        },
+        {
+          "name": "PostStats",
+          "kind": "view",
+          "library": "prisma",
+          "provider": "postgresql",
+          "declaredIn": "prisma/schema.prisma",
+          "line": 47,
+          "columns": [
+            {
+              "name": "authorId",
+              "type": "Int",
+              "isUnique": true
+            },
+            {
+              "name": "posts",
+              "type": "Int"
+            }
+          ],
+          "models": [
+            {
+              "name": "PostStats",
+              "relations": []
+            }
+          ],
+          "readBy": {
+            "routes": 1,
+            "entrypoints": 0,
+            "functions": 1
+          },
+          "writtenBy": {
+            "routes": 0,
+            "entrypoints": 0,
+            "functions": 0
+          },
+          "routes": [
+            {
+              "method": "GET",
+              "path": "/stats",
+              "file": "src/routes.ts",
+              "line": 25,
+              "reads": [
+                "read"
+              ]
+            }
+          ],
+          "entrypoints": []
+        },
+        {
+          "name": "Setting",
+          "kind": "table",
+          "library": "prisma",
+          "provider": "postgresql",
+          "declaredIn": "prisma/schema.prisma",
+          "line": 42,
+          "columns": [
+            {
+              "name": "key",
+              "type": "String",
+              "isId": true
+            },
+            {
+              "name": "value",
+              "type": "String"
+            }
+          ],
+          "models": [
+            {
+              "name": "Setting",
+              "relations": []
+            }
+          ],
+          "readBy": {
+            "routes": 0,
+            "entrypoints": 0,
+            "functions": 0
+          },
+          "writtenBy": {
+            "routes": 0,
+            "entrypoints": 0,
+            "functions": 0
+          },
+          "routes": [],
+          "entrypoints": []
+        },
+        {
+          "name": "users",
+          "kind": "table",
+          "library": "prisma",
+          "provider": "postgresql",
+          "declaredIn": "prisma/schema.prisma",
+          "line": 18,
+          "columns": [
+            {
+              "name": "id",
+              "type": "Int",
+              "isId": true
+            },
+            {
+              "name": "email",
+              "type": "String",
+              "isUnique": true
+            },
+            {
+              "name": "name",
+              "type": "String",
+              "column": "display_name",
+              "optional": true
+            },
+            {
+              "name": "role",
+              "type": "Role"
+            },
+            {
+              "name": "inviterId",
+              "type": "Int",
+              "column": "inviter_id",
+              "optional": true
+            }
+          ],
+          "models": [
+            {
+              "name": "User",
+              "relations": [
+                {
+                  "field": "invited",
+                  "kind": "many",
+                  "model": "User",
+                  "relationName": "Invites"
+                },
+                {
+                  "field": "invitedBy",
+                  "kind": "one",
+                  "model": "User",
+                  "relationName": "Invites"
+                },
+                {
+                  "field": "posts",
+                  "kind": "many",
+                  "model": "Post",
+                  "relationName": "AuthoredPosts"
+                }
+              ]
+            }
+          ],
+          "readBy": {
+            "routes": 1,
+            "entrypoints": 0,
+            "functions": 2
+          },
+          "writtenBy": {
+            "routes": 1,
+            "entrypoints": 0,
+            "functions": 2
+          },
+          "routes": [
+            {
+              "method": "GET",
+              "path": "/users",
+              "file": "src/routes.ts",
+              "line": 10,
+              "reads": [
+                "read"
+              ]
+            },
+            {
+              "method": "PATCH",
+              "path": "/users/:id",
+              "file": "src/routes.ts",
+              "line": 14,
+              "writes": [
+                "update"
+              ]
+            }
+          ],
+          "entrypoints": []
+        }
+      ],
+      "note": "Tables come from Prisma schema files, TypeORM entities, Mongoose schemas, Drizzle table definitions and Knex calls. readBy / writtenBy count distinct routes, entrypoints and functions; each table lists up to 20 routes and entrypoints.",
+      "page": {
+        "offset": 0,
+        "returned": 5
+      }
+    }
+  },
+  {
+    "tool": "list_tables",
+    "args": {
+      "name": "user",
+      "library": "prisma"
+    },
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (table:Table) WHERE contains(lower(table.name), lower($name)) AND table.library = $library RETURN id(table) AS id, table.name AS name, table.kind AS kind, table.library AS library, table.schemaName AS schemaName, table.provider AS provider, table.declaredIn AS declaredIn, table.line AS line, table.columns AS columns",
+        "params": {
+          "name": "user",
+          "library": "prisma"
+        },
+        "rows": [
+          {
+            "id": "table:prisma:prisma/schema.prisma:users",
+            "name": "users",
+            "kind": "table",
+            "library": "prisma",
+            "schemaName": null,
+            "provider": "postgresql",
+            "declaredIn": "prisma/schema.prisma",
+            "line": 18,
+            "columns": "[{\"name\":\"id\",\"column\":\"id\",\"type\":\"Int\",\"optional\":false,\"list\":false,\"isId\":true,\"isUnique\":false},{\"name\":\"email\",\"column\":\"email\",\"type\":\"String\",\"optional\":false,\"list\":false,\"isId\":false,\"isUnique\":true},{\"name\":\"name\",\"column\":\"display_name\",\"type\":\"String\",\"optional\":true,\"list\":false,\"isId\":false,\"isUnique\":false},{\"name\":\"role\",\"column\":\"role\",\"type\":\"Role\",\"optional\":false,\"list\":false,\"isId\":false,\"isUnique\":false},{\"name\":\"inviterId\",\"column\":\"inviter_id\",\"type\":\"Int\",\"optional\":true,\"list\":false,\"isId\":false,\"isUnique\":false}]"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (model:DataModel)-[:MAPS_TO_TABLE]->(table:Table) WHERE contains(lower(table.name), lower($name)) AND table.library = $library RETURN id(table) AS table, id(model) AS modelId, model.name AS model",
+        "params": {
+          "name": "user",
+          "library": "prisma"
+        },
+        "rows": [
+          {
+            "table": "table:prisma:prisma/schema.prisma:users",
+            "modelId": "datamodel:prisma:prisma/schema.prisma:User",
+            "model": "User"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (model:DataModel)-[rel:RELATES_TO]->(target:DataModel) RETURN id(model) AS modelId, rel.field AS field, rel.kind AS kind, target.name AS target, rel.relationName AS relationName, rel.onDelete AS onDelete",
+        "rows": [
+          {
+            "modelId": "datamodel:prisma:prisma/schema.prisma:User",
+            "field": "posts",
+            "kind": "many",
+            "target": "Post",
+            "relationName": "AuthoredPosts",
+            "onDelete": null
+          },
+          {
+            "modelId": "datamodel:prisma:prisma/schema.prisma:User",
+            "field": "invitedBy",
+            "kind": "one",
+            "target": "User",
+            "relationName": "Invites",
+            "onDelete": null
+          },
+          {
+            "modelId": "datamodel:prisma:prisma/schema.prisma:User",
+            "field": "invited",
+            "kind": "many",
+            "target": "User",
+            "relationName": "Invites",
+            "onDelete": null
+          },
+          {
+            "modelId": "datamodel:prisma:prisma/schema.prisma:Post",
+            "field": "author",
+            "kind": "one",
+            "target": "User",
+            "relationName": "AuthoredPosts",
+            "onDelete": "Cascade"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (route:Route)-[rel:READS_ROUTE|WRITES_ROUTE]->(table:Table) WHERE contains(lower(table.name), lower($name)) AND table.library = $library OPTIONAL MATCH (file:File)-[:DECLARES_ROUTE]->(route) RETURN id(table) AS table, id(route) AS id, route.method AS method, route.fullPath AS fullPath, route.path AS path, file.relativePath AS file, route.line AS line, label(rel) AS relType, rel.operation AS operation",
+        "params": {
+          "name": "user",
+          "library": "prisma"
+        },
+        "rows": [
+          {
+            "table": "table:prisma:prisma/schema.prisma:users",
+            "id": "file:src/routes.ts:route:10:0:GET:/users",
+            "method": "GET",
+            "fullPath": "/users",
+            "path": "/users",
+            "file": "src/routes.ts",
+            "line": 10,
+            "relType": "READS_ROUTE",
+            "operation": "read"
+          },
+          {
+            "table": "table:prisma:prisma/schema.prisma:users",
+            "id": "file:src/routes.ts:route:14:0:PATCH:/users/:id",
+            "method": "PATCH",
+            "fullPath": "/users/:id",
+            "path": "/users/:id",
+            "file": "src/routes.ts",
+            "line": 14,
+            "relType": "WRITES_ROUTE",
+            "operation": "update"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (entrypoint:EntryPoint)-[rel:READS_ENTRYPOINT|WRITES_ENTRYPOINT]->(table:Table) WHERE contains(lower(table.name), lower($name)) AND table.library = $library OPTIONAL MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(entrypoint) RETURN id(table) AS table, id(entrypoint) AS id, entrypoint.kind AS kind, entrypoint.trigger AS trigger, file.relativePath AS file, entrypoint.line AS line, label(rel) AS relType, rel.operation AS operation",
+        "params": {
+          "name": "user",
+          "library": "prisma"
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (fn:Function)-[rel:READS_FUNCTION|WRITES_FUNCTION]->(table:Table) WHERE contains(lower(table.name), lower($name)) AND table.library = $library RETURN id(table) AS table, id(fn) AS id, label(rel) AS relType",
+        "params": {
+          "name": "user",
+          "library": "prisma"
+        },
+        "rows": [
+          {
+            "table": "table:prisma:prisma/schema.prisma:users",
+            "id": "file:src/users.ts:function:5:findUsers",
+            "relType": "READS_FUNCTION"
+          },
+          {
+            "table": "table:prisma:prisma/schema.prisma:users",
+            "id": "file:src/users.ts:function:9:renameUser",
+            "relType": "WRITES_FUNCTION"
+          },
+          {
+            "table": "table:prisma:prisma/schema.prisma:users",
+            "id": "file:src/routes.ts:function:10:<app.get:/users:arg1>",
+            "relType": "READS_FUNCTION"
+          },
+          {
+            "table": "table:prisma:prisma/schema.prisma:users",
+            "id": "file:src/routes.ts:function:14:<app.patch:/users/:id:arg1>",
+            "relType": "WRITES_FUNCTION"
+          }
+        ]
+      }
+    ],
+    "output": {
+      "query": {
+        "name": "user",
+        "library": "prisma"
+      },
+      "totalTables": 1,
+      "tables": [
+        {
+          "name": "users",
+          "kind": "table",
+          "library": "prisma",
+          "provider": "postgresql",
+          "declaredIn": "prisma/schema.prisma",
+          "line": 18,
+          "columns": [
+            {
+              "name": "id",
+              "type": "Int",
+              "isId": true
+            },
+            {
+              "name": "email",
+              "type": "String",
+              "isUnique": true
+            },
+            {
+              "name": "name",
+              "type": "String",
+              "column": "display_name",
+              "optional": true
+            },
+            {
+              "name": "role",
+              "type": "Role"
+            },
+            {
+              "name": "inviterId",
+              "type": "Int",
+              "column": "inviter_id",
+              "optional": true
+            }
+          ],
+          "models": [
+            {
+              "name": "User",
+              "relations": [
+                {
+                  "field": "invited",
+                  "kind": "many",
+                  "model": "User",
+                  "relationName": "Invites"
+                },
+                {
+                  "field": "invitedBy",
+                  "kind": "one",
+                  "model": "User",
+                  "relationName": "Invites"
+                },
+                {
+                  "field": "posts",
+                  "kind": "many",
+                  "model": "Post",
+                  "relationName": "AuthoredPosts"
+                }
+              ]
+            }
+          ],
+          "readBy": {
+            "routes": 1,
+            "entrypoints": 0,
+            "functions": 2
+          },
+          "writtenBy": {
+            "routes": 1,
+            "entrypoints": 0,
+            "functions": 2
+          },
+          "routes": [
+            {
+              "method": "GET",
+              "path": "/users",
+              "file": "src/routes.ts",
+              "line": 10,
+              "reads": [
+                "read"
+              ]
+            },
+            {
+              "method": "PATCH",
+              "path": "/users/:id",
+              "file": "src/routes.ts",
+              "line": 14,
+              "writes": [
+                "update"
+              ]
+            }
+          ],
+          "entrypoints": []
+        }
+      ],
+      "note": "Tables come from Prisma schema files, TypeORM entities, Mongoose schemas, Drizzle table definitions and Knex calls. readBy / writtenBy count distinct routes, entrypoints and functions; each table lists up to 20 routes and entrypoints.",
+      "page": {
+        "offset": 0,
+        "returned": 1
+      }
+    }
+  },
+  {
+    "tool": "list_data_access",
+    "args": {
+      "model": "user"
+    },
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (source:File)-[rel:ACCESSES_DATA_FILE]->(model:DataModel) WHERE true AND contains(lower(model.name), lower(\"user\")) WITH source AS file, source, rel, model OPTIONAL MATCH (model)-[:MAPS_TO_TABLE]->(table:Table) RETURN 'File' AS sourceKind, source.relativePath AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, table.name AS table, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 51",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (source:Function)-[rel:ACCESSES_DATA_FUNCTION]->(model:DataModel) WHERE true AND contains(lower(model.name), lower(\"user\")) OPTIONAL MATCH (file:File)-[:DEFINES_FUNCTION]->(source) OPTIONAL MATCH (model)-[:MAPS_TO_TABLE]->(table:Table) RETURN 'Function' AS sourceKind, source.name AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, table.name AS table, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 51",
+        "rows": [
+          {
+            "sourceKind": "Function",
+            "sourceName": "<app.get:/users:arg1>",
+            "file": "src/routes.ts",
+            "line": 6,
+            "model": "User",
+            "library": "prisma",
+            "table": "users",
+            "operation": "read",
+            "expression": "prisma.user.findMany"
+          },
+          {
+            "sourceKind": "Function",
+            "sourceName": "<app.patch:/users/:id:arg1>",
+            "file": "src/routes.ts",
+            "line": 10,
+            "model": "User",
+            "library": "prisma",
+            "table": "users",
+            "operation": "update",
+            "expression": "prisma.user.update"
+          },
+          {
+            "sourceKind": "Function",
+            "sourceName": "findUsers",
+            "file": "src/users.ts",
+            "line": 6,
+            "model": "User",
+            "library": "prisma",
+            "table": "users",
+            "operation": "read",
+            "expression": "prisma.user.findMany"
+          },
+          {
+            "sourceKind": "Function",
+            "sourceName": "renameUser",
+            "file": "src/users.ts",
+            "line": 10,
+            "model": "User",
+            "library": "prisma",
+            "table": "users",
+            "operation": "update",
+            "expression": "prisma.user.update"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (source:Route)-[rel:ACCESSES_DATA_ROUTE]->(model:DataModel) WHERE true AND contains(lower(model.name), lower(\"user\")) OPTIONAL MATCH (file:File)-[:DECLARES_ROUTE]->(source) OPTIONAL MATCH (model)-[:MAPS_TO_TABLE]->(table:Table) RETURN 'Route' AS sourceKind, source.path AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, table.name AS table, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 51",
+        "rows": [
+          {
+            "sourceKind": "Route",
+            "sourceName": "/users",
+            "file": "src/routes.ts",
+            "line": 6,
+            "model": "User",
+            "library": "prisma",
+            "table": "users",
+            "operation": "read",
+            "expression": "prisma.user.findMany"
+          },
+          {
+            "sourceKind": "Route",
+            "sourceName": "/users/:id",
+            "file": "src/routes.ts",
+            "line": 10,
+            "model": "User",
+            "library": "prisma",
+            "table": "users",
+            "operation": "update",
+            "expression": "prisma.user.update"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (source:EntryPoint)-[rel:ACCESSES_DATA_ENTRYPOINT]->(model:DataModel) WHERE true AND contains(lower(model.name), lower(\"user\")) OPTIONAL MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(source) OPTIONAL MATCH (model)-[:MAPS_TO_TABLE]->(table:Table) RETURN 'EntryPoint' AS sourceKind, source.trigger AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, table.name AS table, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 51",
+        "rows": []
+      }
+    ],
+    "output": {
+      "query": {
+        "model": "user",
+        "limit": 50
+      },
+      "dataAccess": [
+        {
+          "sourceKind": "Function",
+          "sourceName": "<app.get:/users:arg1>",
+          "file": "src/routes.ts",
+          "line": 6,
+          "model": "User",
+          "library": "prisma",
+          "table": "users",
+          "operation": "read",
+          "expression": "prisma.user.findMany"
+        },
+        {
+          "sourceKind": "Function",
+          "sourceName": "<app.patch:/users/:id:arg1>",
+          "file": "src/routes.ts",
+          "line": 10,
+          "model": "User",
+          "library": "prisma",
+          "table": "users",
+          "operation": "update",
+          "expression": "prisma.user.update"
+        },
+        {
+          "sourceKind": "Function",
+          "sourceName": "findUsers",
+          "file": "src/users.ts",
+          "line": 6,
+          "model": "User",
+          "library": "prisma",
+          "table": "users",
+          "operation": "read",
+          "expression": "prisma.user.findMany"
+        },
+        {
+          "sourceKind": "Function",
+          "sourceName": "renameUser",
+          "file": "src/users.ts",
+          "line": 10,
+          "model": "User",
+          "library": "prisma",
+          "table": "users",
+          "operation": "update",
+          "expression": "prisma.user.update"
+        },
+        {
+          "sourceKind": "Route",
+          "sourceName": "/users",
+          "file": "src/routes.ts",
+          "line": 6,
+          "model": "User",
+          "library": "prisma",
+          "table": "users",
+          "operation": "read",
+          "expression": "prisma.user.findMany"
+        },
+        {
+          "sourceKind": "Route",
+          "sourceName": "/users/:id",
+          "file": "src/routes.ts",
+          "line": 10,
+          "model": "User",
+          "library": "prisma",
+          "table": "users",
+          "operation": "update",
+          "expression": "prisma.user.update"
+        }
+      ],
+      "page": {
+        "offset": 0,
+        "returned": 6
+      }
+    }
+  },
+  {
+    "tool": "route_details",
+    "args": {
+      "method": "PATCH",
+      "path": "/users/:id"
+    },
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_ROUTE]->(route:Route) WHERE lower(route.method) = lower($method) AND (route.fullPath = $path OR route.path = $path) RETURN id(route) AS id, route.method AS method, route.path AS path, route.fullPath AS fullPath, route.framework AS framework, route.handlerName AS handlerName, file.relativePath AS file, route.line AS line ORDER BY file, line LIMIT 6",
+        "params": {
+          "method": "PATCH",
+          "path": "/users/:id"
+        },
+        "rows": [
+          {
+            "id": "file:src/routes.ts:route:14:0:PATCH:/users/:id",
+            "method": "PATCH",
+            "path": "/users/:id",
+            "fullPath": "/users/:id",
+            "framework": "express-koa",
+            "handlerName": null,
+            "file": "src/routes.ts",
+            "line": 14
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_FUNCTION]->(fn:Function) RETURN id(fn) AS id, fn.name AS name, fn.className AS className, file.relativePath AS file, fn.line AS line, fn.endLine AS endLine",
+        "params": {},
+        "rows": [
+          {
+            "id": "file:src/routes.ts:function:10:<app.get:/users:arg1>",
+            "name": "<app.get:/users:arg1>",
+            "className": null,
+            "file": "src/routes.ts",
+            "line": 10,
+            "endLine": 12
+          },
+          {
+            "id": "file:src/routes.ts:function:14:<app.patch:/users/:id:arg1>",
+            "name": "<app.patch:/users/:id:arg1>",
+            "className": null,
+            "file": "src/routes.ts",
+            "line": 14,
+            "endLine": 18
+          },
+          {
+            "id": "file:src/routes.ts:function:20:<app.post:/posts:arg1>",
+            "name": "<app.post:/posts:arg1>",
+            "className": null,
+            "file": "src/routes.ts",
+            "line": 20,
+            "endLine": 23
+          },
+          {
+            "id": "file:src/routes.ts:function:25:<app.get:/stats:arg1>",
+            "name": "<app.get:/stats:arg1>",
+            "className": null,
+            "file": "src/routes.ts",
+            "line": 25,
+            "endLine": 27
+          },
+          {
+            "id": "file:src/users.ts:function:5:findUsers",
+            "name": "findUsers",
+            "className": null,
+            "file": "src/users.ts",
+            "line": 5,
+            "endLine": 7
+          },
+          {
+            "id": "file:src/users.ts:function:9:renameUser",
+            "name": "renameUser",
+            "className": null,
+            "file": "src/users.ts",
+            "line": 9,
+            "endLine": 11
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(class:Class)-[:DEFINES_METHOD]->(fn:Function) RETURN id(fn) AS id, fn.name AS name, class.name AS className, file.relativePath AS file, fn.line AS line, fn.endLine AS endLine",
+        "params": {},
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (caller:Function)-[:CALLS]->(call:Call)-[:CALL_RESOLVES_TO]->(callee:Function) RETURN id(caller) AS caller, id(callee) AS callee, call.line AS line",
+        "rows": [
+          {
+            "caller": "file:src/routes.ts:function:10:<app.get:/users:arg1>",
+            "callee": "file:src/users.ts:function:5:findUsers",
+            "line": 11
+          },
+          {
+            "caller": "file:src/routes.ts:function:14:<app.patch:/users/:id:arg1>",
+            "callee": "file:src/users.ts:function:9:renameUser",
+            "line": 15
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (route:Route)-[:ROUTE_HANDLED_BY]->(fn:Function) WHERE id(route) IN $ids RETURN id(route) AS route, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:src/routes.ts:route:14:0:PATCH:/users/:id"
+          ]
+        },
+        "rows": [
+          {
+            "route": "file:src/routes.ts:route:14:0:PATCH:/users/:id",
+            "fn": "file:src/routes.ts:function:14:<app.patch:/users/:id:arg1>"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (route:Route)-[step:ROUTE_LIFECYCLE_STEP]->(fn:Function) WHERE id(route) IN $ids RETURN id(route) AS route, id(fn) AS fn, step.role AS role, step.scope AS scope, step.hook AS hook, step.orderIndex AS orderIndex",
+        "params": {
+          "ids": [
+            "file:src/routes.ts:route:14:0:PATCH:/users/:id"
+          ]
+        },
+        "rows": [
+          {
+            "route": "file:src/routes.ts:route:14:0:PATCH:/users/:id",
+            "fn": "file:src/routes.ts:function:14:<app.patch:/users/:id:arg1>",
+            "role": "handler",
+            "scope": "route",
+            "hook": "handler",
+            "orderIndex": 0
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (route:Route)-[rel:ACCESSES_DATA_ROUTE]->(model:DataModel) WHERE id(route) IN $ids RETURN id(route) AS route, model.name AS model, model.library AS library, rel.operation AS operation, rel.line AS line, rel.expression AS expression",
+        "params": {
+          "ids": [
+            "file:src/routes.ts:route:14:0:PATCH:/users/:id"
+          ]
+        },
+        "rows": [
+          {
+            "route": "file:src/routes.ts:route:14:0:PATCH:/users/:id",
+            "model": "audit_log",
+            "library": "knex",
+            "operation": "create",
+            "line": 16,
+            "expression": "knex('audit_log').insert"
+          },
+          {
+            "route": "file:src/routes.ts:route:14:0:PATCH:/users/:id",
+            "model": "User",
+            "library": "prisma",
+            "operation": "update",
+            "line": 10,
+            "expression": "prisma.user.update"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (route:Route)-[rel:READS_ROUTE|WRITES_ROUTE]->(table:Table) WHERE id(route) IN $ids RETURN id(route) AS route, id(table) AS tableId, table.name AS table, table.kind AS kind, table.library AS library, label(rel) AS tableAccess, rel.operation AS operation",
+        "params": {
+          "ids": [
+            "file:src/routes.ts:route:14:0:PATCH:/users/:id"
+          ]
+        },
+        "rows": [
+          {
+            "route": "file:src/routes.ts:route:14:0:PATCH:/users/:id",
+            "tableId": "table:knex:-:audit_log",
+            "table": "audit_log",
+            "kind": "table",
+            "library": "knex",
+            "tableAccess": "WRITES_ROUTE",
+            "operation": "create"
+          },
+          {
+            "route": "file:src/routes.ts:route:14:0:PATCH:/users/:id",
+            "tableId": "table:prisma:prisma/schema.prisma:users",
+            "table": "users",
+            "kind": "table",
+            "library": "prisma",
+            "tableAccess": "WRITES_ROUTE",
+            "operation": "update"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (route:Route)-[rel:USES_ENV_ROUTE]->(env:EnvVar) WHERE id(route) IN $ids RETURN id(route) AS route, env.name AS name, rel.access AS access, rel.line AS line",
+        "params": {
+          "ids": [
+            "file:src/routes.ts:route:14:0:PATCH:/users/:id"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (route:Route)-[rel:CONSUMES_CONFIG_ROUTE]->(config:ConfigValue) WHERE id(route) IN $ids RETURN id(route) AS route, config.name AS name, rel.localName AS localName",
+        "params": {
+          "ids": [
+            "file:src/routes.ts:route:14:0:PATCH:/users/:id"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (fn:Function)-[rel:ACCESSES_DATA_FUNCTION]->(model:DataModel) WHERE id(fn) IN $ids RETURN model.name AS model, model.library AS library, rel.operation AS operation, rel.line AS line, rel.expression AS expression, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:src/routes.ts:function:14:<app.patch:/users/:id:arg1>",
+            "file:src/users.ts:function:9:renameUser"
+          ]
+        },
+        "rows": [
+          {
+            "model": "User",
+            "library": "prisma",
+            "operation": "update",
+            "line": 10,
+            "expression": "prisma.user.update",
+            "fn": "file:src/users.ts:function:9:renameUser"
+          },
+          {
+            "model": "User",
+            "library": "prisma",
+            "operation": "update",
+            "line": 10,
+            "expression": "prisma.user.update",
+            "fn": "file:src/routes.ts:function:14:<app.patch:/users/:id:arg1>"
+          },
+          {
+            "model": "audit_log",
+            "library": "knex",
+            "operation": "create",
+            "line": 16,
+            "expression": "knex('audit_log').insert",
+            "fn": "file:src/routes.ts:function:14:<app.patch:/users/:id:arg1>"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (fn:Function)-[rel:READS_FUNCTION|WRITES_FUNCTION]->(table:Table) WHERE id(fn) IN $ids RETURN id(table) AS tableId, table.name AS table, table.kind AS kind, table.library AS library, label(rel) AS tableAccess, rel.operation AS operation, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:src/routes.ts:function:14:<app.patch:/users/:id:arg1>",
+            "file:src/users.ts:function:9:renameUser"
+          ]
+        },
+        "rows": [
+          {
+            "tableId": "table:prisma:prisma/schema.prisma:users",
+            "table": "users",
+            "kind": "table",
+            "library": "prisma",
+            "tableAccess": "WRITES_FUNCTION",
+            "operation": "update",
+            "fn": "file:src/users.ts:function:9:renameUser"
+          },
+          {
+            "tableId": "table:prisma:prisma/schema.prisma:users",
+            "table": "users",
+            "kind": "table",
+            "library": "prisma",
+            "tableAccess": "WRITES_FUNCTION",
+            "operation": "update",
+            "fn": "file:src/routes.ts:function:14:<app.patch:/users/:id:arg1>"
+          },
+          {
+            "tableId": "table:knex:-:audit_log",
+            "table": "audit_log",
+            "kind": "table",
+            "library": "knex",
+            "tableAccess": "WRITES_FUNCTION",
+            "operation": "create",
+            "fn": "file:src/routes.ts:function:14:<app.patch:/users/:id:arg1>"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (fn:Function)-[rel:USES_ENV_FUNCTION]->(env:EnvVar) WHERE id(fn) IN $ids RETURN env.name AS name, rel.access AS access, rel.line AS line, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:src/routes.ts:function:14:<app.patch:/users/:id:arg1>",
+            "file:src/users.ts:function:9:renameUser"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (fn:Function)-[rel:CONSUMES_CONFIG_FUNCTION]->(config:ConfigValue) WHERE id(fn) IN $ids RETURN config.name AS name, rel.localName AS localName, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:src/routes.ts:function:14:<app.patch:/users/:id:arg1>",
+            "file:src/users.ts:function:9:renameUser"
+          ]
+        },
+        "rows": []
+      }
+    ],
+    "output": {
+      "method": "PATCH",
+      "path": "/users/:id",
+      "routes": [
+        {
+          "method": "PATCH",
+          "path": "/users/:id",
+          "fullPath": "/users/:id",
+          "framework": "express-koa",
+          "handlerName": null,
+          "file": "src/routes.ts",
+          "line": 14,
+          "handlers": [
+            {
+              "name": "<app.patch:/users/:id:arg1>",
+              "className": null,
+              "file": "src/routes.ts",
+              "line": 14,
+              "endLine": 18
+            }
+          ],
+          "lifecycle": [
+            {
+              "role": "handler",
+              "scope": "route",
+              "hook": "handler",
+              "orderIndex": 0,
+              "name": "<app.patch:/users/:id:arg1>",
+              "className": null,
+              "file": "src/routes.ts",
+              "line": 14,
+              "endLine": 18
+            }
+          ],
+          "callChain": [
+            {
+              "depth": 1,
+              "caller": "<app.patch:/users/:id:arg1>",
+              "callerFile": "src/routes.ts",
+              "line": 15,
+              "callee": "renameUser",
+              "calleeClass": null,
+              "calleeFile": "src/users.ts"
+            }
+          ],
+          "dataAccess": [
+            {
+              "model": "audit_log",
+              "library": "knex",
+              "operation": "create",
+              "line": 16,
+              "expression": "knex('audit_log').insert",
+              "usedBy": [
+                {
+                  "route": true
+                },
+                {
+                  "function": "<app.patch:/users/:id:arg1>",
+                  "functionFile": "src/routes.ts"
+                }
+              ]
+            },
+            {
+              "model": "User",
+              "library": "prisma",
+              "operation": "update",
+              "line": 10,
+              "expression": "prisma.user.update",
+              "usedBy": [
+                {
+                  "route": true
+                },
+                {
+                  "function": "renameUser",
+                  "functionFile": "src/users.ts"
+                },
+                {
+                  "function": "<app.patch:/users/:id:arg1>",
+                  "functionFile": "src/routes.ts"
+                }
+              ]
+            }
+          ],
+          "tables": [
+            {
+              "table": "audit_log",
+              "kind": "table",
+              "library": "knex",
+              "reads": [],
+              "writes": [
+                "create"
+              ],
+              "usedBy": [
+                {
+                  "route": true
+                },
+                {
+                  "function": "<app.patch:/users/:id:arg1>",
+                  "functionFile": "src/routes.ts"
+                }
+              ]
+            },
+            {
+              "table": "users",
+              "kind": "table",
+              "library": "prisma",
+              "reads": [],
+              "writes": [
+                "update"
+              ],
+              "usedBy": [
+                {
+                  "route": true
+                },
+                {
+                  "function": "renameUser",
+                  "functionFile": "src/users.ts"
+                },
+                {
+                  "function": "<app.patch:/users/:id:arg1>",
+                  "functionFile": "src/routes.ts"
+                }
+              ]
+            }
+          ],
+          "envVars": [],
+          "config": []
+        }
+      ],
+      "page": {
+        "offset": 0,
+        "returned": 1
+      }
+    }
+  },
+  {
+    "tool": "impact_of",
+    "args": {
+      "symbol": "renameUser"
+    },
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_FUNCTION]->(fn:Function) RETURN id(fn) AS id, fn.name AS name, fn.className AS className, file.relativePath AS file, fn.line AS line, fn.endLine AS endLine",
+        "params": {},
+        "rows": [
+          {
+            "id": "file:src/routes.ts:function:10:<app.get:/users:arg1>",
+            "name": "<app.get:/users:arg1>",
+            "className": null,
+            "file": "src/routes.ts",
+            "line": 10,
+            "endLine": 12
+          },
+          {
+            "id": "file:src/routes.ts:function:14:<app.patch:/users/:id:arg1>",
+            "name": "<app.patch:/users/:id:arg1>",
+            "className": null,
+            "file": "src/routes.ts",
+            "line": 14,
+            "endLine": 18
+          },
+          {
+            "id": "file:src/routes.ts:function:20:<app.post:/posts:arg1>",
+            "name": "<app.post:/posts:arg1>",
+            "className": null,
+            "file": "src/routes.ts",
+            "line": 20,
+            "endLine": 23
+          },
+          {
+            "id": "file:src/routes.ts:function:25:<app.get:/stats:arg1>",
+            "name": "<app.get:/stats:arg1>",
+            "className": null,
+            "file": "src/routes.ts",
+            "line": 25,
+            "endLine": 27
+          },
+          {
+            "id": "file:src/users.ts:function:5:findUsers",
+            "name": "findUsers",
+            "className": null,
+            "file": "src/users.ts",
+            "line": 5,
+            "endLine": 7
+          },
+          {
+            "id": "file:src/users.ts:function:9:renameUser",
+            "name": "renameUser",
+            "className": null,
+            "file": "src/users.ts",
+            "line": 9,
+            "endLine": 11
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(class:Class)-[:DEFINES_METHOD]->(fn:Function) RETURN id(fn) AS id, fn.name AS name, class.name AS className, file.relativePath AS file, fn.line AS line, fn.endLine AS endLine",
+        "params": {},
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (caller:Function)-[:CALLS]->(call:Call)-[:CALL_RESOLVES_TO]->(callee:Function) RETURN id(caller) AS caller, id(callee) AS callee, call.line AS line",
+        "rows": [
+          {
+            "caller": "file:src/routes.ts:function:10:<app.get:/users:arg1>",
+            "callee": "file:src/users.ts:function:5:findUsers",
+            "line": 11
+          },
+          {
+            "caller": "file:src/routes.ts:function:14:<app.patch:/users/:id:arg1>",
+            "callee": "file:src/users.ts:function:9:renameUser",
+            "line": 15
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:MODULE_CALLS]->(call:Call)-[:CALL_RESOLVES_TO]->(fn:Function) WHERE id(fn) IN $ids RETURN file.relativePath AS file, call.line AS line, call.expression AS expression, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:src/users.ts:function:9:renameUser",
+            "file:src/routes.ts:function:14:<app.patch:/users/:id:arg1>"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_ROUTE]->(route:Route)-[rel:ROUTE_HANDLED_BY|ROUTE_LIFECYCLE_STEP]->(fn:Function) WHERE id(fn) IN $ids RETURN route.method AS method, route.path AS path, route.fullPath AS fullPath, route.framework AS framework, file.relativePath AS file, route.line AS line, label(rel) AS relType, rel.role AS role, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:src/users.ts:function:9:renameUser",
+            "file:src/routes.ts:function:14:<app.patch:/users/:id:arg1>"
+          ]
+        },
+        "rows": [
+          {
+            "method": "PATCH",
+            "path": "/users/:id",
+            "fullPath": "/users/:id",
+            "framework": "express-koa",
+            "file": "src/routes.ts",
+            "line": 14,
+            "relType": "ROUTE_HANDLED_BY",
+            "role": null,
+            "fn": "file:src/routes.ts:function:14:<app.patch:/users/:id:arg1>"
+          },
+          {
+            "method": "PATCH",
+            "path": "/users/:id",
+            "fullPath": "/users/:id",
+            "framework": "express-koa",
+            "file": "src/routes.ts",
+            "line": 14,
+            "relType": "ROUTE_LIFECYCLE_STEP",
+            "role": "handler",
+            "fn": "file:src/routes.ts:function:14:<app.patch:/users/:id:arg1>"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(entrypoint:EntryPoint)-[:ENTRYPOINT_HANDLED_BY]->(fn:Function) WHERE id(fn) IN $ids RETURN entrypoint.kind AS kind, entrypoint.trigger AS trigger, entrypoint.library AS library, file.relativePath AS file, entrypoint.line AS line, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:src/users.ts:function:9:renameUser",
+            "file:src/routes.ts:function:14:<app.patch:/users/:id:arg1>"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (fn:Function)-[rel:ACCESSES_DATA_FUNCTION]->(model:DataModel) WHERE id(fn) IN $ids RETURN model.name AS model, model.library AS library, rel.operation AS operation, rel.line AS line, rel.expression AS expression, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:src/users.ts:function:9:renameUser"
+          ]
+        },
+        "rows": [
+          {
+            "model": "User",
+            "library": "prisma",
+            "operation": "update",
+            "line": 10,
+            "expression": "prisma.user.update",
+            "fn": "file:src/users.ts:function:9:renameUser"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (fn:Function)-[rel:READS_FUNCTION|WRITES_FUNCTION]->(table:Table) WHERE id(fn) IN $ids RETURN id(table) AS tableId, table.name AS table, table.kind AS kind, table.library AS library, label(rel) AS tableAccess, rel.operation AS operation, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:src/users.ts:function:9:renameUser"
+          ]
+        },
+        "rows": [
+          {
+            "tableId": "table:prisma:prisma/schema.prisma:users",
+            "table": "users",
+            "kind": "table",
+            "library": "prisma",
+            "tableAccess": "WRITES_FUNCTION",
+            "operation": "update",
+            "fn": "file:src/users.ts:function:9:renameUser"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (fn:Function)-[rel:USES_ENV_FUNCTION]->(env:EnvVar) WHERE id(fn) IN $ids RETURN env.name AS name, rel.access AS access, rel.line AS line, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:src/users.ts:function:9:renameUser"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (fn:Function)-[rel:CONSUMES_CONFIG_FUNCTION]->(config:ConfigValue) WHERE id(fn) IN $ids RETURN config.name AS name, rel.localName AS localName, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:src/users.ts:function:9:renameUser"
+          ]
+        },
+        "rows": []
+      }
+    ],
+    "output": {
+      "symbol": "renameUser",
+      "file": null,
+      "maxDepth": 5,
+      "seeds": [
+        {
+          "name": "renameUser",
+          "className": null,
+          "file": "src/users.ts",
+          "line": 9,
+          "endLine": 11
+        }
+      ],
+      "callers": [
+        {
+          "name": "<app.patch:/users/:id:arg1>",
+          "className": null,
+          "file": "src/routes.ts",
+          "line": 14,
+          "endLine": 18,
+          "depth": 1
+        }
+      ],
+      "moduleCallers": [],
+      "routes": [
+        {
+          "method": "PATCH",
+          "path": "/users/:id",
+          "fullPath": "/users/:id",
+          "framework": "express-koa",
+          "file": "src/routes.ts",
+          "line": 14,
+          "reachedThrough": [
+            {
+              "function": "<app.patch:/users/:id:arg1>",
+              "functionFile": "src/routes.ts",
+              "as": "handler"
+            }
+          ]
+        }
+      ],
+      "entrypoints": [],
+      "dataAccess": [
+        {
+          "model": "User",
+          "library": "prisma",
+          "operation": "update",
+          "line": 10,
+          "expression": "prisma.user.update",
+          "usedBy": [
+            {
+              "function": "renameUser",
+              "functionFile": "src/users.ts"
+            }
+          ]
+        }
+      ],
+      "tables": [
+        {
+          "table": "users",
+          "kind": "table",
+          "library": "prisma",
+          "reads": [],
+          "writes": [
+            "update"
+          ],
+          "usedBy": [
+            {
+              "function": "renameUser",
+              "functionFile": "src/users.ts"
+            }
+          ]
+        }
+      ],
+      "envVars": [],
+      "config": [],
+      "page": {
+        "offset": 0,
+        "returned": 1
+      }
+    }
+  }
+]

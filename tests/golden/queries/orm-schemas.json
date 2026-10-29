@@ -1,0 +1,3586 @@
+[
+  {
+    "tool": "graph_stats",
+    "args": {},
+    "calls": [
+      {
+        "method": "schemaVersion",
+        "result": 38
+      },
+      {
+        "method": "stats",
+        "options": {},
+        "rows": [
+          {
+            "table": "Repo",
+            "count": 1
+          },
+          {
+            "table": "Package",
+            "count": 1
+          },
+          {
+            "table": "Directory",
+            "count": 5
+          },
+          {
+            "table": "File",
+            "count": 9
+          },
+          {
+            "table": "Import",
+            "count": 19
+          },
+          {
+            "table": "Function",
+            "count": 12
+          },
+          {
+            "table": "Class",
+            "count": 8
+          },
+          {
+            "table": "Field",
+            "count": 17
+          },
+          {
+            "table": "Variable",
+            "count": 8
+          },
+          {
+            "table": "Decorator",
+            "count": 6
+          },
+          {
+            "table": "Interface",
+            "count": 0
+          },
+          {
+            "table": "TypeAlias",
+            "count": 0
+          },
+          {
+            "table": "Enum",
+            "count": 0
+          },
+          {
+            "table": "Call",
+            "count": 33
+          },
+          {
+            "table": "Route",
+            "count": 3
+          },
+          {
+            "table": "EntryPoint",
+            "count": 0
+          },
+          {
+            "table": "EnvVar",
+            "count": 1
+          },
+          {
+            "table": "ConfigValue",
+            "count": 3
+          },
+          {
+            "table": "DataModel",
+            "count": 9
+          },
+          {
+            "table": "Table",
+            "count": 9
+          }
+        ]
+      }
+    ],
+    "output": {
+      "schemaVersion": 38,
+      "stats": [
+        {
+          "table": "Repo",
+          "count": 1
+        },
+        {
+          "table": "Package",
+          "count": 1
+        },
+        {
+          "table": "Directory",
+          "count": 5
+        },
+        {
+          "table": "File",
+          "count": 9
+        },
+        {
+          "table": "Import",
+          "count": 19
+        },
+        {
+          "table": "Function",
+          "count": 12
+        },
+        {
+          "table": "Class",
+          "count": 8
+        },
+        {
+          "table": "Field",
+          "count": 17
+        },
+        {
+          "table": "Variable",
+          "count": 8
+        },
+        {
+          "table": "Decorator",
+          "count": 6
+        },
+        {
+          "table": "Interface",
+          "count": 0
+        },
+        {
+          "table": "TypeAlias",
+          "count": 0
+        },
+        {
+          "table": "Enum",
+          "count": 0
+        },
+        {
+          "table": "Call",
+          "count": 33
+        },
+        {
+          "table": "Route",
+          "count": 3
+        },
+        {
+          "table": "EntryPoint",
+          "count": 0
+        },
+        {
+          "table": "EnvVar",
+          "count": 1
+        },
+        {
+          "table": "ConfigValue",
+          "count": 3
+        },
+        {
+          "table": "DataModel",
+          "count": 9
+        },
+        {
+          "table": "Table",
+          "count": 9
+        }
+      ]
+    }
+  },
+  {
+    "tool": "find_definitions",
+    "args": {
+      "name": "e"
+    },
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_FUNCTION]->(n:Function) WHERE contains(lower(n.name), lower(\"e\")) RETURN n.name AS name, 'Function' AS kind, file.relativePath AS file, n.line AS line, n.isExported AS isExported, 'DEFINES_FUNCTION' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 21",
+        "rows": [
+          {
+            "name": "openSession",
+            "kind": "Function",
+            "file": "src/drizzle/db.ts",
+            "line": 11,
+            "isExported": true,
+            "relationship": "DEFINES_FUNCTION"
+          },
+          {
+            "name": "closeSessions",
+            "kind": "Function",
+            "file": "src/drizzle/db.ts",
+            "line": 16,
+            "isExported": true,
+            "relationship": "DEFINES_FUNCTION"
+          },
+          {
+            "name": "<app.get:/accounts/:id:arg1>",
+            "kind": "Function",
+            "file": "src/routes.ts",
+            "line": 6,
+            "isExported": false,
+            "relationship": "DEFINES_FUNCTION"
+          },
+          {
+            "name": "<app.post:/sessions:arg1>",
+            "kind": "Function",
+            "file": "src/routes.ts",
+            "line": 10,
+            "isExported": false,
+            "relationship": "DEFINES_FUNCTION"
+          },
+          {
+            "name": "<app.delete:/sessions:arg1>",
+            "kind": "Function",
+            "file": "src/routes.ts",
+            "line": 14,
+            "isExported": false,
+            "relationship": "DEFINES_FUNCTION"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(n:Class) WHERE contains(lower(n.name), lower(\"e\")) RETURN n.name AS name, 'Class' AS kind, file.relativePath AS file, n.line AS line, n.isExported AS isExported, 'DEFINES_CLASS' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 21",
+        "rows": [
+          {
+            "name": "Owner",
+            "kind": "Class",
+            "file": "src/mongoose/cat.schema.ts",
+            "line": 5,
+            "isExported": true,
+            "relationship": "DEFINES_CLASS"
+          },
+          {
+            "name": "CatsService",
+            "kind": "Class",
+            "file": "src/mongoose/cats.service.ts",
+            "line": 5,
+            "isExported": true,
+            "relationship": "DEFINES_CLASS"
+          },
+          {
+            "name": "PhotosService",
+            "kind": "Class",
+            "file": "src/typeorm/photos.service.ts",
+            "line": 5,
+            "isExported": true,
+            "relationship": "DEFINES_CLASS"
+          },
+          {
+            "name": "User",
+            "kind": "Class",
+            "file": "src/typeorm/user.entity.ts",
+            "line": 5,
+            "isExported": true,
+            "relationship": "DEFINES_CLASS"
+          },
+          {
+            "name": "UserPhotoCount",
+            "kind": "Class",
+            "file": "src/typeorm/user.entity.ts",
+            "line": 23,
+            "isExported": true,
+            "relationship": "DEFINES_CLASS"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_VARIABLE]->(n:Variable) WHERE contains(lower(n.name), lower(\"e\")) RETURN n.name AS name, 'Variable' AS kind, file.relativePath AS file, n.line AS line, n.isExported AS isExported, 'DEFINES_VARIABLE' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 21",
+        "rows": [
+          {
+            "name": "sessions",
+            "kind": "Variable",
+            "file": "src/drizzle/schema.ts",
+            "line": 9,
+            "isExported": true,
+            "relationship": "DEFINES_VARIABLE"
+          },
+          {
+            "name": "CatSchema",
+            "kind": "Variable",
+            "file": "src/mongoose/cat.schema.ts",
+            "line": 25,
+            "isExported": true,
+            "relationship": "DEFINES_VARIABLE"
+          },
+          {
+            "name": "mongoose",
+            "kind": "Variable",
+            "file": "src/mongoose/toy.model.js",
+            "line": 1,
+            "isExported": false,
+            "relationship": "DEFINES_VARIABLE"
+          },
+          {
+            "name": "toySchema",
+            "kind": "Variable",
+            "file": "src/mongoose/toy.model.js",
+            "line": 3,
+            "isExported": false,
+            "relationship": "DEFINES_VARIABLE"
+          },
+          {
+            "name": "default",
+            "kind": "Variable",
+            "file": "src/routes.ts",
+            "line": 19,
+            "isExported": true,
+            "relationship": "DEFINES_VARIABLE"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_INTERFACE]->(n:Interface) WHERE contains(lower(n.name), lower(\"e\")) RETURN n.name AS name, 'Interface' AS kind, file.relativePath AS file, n.line AS line, n.isExported AS isExported, 'DEFINES_INTERFACE' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 21",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_TYPE_ALIAS]->(n:TypeAlias) WHERE contains(lower(n.name), lower(\"e\")) RETURN n.name AS name, 'TypeAlias' AS kind, file.relativePath AS file, n.line AS line, n.isExported AS isExported, 'DEFINES_TYPE_ALIAS' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 21",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_ENUM]->(n:Enum) WHERE contains(lower(n.name), lower(\"e\")) RETURN n.name AS name, 'Enum' AS kind, file.relativePath AS file, n.line AS line, n.isExported AS isExported, 'DEFINES_ENUM' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 21",
+        "rows": []
+      }
+    ],
+    "output": {
+      "query": {
+        "name": "e",
+        "exact": false,
+        "limit": 20
+      },
+      "definitions": [
+        {
+          "name": "openSession",
+          "kind": "Function",
+          "file": "src/drizzle/db.ts",
+          "line": 11,
+          "isExported": true,
+          "relationship": "DEFINES_FUNCTION"
+        },
+        {
+          "name": "closeSessions",
+          "kind": "Function",
+          "file": "src/drizzle/db.ts",
+          "line": 16,
+          "isExported": true,
+          "relationship": "DEFINES_FUNCTION"
+        },
+        {
+          "name": "<app.get:/accounts/:id:arg1>",
+          "kind": "Function",
+          "file": "src/routes.ts",
+          "line": 6,
+          "isExported": false,
+          "relationship": "DEFINES_FUNCTION"
+        },
+        {
+          "name": "<app.post:/sessions:arg1>",
+          "kind": "Function",
+          "file": "src/routes.ts",
+          "line": 10,
+          "isExported": false,
+          "relationship": "DEFINES_FUNCTION"
+        },
+        {
+          "name": "<app.delete:/sessions:arg1>",
+          "kind": "Function",
+          "file": "src/routes.ts",
+          "line": 14,
+          "isExported": false,
+          "relationship": "DEFINES_FUNCTION"
+        },
+        {
+          "name": "Owner",
+          "kind": "Class",
+          "file": "src/mongoose/cat.schema.ts",
+          "line": 5,
+          "isExported": true,
+          "relationship": "DEFINES_CLASS"
+        },
+        {
+          "name": "CatsService",
+          "kind": "Class",
+          "file": "src/mongoose/cats.service.ts",
+          "line": 5,
+          "isExported": true,
+          "relationship": "DEFINES_CLASS"
+        },
+        {
+          "name": "PhotosService",
+          "kind": "Class",
+          "file": "src/typeorm/photos.service.ts",
+          "line": 5,
+          "isExported": true,
+          "relationship": "DEFINES_CLASS"
+        },
+        {
+          "name": "User",
+          "kind": "Class",
+          "file": "src/typeorm/user.entity.ts",
+          "line": 5,
+          "isExported": true,
+          "relationship": "DEFINES_CLASS"
+        },
+        {
+          "name": "UserPhotoCount",
+          "kind": "Class",
+          "file": "src/typeorm/user.entity.ts",
+          "line": 23,
+          "isExported": true,
+          "relationship": "DEFINES_CLASS"
+        },
+        {
+          "name": "sessions",
+          "kind": "Variable",
+          "file": "src/drizzle/schema.ts",
+          "line": 9,
+          "isExported": true,
+          "relationship": "DEFINES_VARIABLE"
+        },
+        {
+          "name": "CatSchema",
+          "kind": "Variable",
+          "file": "src/mongoose/cat.schema.ts",
+          "line": 25,
+          "isExported": true,
+          "relationship": "DEFINES_VARIABLE"
+        },
+        {
+          "name": "mongoose",
+          "kind": "Variable",
+          "file": "src/mongoose/toy.model.js",
+          "line": 1,
+          "isExported": false,
+          "relationship": "DEFINES_VARIABLE"
+        },
+        {
+          "name": "toySchema",
+          "kind": "Variable",
+          "file": "src/mongoose/toy.model.js",
+          "line": 3,
+          "isExported": false,
+          "relationship": "DEFINES_VARIABLE"
+        },
+        {
+          "name": "default",
+          "kind": "Variable",
+          "file": "src/routes.ts",
+          "line": 19,
+          "isExported": true,
+          "relationship": "DEFINES_VARIABLE"
+        }
+      ],
+      "page": {
+        "offset": 0,
+        "returned": 15
+      }
+    }
+  },
+  {
+    "tool": "list_exports",
+    "args": {},
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_FUNCTION]->(n:Function) WHERE n.isExported = true RETURN file.relativePath AS file, n.name AS name, 'Function' AS kind, n.line AS line, 'DEFINES_FUNCTION' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 51",
+        "rows": [
+          {
+            "file": "src/drizzle/db.ts",
+            "name": "findAccount",
+            "kind": "Function",
+            "line": 7,
+            "relationship": "DEFINES_FUNCTION"
+          },
+          {
+            "file": "src/drizzle/db.ts",
+            "name": "openSession",
+            "kind": "Function",
+            "line": 11,
+            "relationship": "DEFINES_FUNCTION"
+          },
+          {
+            "file": "src/drizzle/db.ts",
+            "name": "closeSessions",
+            "kind": "Function",
+            "line": 16,
+            "relationship": "DEFINES_FUNCTION"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(n:Class) WHERE n.isExported = true RETURN file.relativePath AS file, n.name AS name, 'Class' AS kind, n.line AS line, 'DEFINES_CLASS' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 51",
+        "rows": [
+          {
+            "file": "src/mongoose/cat.schema.ts",
+            "name": "Owner",
+            "kind": "Class",
+            "line": 5,
+            "relationship": "DEFINES_CLASS"
+          },
+          {
+            "file": "src/mongoose/cat.schema.ts",
+            "name": "Cat",
+            "kind": "Class",
+            "line": 11,
+            "relationship": "DEFINES_CLASS"
+          },
+          {
+            "file": "src/mongoose/cats.service.ts",
+            "name": "CatsService",
+            "kind": "Class",
+            "line": 5,
+            "relationship": "DEFINES_CLASS"
+          },
+          {
+            "file": "src/typeorm/photo.entity.ts",
+            "name": "PhotoAlbum",
+            "kind": "Class",
+            "line": 5,
+            "relationship": "DEFINES_CLASS"
+          },
+          {
+            "file": "src/typeorm/photo.entity.ts",
+            "name": "Photo",
+            "kind": "Class",
+            "line": 11,
+            "relationship": "DEFINES_CLASS"
+          },
+          {
+            "file": "src/typeorm/photos.service.ts",
+            "name": "PhotosService",
+            "kind": "Class",
+            "line": 5,
+            "relationship": "DEFINES_CLASS"
+          },
+          {
+            "file": "src/typeorm/user.entity.ts",
+            "name": "User",
+            "kind": "Class",
+            "line": 5,
+            "relationship": "DEFINES_CLASS"
+          },
+          {
+            "file": "src/typeorm/user.entity.ts",
+            "name": "UserPhotoCount",
+            "kind": "Class",
+            "line": 23,
+            "relationship": "DEFINES_CLASS"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_VARIABLE]->(n:Variable) WHERE n.isExported = true RETURN file.relativePath AS file, n.name AS name, 'Variable' AS kind, n.line AS line, 'DEFINES_VARIABLE' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 51",
+        "rows": [
+          {
+            "file": "src/drizzle/schema.ts",
+            "name": "accounts",
+            "kind": "Variable",
+            "line": 3,
+            "relationship": "DEFINES_VARIABLE"
+          },
+          {
+            "file": "src/drizzle/schema.ts",
+            "name": "sessions",
+            "kind": "Variable",
+            "line": 9,
+            "relationship": "DEFINES_VARIABLE"
+          },
+          {
+            "file": "src/mongoose/cat.schema.ts",
+            "name": "CatSchema",
+            "kind": "Variable",
+            "line": 25,
+            "relationship": "DEFINES_VARIABLE"
+          },
+          {
+            "file": "src/routes.ts",
+            "name": "default",
+            "kind": "Variable",
+            "line": 19,
+            "relationship": "DEFINES_VARIABLE"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_INTERFACE]->(n:Interface) WHERE n.isExported = true RETURN file.relativePath AS file, n.name AS name, 'Interface' AS kind, n.line AS line, 'DEFINES_INTERFACE' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 51",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_TYPE_ALIAS]->(n:TypeAlias) WHERE n.isExported = true RETURN file.relativePath AS file, n.name AS name, 'TypeAlias' AS kind, n.line AS line, 'DEFINES_TYPE_ALIAS' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 51",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_ENUM]->(n:Enum) WHERE n.isExported = true RETURN file.relativePath AS file, n.name AS name, 'Enum' AS kind, n.line AS line, 'DEFINES_ENUM' AS relationship ORDER BY file.relativePath, n.line, n.name LIMIT 51",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:RE_EXPORTS]->(target:Import) WHERE true RETURN file.relativePath AS file, target.source AS name, 'Import' AS kind, target.line AS line, 'RE_EXPORTS' AS relationship ORDER BY file.relativePath, target.line, target.source LIMIT 51",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:RE_EXPORTS_FUNCTION]->(target:Function) WHERE true RETURN file.relativePath AS file, target.name AS name, 'Function' AS kind, target.line AS line, 'RE_EXPORTS_FUNCTION' AS relationship ORDER BY file.relativePath, target.line, target.name LIMIT 51",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:RE_EXPORTS_CLASS]->(target:Class) WHERE true RETURN file.relativePath AS file, target.name AS name, 'Class' AS kind, target.line AS line, 'RE_EXPORTS_CLASS' AS relationship ORDER BY file.relativePath, target.line, target.name LIMIT 51",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:RE_EXPORTS_VARIABLE]->(target:Variable) WHERE true RETURN file.relativePath AS file, target.name AS name, 'Variable' AS kind, target.line AS line, 'RE_EXPORTS_VARIABLE' AS relationship ORDER BY file.relativePath, target.line, target.name LIMIT 51",
+        "rows": []
+      }
+    ],
+    "output": {
+      "query": {
+        "limit": 50
+      },
+      "exports": [
+        {
+          "file": "src/drizzle/db.ts",
+          "name": "findAccount",
+          "kind": "Function",
+          "line": 7,
+          "relationship": "DEFINES_FUNCTION"
+        },
+        {
+          "file": "src/drizzle/db.ts",
+          "name": "openSession",
+          "kind": "Function",
+          "line": 11,
+          "relationship": "DEFINES_FUNCTION"
+        },
+        {
+          "file": "src/drizzle/db.ts",
+          "name": "closeSessions",
+          "kind": "Function",
+          "line": 16,
+          "relationship": "DEFINES_FUNCTION"
+        },
+        {
+          "file": "src/mongoose/cat.schema.ts",
+          "name": "Owner",
+          "kind": "Class",
+          "line": 5,
+          "relationship": "DEFINES_CLASS"
+        },
+        {
+          "file": "src/mongoose/cat.schema.ts",
+          "name": "Cat",
+          "kind": "Class",
+          "line": 11,
+          "relationship": "DEFINES_CLASS"
+        },
+        {
+          "file": "src/mongoose/cats.service.ts",
+          "name": "CatsService",
+          "kind": "Class",
+          "line": 5,
+          "relationship": "DEFINES_CLASS"
+        },
+        {
+          "file": "src/typeorm/photo.entity.ts",
+          "name": "PhotoAlbum",
+          "kind": "Class",
+          "line": 5,
+          "relationship": "DEFINES_CLASS"
+        },
+        {
+          "file": "src/typeorm/photo.entity.ts",
+          "name": "Photo",
+          "kind": "Class",
+          "line": 11,
+          "relationship": "DEFINES_CLASS"
+        },
+        {
+          "file": "src/typeorm/photos.service.ts",
+          "name": "PhotosService",
+          "kind": "Class",
+          "line": 5,
+          "relationship": "DEFINES_CLASS"
+        },
+        {
+          "file": "src/typeorm/user.entity.ts",
+          "name": "User",
+          "kind": "Class",
+          "line": 5,
+          "relationship": "DEFINES_CLASS"
+        },
+        {
+          "file": "src/typeorm/user.entity.ts",
+          "name": "UserPhotoCount",
+          "kind": "Class",
+          "line": 23,
+          "relationship": "DEFINES_CLASS"
+        },
+        {
+          "file": "src/drizzle/schema.ts",
+          "name": "accounts",
+          "kind": "Variable",
+          "line": 3,
+          "relationship": "DEFINES_VARIABLE"
+        },
+        {
+          "file": "src/drizzle/schema.ts",
+          "name": "sessions",
+          "kind": "Variable",
+          "line": 9,
+          "relationship": "DEFINES_VARIABLE"
+        },
+        {
+          "file": "src/mongoose/cat.schema.ts",
+          "name": "CatSchema",
+          "kind": "Variable",
+          "line": 25,
+          "relationship": "DEFINES_VARIABLE"
+        },
+        {
+          "file": "src/routes.ts",
+          "name": "default",
+          "kind": "Variable",
+          "line": 19,
+          "relationship": "DEFINES_VARIABLE"
+        }
+      ],
+      "page": {
+        "offset": 0,
+        "returned": 15
+      }
+    }
+  },
+  {
+    "tool": "list_routes",
+    "args": {},
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_ROUTE]->(route:Route) WHERE true OPTIONAL MATCH (route)-[:ROUTE_HANDLED_BY]->(handler:Function) RETURN file.relativePath AS file, route.line AS line, route.method AS method, route.path AS path, route.fullPath AS fullPath, route.framework AS framework, route.handlerName AS handlerName, handler.name AS handler ORDER BY file.relativePath, route.line, route.method, route.path, handler.name LIMIT 51",
+        "rows": [
+          {
+            "file": "src/routes.ts",
+            "line": 6,
+            "method": "GET",
+            "path": "/accounts/:id",
+            "fullPath": "/accounts/:id",
+            "framework": "express-koa",
+            "handlerName": null,
+            "handler": "<app.get:/accounts/:id:arg1>"
+          },
+          {
+            "file": "src/routes.ts",
+            "line": 10,
+            "method": "POST",
+            "path": "/sessions",
+            "fullPath": "/sessions",
+            "framework": "express-koa",
+            "handlerName": null,
+            "handler": "<app.post:/sessions:arg1>"
+          },
+          {
+            "file": "src/routes.ts",
+            "line": 14,
+            "method": "DELETE",
+            "path": "/sessions",
+            "fullPath": "/sessions",
+            "framework": "express-koa",
+            "handlerName": null,
+            "handler": "<app.delete:/sessions:arg1>"
+          }
+        ]
+      }
+    ],
+    "output": {
+      "query": {
+        "limit": 50
+      },
+      "routes": [
+        {
+          "file": "src/routes.ts",
+          "line": 6,
+          "method": "GET",
+          "path": "/accounts/:id",
+          "fullPath": "/accounts/:id",
+          "framework": "express-koa",
+          "handlerName": null,
+          "handler": "<app.get:/accounts/:id:arg1>"
+        },
+        {
+          "file": "src/routes.ts",
+          "line": 10,
+          "method": "POST",
+          "path": "/sessions",
+          "fullPath": "/sessions",
+          "framework": "express-koa",
+          "handlerName": null,
+          "handler": "<app.post:/sessions:arg1>"
+        },
+        {
+          "file": "src/routes.ts",
+          "line": 14,
+          "method": "DELETE",
+          "path": "/sessions",
+          "fullPath": "/sessions",
+          "framework": "express-koa",
+          "handlerName": null,
+          "handler": "<app.delete:/sessions:arg1>"
+        }
+      ],
+      "page": {
+        "offset": 0,
+        "returned": 3
+      }
+    }
+  },
+  {
+    "tool": "list_entrypoints",
+    "args": {},
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(entrypoint:EntryPoint) WHERE true OPTIONAL MATCH (entrypoint)-[:ENTRYPOINT_HANDLED_BY]->(handler:Function) RETURN file.relativePath AS file, entrypoint.line AS line, entrypoint.kind AS kind, entrypoint.trigger AS trigger, entrypoint.library AS library, entrypoint.handlerName AS handlerName, handler.name AS handler ORDER BY file.relativePath, entrypoint.line, entrypoint.kind, entrypoint.trigger, handler.name LIMIT 51",
+        "rows": []
+      }
+    ],
+    "output": {
+      "query": {
+        "limit": 50
+      },
+      "entrypoints": [],
+      "page": {
+        "offset": 0,
+        "returned": 0
+      }
+    }
+  },
+  {
+    "tool": "list_env_config",
+    "args": {},
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[rel:USES_ENV_FILE]->(env:EnvVar) WHERE true RETURN 'env' AS kind, file.relativePath AS file, rel.line AS line, env.name AS name, rel.access AS value, NULL AS valueType, file.relativePath AS consumer, 'File' AS consumerKind ORDER BY file.relativePath, rel.line LIMIT 51",
+        "rows": [
+          {
+            "kind": "env",
+            "file": "src/drizzle/db.ts",
+            "line": 5,
+            "name": "DATABASE_URL",
+            "value": "member",
+            "valueType": null,
+            "consumer": "src/drizzle/db.ts",
+            "consumerKind": "File"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_CONFIG_FILE]->(config:ConfigValue) WHERE true RETURN 'config' AS kind, file.relativePath AS file, config.line AS line, config.name AS name, config.value AS value, config.valueType AS valueType, file.relativePath AS consumer, 'File' AS consumerKind ORDER BY file.relativePath, config.line LIMIT 51",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[rel:CONSUMES_CONFIG_FILE]->(config:ConfigValue) WHERE true RETURN 'config-consumer' AS kind, file.relativePath AS file, config.line AS line, config.name AS name, config.value AS value, config.valueType AS valueType, rel.localName AS consumer, 'File' AS consumerKind ORDER BY file.relativePath, config.line LIMIT 51",
+        "rows": []
+      }
+    ],
+    "output": {
+      "query": {
+        "limit": 50
+      },
+      "envConfig": [
+        {
+          "kind": "env",
+          "file": "src/drizzle/db.ts",
+          "line": 5,
+          "name": "DATABASE_URL",
+          "value": "member",
+          "valueType": null,
+          "consumer": "src/drizzle/db.ts",
+          "consumerKind": "File"
+        }
+      ],
+      "page": {
+        "offset": 0,
+        "returned": 1
+      }
+    }
+  },
+  {
+    "tool": "list_data_access",
+    "args": {},
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (source:File)-[rel:ACCESSES_DATA_FILE]->(model:DataModel) WHERE true WITH source AS file, source, rel, model OPTIONAL MATCH (model)-[:MAPS_TO_TABLE]->(table:Table) RETURN 'File' AS sourceKind, source.relativePath AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, table.name AS table, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 51",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (source:Function)-[rel:ACCESSES_DATA_FUNCTION]->(model:DataModel) WHERE true OPTIONAL MATCH (file:File)-[:DEFINES_FUNCTION]->(source) OPTIONAL MATCH (model)-[:MAPS_TO_TABLE]->(table:Table) RETURN 'Function' AS sourceKind, source.name AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, table.name AS table, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 51",
+        "rows": [
+          {
+            "sourceKind": "Function",
+            "sourceName": "findAccount",
+            "file": "src/drizzle/db.ts",
+            "line": 8,
+            "model": "accounts",
+            "library": "drizzle",
+            "table": "accounts",
+            "operation": "read",
+            "expression": "db.select().from"
+          },
+          {
+            "sourceKind": "Function",
+            "sourceName": "openSession",
+            "file": "src/drizzle/db.ts",
+            "line": 12,
+            "model": "sessions",
+            "library": "drizzle",
+            "table": "sessions",
+            "operation": "create",
+            "expression": "db.insert"
+          },
+          {
+            "sourceKind": "Function",
+            "sourceName": "openSession",
+            "file": "src/drizzle/db.ts",
+            "line": 13,
+            "model": "accounts",
+            "library": "drizzle",
+            "table": "accounts",
+            "operation": "read",
+            "expression": "db.query.accounts.findFirst"
+          },
+          {
+            "sourceKind": "Function",
+            "sourceName": "closeSessions",
+            "file": "src/drizzle/db.ts",
+            "line": 17,
+            "model": "sessions",
+            "library": "drizzle",
+            "table": "sessions",
+            "operation": "delete",
+            "expression": "db.delete"
+          },
+          {
+            "sourceKind": "Function",
+            "sourceName": "<app.get:/accounts/:id:arg1>",
+            "file": "src/routes.ts",
+            "line": 8,
+            "model": "accounts",
+            "library": "drizzle",
+            "table": "accounts",
+            "operation": "read",
+            "expression": "db.select().from"
+          },
+          {
+            "sourceKind": "Function",
+            "sourceName": "<app.post:/sessions:arg1>",
+            "file": "src/routes.ts",
+            "line": 12,
+            "model": "sessions",
+            "library": "drizzle",
+            "table": "sessions",
+            "operation": "create",
+            "expression": "db.insert"
+          },
+          {
+            "sourceKind": "Function",
+            "sourceName": "<app.post:/sessions:arg1>",
+            "file": "src/routes.ts",
+            "line": 13,
+            "model": "accounts",
+            "library": "drizzle",
+            "table": "accounts",
+            "operation": "read",
+            "expression": "db.query.accounts.findFirst"
+          },
+          {
+            "sourceKind": "Function",
+            "sourceName": "<app.delete:/sessions:arg1>",
+            "file": "src/routes.ts",
+            "line": 17,
+            "model": "sessions",
+            "library": "drizzle",
+            "table": "sessions",
+            "operation": "delete",
+            "expression": "db.delete"
+          },
+          {
+            "sourceKind": "Function",
+            "sourceName": "findAll",
+            "file": null,
+            "line": 9,
+            "model": "Cat",
+            "library": "mongoose",
+            "table": "cats",
+            "operation": "read",
+            "expression": "this.catModel.find"
+          },
+          {
+            "sourceKind": "Function",
+            "sourceName": "list",
+            "file": null,
+            "line": 9,
+            "model": "Photo",
+            "library": "typeorm",
+            "table": "photo",
+            "operation": "read",
+            "expression": "this.photoRepository.find"
+          },
+          {
+            "sourceKind": "Function",
+            "sourceName": "create",
+            "file": null,
+            "line": 13,
+            "model": "Cat",
+            "library": "mongoose",
+            "table": "cats",
+            "operation": "create",
+            "expression": "this.catModel.create"
+          },
+          {
+            "sourceKind": "Function",
+            "sourceName": "add",
+            "file": null,
+            "line": 13,
+            "model": "Photo",
+            "library": "typeorm",
+            "table": "photo",
+            "operation": "create",
+            "expression": "this.photoRepository.save"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (source:Route)-[rel:ACCESSES_DATA_ROUTE]->(model:DataModel) WHERE true OPTIONAL MATCH (file:File)-[:DECLARES_ROUTE]->(source) OPTIONAL MATCH (model)-[:MAPS_TO_TABLE]->(table:Table) RETURN 'Route' AS sourceKind, source.path AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, table.name AS table, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 51",
+        "rows": [
+          {
+            "sourceKind": "Route",
+            "sourceName": "/accounts/:id",
+            "file": "src/routes.ts",
+            "line": 8,
+            "model": "accounts",
+            "library": "drizzle",
+            "table": "accounts",
+            "operation": "read",
+            "expression": "db.select().from"
+          },
+          {
+            "sourceKind": "Route",
+            "sourceName": "/sessions",
+            "file": "src/routes.ts",
+            "line": 12,
+            "model": "sessions",
+            "library": "drizzle",
+            "table": "sessions",
+            "operation": "create",
+            "expression": "db.insert"
+          },
+          {
+            "sourceKind": "Route",
+            "sourceName": "/sessions",
+            "file": "src/routes.ts",
+            "line": 13,
+            "model": "accounts",
+            "library": "drizzle",
+            "table": "accounts",
+            "operation": "read",
+            "expression": "db.query.accounts.findFirst"
+          },
+          {
+            "sourceKind": "Route",
+            "sourceName": "/sessions",
+            "file": "src/routes.ts",
+            "line": 17,
+            "model": "sessions",
+            "library": "drizzle",
+            "table": "sessions",
+            "operation": "delete",
+            "expression": "db.delete"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (source:EntryPoint)-[rel:ACCESSES_DATA_ENTRYPOINT]->(model:DataModel) WHERE true OPTIONAL MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(source) OPTIONAL MATCH (model)-[:MAPS_TO_TABLE]->(table:Table) RETURN 'EntryPoint' AS sourceKind, source.trigger AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, table.name AS table, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 51",
+        "rows": []
+      }
+    ],
+    "output": {
+      "query": {
+        "limit": 50
+      },
+      "dataAccess": [
+        {
+          "sourceKind": "Function",
+          "sourceName": "findAccount",
+          "file": "src/drizzle/db.ts",
+          "line": 8,
+          "model": "accounts",
+          "library": "drizzle",
+          "table": "accounts",
+          "operation": "read",
+          "expression": "db.select().from"
+        },
+        {
+          "sourceKind": "Function",
+          "sourceName": "openSession",
+          "file": "src/drizzle/db.ts",
+          "line": 12,
+          "model": "sessions",
+          "library": "drizzle",
+          "table": "sessions",
+          "operation": "create",
+          "expression": "db.insert"
+        },
+        {
+          "sourceKind": "Function",
+          "sourceName": "openSession",
+          "file": "src/drizzle/db.ts",
+          "line": 13,
+          "model": "accounts",
+          "library": "drizzle",
+          "table": "accounts",
+          "operation": "read",
+          "expression": "db.query.accounts.findFirst"
+        },
+        {
+          "sourceKind": "Function",
+          "sourceName": "closeSessions",
+          "file": "src/drizzle/db.ts",
+          "line": 17,
+          "model": "sessions",
+          "library": "drizzle",
+          "table": "sessions",
+          "operation": "delete",
+          "expression": "db.delete"
+        },
+        {
+          "sourceKind": "Function",
+          "sourceName": "<app.get:/accounts/:id:arg1>",
+          "file": "src/routes.ts",
+          "line": 8,
+          "model": "accounts",
+          "library": "drizzle",
+          "table": "accounts",
+          "operation": "read",
+          "expression": "db.select().from"
+        },
+        {
+          "sourceKind": "Function",
+          "sourceName": "<app.post:/sessions:arg1>",
+          "file": "src/routes.ts",
+          "line": 12,
+          "model": "sessions",
+          "library": "drizzle",
+          "table": "sessions",
+          "operation": "create",
+          "expression": "db.insert"
+        },
+        {
+          "sourceKind": "Function",
+          "sourceName": "<app.post:/sessions:arg1>",
+          "file": "src/routes.ts",
+          "line": 13,
+          "model": "accounts",
+          "library": "drizzle",
+          "table": "accounts",
+          "operation": "read",
+          "expression": "db.query.accounts.findFirst"
+        },
+        {
+          "sourceKind": "Function",
+          "sourceName": "<app.delete:/sessions:arg1>",
+          "file": "src/routes.ts",
+          "line": 17,
+          "model": "sessions",
+          "library": "drizzle",
+          "table": "sessions",
+          "operation": "delete",
+          "expression": "db.delete"
+        },
+        {
+          "sourceKind": "Function",
+          "sourceName": "findAll",
+          "file": null,
+          "line": 9,
+          "model": "Cat",
+          "library": "mongoose",
+          "table": "cats",
+          "operation": "read",
+          "expression": "this.catModel.find"
+        },
+        {
+          "sourceKind": "Function",
+          "sourceName": "list",
+          "file": null,
+          "line": 9,
+          "model": "Photo",
+          "library": "typeorm",
+          "table": "photo",
+          "operation": "read",
+          "expression": "this.photoRepository.find"
+        },
+        {
+          "sourceKind": "Function",
+          "sourceName": "create",
+          "file": null,
+          "line": 13,
+          "model": "Cat",
+          "library": "mongoose",
+          "table": "cats",
+          "operation": "create",
+          "expression": "this.catModel.create"
+        },
+        {
+          "sourceKind": "Function",
+          "sourceName": "add",
+          "file": null,
+          "line": 13,
+          "model": "Photo",
+          "library": "typeorm",
+          "table": "photo",
+          "operation": "create",
+          "expression": "this.photoRepository.save"
+        },
+        {
+          "sourceKind": "Route",
+          "sourceName": "/accounts/:id",
+          "file": "src/routes.ts",
+          "line": 8,
+          "model": "accounts",
+          "library": "drizzle",
+          "table": "accounts",
+          "operation": "read",
+          "expression": "db.select().from"
+        },
+        {
+          "sourceKind": "Route",
+          "sourceName": "/sessions",
+          "file": "src/routes.ts",
+          "line": 12,
+          "model": "sessions",
+          "library": "drizzle",
+          "table": "sessions",
+          "operation": "create",
+          "expression": "db.insert"
+        },
+        {
+          "sourceKind": "Route",
+          "sourceName": "/sessions",
+          "file": "src/routes.ts",
+          "line": 13,
+          "model": "accounts",
+          "library": "drizzle",
+          "table": "accounts",
+          "operation": "read",
+          "expression": "db.query.accounts.findFirst"
+        },
+        {
+          "sourceKind": "Route",
+          "sourceName": "/sessions",
+          "file": "src/routes.ts",
+          "line": 17,
+          "model": "sessions",
+          "library": "drizzle",
+          "table": "sessions",
+          "operation": "delete",
+          "expression": "db.delete"
+        }
+      ],
+      "page": {
+        "offset": 0,
+        "returned": 16
+      }
+    }
+  },
+  {
+    "tool": "list_tables",
+    "args": {},
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (table:Table) RETURN id(table) AS id, table.name AS name, table.kind AS kind, table.library AS library, table.schemaName AS schemaName, table.provider AS provider, table.declaredIn AS declaredIn, table.line AS line, table.columns AS columns",
+        "params": {
+          "name": "",
+          "library": ""
+        },
+        "rows": [
+          {
+            "id": "table:drizzle:src/drizzle/schema.ts:accounts",
+            "name": "accounts",
+            "kind": "table",
+            "library": "drizzle",
+            "schemaName": null,
+            "provider": "postgresql",
+            "declaredIn": "src/drizzle/schema.ts",
+            "line": 3,
+            "columns": "[{\"name\":\"id\",\"column\":\"id\",\"type\":\"serial\",\"optional\":false,\"list\":false,\"isId\":true,\"isUnique\":false},{\"name\":\"handle\",\"column\":\"handle\",\"type\":\"text\",\"optional\":false,\"list\":false,\"isId\":false,\"isUnique\":true},{\"name\":\"bio\",\"column\":\"bio\",\"type\":\"text\",\"optional\":true,\"list\":false,\"isId\":false,\"isUnique\":false}]"
+          },
+          {
+            "id": "table:drizzle:src/drizzle/schema.ts:sessions",
+            "name": "sessions",
+            "kind": "table",
+            "library": "drizzle",
+            "schemaName": null,
+            "provider": "postgresql",
+            "declaredIn": "src/drizzle/schema.ts",
+            "line": 9,
+            "columns": "[{\"name\":\"id\",\"column\":\"id\",\"type\":\"serial\",\"optional\":false,\"list\":false,\"isId\":true,\"isUnique\":false},{\"name\":\"accountId\",\"column\":\"account_id\",\"type\":\"integer\",\"optional\":false,\"list\":false,\"isId\":false,\"isUnique\":false}]"
+          },
+          {
+            "id": "table:mongoose:src/mongoose/cat.schema.ts:felines",
+            "name": "felines",
+            "kind": "collection",
+            "library": "mongoose",
+            "schemaName": null,
+            "provider": "mongodb",
+            "declaredIn": "src/mongoose/cat.schema.ts",
+            "line": 5,
+            "columns": "[{\"name\":\"name\",\"column\":\"name\",\"type\":\"string\",\"optional\":false,\"list\":false,\"isId\":false,\"isUnique\":true}]"
+          },
+          {
+            "id": "table:mongoose:src/mongoose/cat.schema.ts:cats",
+            "name": "cats",
+            "kind": "collection",
+            "library": "mongoose",
+            "schemaName": null,
+            "provider": "mongodb",
+            "declaredIn": "src/mongoose/cat.schema.ts",
+            "line": 11,
+            "columns": "[{\"name\":\"name\",\"column\":\"name\",\"type\":\"string\",\"optional\":false,\"list\":false,\"isId\":false,\"isUnique\":false},{\"name\":\"age\",\"column\":\"age\",\"type\":\"number\",\"optional\":true,\"list\":false,\"isId\":false,\"isUnique\":false},{\"name\":\"owner\",\"column\":\"owner\",\"type\":\"ObjectId\",\"optional\":true,\"list\":false,\"isId\":false,\"isUnique\":false},{\"name\":\"tags\",\"column\":\"tags\",\"type\":\"string\",\"optional\":true,\"list\":true,\"isId\":false,\"isUnique\":false}]"
+          },
+          {
+            "id": "table:mongoose:src/mongoose/toy.model.js:toys",
+            "name": "toys",
+            "kind": "collection",
+            "library": "mongoose",
+            "schemaName": null,
+            "provider": "mongodb",
+            "declaredIn": "src/mongoose/toy.model.js",
+            "line": 3,
+            "columns": "[{\"name\":\"label\",\"column\":\"label\",\"type\":\"String\",\"optional\":false,\"list\":false,\"isId\":false,\"isUnique\":false},{\"name\":\"price\",\"column\":\"price\",\"type\":\"Number\",\"optional\":true,\"list\":false,\"isId\":false,\"isUnique\":false},{\"name\":\"cat\",\"column\":\"cat\",\"type\":\"ObjectId\",\"optional\":true,\"list\":false,\"isId\":false,\"isUnique\":false},{\"name\":\"colors\",\"column\":\"colors\",\"type\":\"String\",\"optional\":true,\"list\":true,\"isId\":false,\"isUnique\":false}]"
+          },
+          {
+            "id": "table:typeorm:src/typeorm/photo.entity.ts:photo_album",
+            "name": "photo_album",
+            "kind": "table",
+            "library": "typeorm",
+            "schemaName": null,
+            "provider": null,
+            "declaredIn": "src/typeorm/photo.entity.ts",
+            "line": 5,
+            "columns": "[{\"name\":\"slug\",\"column\":\"slug\",\"type\":\"string\",\"optional\":false,\"list\":false,\"isId\":true,\"isUnique\":false}]"
+          },
+          {
+            "id": "table:typeorm:src/typeorm/photo.entity.ts:photo",
+            "name": "photo",
+            "kind": "table",
+            "library": "typeorm",
+            "schemaName": null,
+            "provider": null,
+            "declaredIn": "src/typeorm/photo.entity.ts",
+            "line": 11,
+            "columns": "[{\"name\":\"id\",\"column\":\"id\",\"type\":\"string\",\"optional\":false,\"list\":false,\"isId\":true,\"isUnique\":false},{\"name\":\"url\",\"column\":\"url\",\"type\":\"string\",\"optional\":false,\"list\":false,\"isId\":false,\"isUnique\":false}]"
+          },
+          {
+            "id": "table:typeorm:src/typeorm/user.entity.ts:app_users",
+            "name": "app_users",
+            "kind": "table",
+            "library": "typeorm",
+            "schemaName": "auth",
+            "provider": null,
+            "declaredIn": "src/typeorm/user.entity.ts",
+            "line": 5,
+            "columns": "[{\"name\":\"id\",\"column\":\"id\",\"type\":\"number\",\"optional\":false,\"list\":false,\"isId\":true,\"isUnique\":false},{\"name\":\"email\",\"column\":\"email_address\",\"type\":\"string\",\"optional\":false,\"list\":false,\"isId\":false,\"isUnique\":true},{\"name\":\"nickname\",\"column\":\"nickname\",\"type\":\"varchar\",\"optional\":true,\"list\":false,\"isId\":false,\"isUnique\":false},{\"name\":\"createdAt\",\"column\":\"createdAt\",\"type\":\"Date\",\"optional\":false,\"list\":false,\"isId\":false,\"isUnique\":false}]"
+          },
+          {
+            "id": "table:typeorm:src/typeorm/user.entity.ts:user_photo_counts",
+            "name": "user_photo_counts",
+            "kind": "view",
+            "library": "typeorm",
+            "schemaName": null,
+            "provider": null,
+            "declaredIn": "src/typeorm/user.entity.ts",
+            "line": 23,
+            "columns": "[{\"name\":\"userId\",\"column\":\"userId\",\"type\":\"number\",\"optional\":false,\"list\":false,\"isId\":false,\"isUnique\":false}]"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (model:DataModel)-[:MAPS_TO_TABLE]->(table:Table) RETURN id(table) AS table, id(model) AS modelId, model.name AS model",
+        "params": {
+          "name": "",
+          "library": ""
+        },
+        "rows": [
+          {
+            "table": "table:drizzle:src/drizzle/schema.ts:accounts",
+            "modelId": "datamodel:drizzle:src/drizzle/schema.ts:accounts",
+            "model": "accounts"
+          },
+          {
+            "table": "table:drizzle:src/drizzle/schema.ts:sessions",
+            "modelId": "datamodel:drizzle:src/drizzle/schema.ts:sessions",
+            "model": "sessions"
+          },
+          {
+            "table": "table:mongoose:src/mongoose/cat.schema.ts:felines",
+            "modelId": "datamodel:mongoose:src/mongoose/cat.schema.ts:Owner",
+            "model": "Owner"
+          },
+          {
+            "table": "table:mongoose:src/mongoose/cat.schema.ts:cats",
+            "modelId": "datamodel:mongoose:src/mongoose/cat.schema.ts:Cat",
+            "model": "Cat"
+          },
+          {
+            "table": "table:mongoose:src/mongoose/toy.model.js:toys",
+            "modelId": "datamodel:mongoose:src/mongoose/toy.model.js:Toy",
+            "model": "Toy"
+          },
+          {
+            "table": "table:typeorm:src/typeorm/photo.entity.ts:photo_album",
+            "modelId": "datamodel:typeorm:src/typeorm/photo.entity.ts:PhotoAlbum",
+            "model": "PhotoAlbum"
+          },
+          {
+            "table": "table:typeorm:src/typeorm/photo.entity.ts:photo",
+            "modelId": "datamodel:typeorm:src/typeorm/photo.entity.ts:Photo",
+            "model": "Photo"
+          },
+          {
+            "table": "table:typeorm:src/typeorm/user.entity.ts:app_users",
+            "modelId": "datamodel:typeorm:src/typeorm/user.entity.ts:User",
+            "model": "User"
+          },
+          {
+            "table": "table:typeorm:src/typeorm/user.entity.ts:user_photo_counts",
+            "modelId": "datamodel:typeorm:src/typeorm/user.entity.ts:UserPhotoCount",
+            "model": "UserPhotoCount"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (model:DataModel)-[rel:RELATES_TO]->(target:DataModel) RETURN id(model) AS modelId, rel.field AS field, rel.kind AS kind, target.name AS target, rel.relationName AS relationName, rel.onDelete AS onDelete",
+        "rows": [
+          {
+            "modelId": "datamodel:drizzle:src/drizzle/schema.ts:sessions",
+            "field": "accountId",
+            "kind": "one",
+            "target": "accounts",
+            "relationName": null,
+            "onDelete": "cascade"
+          },
+          {
+            "modelId": "datamodel:mongoose:src/mongoose/cat.schema.ts:Cat",
+            "field": "owner",
+            "kind": "one",
+            "target": "Owner",
+            "relationName": null,
+            "onDelete": null
+          },
+          {
+            "modelId": "datamodel:mongoose:src/mongoose/toy.model.js:Toy",
+            "field": "cat",
+            "kind": "one",
+            "target": "Cat",
+            "relationName": null,
+            "onDelete": null
+          },
+          {
+            "modelId": "datamodel:typeorm:src/typeorm/photo.entity.ts:Photo",
+            "field": "owner",
+            "kind": "one",
+            "target": "User",
+            "relationName": null,
+            "onDelete": "CASCADE"
+          },
+          {
+            "modelId": "datamodel:typeorm:src/typeorm/user.entity.ts:User",
+            "field": "photos",
+            "kind": "many",
+            "target": "Photo",
+            "relationName": null,
+            "onDelete": null
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (route:Route)-[rel:READS_ROUTE|WRITES_ROUTE]->(table:Table) OPTIONAL MATCH (file:File)-[:DECLARES_ROUTE]->(route) RETURN id(table) AS table, id(route) AS id, route.method AS method, route.fullPath AS fullPath, route.path AS path, file.relativePath AS file, route.line AS line, label(rel) AS relType, rel.operation AS operation",
+        "params": {
+          "name": "",
+          "library": ""
+        },
+        "rows": [
+          {
+            "table": "table:drizzle:src/drizzle/schema.ts:accounts",
+            "id": "file:src/routes.ts:route:6:0:GET:/accounts/:id",
+            "method": "GET",
+            "fullPath": "/accounts/:id",
+            "path": "/accounts/:id",
+            "file": "src/routes.ts",
+            "line": 6,
+            "relType": "READS_ROUTE",
+            "operation": "read"
+          },
+          {
+            "table": "table:drizzle:src/drizzle/schema.ts:sessions",
+            "id": "file:src/routes.ts:route:10:0:POST:/sessions",
+            "method": "POST",
+            "fullPath": "/sessions",
+            "path": "/sessions",
+            "file": "src/routes.ts",
+            "line": 10,
+            "relType": "WRITES_ROUTE",
+            "operation": "create"
+          },
+          {
+            "table": "table:drizzle:src/drizzle/schema.ts:accounts",
+            "id": "file:src/routes.ts:route:10:0:POST:/sessions",
+            "method": "POST",
+            "fullPath": "/sessions",
+            "path": "/sessions",
+            "file": "src/routes.ts",
+            "line": 10,
+            "relType": "READS_ROUTE",
+            "operation": "read"
+          },
+          {
+            "table": "table:drizzle:src/drizzle/schema.ts:sessions",
+            "id": "file:src/routes.ts:route:14:0:DELETE:/sessions",
+            "method": "DELETE",
+            "fullPath": "/sessions",
+            "path": "/sessions",
+            "file": "src/routes.ts",
+            "line": 14,
+            "relType": "WRITES_ROUTE",
+            "operation": "delete"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (entrypoint:EntryPoint)-[rel:READS_ENTRYPOINT|WRITES_ENTRYPOINT]->(table:Table) OPTIONAL MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(entrypoint) RETURN id(table) AS table, id(entrypoint) AS id, entrypoint.kind AS kind, entrypoint.trigger AS trigger, file.relativePath AS file, entrypoint.line AS line, label(rel) AS relType, rel.operation AS operation",
+        "params": {
+          "name": "",
+          "library": ""
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (fn:Function)-[rel:READS_FUNCTION|WRITES_FUNCTION]->(table:Table) RETURN id(table) AS table, id(fn) AS id, label(rel) AS relType",
+        "params": {
+          "name": "",
+          "library": ""
+        },
+        "rows": [
+          {
+            "table": "table:drizzle:src/drizzle/schema.ts:accounts",
+            "id": "file:src/drizzle/db.ts:function:7:findAccount",
+            "relType": "READS_FUNCTION"
+          },
+          {
+            "table": "table:drizzle:src/drizzle/schema.ts:accounts",
+            "id": "file:src/drizzle/db.ts:function:11:openSession",
+            "relType": "READS_FUNCTION"
+          },
+          {
+            "table": "table:drizzle:src/drizzle/schema.ts:accounts",
+            "id": "file:src/routes.ts:function:6:<app.get:/accounts/:id:arg1>",
+            "relType": "READS_FUNCTION"
+          },
+          {
+            "table": "table:drizzle:src/drizzle/schema.ts:accounts",
+            "id": "file:src/routes.ts:function:10:<app.post:/sessions:arg1>",
+            "relType": "READS_FUNCTION"
+          },
+          {
+            "table": "table:drizzle:src/drizzle/schema.ts:sessions",
+            "id": "file:src/drizzle/db.ts:function:11:openSession",
+            "relType": "WRITES_FUNCTION"
+          },
+          {
+            "table": "table:drizzle:src/drizzle/schema.ts:sessions",
+            "id": "file:src/drizzle/db.ts:function:16:closeSessions",
+            "relType": "WRITES_FUNCTION"
+          },
+          {
+            "table": "table:drizzle:src/drizzle/schema.ts:sessions",
+            "id": "file:src/routes.ts:function:10:<app.post:/sessions:arg1>",
+            "relType": "WRITES_FUNCTION"
+          },
+          {
+            "table": "table:drizzle:src/drizzle/schema.ts:sessions",
+            "id": "file:src/routes.ts:function:14:<app.delete:/sessions:arg1>",
+            "relType": "WRITES_FUNCTION"
+          },
+          {
+            "table": "table:mongoose:src/mongoose/cat.schema.ts:cats",
+            "id": "file:src/mongoose/cats.service.ts:function:8:findAll",
+            "relType": "READS_FUNCTION"
+          },
+          {
+            "table": "table:mongoose:src/mongoose/cat.schema.ts:cats",
+            "id": "file:src/mongoose/cats.service.ts:function:12:create",
+            "relType": "WRITES_FUNCTION"
+          },
+          {
+            "table": "table:typeorm:src/typeorm/photo.entity.ts:photo",
+            "id": "file:src/typeorm/photos.service.ts:function:8:list",
+            "relType": "READS_FUNCTION"
+          },
+          {
+            "table": "table:typeorm:src/typeorm/photo.entity.ts:photo",
+            "id": "file:src/typeorm/photos.service.ts:function:12:add",
+            "relType": "WRITES_FUNCTION"
+          }
+        ]
+      }
+    ],
+    "output": {
+      "query": {},
+      "totalTables": 9,
+      "tables": [
+        {
+          "name": "accounts",
+          "kind": "table",
+          "library": "drizzle",
+          "provider": "postgresql",
+          "declaredIn": "src/drizzle/schema.ts",
+          "line": 3,
+          "columns": [
+            {
+              "name": "id",
+              "type": "serial",
+              "isId": true
+            },
+            {
+              "name": "handle",
+              "type": "text",
+              "isUnique": true
+            },
+            {
+              "name": "bio",
+              "type": "text",
+              "optional": true
+            }
+          ],
+          "models": [
+            {
+              "name": "accounts",
+              "relations": []
+            }
+          ],
+          "readBy": {
+            "routes": 2,
+            "entrypoints": 0,
+            "functions": 4
+          },
+          "writtenBy": {
+            "routes": 0,
+            "entrypoints": 0,
+            "functions": 0
+          },
+          "routes": [
+            {
+              "method": "GET",
+              "path": "/accounts/:id",
+              "file": "src/routes.ts",
+              "line": 6,
+              "reads": [
+                "read"
+              ]
+            },
+            {
+              "method": "POST",
+              "path": "/sessions",
+              "file": "src/routes.ts",
+              "line": 10,
+              "reads": [
+                "read"
+              ]
+            }
+          ],
+          "entrypoints": []
+        },
+        {
+          "name": "app_users",
+          "kind": "table",
+          "library": "typeorm",
+          "schemaName": "auth",
+          "declaredIn": "src/typeorm/user.entity.ts",
+          "line": 5,
+          "columns": [
+            {
+              "name": "id",
+              "type": "number",
+              "isId": true
+            },
+            {
+              "name": "email",
+              "type": "string",
+              "column": "email_address",
+              "isUnique": true
+            },
+            {
+              "name": "nickname",
+              "type": "varchar",
+              "optional": true
+            },
+            {
+              "name": "createdAt",
+              "type": "Date"
+            }
+          ],
+          "models": [
+            {
+              "name": "User",
+              "relations": [
+                {
+                  "field": "photos",
+                  "kind": "many",
+                  "model": "Photo"
+                }
+              ]
+            }
+          ],
+          "readBy": {
+            "routes": 0,
+            "entrypoints": 0,
+            "functions": 0
+          },
+          "writtenBy": {
+            "routes": 0,
+            "entrypoints": 0,
+            "functions": 0
+          },
+          "routes": [],
+          "entrypoints": []
+        },
+        {
+          "name": "cats",
+          "kind": "collection",
+          "library": "mongoose",
+          "provider": "mongodb",
+          "declaredIn": "src/mongoose/cat.schema.ts",
+          "line": 11,
+          "columns": [
+            {
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "name": "age",
+              "type": "number",
+              "optional": true
+            },
+            {
+              "name": "owner",
+              "type": "ObjectId",
+              "optional": true
+            },
+            {
+              "name": "tags",
+              "type": "string",
+              "optional": true,
+              "list": true
+            }
+          ],
+          "models": [
+            {
+              "name": "Cat",
+              "relations": [
+                {
+                  "field": "owner",
+                  "kind": "one",
+                  "model": "Owner"
+                }
+              ]
+            }
+          ],
+          "readBy": {
+            "routes": 0,
+            "entrypoints": 0,
+            "functions": 1
+          },
+          "writtenBy": {
+            "routes": 0,
+            "entrypoints": 0,
+            "functions": 1
+          },
+          "routes": [],
+          "entrypoints": []
+        },
+        {
+          "name": "felines",
+          "kind": "collection",
+          "library": "mongoose",
+          "provider": "mongodb",
+          "declaredIn": "src/mongoose/cat.schema.ts",
+          "line": 5,
+          "columns": [
+            {
+              "name": "name",
+              "type": "string",
+              "isUnique": true
+            }
+          ],
+          "models": [
+            {
+              "name": "Owner",
+              "relations": []
+            }
+          ],
+          "readBy": {
+            "routes": 0,
+            "entrypoints": 0,
+            "functions": 0
+          },
+          "writtenBy": {
+            "routes": 0,
+            "entrypoints": 0,
+            "functions": 0
+          },
+          "routes": [],
+          "entrypoints": []
+        },
+        {
+          "name": "photo",
+          "kind": "table",
+          "library": "typeorm",
+          "declaredIn": "src/typeorm/photo.entity.ts",
+          "line": 11,
+          "columns": [
+            {
+              "name": "id",
+              "type": "string",
+              "isId": true
+            },
+            {
+              "name": "url",
+              "type": "string"
+            }
+          ],
+          "models": [
+            {
+              "name": "Photo",
+              "relations": [
+                {
+                  "field": "owner",
+                  "kind": "one",
+                  "model": "User",
+                  "onDelete": "CASCADE"
+                }
+              ]
+            }
+          ],
+          "readBy": {
+            "routes": 0,
+            "entrypoints": 0,
+            "functions": 1
+          },
+          "writtenBy": {
+            "routes": 0,
+            "entrypoints": 0,
+            "functions": 1
+          },
+          "routes": [],
+          "entrypoints": []
+        },
+        {
+          "name": "photo_album",
+          "kind": "table",
+          "library": "typeorm",
+          "declaredIn": "src/typeorm/photo.entity.ts",
+          "line": 5,
+          "columns": [
+            {
+              "name": "slug",
+              "type": "string",
+              "isId": true
+            }
+          ],
+          "models": [
+            {
+              "name": "PhotoAlbum",
+              "relations": []
+            }
+          ],
+          "readBy": {
+            "routes": 0,
+            "entrypoints": 0,
+            "functions": 0
+          },
+          "writtenBy": {
+            "routes": 0,
+            "entrypoints": 0,
+            "functions": 0
+          },
+          "routes": [],
+          "entrypoints": []
+        },
+        {
+          "name": "sessions",
+          "kind": "table",
+          "library": "drizzle",
+          "provider": "postgresql",
+          "declaredIn": "src/drizzle/schema.ts",
+          "line": 9,
+          "columns": [
+            {
+              "name": "id",
+              "type": "serial",
+              "isId": true
+            },
+            {
+              "name": "accountId",
+              "type": "integer",
+              "column": "account_id"
+            }
+          ],
+          "models": [
+            {
+              "name": "sessions",
+              "relations": [
+                {
+                  "field": "accountId",
+                  "kind": "one",
+                  "model": "accounts",
+                  "onDelete": "cascade"
+                }
+              ]
+            }
+          ],
+          "readBy": {
+            "routes": 0,
+            "entrypoints": 0,
+            "functions": 0
+          },
+          "writtenBy": {
+            "routes": 2,
+            "entrypoints": 0,
+            "functions": 4
+          },
+          "routes": [
+            {
+              "method": "POST",
+              "path": "/sessions",
+              "file": "src/routes.ts",
+              "line": 10,
+              "writes": [
+                "create"
+              ]
+            },
+            {
+              "method": "DELETE",
+              "path": "/sessions",
+              "file": "src/routes.ts",
+              "line": 14,
+              "writes": [
+                "delete"
+              ]
+            }
+          ],
+          "entrypoints": []
+        },
+        {
+          "name": "toys",
+          "kind": "collection",
+          "library": "mongoose",
+          "provider": "mongodb",
+          "declaredIn": "src/mongoose/toy.model.js",
+          "line": 3,
+          "columns": [
+            {
+              "name": "label",
+              "type": "String"
+            },
+            {
+              "name": "price",
+              "type": "Number",
+              "optional": true
+            },
+            {
+              "name": "cat",
+              "type": "ObjectId",
+              "optional": true
+            },
+            {
+              "name": "colors",
+              "type": "String",
+              "optional": true,
+              "list": true
+            }
+          ],
+          "models": [
+            {
+              "name": "Toy",
+              "relations": [
+                {
+                  "field": "cat",
+                  "kind": "one",
+                  "model": "Cat"
+                }
+              ]
+            }
+          ],
+          "readBy": {
+            "routes": 0,
+            "entrypoints": 0,
+            "functions": 0
+          },
+          "writtenBy": {
+            "routes": 0,
+            "entrypoints": 0,
+            "functions": 0
+          },
+          "routes": [],
+          "entrypoints": []
+        },
+        {
+          "name": "user_photo_counts",
+          "kind": "view",
+          "library": "typeorm",
+          "declaredIn": "src/typeorm/user.entity.ts",
+          "line": 23,
+          "columns": [
+            {
+              "name": "userId",
+              "type": "number"
+            }
+          ],
+          "models": [
+            {
+              "name": "UserPhotoCount",
+              "relations": []
+            }
+          ],
+          "readBy": {
+            "routes": 0,
+            "entrypoints": 0,
+            "functions": 0
+          },
+          "writtenBy": {
+            "routes": 0,
+            "entrypoints": 0,
+            "functions": 0
+          },
+          "routes": [],
+          "entrypoints": []
+        }
+      ],
+      "note": "Tables come from Prisma schema files, TypeORM entities, Mongoose schemas, Drizzle table definitions and Knex calls. readBy / writtenBy count distinct routes, entrypoints and functions; each table lists up to 20 routes and entrypoints.",
+      "page": {
+        "offset": 0,
+        "returned": 9
+      }
+    }
+  },
+  {
+    "tool": "list_tables",
+    "args": {
+      "library": "mongoose"
+    },
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (table:Table) WHERE table.library = $library RETURN id(table) AS id, table.name AS name, table.kind AS kind, table.library AS library, table.schemaName AS schemaName, table.provider AS provider, table.declaredIn AS declaredIn, table.line AS line, table.columns AS columns",
+        "params": {
+          "name": "",
+          "library": "mongoose"
+        },
+        "rows": [
+          {
+            "id": "table:mongoose:src/mongoose/cat.schema.ts:felines",
+            "name": "felines",
+            "kind": "collection",
+            "library": "mongoose",
+            "schemaName": null,
+            "provider": "mongodb",
+            "declaredIn": "src/mongoose/cat.schema.ts",
+            "line": 5,
+            "columns": "[{\"name\":\"name\",\"column\":\"name\",\"type\":\"string\",\"optional\":false,\"list\":false,\"isId\":false,\"isUnique\":true}]"
+          },
+          {
+            "id": "table:mongoose:src/mongoose/cat.schema.ts:cats",
+            "name": "cats",
+            "kind": "collection",
+            "library": "mongoose",
+            "schemaName": null,
+            "provider": "mongodb",
+            "declaredIn": "src/mongoose/cat.schema.ts",
+            "line": 11,
+            "columns": "[{\"name\":\"name\",\"column\":\"name\",\"type\":\"string\",\"optional\":false,\"list\":false,\"isId\":false,\"isUnique\":false},{\"name\":\"age\",\"column\":\"age\",\"type\":\"number\",\"optional\":true,\"list\":false,\"isId\":false,\"isUnique\":false},{\"name\":\"owner\",\"column\":\"owner\",\"type\":\"ObjectId\",\"optional\":true,\"list\":false,\"isId\":false,\"isUnique\":false},{\"name\":\"tags\",\"column\":\"tags\",\"type\":\"string\",\"optional\":true,\"list\":true,\"isId\":false,\"isUnique\":false}]"
+          },
+          {
+            "id": "table:mongoose:src/mongoose/toy.model.js:toys",
+            "name": "toys",
+            "kind": "collection",
+            "library": "mongoose",
+            "schemaName": null,
+            "provider": "mongodb",
+            "declaredIn": "src/mongoose/toy.model.js",
+            "line": 3,
+            "columns": "[{\"name\":\"label\",\"column\":\"label\",\"type\":\"String\",\"optional\":false,\"list\":false,\"isId\":false,\"isUnique\":false},{\"name\":\"price\",\"column\":\"price\",\"type\":\"Number\",\"optional\":true,\"list\":false,\"isId\":false,\"isUnique\":false},{\"name\":\"cat\",\"column\":\"cat\",\"type\":\"ObjectId\",\"optional\":true,\"list\":false,\"isId\":false,\"isUnique\":false},{\"name\":\"colors\",\"column\":\"colors\",\"type\":\"String\",\"optional\":true,\"list\":true,\"isId\":false,\"isUnique\":false}]"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (model:DataModel)-[:MAPS_TO_TABLE]->(table:Table) WHERE table.library = $library RETURN id(table) AS table, id(model) AS modelId, model.name AS model",
+        "params": {
+          "name": "",
+          "library": "mongoose"
+        },
+        "rows": [
+          {
+            "table": "table:mongoose:src/mongoose/cat.schema.ts:felines",
+            "modelId": "datamodel:mongoose:src/mongoose/cat.schema.ts:Owner",
+            "model": "Owner"
+          },
+          {
+            "table": "table:mongoose:src/mongoose/cat.schema.ts:cats",
+            "modelId": "datamodel:mongoose:src/mongoose/cat.schema.ts:Cat",
+            "model": "Cat"
+          },
+          {
+            "table": "table:mongoose:src/mongoose/toy.model.js:toys",
+            "modelId": "datamodel:mongoose:src/mongoose/toy.model.js:Toy",
+            "model": "Toy"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (model:DataModel)-[rel:RELATES_TO]->(target:DataModel) RETURN id(model) AS modelId, rel.field AS field, rel.kind AS kind, target.name AS target, rel.relationName AS relationName, rel.onDelete AS onDelete",
+        "rows": [
+          {
+            "modelId": "datamodel:drizzle:src/drizzle/schema.ts:sessions",
+            "field": "accountId",
+            "kind": "one",
+            "target": "accounts",
+            "relationName": null,
+            "onDelete": "cascade"
+          },
+          {
+            "modelId": "datamodel:mongoose:src/mongoose/cat.schema.ts:Cat",
+            "field": "owner",
+            "kind": "one",
+            "target": "Owner",
+            "relationName": null,
+            "onDelete": null
+          },
+          {
+            "modelId": "datamodel:mongoose:src/mongoose/toy.model.js:Toy",
+            "field": "cat",
+            "kind": "one",
+            "target": "Cat",
+            "relationName": null,
+            "onDelete": null
+          },
+          {
+            "modelId": "datamodel:typeorm:src/typeorm/photo.entity.ts:Photo",
+            "field": "owner",
+            "kind": "one",
+            "target": "User",
+            "relationName": null,
+            "onDelete": "CASCADE"
+          },
+          {
+            "modelId": "datamodel:typeorm:src/typeorm/user.entity.ts:User",
+            "field": "photos",
+            "kind": "many",
+            "target": "Photo",
+            "relationName": null,
+            "onDelete": null
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (route:Route)-[rel:READS_ROUTE|WRITES_ROUTE]->(table:Table) WHERE table.library = $library OPTIONAL MATCH (file:File)-[:DECLARES_ROUTE]->(route) RETURN id(table) AS table, id(route) AS id, route.method AS method, route.fullPath AS fullPath, route.path AS path, file.relativePath AS file, route.line AS line, label(rel) AS relType, rel.operation AS operation",
+        "params": {
+          "name": "",
+          "library": "mongoose"
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (entrypoint:EntryPoint)-[rel:READS_ENTRYPOINT|WRITES_ENTRYPOINT]->(table:Table) WHERE table.library = $library OPTIONAL MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(entrypoint) RETURN id(table) AS table, id(entrypoint) AS id, entrypoint.kind AS kind, entrypoint.trigger AS trigger, file.relativePath AS file, entrypoint.line AS line, label(rel) AS relType, rel.operation AS operation",
+        "params": {
+          "name": "",
+          "library": "mongoose"
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (fn:Function)-[rel:READS_FUNCTION|WRITES_FUNCTION]->(table:Table) WHERE table.library = $library RETURN id(table) AS table, id(fn) AS id, label(rel) AS relType",
+        "params": {
+          "name": "",
+          "library": "mongoose"
+        },
+        "rows": [
+          {
+            "table": "table:mongoose:src/mongoose/cat.schema.ts:cats",
+            "id": "file:src/mongoose/cats.service.ts:function:8:findAll",
+            "relType": "READS_FUNCTION"
+          },
+          {
+            "table": "table:mongoose:src/mongoose/cat.schema.ts:cats",
+            "id": "file:src/mongoose/cats.service.ts:function:12:create",
+            "relType": "WRITES_FUNCTION"
+          }
+        ]
+      }
+    ],
+    "output": {
+      "query": {
+        "library": "mongoose"
+      },
+      "totalTables": 3,
+      "tables": [
+        {
+          "name": "cats",
+          "kind": "collection",
+          "library": "mongoose",
+          "provider": "mongodb",
+          "declaredIn": "src/mongoose/cat.schema.ts",
+          "line": 11,
+          "columns": [
+            {
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "name": "age",
+              "type": "number",
+              "optional": true
+            },
+            {
+              "name": "owner",
+              "type": "ObjectId",
+              "optional": true
+            },
+            {
+              "name": "tags",
+              "type": "string",
+              "optional": true,
+              "list": true
+            }
+          ],
+          "models": [
+            {
+              "name": "Cat",
+              "relations": [
+                {
+                  "field": "owner",
+                  "kind": "one",
+                  "model": "Owner"
+                }
+              ]
+            }
+          ],
+          "readBy": {
+            "routes": 0,
+            "entrypoints": 0,
+            "functions": 1
+          },
+          "writtenBy": {
+            "routes": 0,
+            "entrypoints": 0,
+            "functions": 1
+          },
+          "routes": [],
+          "entrypoints": []
+        },
+        {
+          "name": "felines",
+          "kind": "collection",
+          "library": "mongoose",
+          "provider": "mongodb",
+          "declaredIn": "src/mongoose/cat.schema.ts",
+          "line": 5,
+          "columns": [
+            {
+              "name": "name",
+              "type": "string",
+              "isUnique": true
+            }
+          ],
+          "models": [
+            {
+              "name": "Owner",
+              "relations": []
+            }
+          ],
+          "readBy": {
+            "routes": 0,
+            "entrypoints": 0,
+            "functions": 0
+          },
+          "writtenBy": {
+            "routes": 0,
+            "entrypoints": 0,
+            "functions": 0
+          },
+          "routes": [],
+          "entrypoints": []
+        },
+        {
+          "name": "toys",
+          "kind": "collection",
+          "library": "mongoose",
+          "provider": "mongodb",
+          "declaredIn": "src/mongoose/toy.model.js",
+          "line": 3,
+          "columns": [
+            {
+              "name": "label",
+              "type": "String"
+            },
+            {
+              "name": "price",
+              "type": "Number",
+              "optional": true
+            },
+            {
+              "name": "cat",
+              "type": "ObjectId",
+              "optional": true
+            },
+            {
+              "name": "colors",
+              "type": "String",
+              "optional": true,
+              "list": true
+            }
+          ],
+          "models": [
+            {
+              "name": "Toy",
+              "relations": [
+                {
+                  "field": "cat",
+                  "kind": "one",
+                  "model": "Cat"
+                }
+              ]
+            }
+          ],
+          "readBy": {
+            "routes": 0,
+            "entrypoints": 0,
+            "functions": 0
+          },
+          "writtenBy": {
+            "routes": 0,
+            "entrypoints": 0,
+            "functions": 0
+          },
+          "routes": [],
+          "entrypoints": []
+        }
+      ],
+      "note": "Tables come from Prisma schema files, TypeORM entities, Mongoose schemas, Drizzle table definitions and Knex calls. readBy / writtenBy count distinct routes, entrypoints and functions; each table lists up to 20 routes and entrypoints.",
+      "page": {
+        "offset": 0,
+        "returned": 3
+      }
+    }
+  },
+  {
+    "tool": "list_data_access",
+    "args": {
+      "library": "drizzle"
+    },
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (source:File)-[rel:ACCESSES_DATA_FILE]->(model:DataModel) WHERE true AND model.library = \"drizzle\" WITH source AS file, source, rel, model OPTIONAL MATCH (model)-[:MAPS_TO_TABLE]->(table:Table) RETURN 'File' AS sourceKind, source.relativePath AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, table.name AS table, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 51",
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (source:Function)-[rel:ACCESSES_DATA_FUNCTION]->(model:DataModel) WHERE true AND model.library = \"drizzle\" OPTIONAL MATCH (file:File)-[:DEFINES_FUNCTION]->(source) OPTIONAL MATCH (model)-[:MAPS_TO_TABLE]->(table:Table) RETURN 'Function' AS sourceKind, source.name AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, table.name AS table, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 51",
+        "rows": [
+          {
+            "sourceKind": "Function",
+            "sourceName": "findAccount",
+            "file": "src/drizzle/db.ts",
+            "line": 8,
+            "model": "accounts",
+            "library": "drizzle",
+            "table": "accounts",
+            "operation": "read",
+            "expression": "db.select().from"
+          },
+          {
+            "sourceKind": "Function",
+            "sourceName": "openSession",
+            "file": "src/drizzle/db.ts",
+            "line": 12,
+            "model": "sessions",
+            "library": "drizzle",
+            "table": "sessions",
+            "operation": "create",
+            "expression": "db.insert"
+          },
+          {
+            "sourceKind": "Function",
+            "sourceName": "openSession",
+            "file": "src/drizzle/db.ts",
+            "line": 13,
+            "model": "accounts",
+            "library": "drizzle",
+            "table": "accounts",
+            "operation": "read",
+            "expression": "db.query.accounts.findFirst"
+          },
+          {
+            "sourceKind": "Function",
+            "sourceName": "closeSessions",
+            "file": "src/drizzle/db.ts",
+            "line": 17,
+            "model": "sessions",
+            "library": "drizzle",
+            "table": "sessions",
+            "operation": "delete",
+            "expression": "db.delete"
+          },
+          {
+            "sourceKind": "Function",
+            "sourceName": "<app.get:/accounts/:id:arg1>",
+            "file": "src/routes.ts",
+            "line": 8,
+            "model": "accounts",
+            "library": "drizzle",
+            "table": "accounts",
+            "operation": "read",
+            "expression": "db.select().from"
+          },
+          {
+            "sourceKind": "Function",
+            "sourceName": "<app.post:/sessions:arg1>",
+            "file": "src/routes.ts",
+            "line": 12,
+            "model": "sessions",
+            "library": "drizzle",
+            "table": "sessions",
+            "operation": "create",
+            "expression": "db.insert"
+          },
+          {
+            "sourceKind": "Function",
+            "sourceName": "<app.post:/sessions:arg1>",
+            "file": "src/routes.ts",
+            "line": 13,
+            "model": "accounts",
+            "library": "drizzle",
+            "table": "accounts",
+            "operation": "read",
+            "expression": "db.query.accounts.findFirst"
+          },
+          {
+            "sourceKind": "Function",
+            "sourceName": "<app.delete:/sessions:arg1>",
+            "file": "src/routes.ts",
+            "line": 17,
+            "model": "sessions",
+            "library": "drizzle",
+            "table": "sessions",
+            "operation": "delete",
+            "expression": "db.delete"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (source:Route)-[rel:ACCESSES_DATA_ROUTE]->(model:DataModel) WHERE true AND model.library = \"drizzle\" OPTIONAL MATCH (file:File)-[:DECLARES_ROUTE]->(source) OPTIONAL MATCH (model)-[:MAPS_TO_TABLE]->(table:Table) RETURN 'Route' AS sourceKind, source.path AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, table.name AS table, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 51",
+        "rows": [
+          {
+            "sourceKind": "Route",
+            "sourceName": "/accounts/:id",
+            "file": "src/routes.ts",
+            "line": 8,
+            "model": "accounts",
+            "library": "drizzle",
+            "table": "accounts",
+            "operation": "read",
+            "expression": "db.select().from"
+          },
+          {
+            "sourceKind": "Route",
+            "sourceName": "/sessions",
+            "file": "src/routes.ts",
+            "line": 12,
+            "model": "sessions",
+            "library": "drizzle",
+            "table": "sessions",
+            "operation": "create",
+            "expression": "db.insert"
+          },
+          {
+            "sourceKind": "Route",
+            "sourceName": "/sessions",
+            "file": "src/routes.ts",
+            "line": 13,
+            "model": "accounts",
+            "library": "drizzle",
+            "table": "accounts",
+            "operation": "read",
+            "expression": "db.query.accounts.findFirst"
+          },
+          {
+            "sourceKind": "Route",
+            "sourceName": "/sessions",
+            "file": "src/routes.ts",
+            "line": 17,
+            "model": "sessions",
+            "library": "drizzle",
+            "table": "sessions",
+            "operation": "delete",
+            "expression": "db.delete"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (source:EntryPoint)-[rel:ACCESSES_DATA_ENTRYPOINT]->(model:DataModel) WHERE true AND model.library = \"drizzle\" OPTIONAL MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(source) OPTIONAL MATCH (model)-[:MAPS_TO_TABLE]->(table:Table) RETURN 'EntryPoint' AS sourceKind, source.trigger AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, table.name AS table, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 51",
+        "rows": []
+      }
+    ],
+    "output": {
+      "query": {
+        "library": "drizzle",
+        "limit": 50
+      },
+      "dataAccess": [
+        {
+          "sourceKind": "Function",
+          "sourceName": "findAccount",
+          "file": "src/drizzle/db.ts",
+          "line": 8,
+          "model": "accounts",
+          "library": "drizzle",
+          "table": "accounts",
+          "operation": "read",
+          "expression": "db.select().from"
+        },
+        {
+          "sourceKind": "Function",
+          "sourceName": "openSession",
+          "file": "src/drizzle/db.ts",
+          "line": 12,
+          "model": "sessions",
+          "library": "drizzle",
+          "table": "sessions",
+          "operation": "create",
+          "expression": "db.insert"
+        },
+        {
+          "sourceKind": "Function",
+          "sourceName": "openSession",
+          "file": "src/drizzle/db.ts",
+          "line": 13,
+          "model": "accounts",
+          "library": "drizzle",
+          "table": "accounts",
+          "operation": "read",
+          "expression": "db.query.accounts.findFirst"
+        },
+        {
+          "sourceKind": "Function",
+          "sourceName": "closeSessions",
+          "file": "src/drizzle/db.ts",
+          "line": 17,
+          "model": "sessions",
+          "library": "drizzle",
+          "table": "sessions",
+          "operation": "delete",
+          "expression": "db.delete"
+        },
+        {
+          "sourceKind": "Function",
+          "sourceName": "<app.get:/accounts/:id:arg1>",
+          "file": "src/routes.ts",
+          "line": 8,
+          "model": "accounts",
+          "library": "drizzle",
+          "table": "accounts",
+          "operation": "read",
+          "expression": "db.select().from"
+        },
+        {
+          "sourceKind": "Function",
+          "sourceName": "<app.post:/sessions:arg1>",
+          "file": "src/routes.ts",
+          "line": 12,
+          "model": "sessions",
+          "library": "drizzle",
+          "table": "sessions",
+          "operation": "create",
+          "expression": "db.insert"
+        },
+        {
+          "sourceKind": "Function",
+          "sourceName": "<app.post:/sessions:arg1>",
+          "file": "src/routes.ts",
+          "line": 13,
+          "model": "accounts",
+          "library": "drizzle",
+          "table": "accounts",
+          "operation": "read",
+          "expression": "db.query.accounts.findFirst"
+        },
+        {
+          "sourceKind": "Function",
+          "sourceName": "<app.delete:/sessions:arg1>",
+          "file": "src/routes.ts",
+          "line": 17,
+          "model": "sessions",
+          "library": "drizzle",
+          "table": "sessions",
+          "operation": "delete",
+          "expression": "db.delete"
+        },
+        {
+          "sourceKind": "Route",
+          "sourceName": "/accounts/:id",
+          "file": "src/routes.ts",
+          "line": 8,
+          "model": "accounts",
+          "library": "drizzle",
+          "table": "accounts",
+          "operation": "read",
+          "expression": "db.select().from"
+        },
+        {
+          "sourceKind": "Route",
+          "sourceName": "/sessions",
+          "file": "src/routes.ts",
+          "line": 12,
+          "model": "sessions",
+          "library": "drizzle",
+          "table": "sessions",
+          "operation": "create",
+          "expression": "db.insert"
+        },
+        {
+          "sourceKind": "Route",
+          "sourceName": "/sessions",
+          "file": "src/routes.ts",
+          "line": 13,
+          "model": "accounts",
+          "library": "drizzle",
+          "table": "accounts",
+          "operation": "read",
+          "expression": "db.query.accounts.findFirst"
+        },
+        {
+          "sourceKind": "Route",
+          "sourceName": "/sessions",
+          "file": "src/routes.ts",
+          "line": 17,
+          "model": "sessions",
+          "library": "drizzle",
+          "table": "sessions",
+          "operation": "delete",
+          "expression": "db.delete"
+        }
+      ],
+      "page": {
+        "offset": 0,
+        "returned": 12
+      }
+    }
+  },
+  {
+    "tool": "route_details",
+    "args": {
+      "method": "POST",
+      "path": "/sessions"
+    },
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_ROUTE]->(route:Route) WHERE lower(route.method) = lower($method) AND (route.fullPath = $path OR route.path = $path) RETURN id(route) AS id, route.method AS method, route.path AS path, route.fullPath AS fullPath, route.framework AS framework, route.handlerName AS handlerName, file.relativePath AS file, route.line AS line ORDER BY file, line LIMIT 6",
+        "params": {
+          "method": "POST",
+          "path": "/sessions"
+        },
+        "rows": [
+          {
+            "id": "file:src/routes.ts:route:10:0:POST:/sessions",
+            "method": "POST",
+            "path": "/sessions",
+            "fullPath": "/sessions",
+            "framework": "express-koa",
+            "handlerName": null,
+            "file": "src/routes.ts",
+            "line": 10
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_FUNCTION]->(fn:Function) RETURN id(fn) AS id, fn.name AS name, fn.className AS className, file.relativePath AS file, fn.line AS line, fn.endLine AS endLine",
+        "params": {},
+        "rows": [
+          {
+            "id": "file:src/drizzle/db.ts:function:7:findAccount",
+            "name": "findAccount",
+            "className": null,
+            "file": "src/drizzle/db.ts",
+            "line": 7,
+            "endLine": 9
+          },
+          {
+            "id": "file:src/drizzle/db.ts:function:11:openSession",
+            "name": "openSession",
+            "className": null,
+            "file": "src/drizzle/db.ts",
+            "line": 11,
+            "endLine": 14
+          },
+          {
+            "id": "file:src/drizzle/db.ts:function:16:closeSessions",
+            "name": "closeSessions",
+            "className": null,
+            "file": "src/drizzle/db.ts",
+            "line": 16,
+            "endLine": 18
+          },
+          {
+            "id": "file:src/routes.ts:function:6:<app.get:/accounts/:id:arg1>",
+            "name": "<app.get:/accounts/:id:arg1>",
+            "className": null,
+            "file": "src/routes.ts",
+            "line": 6,
+            "endLine": 8
+          },
+          {
+            "id": "file:src/routes.ts:function:10:<app.post:/sessions:arg1>",
+            "name": "<app.post:/sessions:arg1>",
+            "className": null,
+            "file": "src/routes.ts",
+            "line": 10,
+            "endLine": 12
+          },
+          {
+            "id": "file:src/routes.ts:function:14:<app.delete:/sessions:arg1>",
+            "name": "<app.delete:/sessions:arg1>",
+            "className": null,
+            "file": "src/routes.ts",
+            "line": 14,
+            "endLine": 17
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(class:Class)-[:DEFINES_METHOD]->(fn:Function) RETURN id(fn) AS id, fn.name AS name, class.name AS className, file.relativePath AS file, fn.line AS line, fn.endLine AS endLine",
+        "params": {},
+        "rows": [
+          {
+            "id": "file:src/mongoose/cats.service.ts:function:6:constructor",
+            "name": "constructor",
+            "className": "CatsService",
+            "file": "src/mongoose/cats.service.ts",
+            "line": 6,
+            "endLine": 6
+          },
+          {
+            "id": "file:src/mongoose/cats.service.ts:function:8:findAll",
+            "name": "findAll",
+            "className": "CatsService",
+            "file": "src/mongoose/cats.service.ts",
+            "line": 8,
+            "endLine": 10
+          },
+          {
+            "id": "file:src/mongoose/cats.service.ts:function:12:create",
+            "name": "create",
+            "className": "CatsService",
+            "file": "src/mongoose/cats.service.ts",
+            "line": 12,
+            "endLine": 14
+          },
+          {
+            "id": "file:src/typeorm/photos.service.ts:function:6:constructor",
+            "name": "constructor",
+            "className": "PhotosService",
+            "file": "src/typeorm/photos.service.ts",
+            "line": 6,
+            "endLine": 6
+          },
+          {
+            "id": "file:src/typeorm/photos.service.ts:function:8:list",
+            "name": "list",
+            "className": "PhotosService",
+            "file": "src/typeorm/photos.service.ts",
+            "line": 8,
+            "endLine": 10
+          },
+          {
+            "id": "file:src/typeorm/photos.service.ts:function:12:add",
+            "name": "add",
+            "className": "PhotosService",
+            "file": "src/typeorm/photos.service.ts",
+            "line": 12,
+            "endLine": 14
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (caller:Function)-[:CALLS]->(call:Call)-[:CALL_RESOLVES_TO]->(callee:Function) RETURN id(caller) AS caller, id(callee) AS callee, call.line AS line",
+        "rows": [
+          {
+            "caller": "file:src/routes.ts:function:6:<app.get:/accounts/:id:arg1>",
+            "callee": "file:src/drizzle/db.ts:function:7:findAccount",
+            "line": 7
+          },
+          {
+            "caller": "file:src/routes.ts:function:10:<app.post:/sessions:arg1>",
+            "callee": "file:src/drizzle/db.ts:function:11:openSession",
+            "line": 11
+          },
+          {
+            "caller": "file:src/routes.ts:function:14:<app.delete:/sessions:arg1>",
+            "callee": "file:src/drizzle/db.ts:function:16:closeSessions",
+            "line": 15
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (route:Route)-[:ROUTE_HANDLED_BY]->(fn:Function) WHERE id(route) IN $ids RETURN id(route) AS route, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:src/routes.ts:route:10:0:POST:/sessions"
+          ]
+        },
+        "rows": [
+          {
+            "route": "file:src/routes.ts:route:10:0:POST:/sessions",
+            "fn": "file:src/routes.ts:function:10:<app.post:/sessions:arg1>"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (route:Route)-[step:ROUTE_LIFECYCLE_STEP]->(fn:Function) WHERE id(route) IN $ids RETURN id(route) AS route, id(fn) AS fn, step.role AS role, step.scope AS scope, step.hook AS hook, step.orderIndex AS orderIndex",
+        "params": {
+          "ids": [
+            "file:src/routes.ts:route:10:0:POST:/sessions"
+          ]
+        },
+        "rows": [
+          {
+            "route": "file:src/routes.ts:route:10:0:POST:/sessions",
+            "fn": "file:src/routes.ts:function:10:<app.post:/sessions:arg1>",
+            "role": "handler",
+            "scope": "route",
+            "hook": "handler",
+            "orderIndex": 0
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (route:Route)-[rel:ACCESSES_DATA_ROUTE]->(model:DataModel) WHERE id(route) IN $ids RETURN id(route) AS route, model.name AS model, model.library AS library, rel.operation AS operation, rel.line AS line, rel.expression AS expression",
+        "params": {
+          "ids": [
+            "file:src/routes.ts:route:10:0:POST:/sessions"
+          ]
+        },
+        "rows": [
+          {
+            "route": "file:src/routes.ts:route:10:0:POST:/sessions",
+            "model": "sessions",
+            "library": "drizzle",
+            "operation": "create",
+            "line": 12,
+            "expression": "db.insert"
+          },
+          {
+            "route": "file:src/routes.ts:route:10:0:POST:/sessions",
+            "model": "accounts",
+            "library": "drizzle",
+            "operation": "read",
+            "line": 13,
+            "expression": "db.query.accounts.findFirst"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (route:Route)-[rel:READS_ROUTE|WRITES_ROUTE]->(table:Table) WHERE id(route) IN $ids RETURN id(route) AS route, id(table) AS tableId, table.name AS table, table.kind AS kind, table.library AS library, label(rel) AS tableAccess, rel.operation AS operation",
+        "params": {
+          "ids": [
+            "file:src/routes.ts:route:10:0:POST:/sessions"
+          ]
+        },
+        "rows": [
+          {
+            "route": "file:src/routes.ts:route:10:0:POST:/sessions",
+            "tableId": "table:drizzle:src/drizzle/schema.ts:sessions",
+            "table": "sessions",
+            "kind": "table",
+            "library": "drizzle",
+            "tableAccess": "WRITES_ROUTE",
+            "operation": "create"
+          },
+          {
+            "route": "file:src/routes.ts:route:10:0:POST:/sessions",
+            "tableId": "table:drizzle:src/drizzle/schema.ts:accounts",
+            "table": "accounts",
+            "kind": "table",
+            "library": "drizzle",
+            "tableAccess": "READS_ROUTE",
+            "operation": "read"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (route:Route)-[rel:USES_ENV_ROUTE]->(env:EnvVar) WHERE id(route) IN $ids RETURN id(route) AS route, env.name AS name, rel.access AS access, rel.line AS line",
+        "params": {
+          "ids": [
+            "file:src/routes.ts:route:10:0:POST:/sessions"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (route:Route)-[rel:CONSUMES_CONFIG_ROUTE]->(config:ConfigValue) WHERE id(route) IN $ids RETURN id(route) AS route, config.name AS name, rel.localName AS localName",
+        "params": {
+          "ids": [
+            "file:src/routes.ts:route:10:0:POST:/sessions"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (fn:Function)-[rel:ACCESSES_DATA_FUNCTION]->(model:DataModel) WHERE id(fn) IN $ids RETURN model.name AS model, model.library AS library, rel.operation AS operation, rel.line AS line, rel.expression AS expression, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:src/routes.ts:function:10:<app.post:/sessions:arg1>",
+            "file:src/drizzle/db.ts:function:11:openSession"
+          ]
+        },
+        "rows": [
+          {
+            "model": "accounts",
+            "library": "drizzle",
+            "operation": "read",
+            "line": 13,
+            "expression": "db.query.accounts.findFirst",
+            "fn": "file:src/drizzle/db.ts:function:11:openSession"
+          },
+          {
+            "model": "accounts",
+            "library": "drizzle",
+            "operation": "read",
+            "line": 13,
+            "expression": "db.query.accounts.findFirst",
+            "fn": "file:src/routes.ts:function:10:<app.post:/sessions:arg1>"
+          },
+          {
+            "model": "sessions",
+            "library": "drizzle",
+            "operation": "create",
+            "line": 12,
+            "expression": "db.insert",
+            "fn": "file:src/drizzle/db.ts:function:11:openSession"
+          },
+          {
+            "model": "sessions",
+            "library": "drizzle",
+            "operation": "create",
+            "line": 12,
+            "expression": "db.insert",
+            "fn": "file:src/routes.ts:function:10:<app.post:/sessions:arg1>"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (fn:Function)-[rel:READS_FUNCTION|WRITES_FUNCTION]->(table:Table) WHERE id(fn) IN $ids RETURN id(table) AS tableId, table.name AS table, table.kind AS kind, table.library AS library, label(rel) AS tableAccess, rel.operation AS operation, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:src/routes.ts:function:10:<app.post:/sessions:arg1>",
+            "file:src/drizzle/db.ts:function:11:openSession"
+          ]
+        },
+        "rows": [
+          {
+            "tableId": "table:drizzle:src/drizzle/schema.ts:accounts",
+            "table": "accounts",
+            "kind": "table",
+            "library": "drizzle",
+            "tableAccess": "READS_FUNCTION",
+            "operation": "read",
+            "fn": "file:src/drizzle/db.ts:function:11:openSession"
+          },
+          {
+            "tableId": "table:drizzle:src/drizzle/schema.ts:accounts",
+            "table": "accounts",
+            "kind": "table",
+            "library": "drizzle",
+            "tableAccess": "READS_FUNCTION",
+            "operation": "read",
+            "fn": "file:src/routes.ts:function:10:<app.post:/sessions:arg1>"
+          },
+          {
+            "tableId": "table:drizzle:src/drizzle/schema.ts:sessions",
+            "table": "sessions",
+            "kind": "table",
+            "library": "drizzle",
+            "tableAccess": "WRITES_FUNCTION",
+            "operation": "create",
+            "fn": "file:src/drizzle/db.ts:function:11:openSession"
+          },
+          {
+            "tableId": "table:drizzle:src/drizzle/schema.ts:sessions",
+            "table": "sessions",
+            "kind": "table",
+            "library": "drizzle",
+            "tableAccess": "WRITES_FUNCTION",
+            "operation": "create",
+            "fn": "file:src/routes.ts:function:10:<app.post:/sessions:arg1>"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (fn:Function)-[rel:USES_ENV_FUNCTION]->(env:EnvVar) WHERE id(fn) IN $ids RETURN env.name AS name, rel.access AS access, rel.line AS line, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:src/routes.ts:function:10:<app.post:/sessions:arg1>",
+            "file:src/drizzle/db.ts:function:11:openSession"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (fn:Function)-[rel:CONSUMES_CONFIG_FUNCTION]->(config:ConfigValue) WHERE id(fn) IN $ids RETURN config.name AS name, rel.localName AS localName, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:src/routes.ts:function:10:<app.post:/sessions:arg1>",
+            "file:src/drizzle/db.ts:function:11:openSession"
+          ]
+        },
+        "rows": []
+      }
+    ],
+    "output": {
+      "method": "POST",
+      "path": "/sessions",
+      "routes": [
+        {
+          "method": "POST",
+          "path": "/sessions",
+          "fullPath": "/sessions",
+          "framework": "express-koa",
+          "handlerName": null,
+          "file": "src/routes.ts",
+          "line": 10,
+          "handlers": [
+            {
+              "name": "<app.post:/sessions:arg1>",
+              "className": null,
+              "file": "src/routes.ts",
+              "line": 10,
+              "endLine": 12
+            }
+          ],
+          "lifecycle": [
+            {
+              "role": "handler",
+              "scope": "route",
+              "hook": "handler",
+              "orderIndex": 0,
+              "name": "<app.post:/sessions:arg1>",
+              "className": null,
+              "file": "src/routes.ts",
+              "line": 10,
+              "endLine": 12
+            }
+          ],
+          "callChain": [
+            {
+              "depth": 1,
+              "caller": "<app.post:/sessions:arg1>",
+              "callerFile": "src/routes.ts",
+              "line": 11,
+              "callee": "openSession",
+              "calleeClass": null,
+              "calleeFile": "src/drizzle/db.ts"
+            }
+          ],
+          "dataAccess": [
+            {
+              "model": "sessions",
+              "library": "drizzle",
+              "operation": "create",
+              "line": 12,
+              "expression": "db.insert",
+              "usedBy": [
+                {
+                  "route": true
+                },
+                {
+                  "function": "openSession",
+                  "functionFile": "src/drizzle/db.ts"
+                },
+                {
+                  "function": "<app.post:/sessions:arg1>",
+                  "functionFile": "src/routes.ts"
+                }
+              ]
+            },
+            {
+              "model": "accounts",
+              "library": "drizzle",
+              "operation": "read",
+              "line": 13,
+              "expression": "db.query.accounts.findFirst",
+              "usedBy": [
+                {
+                  "route": true
+                },
+                {
+                  "function": "openSession",
+                  "functionFile": "src/drizzle/db.ts"
+                },
+                {
+                  "function": "<app.post:/sessions:arg1>",
+                  "functionFile": "src/routes.ts"
+                }
+              ]
+            }
+          ],
+          "tables": [
+            {
+              "table": "accounts",
+              "kind": "table",
+              "library": "drizzle",
+              "reads": [
+                "read"
+              ],
+              "writes": [],
+              "usedBy": [
+                {
+                  "route": true
+                },
+                {
+                  "function": "openSession",
+                  "functionFile": "src/drizzle/db.ts"
+                },
+                {
+                  "function": "<app.post:/sessions:arg1>",
+                  "functionFile": "src/routes.ts"
+                }
+              ]
+            },
+            {
+              "table": "sessions",
+              "kind": "table",
+              "library": "drizzle",
+              "reads": [],
+              "writes": [
+                "create"
+              ],
+              "usedBy": [
+                {
+                  "route": true
+                },
+                {
+                  "function": "openSession",
+                  "functionFile": "src/drizzle/db.ts"
+                },
+                {
+                  "function": "<app.post:/sessions:arg1>",
+                  "functionFile": "src/routes.ts"
+                }
+              ]
+            }
+          ],
+          "envVars": [],
+          "config": []
+        }
+      ],
+      "page": {
+        "offset": 0,
+        "returned": 1
+      }
+    }
+  },
+  {
+    "tool": "impact_of",
+    "args": {
+      "symbol": "PhotosService"
+    },
+    "calls": [
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_FUNCTION]->(fn:Function) RETURN id(fn) AS id, fn.name AS name, fn.className AS className, file.relativePath AS file, fn.line AS line, fn.endLine AS endLine",
+        "params": {},
+        "rows": [
+          {
+            "id": "file:src/drizzle/db.ts:function:7:findAccount",
+            "name": "findAccount",
+            "className": null,
+            "file": "src/drizzle/db.ts",
+            "line": 7,
+            "endLine": 9
+          },
+          {
+            "id": "file:src/drizzle/db.ts:function:11:openSession",
+            "name": "openSession",
+            "className": null,
+            "file": "src/drizzle/db.ts",
+            "line": 11,
+            "endLine": 14
+          },
+          {
+            "id": "file:src/drizzle/db.ts:function:16:closeSessions",
+            "name": "closeSessions",
+            "className": null,
+            "file": "src/drizzle/db.ts",
+            "line": 16,
+            "endLine": 18
+          },
+          {
+            "id": "file:src/routes.ts:function:6:<app.get:/accounts/:id:arg1>",
+            "name": "<app.get:/accounts/:id:arg1>",
+            "className": null,
+            "file": "src/routes.ts",
+            "line": 6,
+            "endLine": 8
+          },
+          {
+            "id": "file:src/routes.ts:function:10:<app.post:/sessions:arg1>",
+            "name": "<app.post:/sessions:arg1>",
+            "className": null,
+            "file": "src/routes.ts",
+            "line": 10,
+            "endLine": 12
+          },
+          {
+            "id": "file:src/routes.ts:function:14:<app.delete:/sessions:arg1>",
+            "name": "<app.delete:/sessions:arg1>",
+            "className": null,
+            "file": "src/routes.ts",
+            "line": 14,
+            "endLine": 17
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DEFINES_CLASS]->(class:Class)-[:DEFINES_METHOD]->(fn:Function) RETURN id(fn) AS id, fn.name AS name, class.name AS className, file.relativePath AS file, fn.line AS line, fn.endLine AS endLine",
+        "params": {},
+        "rows": [
+          {
+            "id": "file:src/mongoose/cats.service.ts:function:6:constructor",
+            "name": "constructor",
+            "className": "CatsService",
+            "file": "src/mongoose/cats.service.ts",
+            "line": 6,
+            "endLine": 6
+          },
+          {
+            "id": "file:src/mongoose/cats.service.ts:function:8:findAll",
+            "name": "findAll",
+            "className": "CatsService",
+            "file": "src/mongoose/cats.service.ts",
+            "line": 8,
+            "endLine": 10
+          },
+          {
+            "id": "file:src/mongoose/cats.service.ts:function:12:create",
+            "name": "create",
+            "className": "CatsService",
+            "file": "src/mongoose/cats.service.ts",
+            "line": 12,
+            "endLine": 14
+          },
+          {
+            "id": "file:src/typeorm/photos.service.ts:function:6:constructor",
+            "name": "constructor",
+            "className": "PhotosService",
+            "file": "src/typeorm/photos.service.ts",
+            "line": 6,
+            "endLine": 6
+          },
+          {
+            "id": "file:src/typeorm/photos.service.ts:function:8:list",
+            "name": "list",
+            "className": "PhotosService",
+            "file": "src/typeorm/photos.service.ts",
+            "line": 8,
+            "endLine": 10
+          },
+          {
+            "id": "file:src/typeorm/photos.service.ts:function:12:add",
+            "name": "add",
+            "className": "PhotosService",
+            "file": "src/typeorm/photos.service.ts",
+            "line": 12,
+            "endLine": 14
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (caller:Function)-[:CALLS]->(call:Call)-[:CALL_RESOLVES_TO]->(callee:Function) RETURN id(caller) AS caller, id(callee) AS callee, call.line AS line",
+        "rows": [
+          {
+            "caller": "file:src/routes.ts:function:6:<app.get:/accounts/:id:arg1>",
+            "callee": "file:src/drizzle/db.ts:function:7:findAccount",
+            "line": 7
+          },
+          {
+            "caller": "file:src/routes.ts:function:10:<app.post:/sessions:arg1>",
+            "callee": "file:src/drizzle/db.ts:function:11:openSession",
+            "line": 11
+          },
+          {
+            "caller": "file:src/routes.ts:function:14:<app.delete:/sessions:arg1>",
+            "callee": "file:src/drizzle/db.ts:function:16:closeSessions",
+            "line": 15
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:MODULE_CALLS]->(call:Call)-[:CALL_RESOLVES_TO]->(fn:Function) WHERE id(fn) IN $ids RETURN file.relativePath AS file, call.line AS line, call.expression AS expression, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:src/typeorm/photos.service.ts:function:6:constructor",
+            "file:src/typeorm/photos.service.ts:function:8:list",
+            "file:src/typeorm/photos.service.ts:function:12:add"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_ROUTE]->(route:Route)-[rel:ROUTE_HANDLED_BY|ROUTE_LIFECYCLE_STEP]->(fn:Function) WHERE id(fn) IN $ids RETURN route.method AS method, route.path AS path, route.fullPath AS fullPath, route.framework AS framework, file.relativePath AS file, route.line AS line, label(rel) AS relType, rel.role AS role, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:src/typeorm/photos.service.ts:function:6:constructor",
+            "file:src/typeorm/photos.service.ts:function:8:list",
+            "file:src/typeorm/photos.service.ts:function:12:add"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(entrypoint:EntryPoint)-[:ENTRYPOINT_HANDLED_BY]->(fn:Function) WHERE id(fn) IN $ids RETURN entrypoint.kind AS kind, entrypoint.trigger AS trigger, entrypoint.library AS library, file.relativePath AS file, entrypoint.line AS line, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:src/typeorm/photos.service.ts:function:6:constructor",
+            "file:src/typeorm/photos.service.ts:function:8:list",
+            "file:src/typeorm/photos.service.ts:function:12:add"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (fn:Function)-[rel:ACCESSES_DATA_FUNCTION]->(model:DataModel) WHERE id(fn) IN $ids RETURN model.name AS model, model.library AS library, rel.operation AS operation, rel.line AS line, rel.expression AS expression, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:src/typeorm/photos.service.ts:function:6:constructor",
+            "file:src/typeorm/photos.service.ts:function:8:list",
+            "file:src/typeorm/photos.service.ts:function:12:add"
+          ]
+        },
+        "rows": [
+          {
+            "model": "Photo",
+            "library": "typeorm",
+            "operation": "read",
+            "line": 9,
+            "expression": "this.photoRepository.find",
+            "fn": "file:src/typeorm/photos.service.ts:function:8:list"
+          },
+          {
+            "model": "Photo",
+            "library": "typeorm",
+            "operation": "create",
+            "line": 13,
+            "expression": "this.photoRepository.save",
+            "fn": "file:src/typeorm/photos.service.ts:function:12:add"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (fn:Function)-[rel:READS_FUNCTION|WRITES_FUNCTION]->(table:Table) WHERE id(fn) IN $ids RETURN id(table) AS tableId, table.name AS table, table.kind AS kind, table.library AS library, label(rel) AS tableAccess, rel.operation AS operation, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:src/typeorm/photos.service.ts:function:6:constructor",
+            "file:src/typeorm/photos.service.ts:function:8:list",
+            "file:src/typeorm/photos.service.ts:function:12:add"
+          ]
+        },
+        "rows": [
+          {
+            "tableId": "table:typeorm:src/typeorm/photo.entity.ts:photo",
+            "table": "photo",
+            "kind": "table",
+            "library": "typeorm",
+            "tableAccess": "READS_FUNCTION",
+            "operation": "read",
+            "fn": "file:src/typeorm/photos.service.ts:function:8:list"
+          },
+          {
+            "tableId": "table:typeorm:src/typeorm/photo.entity.ts:photo",
+            "table": "photo",
+            "kind": "table",
+            "library": "typeorm",
+            "tableAccess": "WRITES_FUNCTION",
+            "operation": "create",
+            "fn": "file:src/typeorm/photos.service.ts:function:12:add"
+          }
+        ]
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (fn:Function)-[rel:USES_ENV_FUNCTION]->(env:EnvVar) WHERE id(fn) IN $ids RETURN env.name AS name, rel.access AS access, rel.line AS line, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:src/typeorm/photos.service.ts:function:6:constructor",
+            "file:src/typeorm/photos.service.ts:function:8:list",
+            "file:src/typeorm/photos.service.ts:function:12:add"
+          ]
+        },
+        "rows": []
+      },
+      {
+        "method": "query",
+        "cypher": "MATCH (fn:Function)-[rel:CONSUMES_CONFIG_FUNCTION]->(config:ConfigValue) WHERE id(fn) IN $ids RETURN config.name AS name, rel.localName AS localName, id(fn) AS fn",
+        "params": {
+          "ids": [
+            "file:src/typeorm/photos.service.ts:function:6:constructor",
+            "file:src/typeorm/photos.service.ts:function:8:list",
+            "file:src/typeorm/photos.service.ts:function:12:add"
+          ]
+        },
+        "rows": []
+      }
+    ],
+    "output": {
+      "symbol": "PhotosService",
+      "file": null,
+      "maxDepth": 5,
+      "seeds": [
+        {
+          "name": "constructor",
+          "className": "PhotosService",
+          "file": "src/typeorm/photos.service.ts",
+          "line": 6,
+          "endLine": 6
+        },
+        {
+          "name": "list",
+          "className": "PhotosService",
+          "file": "src/typeorm/photos.service.ts",
+          "line": 8,
+          "endLine": 10
+        },
+        {
+          "name": "add",
+          "className": "PhotosService",
+          "file": "src/typeorm/photos.service.ts",
+          "line": 12,
+          "endLine": 14
+        }
+      ],
+      "callers": [],
+      "moduleCallers": [],
+      "routes": [],
+      "entrypoints": [],
+      "dataAccess": [
+        {
+          "model": "Photo",
+          "library": "typeorm",
+          "operation": "read",
+          "line": 9,
+          "expression": "this.photoRepository.find",
+          "usedBy": [
+            {
+              "function": "list",
+              "functionFile": "src/typeorm/photos.service.ts"
+            }
+          ]
+        },
+        {
+          "model": "Photo",
+          "library": "typeorm",
+          "operation": "create",
+          "line": 13,
+          "expression": "this.photoRepository.save",
+          "usedBy": [
+            {
+              "function": "add",
+              "functionFile": "src/typeorm/photos.service.ts"
+            }
+          ]
+        }
+      ],
+      "tables": [
+        {
+          "table": "photo",
+          "kind": "table",
+          "library": "typeorm",
+          "reads": [
+            "read"
+          ],
+          "writes": [
+            "create"
+          ],
+          "usedBy": [
+            {
+              "function": "list",
+              "functionFile": "src/typeorm/photos.service.ts"
+            },
+            {
+              "function": "add",
+              "functionFile": "src/typeorm/photos.service.ts"
+            }
+          ]
+        }
+      ],
+      "envVars": [],
+      "config": [],
+      "page": {
+        "offset": 0,
+        "returned": 0
+      }
+    }
+  }
+]

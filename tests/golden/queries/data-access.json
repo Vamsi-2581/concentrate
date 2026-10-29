@@ -5,7 +5,7 @@
     "calls": [
       {
         "method": "schemaVersion",
-        "result": 37
+        "result": 38
       },
       {
         "method": "stats",
@@ -86,12 +86,16 @@
           {
             "table": "DataModel",
             "count": 6
+          },
+          {
+            "table": "Table",
+            "count": 1
           }
         ]
       }
     ],
     "output": {
-      "schemaVersion": 37,
+      "schemaVersion": 38,
       "stats": [
         {
           "table": "Repo",
@@ -168,6 +172,10 @@
         {
           "table": "DataModel",
           "count": 6
+        },
+        {
+          "table": "Table",
+          "count": 1
         }
       ]
     }
@@ -641,12 +649,12 @@
     "calls": [
       {
         "method": "query",
-        "cypher": "MATCH (source:File)-[rel:ACCESSES_DATA_FILE]->(model:DataModel) WHERE true WITH source AS file, source, rel, model RETURN 'File' AS sourceKind, source.relativePath AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 51",
+        "cypher": "MATCH (source:File)-[rel:ACCESSES_DATA_FILE]->(model:DataModel) WHERE true WITH source AS file, source, rel, model OPTIONAL MATCH (model)-[:MAPS_TO_TABLE]->(table:Table) RETURN 'File' AS sourceKind, source.relativePath AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, table.name AS table, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 51",
         "rows": []
       },
       {
         "method": "query",
-        "cypher": "MATCH (source:Function)-[rel:ACCESSES_DATA_FUNCTION]->(model:DataModel) WHERE true OPTIONAL MATCH (file:File)-[:DEFINES_FUNCTION]->(source) RETURN 'Function' AS sourceKind, source.name AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 51",
+        "cypher": "MATCH (source:Function)-[rel:ACCESSES_DATA_FUNCTION]->(model:DataModel) WHERE true OPTIONAL MATCH (file:File)-[:DEFINES_FUNCTION]->(source) OPTIONAL MATCH (model)-[:MAPS_TO_TABLE]->(table:Table) RETURN 'Function' AS sourceKind, source.name AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, table.name AS table, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 51",
         "rows": [
           {
             "sourceKind": "Function",
@@ -655,6 +663,7 @@
             "line": 14,
             "model": "user",
             "library": "prisma",
+            "table": null,
             "operation": "read",
             "expression": "prisma.user.findMany"
           },
@@ -665,6 +674,7 @@
             "line": 15,
             "model": "user",
             "library": "prisma",
+            "table": null,
             "operation": "read",
             "expression": "aliasedPrisma.user.findFirst"
           },
@@ -675,6 +685,7 @@
             "line": 16,
             "model": "Audit",
             "library": "mongoose",
+            "table": null,
             "operation": "read",
             "expression": "AuditModel.findOne"
           },
@@ -685,6 +696,7 @@
             "line": 21,
             "model": "users",
             "library": "typeorm",
+            "table": null,
             "operation": "create",
             "expression": "usersRepository.save"
           },
@@ -695,6 +707,7 @@
             "line": 22,
             "model": "user",
             "library": "prisma",
+            "table": null,
             "operation": "update",
             "expression": "prisma.user.update"
           },
@@ -705,6 +718,7 @@
             "line": 27,
             "model": "Job",
             "library": "sequelize",
+            "table": null,
             "operation": "delete",
             "expression": "Job.destroy"
           },
@@ -715,6 +729,7 @@
             "line": 34,
             "model": "user",
             "library": "prisma",
+            "table": null,
             "operation": "read",
             "expression": "this.prisma.user.findMany"
           },
@@ -725,6 +740,7 @@
             "line": 34,
             "model": "user",
             "library": "prisma",
+            "table": null,
             "operation": "read",
             "expression": "this.prisma.user.findMany"
           },
@@ -735,6 +751,7 @@
             "line": 42,
             "model": "User",
             "library": "typeorm",
+            "table": null,
             "operation": "create",
             "expression": "this.usersRepository.save"
           },
@@ -745,6 +762,7 @@
             "line": 50,
             "model": "Audit",
             "library": "mongoose",
+            "table": null,
             "operation": "read",
             "expression": "this.AuditModel.findOne"
           },
@@ -755,6 +773,7 @@
             "line": 56,
             "model": "users",
             "library": "knex",
+            "table": "users",
             "operation": "read",
             "expression": "knex('users').select"
           }
@@ -762,7 +781,7 @@
       },
       {
         "method": "query",
-        "cypher": "MATCH (source:Route)-[rel:ACCESSES_DATA_ROUTE]->(model:DataModel) WHERE true OPTIONAL MATCH (file:File)-[:DECLARES_ROUTE]->(source) RETURN 'Route' AS sourceKind, source.path AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 51",
+        "cypher": "MATCH (source:Route)-[rel:ACCESSES_DATA_ROUTE]->(model:DataModel) WHERE true OPTIONAL MATCH (file:File)-[:DECLARES_ROUTE]->(source) OPTIONAL MATCH (model)-[:MAPS_TO_TABLE]->(table:Table) RETURN 'Route' AS sourceKind, source.path AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, table.name AS table, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 51",
         "rows": [
           {
             "sourceKind": "Route",
@@ -771,6 +790,7 @@
             "line": 14,
             "model": "user",
             "library": "prisma",
+            "table": null,
             "operation": "read",
             "expression": "prisma.user.findMany"
           },
@@ -781,6 +801,7 @@
             "line": 15,
             "model": "user",
             "library": "prisma",
+            "table": null,
             "operation": "read",
             "expression": "aliasedPrisma.user.findFirst"
           },
@@ -791,6 +812,7 @@
             "line": 16,
             "model": "Audit",
             "library": "mongoose",
+            "table": null,
             "operation": "read",
             "expression": "AuditModel.findOne"
           },
@@ -801,6 +823,7 @@
             "line": 21,
             "model": "users",
             "library": "typeorm",
+            "table": null,
             "operation": "create",
             "expression": "usersRepository.save"
           },
@@ -811,6 +834,7 @@
             "line": 22,
             "model": "user",
             "library": "prisma",
+            "table": null,
             "operation": "update",
             "expression": "prisma.user.update"
           }
@@ -818,7 +842,7 @@
       },
       {
         "method": "query",
-        "cypher": "MATCH (source:EntryPoint)-[rel:ACCESSES_DATA_ENTRYPOINT]->(model:DataModel) WHERE true OPTIONAL MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(source) RETURN 'EntryPoint' AS sourceKind, source.trigger AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 51",
+        "cypher": "MATCH (source:EntryPoint)-[rel:ACCESSES_DATA_ENTRYPOINT]->(model:DataModel) WHERE true OPTIONAL MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(source) OPTIONAL MATCH (model)-[:MAPS_TO_TABLE]->(table:Table) RETURN 'EntryPoint' AS sourceKind, source.trigger AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, table.name AS table, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 51",
         "rows": [
           {
             "sourceKind": "EntryPoint",
@@ -827,6 +851,7 @@
             "line": 27,
             "model": "Job",
             "library": "sequelize",
+            "table": null,
             "operation": "delete",
             "expression": "Job.destroy"
           }
@@ -845,6 +870,7 @@
           "line": 14,
           "model": "user",
           "library": "prisma",
+          "table": null,
           "operation": "read",
           "expression": "prisma.user.findMany"
         },
@@ -855,6 +881,7 @@
           "line": 15,
           "model": "user",
           "library": "prisma",
+          "table": null,
           "operation": "read",
           "expression": "aliasedPrisma.user.findFirst"
         },
@@ -865,6 +892,7 @@
           "line": 16,
           "model": "Audit",
           "library": "mongoose",
+          "table": null,
           "operation": "read",
           "expression": "AuditModel.findOne"
         },
@@ -875,6 +903,7 @@
           "line": 21,
           "model": "users",
           "library": "typeorm",
+          "table": null,
           "operation": "create",
           "expression": "usersRepository.save"
         },
@@ -885,6 +914,7 @@
           "line": 22,
           "model": "user",
           "library": "prisma",
+          "table": null,
           "operation": "update",
           "expression": "prisma.user.update"
         },
@@ -895,6 +925,7 @@
           "line": 27,
           "model": "Job",
           "library": "sequelize",
+          "table": null,
           "operation": "delete",
           "expression": "Job.destroy"
         },
@@ -905,6 +936,7 @@
           "line": 34,
           "model": "user",
           "library": "prisma",
+          "table": null,
           "operation": "read",
           "expression": "this.prisma.user.findMany"
         },
@@ -915,6 +947,7 @@
           "line": 34,
           "model": "user",
           "library": "prisma",
+          "table": null,
           "operation": "read",
           "expression": "this.prisma.user.findMany"
         },
@@ -925,6 +958,7 @@
           "line": 42,
           "model": "User",
           "library": "typeorm",
+          "table": null,
           "operation": "create",
           "expression": "this.usersRepository.save"
         },
@@ -935,6 +969,7 @@
           "line": 50,
           "model": "Audit",
           "library": "mongoose",
+          "table": null,
           "operation": "read",
           "expression": "this.AuditModel.findOne"
         },
@@ -945,6 +980,7 @@
           "line": 56,
           "model": "users",
           "library": "knex",
+          "table": "users",
           "operation": "read",
           "expression": "knex('users').select"
         },
@@ -955,6 +991,7 @@
           "line": 14,
           "model": "user",
           "library": "prisma",
+          "table": null,
           "operation": "read",
           "expression": "prisma.user.findMany"
         },
@@ -965,6 +1002,7 @@
           "line": 15,
           "model": "user",
           "library": "prisma",
+          "table": null,
           "operation": "read",
           "expression": "aliasedPrisma.user.findFirst"
         },
@@ -975,6 +1013,7 @@
           "line": 16,
           "model": "Audit",
           "library": "mongoose",
+          "table": null,
           "operation": "read",
           "expression": "AuditModel.findOne"
         },
@@ -985,6 +1024,7 @@
           "line": 21,
           "model": "users",
           "library": "typeorm",
+          "table": null,
           "operation": "create",
           "expression": "usersRepository.save"
         },
@@ -995,6 +1035,7 @@
           "line": 22,
           "model": "user",
           "library": "prisma",
+          "table": null,
           "operation": "update",
           "expression": "prisma.user.update"
         },
@@ -1005,6 +1046,7 @@
           "line": 27,
           "model": "Job",
           "library": "sequelize",
+          "table": null,
           "operation": "delete",
           "expression": "Job.destroy"
         }
@@ -1023,12 +1065,12 @@
     "calls": [
       {
         "method": "query",
-        "cypher": "MATCH (source:File)-[rel:ACCESSES_DATA_FILE]->(model:DataModel) WHERE true AND contains(lower(model.name), lower(\"user\")) WITH source AS file, source, rel, model RETURN 'File' AS sourceKind, source.relativePath AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 51",
+        "cypher": "MATCH (source:File)-[rel:ACCESSES_DATA_FILE]->(model:DataModel) WHERE true AND contains(lower(model.name), lower(\"user\")) WITH source AS file, source, rel, model OPTIONAL MATCH (model)-[:MAPS_TO_TABLE]->(table:Table) RETURN 'File' AS sourceKind, source.relativePath AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, table.name AS table, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 51",
         "rows": []
       },
       {
         "method": "query",
-        "cypher": "MATCH (source:Function)-[rel:ACCESSES_DATA_FUNCTION]->(model:DataModel) WHERE true AND contains(lower(model.name), lower(\"user\")) OPTIONAL MATCH (file:File)-[:DEFINES_FUNCTION]->(source) RETURN 'Function' AS sourceKind, source.name AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 51",
+        "cypher": "MATCH (source:Function)-[rel:ACCESSES_DATA_FUNCTION]->(model:DataModel) WHERE true AND contains(lower(model.name), lower(\"user\")) OPTIONAL MATCH (file:File)-[:DEFINES_FUNCTION]->(source) OPTIONAL MATCH (model)-[:MAPS_TO_TABLE]->(table:Table) RETURN 'Function' AS sourceKind, source.name AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, table.name AS table, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 51",
         "rows": [
           {
             "sourceKind": "Function",
@@ -1037,6 +1079,7 @@
             "line": 14,
             "model": "user",
             "library": "prisma",
+            "table": null,
             "operation": "read",
             "expression": "prisma.user.findMany"
           },
@@ -1047,6 +1090,7 @@
             "line": 15,
             "model": "user",
             "library": "prisma",
+            "table": null,
             "operation": "read",
             "expression": "aliasedPrisma.user.findFirst"
           },
@@ -1057,6 +1101,7 @@
             "line": 21,
             "model": "users",
             "library": "typeorm",
+            "table": null,
             "operation": "create",
             "expression": "usersRepository.save"
           },
@@ -1067,6 +1112,7 @@
             "line": 22,
             "model": "user",
             "library": "prisma",
+            "table": null,
             "operation": "update",
             "expression": "prisma.user.update"
           },
@@ -1077,6 +1123,7 @@
             "line": 34,
             "model": "user",
             "library": "prisma",
+            "table": null,
             "operation": "read",
             "expression": "this.prisma.user.findMany"
           },
@@ -1087,6 +1134,7 @@
             "line": 34,
             "model": "user",
             "library": "prisma",
+            "table": null,
             "operation": "read",
             "expression": "this.prisma.user.findMany"
           },
@@ -1097,6 +1145,7 @@
             "line": 42,
             "model": "User",
             "library": "typeorm",
+            "table": null,
             "operation": "create",
             "expression": "this.usersRepository.save"
           },
@@ -1107,6 +1156,7 @@
             "line": 56,
             "model": "users",
             "library": "knex",
+            "table": "users",
             "operation": "read",
             "expression": "knex('users').select"
           }
@@ -1114,7 +1164,7 @@
       },
       {
         "method": "query",
-        "cypher": "MATCH (source:Route)-[rel:ACCESSES_DATA_ROUTE]->(model:DataModel) WHERE true AND contains(lower(model.name), lower(\"user\")) OPTIONAL MATCH (file:File)-[:DECLARES_ROUTE]->(source) RETURN 'Route' AS sourceKind, source.path AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 51",
+        "cypher": "MATCH (source:Route)-[rel:ACCESSES_DATA_ROUTE]->(model:DataModel) WHERE true AND contains(lower(model.name), lower(\"user\")) OPTIONAL MATCH (file:File)-[:DECLARES_ROUTE]->(source) OPTIONAL MATCH (model)-[:MAPS_TO_TABLE]->(table:Table) RETURN 'Route' AS sourceKind, source.path AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, table.name AS table, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 51",
         "rows": [
           {
             "sourceKind": "Route",
@@ -1123,6 +1173,7 @@
             "line": 14,
             "model": "user",
             "library": "prisma",
+            "table": null,
             "operation": "read",
             "expression": "prisma.user.findMany"
           },
@@ -1133,6 +1184,7 @@
             "line": 15,
             "model": "user",
             "library": "prisma",
+            "table": null,
             "operation": "read",
             "expression": "aliasedPrisma.user.findFirst"
           },
@@ -1143,6 +1195,7 @@
             "line": 21,
             "model": "users",
             "library": "typeorm",
+            "table": null,
             "operation": "create",
             "expression": "usersRepository.save"
           },
@@ -1153,6 +1206,7 @@
             "line": 22,
             "model": "user",
             "library": "prisma",
+            "table": null,
             "operation": "update",
             "expression": "prisma.user.update"
           }
@@ -1160,7 +1214,7 @@
       },
       {
         "method": "query",
-        "cypher": "MATCH (source:EntryPoint)-[rel:ACCESSES_DATA_ENTRYPOINT]->(model:DataModel) WHERE true AND contains(lower(model.name), lower(\"user\")) OPTIONAL MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(source) RETURN 'EntryPoint' AS sourceKind, source.trigger AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 51",
+        "cypher": "MATCH (source:EntryPoint)-[rel:ACCESSES_DATA_ENTRYPOINT]->(model:DataModel) WHERE true AND contains(lower(model.name), lower(\"user\")) OPTIONAL MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(source) OPTIONAL MATCH (model)-[:MAPS_TO_TABLE]->(table:Table) RETURN 'EntryPoint' AS sourceKind, source.trigger AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, table.name AS table, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 51",
         "rows": []
       }
     ],
@@ -1177,6 +1231,7 @@
           "line": 14,
           "model": "user",
           "library": "prisma",
+          "table": null,
           "operation": "read",
           "expression": "prisma.user.findMany"
         },
@@ -1187,6 +1242,7 @@
           "line": 15,
           "model": "user",
           "library": "prisma",
+          "table": null,
           "operation": "read",
           "expression": "aliasedPrisma.user.findFirst"
         },
@@ -1197,6 +1253,7 @@
           "line": 21,
           "model": "users",
           "library": "typeorm",
+          "table": null,
           "operation": "create",
           "expression": "usersRepository.save"
         },
@@ -1207,6 +1264,7 @@
           "line": 22,
           "model": "user",
           "library": "prisma",
+          "table": null,
           "operation": "update",
           "expression": "prisma.user.update"
         },
@@ -1217,6 +1275,7 @@
           "line": 34,
           "model": "user",
           "library": "prisma",
+          "table": null,
           "operation": "read",
           "expression": "this.prisma.user.findMany"
         },
@@ -1227,6 +1286,7 @@
           "line": 34,
           "model": "user",
           "library": "prisma",
+          "table": null,
           "operation": "read",
           "expression": "this.prisma.user.findMany"
         },
@@ -1237,6 +1297,7 @@
           "line": 42,
           "model": "User",
           "library": "typeorm",
+          "table": null,
           "operation": "create",
           "expression": "this.usersRepository.save"
         },
@@ -1247,6 +1308,7 @@
           "line": 56,
           "model": "users",
           "library": "knex",
+          "table": "users",
           "operation": "read",
           "expression": "knex('users').select"
         },
@@ -1257,6 +1319,7 @@
           "line": 14,
           "model": "user",
           "library": "prisma",
+          "table": null,
           "operation": "read",
           "expression": "prisma.user.findMany"
         },
@@ -1267,6 +1330,7 @@
           "line": 15,
           "model": "user",
           "library": "prisma",
+          "table": null,
           "operation": "read",
           "expression": "aliasedPrisma.user.findFirst"
         },
@@ -1277,6 +1341,7 @@
           "line": 21,
           "model": "users",
           "library": "typeorm",
+          "table": null,
           "operation": "create",
           "expression": "usersRepository.save"
         },
@@ -1287,6 +1352,7 @@
           "line": 22,
           "model": "user",
           "library": "prisma",
+          "table": null,
           "operation": "update",
           "expression": "prisma.user.update"
         }
@@ -1305,12 +1371,12 @@
     "calls": [
       {
         "method": "query",
-        "cypher": "MATCH (source:File)-[rel:ACCESSES_DATA_FILE]->(model:DataModel) WHERE true AND rel.operation = \"create\" WITH source AS file, source, rel, model RETURN 'File' AS sourceKind, source.relativePath AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 51",
+        "cypher": "MATCH (source:File)-[rel:ACCESSES_DATA_FILE]->(model:DataModel) WHERE true AND rel.operation = \"create\" WITH source AS file, source, rel, model OPTIONAL MATCH (model)-[:MAPS_TO_TABLE]->(table:Table) RETURN 'File' AS sourceKind, source.relativePath AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, table.name AS table, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 51",
         "rows": []
       },
       {
         "method": "query",
-        "cypher": "MATCH (source:Function)-[rel:ACCESSES_DATA_FUNCTION]->(model:DataModel) WHERE true AND rel.operation = \"create\" OPTIONAL MATCH (file:File)-[:DEFINES_FUNCTION]->(source) RETURN 'Function' AS sourceKind, source.name AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 51",
+        "cypher": "MATCH (source:Function)-[rel:ACCESSES_DATA_FUNCTION]->(model:DataModel) WHERE true AND rel.operation = \"create\" OPTIONAL MATCH (file:File)-[:DEFINES_FUNCTION]->(source) OPTIONAL MATCH (model)-[:MAPS_TO_TABLE]->(table:Table) RETURN 'Function' AS sourceKind, source.name AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, table.name AS table, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 51",
         "rows": [
           {
             "sourceKind": "Function",
@@ -1319,6 +1385,7 @@
             "line": 21,
             "model": "users",
             "library": "typeorm",
+            "table": null,
             "operation": "create",
             "expression": "usersRepository.save"
           },
@@ -1329,6 +1396,7 @@
             "line": 42,
             "model": "User",
             "library": "typeorm",
+            "table": null,
             "operation": "create",
             "expression": "this.usersRepository.save"
           }
@@ -1336,7 +1404,7 @@
       },
       {
         "method": "query",
-        "cypher": "MATCH (source:Route)-[rel:ACCESSES_DATA_ROUTE]->(model:DataModel) WHERE true AND rel.operation = \"create\" OPTIONAL MATCH (file:File)-[:DECLARES_ROUTE]->(source) RETURN 'Route' AS sourceKind, source.path AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 51",
+        "cypher": "MATCH (source:Route)-[rel:ACCESSES_DATA_ROUTE]->(model:DataModel) WHERE true AND rel.operation = \"create\" OPTIONAL MATCH (file:File)-[:DECLARES_ROUTE]->(source) OPTIONAL MATCH (model)-[:MAPS_TO_TABLE]->(table:Table) RETURN 'Route' AS sourceKind, source.path AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, table.name AS table, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 51",
         "rows": [
           {
             "sourceKind": "Route",
@@ -1345,6 +1413,7 @@
             "line": 21,
             "model": "users",
             "library": "typeorm",
+            "table": null,
             "operation": "create",
             "expression": "usersRepository.save"
           }
@@ -1352,7 +1421,7 @@
       },
       {
         "method": "query",
-        "cypher": "MATCH (source:EntryPoint)-[rel:ACCESSES_DATA_ENTRYPOINT]->(model:DataModel) WHERE true AND rel.operation = \"create\" OPTIONAL MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(source) RETURN 'EntryPoint' AS sourceKind, source.trigger AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 51",
+        "cypher": "MATCH (source:EntryPoint)-[rel:ACCESSES_DATA_ENTRYPOINT]->(model:DataModel) WHERE true AND rel.operation = \"create\" OPTIONAL MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(source) OPTIONAL MATCH (model)-[:MAPS_TO_TABLE]->(table:Table) RETURN 'EntryPoint' AS sourceKind, source.trigger AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, table.name AS table, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 51",
         "rows": []
       }
     ],
@@ -1369,6 +1438,7 @@
           "line": 21,
           "model": "users",
           "library": "typeorm",
+          "table": null,
           "operation": "create",
           "expression": "usersRepository.save"
         },
@@ -1379,6 +1449,7 @@
           "line": 42,
           "model": "User",
           "library": "typeorm",
+          "table": null,
           "operation": "create",
           "expression": "this.usersRepository.save"
         },
@@ -1389,6 +1460,7 @@
           "line": 21,
           "model": "users",
           "library": "typeorm",
+          "table": null,
           "operation": "create",
           "expression": "usersRepository.save"
         }
@@ -1408,12 +1480,12 @@
     "calls": [
       {
         "method": "query",
-        "cypher": "MATCH (source:File)-[rel:ACCESSES_DATA_FILE]->(model:DataModel) WHERE true AND model.library = \"mongoose\" WITH source AS file, source, rel, model RETURN 'File' AS sourceKind, source.relativePath AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 6",
+        "cypher": "MATCH (source:File)-[rel:ACCESSES_DATA_FILE]->(model:DataModel) WHERE true AND model.library = \"mongoose\" WITH source AS file, source, rel, model OPTIONAL MATCH (model)-[:MAPS_TO_TABLE]->(table:Table) RETURN 'File' AS sourceKind, source.relativePath AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, table.name AS table, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 6",
         "rows": []
       },
       {
         "method": "query",
-        "cypher": "MATCH (source:Function)-[rel:ACCESSES_DATA_FUNCTION]->(model:DataModel) WHERE true AND model.library = \"mongoose\" OPTIONAL MATCH (file:File)-[:DEFINES_FUNCTION]->(source) RETURN 'Function' AS sourceKind, source.name AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 6",
+        "cypher": "MATCH (source:Function)-[rel:ACCESSES_DATA_FUNCTION]->(model:DataModel) WHERE true AND model.library = \"mongoose\" OPTIONAL MATCH (file:File)-[:DEFINES_FUNCTION]->(source) OPTIONAL MATCH (model)-[:MAPS_TO_TABLE]->(table:Table) RETURN 'Function' AS sourceKind, source.name AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, table.name AS table, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 6",
         "rows": [
           {
             "sourceKind": "Function",
@@ -1422,6 +1494,7 @@
             "line": 16,
             "model": "Audit",
             "library": "mongoose",
+            "table": null,
             "operation": "read",
             "expression": "AuditModel.findOne"
           },
@@ -1432,6 +1505,7 @@
             "line": 50,
             "model": "Audit",
             "library": "mongoose",
+            "table": null,
             "operation": "read",
             "expression": "this.AuditModel.findOne"
           }
@@ -1439,7 +1513,7 @@
       },
       {
         "method": "query",
-        "cypher": "MATCH (source:Route)-[rel:ACCESSES_DATA_ROUTE]->(model:DataModel) WHERE true AND model.library = \"mongoose\" OPTIONAL MATCH (file:File)-[:DECLARES_ROUTE]->(source) RETURN 'Route' AS sourceKind, source.path AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 6",
+        "cypher": "MATCH (source:Route)-[rel:ACCESSES_DATA_ROUTE]->(model:DataModel) WHERE true AND model.library = \"mongoose\" OPTIONAL MATCH (file:File)-[:DECLARES_ROUTE]->(source) OPTIONAL MATCH (model)-[:MAPS_TO_TABLE]->(table:Table) RETURN 'Route' AS sourceKind, source.path AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, table.name AS table, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 6",
         "rows": [
           {
             "sourceKind": "Route",
@@ -1448,6 +1522,7 @@
             "line": 16,
             "model": "Audit",
             "library": "mongoose",
+            "table": null,
             "operation": "read",
             "expression": "AuditModel.findOne"
           }
@@ -1455,7 +1530,7 @@
       },
       {
         "method": "query",
-        "cypher": "MATCH (source:EntryPoint)-[rel:ACCESSES_DATA_ENTRYPOINT]->(model:DataModel) WHERE true AND model.library = \"mongoose\" OPTIONAL MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(source) RETURN 'EntryPoint' AS sourceKind, source.trigger AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 6",
+        "cypher": "MATCH (source:EntryPoint)-[rel:ACCESSES_DATA_ENTRYPOINT]->(model:DataModel) WHERE true AND model.library = \"mongoose\" OPTIONAL MATCH (file:File)-[:DECLARES_ENTRYPOINT]->(source) OPTIONAL MATCH (model)-[:MAPS_TO_TABLE]->(table:Table) RETURN 'EntryPoint' AS sourceKind, source.trigger AS sourceName, file.relativePath AS file, rel.line AS line, model.name AS model, model.library AS library, table.name AS table, rel.operation AS operation, rel.expression AS expression ORDER BY file.relativePath, rel.line LIMIT 6",
         "rows": []
       }
     ],
@@ -1472,6 +1547,7 @@
           "line": 16,
           "model": "Audit",
           "library": "mongoose",
+          "table": null,
           "operation": "read",
           "expression": "AuditModel.findOne"
         },
@@ -1482,6 +1558,7 @@
           "line": 50,
           "model": "Audit",
           "library": "mongoose",
+          "table": null,
           "operation": "read",
           "expression": "this.AuditModel.findOne"
         },
@@ -1492,6 +1569,7 @@
           "line": 16,
           "model": "Audit",
           "library": "mongoose",
+          "table": null,
           "operation": "read",
           "expression": "AuditModel.findOne"
         }

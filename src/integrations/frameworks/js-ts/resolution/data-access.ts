@@ -1,5 +1,7 @@
 import type { GraphNode, GraphRelationship } from "../../../../core/graph/model.js";
 import type { IGraphContributor } from "../../../../core/contracts/graph-contributor.js";
+import { nearestPackageDirectory, resolvePrismaModel, tableId, type PrismaModelIndex } from "../prisma-schema.js";
+import type { PendingRelation } from "../data-schemas.js";
 
 type DataAccess = {
   modelName: string;
@@ -7,6 +9,9 @@ type DataAccess = {
   operation: string;
   line: number;
   expression: string;
+  // A model declared in a schema file (Prisma), instead of one named after
+  // the call.
+  modelId?: string;
 };
 
 type ModelHint = {
@@ -41,26 +46,167 @@ const operationByMethod = new Map<string, string>([
   ["upsert", "upsert"],
 ]);
 
-export function addDataAccessRelationships(graph: IGraphContributor): void {
+// Operations that read or write a model's table.
+const readOperations = new Set(["read", "aggregate"]);
+const writeOperations = new Set(["create", "update", "delete", "upsert"]);
+
+export function addDataAccessRelationships(
+  graph: IGraphContributor,
+  prismaModels: PrismaModelIndex = { schemas: [], packageDirectories: [] },
+): void {
   const context = createDataAccessContext(graph.nodes, graph.relationships);
   const directAccesses: Array<{ from: string; to: string; dataAccess: DataAccess }> = [];
+  const filePaths = new Set(graph.nodes.flatMap((node) => (
+    node.label === "File" && typeof node.properties.relativePath === "string" ? [node.properties.relativePath] : []
+  )));
+  const declaredModels = new DeclaredModels(graph.nodes, prismaModels.packageDirectories);
+  addDeclaredRelations(graph, declaredModels);
 
-  for (const callNode of graph.nodes) {
+  for (const callNode of [...graph.nodes]) {
     if (callNode.label !== "Call") continue;
 
     const dataAccess = classifyDataAccessCall(callNode, context);
     if (!dataAccess) continue;
 
-    const modelNode = createDataModelNode(dataAccess);
-    graph.addNode(modelNode);
+    const file = fileOfNodeId(callNode.id, filePaths);
+    const declared = !file ? null : dataAccess.library === "prisma"
+      ? resolvePrismaModel(prismaModels, file, dataAccess.modelName)
+      : declaredModels.resolve(dataAccess.library, file, dataAccess.modelName);
+    if (declared) dataAccess.modelId = declared;
+
+    let modelId = dataAccess.modelId;
+    if (!modelId) {
+      const modelNode = createDataModelNode(dataAccess);
+      graph.addNode(modelNode);
+      modelId = modelNode.id;
+      if (dataAccess.library === "knex") addKnexTable(graph, modelNode.id, dataAccess.modelName);
+    }
 
     for (const sourceId of accessSourceIds(callNode.id, context)) {
-      addDataAccessRelationship(graph, sourceId, modelNode.id, dataAccess);
-      directAccesses.push({ from: sourceId, to: modelNode.id, dataAccess });
+      addDataAccessRelationship(graph, sourceId, modelId, dataAccess);
+      directAccesses.push({ from: sourceId, to: modelId, dataAccess });
     }
   }
 
   propagateDataAccessThroughResolvedCalls(graph, context, directAccesses);
+  addTableAccessRelationships(graph);
+}
+
+// Models declared in source (TypeORM entities, Mongoose schemas, Drizzle
+// tables) by library and name. A name resolves to the declaration in the
+// caller's package, else to the repository's only declaration of it.
+class DeclaredModels {
+  private readonly byKey = new Map<string, Array<{ id: string; packageDirectory: string | null }>>();
+
+  constructor(nodes: readonly GraphNode[], private readonly packageDirectories: readonly string[]) {
+    for (const node of nodes) {
+      const { name, library, declaredIn } = node.properties;
+      if (node.label !== "DataModel" || library === "prisma" || typeof name !== "string" || typeof library !== "string" || typeof declaredIn !== "string") continue;
+      const key = `${library}\0${name}`;
+      this.byKey.set(key, [...(this.byKey.get(key) ?? []), { id: node.id, packageDirectory: this.packageOf(declaredIn) }]);
+    }
+  }
+
+  resolve(library: string, file: string, name: string): string | null {
+    const candidates = this.byKey.get(`${library}\0${name}`) ?? [];
+    const packageDirectory = this.packageOf(file);
+    const local = candidates.filter((candidate) => candidate.packageDirectory === packageDirectory);
+    const matches = local.length > 0 ? local : candidates;
+    return matches.length === 1 ? matches[0]!.id : null;
+  }
+
+  private packageOf(file: string): string | null {
+    const directory = file.includes("/") ? file.slice(0, file.lastIndexOf("/")) : ".";
+    return nearestPackageDirectory(directory, this.packageDirectories);
+  }
+}
+
+// RELATES_TO for the relations declarations name by class or variable
+// (`pendingRelations`, set at parse time), then the property is dropped.
+function addDeclaredRelations(graph: IGraphContributor, declaredModels: DeclaredModels): void {
+  for (const node of graph.nodes) {
+    const pending = node.properties.pendingRelations;
+    if (node.label !== "DataModel" || pending === undefined) continue;
+    delete node.properties.pendingRelations;
+    if (typeof pending !== "string" || typeof node.properties.declaredIn !== "string") continue;
+    let relations: PendingRelation[];
+    try {
+      relations = JSON.parse(pending) as PendingRelation[];
+    } catch {
+      continue;
+    }
+    for (const relation of relations) {
+      const target = declaredModels.resolve(String(node.properties.library), node.properties.declaredIn, relation.target);
+      if (!target) continue;
+      graph.addRelationship({
+        from: node.id,
+        to: target,
+        type: "RELATES_TO",
+        properties: {
+          field: relation.field,
+          kind: relation.kind,
+          fields: JSON.stringify(relation.fields),
+          references: JSON.stringify(relation.references),
+          relationName: relation.relationName,
+          onDelete: relation.onDelete,
+        },
+      });
+    }
+  }
+}
+
+// Node ids start with their file's id (`file:<relativePath>:...`).
+function fileOfNodeId(id: string, filePaths: ReadonlySet<string>): string | null {
+  if (!id.startsWith("file:")) return null;
+  for (let index = id.indexOf(":", 5); index !== -1; index = id.indexOf(":", index + 1)) {
+    const candidate = id.slice(5, index);
+    if (filePaths.has(candidate)) return candidate;
+  }
+  return null;
+}
+
+// `knex('users')` names the table itself.
+function addKnexTable(graph: IGraphContributor, modelId: string, name: string): void {
+  const id = tableId("knex", null, name);
+  graph.addNode({
+    id,
+    label: "Table",
+    properties: { name, kind: "table", library: "knex", schemaName: null, provider: null, declaredIn: null, line: null, columns: "[]" },
+  });
+  graph.addRelationship({ from: modelId, to: id, type: "MAPS_TO_TABLE", properties: {} });
+}
+
+// READS / WRITES from every data access (direct or propagated) whose model
+// maps to a table.
+function addTableAccessRelationships(graph: IGraphContributor): void {
+  const tableByModel = new Map<string, string>();
+  const modelNames = new Map<string, string>();
+  for (const relationship of graph.relationships) {
+    if (relationship.type === "MAPS_TO_TABLE") tableByModel.set(relationship.from, relationship.to);
+  }
+  if (tableByModel.size === 0) return;
+  for (const node of graph.nodes) {
+    if (node.label === "DataModel" && typeof node.properties.name === "string") modelNames.set(node.id, node.properties.name);
+  }
+
+  for (const relationship of [...graph.relationships]) {
+    if (relationship.type !== "ACCESSES_DATA") continue;
+    const table = tableByModel.get(relationship.to);
+    const operation = String(relationship.properties.operation);
+    const type = readOperations.has(operation) ? "READS" : writeOperations.has(operation) ? "WRITES" : null;
+    if (!table || !type) continue;
+    graph.addRelationship({
+      from: relationship.from,
+      to: table,
+      type,
+      properties: {
+        operation,
+        line: relationship.properties.line,
+        expression: relationship.properties.expression,
+        model: modelNames.get(relationship.to) ?? null,
+      },
+    });
+  }
 }
 
 function createDataAccessContext(nodes: GraphNode[], relationships: GraphRelationship[]): {
@@ -133,6 +279,7 @@ function createDataAccessContext(nodes: GraphNode[], relationships: GraphRelatio
     }
   }
 
+  const prismaClientClasses = prismaClientSubclasses(nodes);
   for (const rel of relationships) {
     if (rel.type !== "DEFINES_FIELD") continue;
 
@@ -143,7 +290,7 @@ function createDataAccessContext(nodes: GraphNode[], relationships: GraphRelatio
     const typeName = field.properties.typeName;
     if (typeof fieldName !== "string" || typeof typeName !== "string") continue;
 
-    const hint = inferModelHintFromField(fieldName, typeName);
+    const hint = inferModelHintFromField(fieldName, typeName, prismaClientClasses);
     if (!hint) continue;
 
     let hints = modelHintByFieldByClassId.get(rel.from);
@@ -193,13 +340,17 @@ function classifyDataAccessCall(
     return null;
   }
 
-  const operation = operationByMethod.get(callee);
+  // `from` only counts in Drizzle's db.select().from(table).
+  const operation = operationByMethod.get(callee) ?? (callee === "from" ? "read" : undefined);
   if (!operation) return null;
 
-  const knexAccess = classifyKnexAccess(expression, operation, callNode);
+  const knexAccess = callee === "from" ? null : classifyKnexAccess(expression, operation, callNode);
   if (knexAccess) return knexAccess;
 
   if (typeof receiver !== "string") {
+    return null;
+  }
+  if (callee === "from" && context.variableLibraryByName.get(receiver.split(".")[0] ?? receiver) !== "drizzle") {
     return null;
   }
 
@@ -259,6 +410,13 @@ function classifyDataAccessCall(
       line: safeLine,
       expression,
     };
+  }
+
+  if (variableLibrary === "drizzle") {
+    const drizzleModel = drizzleModelName(callee, receiverParts, expression, callNode);
+    return drizzleModel
+      ? { modelName: drizzleModel.model, library: "drizzle", operation: drizzleModel.operation, line: safeLine, expression }
+      : null;
   }
 
   if (variableLibrary && variableLibrary !== "prisma") {
@@ -423,6 +581,38 @@ function createDataModelNode(dataAccess: DataAccess): GraphNode {
   };
 }
 
+// Drizzle queries name the table variable: db.select().from(users),
+// db.insert(users), db.update(users), db.delete(users),
+// db.query.users.findMany().
+function drizzleModelName(
+  callee: string,
+  receiverParts: string[],
+  expression: string,
+  callNode: GraphNode,
+): { model: string; operation: string } | null {
+  if (receiverParts[1] === "query" && receiverParts[2]) {
+    const operation = operationByMethod.get(callee);
+    return operation === "read" ? { model: receiverParts[2], operation } : null;
+  }
+  const first = firstIdentifierArg(callNode);
+  if (!first) return null;
+  if (callee === "from" && /\.select(?:Distinct(?:On)?)?\(/u.test(expression)) return { model: first, operation: "read" };
+  if (callee === "insert") return { model: first, operation: "create" };
+  if (callee === "update") return { model: first, operation: "update" };
+  if (callee === "delete") return { model: first, operation: "delete" };
+  return null;
+}
+
+function firstIdentifierArg(callNode: GraphNode): string | null {
+  try {
+    const args = JSON.parse(String(callNode.properties.args ?? "[]")) as unknown[];
+    const first = args[0];
+    return typeof first === "string" && /^[A-Za-z_$][\w$]*$/u.test(first) ? first : null;
+  } catch {
+    return null;
+  }
+}
+
 function stripRepositorySuffix(value: string): string {
   return value.replace(/Repository$|Repo$/u, "") || value;
 }
@@ -487,16 +677,48 @@ function inferLibraryFromImport(source: string, imported: string, kind: string):
   if (source === "typeorm" && ["Repository", "getRepository", "createRepository", "DataSource"].includes(imported)) {
     return "typeorm";
   }
+  if (source.startsWith("drizzle-orm") && imported === "drizzle") {
+    return "drizzle";
+  }
   return null;
 }
 
-function inferModelHintFromField(fieldName: string, typeName: string): ModelHint | null {
+// Names of classes that extend PrismaClient, directly or through other
+// classes (`class PrismaService extends PrismaClient`, the NestJS pattern).
+function prismaClientSubclasses(nodes: readonly GraphNode[]): Set<string> {
+  const parentsByClass = new Map<string, string[]>();
+  for (const node of nodes) {
+    if (node.label !== "Class" || typeof node.properties.name !== "string" || typeof node.properties.extendsNames !== "string") continue;
+    try {
+      const parents = JSON.parse(node.properties.extendsNames) as unknown;
+      if (Array.isArray(parents)) parentsByClass.set(node.properties.name, parents.map(String));
+    } catch {
+      // Not a name list: no parents.
+    }
+  }
+  const subclasses = new Set<string>();
+  let changed = true;
+  while (changed) {
+    changed = false;
+    for (const [name, parents] of parentsByClass) {
+      if (subclasses.has(name)) continue;
+      if (parents.some((parent) => parent === "PrismaClient" || subclasses.has(parent))) {
+        subclasses.add(name);
+        changed = true;
+      }
+    }
+  }
+  return subclasses;
+}
+
+function inferModelHintFromField(fieldName: string, typeName: string, prismaClientClasses: ReadonlySet<string>): ModelHint | null {
   const normalizedType = normalizeTypeName(typeName);
-  if (normalizedType === "PrismaClient") {
+  if (normalizedType === "PrismaClient" || prismaClientClasses.has(normalizedType)) {
     return { library: "prisma", modelName: fieldName };
   }
 
-  const repositoryModel = extractGenericType(typeName, "Repository")
+  // Repository<User>, and TypeORM's MongoRepository<User> / TreeRepository<User>.
+  const repositoryModel = extractGenericType(typeName, "(?:Mongo|Tree)?Repository")
     ?? (normalizedType.endsWith("Repository") || normalizedType.endsWith("Repo")
       ? stripRepositorySuffix(normalizedType)
       : null);

@@ -77,6 +77,33 @@ audits.
 - Data-access propagation follows resolved calls, injection fields, and
   repository/service methods, but complex factory containers or runtime DI
   registration can still hide relationships.
+- `schema.prisma` files (and folders of `.prisma` files, read as one schema)
+  add every model and view as a `DataModel` and a `Table` named after
+  `@@map`. A Prisma call links to a declared model when its accessor
+  (`prisma.user`) is the model name with a lowercase first letter, and the
+  schema is the one in the calling file's nearest package (by `package.json`),
+  or the repository's only schema. Otherwise the call keeps a model named after
+  the accessor, with no table. Fields typed as `PrismaClient` or a class that
+  extends it are treated as Prisma clients.
+- Tables are read from source declarations:
+  - TypeORM: `@Entity()` / `@ViewEntity()` classes, their column decorators,
+    and relation decorators whose target is `() => Class` or a string.
+  - Mongoose: NestJS `@Schema()` classes with `@Prop()` fields, and
+    `new Schema({ ... })` objects named by `model('Name', schema)` in the same
+    file, else by the variable without its `Schema` suffix.
+  - Drizzle: `pgTable` / `mysqlTable` / `sqliteTable` definitions assigned to a
+    variable.
+  - Knex: `knex('table')` calls.
+- Defaults follow each library's naming: TypeORM tables are the class name in
+  snake case, Mongoose collections the model name lowercased and pluralized
+  with the common English rules only (irregular plurals such as `person` →
+  `people` are missed). A custom TypeORM naming strategy or a Mongoose
+  `pluralize` override is not read.
+- An access links to a declared model of the same library and name (the
+  repository's entity, the model class, the Drizzle variable): the declaration
+  in the caller's package, else the repository's only one. Sequelize models,
+  entity schemas built with `new EntitySchema()`, and columns built by helper
+  functions are not read. `$queryRaw` and other raw SQL are not read.
 - Current false-positive guards avoid broad framework factories, but review
   findings from `semanticSamples.dataAccess` should be fed back into resolver
   rules.
