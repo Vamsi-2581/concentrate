@@ -468,13 +468,13 @@ Builds on the existing `--semantic-samples` infrastructure in the smoke command.
 
 ### Agent benchmark
 
-- [ ] Define a fixed question set across the sample repositories
+- [x] Define a fixed question set across the sample repositories ([agent-benchmark.md](agent-benchmark.md))
 - [ ] Measure tokens, tool calls and answer accuracy with and without Concentrate
 - [ ] Publish results in the README and `docs/`
 
 ### Acceptance criteria
 
-- [ ] Accuracy, performance and agent benchmark reports are reproducible from scripts
+- [x] Accuracy, performance and agent benchmark reports are reproducible from scripts
 - [ ] README shows the headline numbers
 
 ## Phase 9: Distribution (npm, init command, CI) ([#16](https://github.com/fatihserhatturan/concentrate/issues/16))
