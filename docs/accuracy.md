@@ -64,7 +64,7 @@ Rules:
 - **Data access:** an access matches on file, function, model and operation,
   and on the table when the label names one.
 
-## Results (2026-10-29, schema 39)
+## Results (2026-10-29, schema 40)
 
 ### Routes
 
@@ -80,12 +80,12 @@ Rules:
 
 | Sample | Labels | TP | FP | FN | Precision | Recall |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| express | 28 | 8 | 1 | 20 | 88.9% | 28.6% |
+| express | 28 | 8 | 0 | 20 | 100.0% | 28.6% |
 | fastify | 6 | 6 | 0 | 0 | 100.0% | 100.0% |
 | internet-node-express-realworld | 24 | 24 | 0 | 0 | 100.0% | 100.0% |
 | ky | 13 | 13 | 0 | 0 | 100.0% | 100.0% |
 | nestjs-starter | 2 | 2 | 0 | 0 | 100.0% | 100.0% |
-| **all** | 73 | 53 | 1 | 20 | **98.1%** | **72.6%** |
+| **all** | 73 | 53 | 0 | 20 | **100.0%** | **72.6%** |
 
 Labels counts calls with a project target. Another 310 call sites are labeled
 `null`, and 35 are `dynamic`.
@@ -100,10 +100,10 @@ Labels counts calls with a project target. Another 310 call sites are labeled
 
 ## What the misses are
 
-Precision is high everywhere: when the graph states something it is almost
-always right. The single wrong call target is a shadowing case: `var resolve =
-path.resolve` called bare in `lib/view.js` links to the same-named
-`View.prototype.resolve`. Recall is where the gaps are, and they cluster:
+Precision is 100% everywhere: no route, call target or data access the graph
+states is wrong. (The one wrong call target, a bare `resolve()` bound by `var
+resolve = path.resolve` in express's `lib/view.js`, is left unresolved since
+#48.) Recall is where the gaps are, and they cluster:
 
 - **Routes declared inside functions.** Routes are read from module-level
   calls only, and a Fastify app registers its routes inside a plugin function
