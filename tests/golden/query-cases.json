@@ -515,6 +515,18 @@
           "name": "build"
         }
       }
+    ],
+    "function-routes": [
+      {
+        "tool": "list_routes",
+        "args": {}
+      },
+      {
+        "tool": "list_routes",
+        "args": {
+          "framework": "fastify"
+        }
+      }
     ]
   }
 }

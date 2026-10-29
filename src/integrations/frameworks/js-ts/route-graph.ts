@@ -2,14 +2,28 @@ import { indexOfNode, type SyntaxNode } from "../../languages/syntax/tree-sitter
 import type { GraphNode, GraphRelationship, ImportBinding } from "../../../core/graph/model.js";
 import { analyzeMemberCallExpression } from "../../languages/tree-sitter-utils.js";
 import {
+  anonymousExportedFunctions,
   firstDecoratorArg,
+  functionBodyCallExpressions,
+  functionParameterNames,
+  functionLocalCallInitializers,
   indexFileFunctions,
   indexPassedToHandlers,
   moduleLevelCallExpressions,
   stripStringQuotes,
+  type FunctionAstPair,
 } from "./file-index.js";
 
 type FrameworkFilter = "express-koa" | "fastify";
+
+// A route call inside a function body: the function, and the receivers that
+// count as an app there (its own parameter or local, see functionRouteReceivers)
+// with the framework each belongs to.
+// The function has no node when it is an unnamed module export.
+type FunctionRouteScope = {
+  functionNodeId: string | null;
+  receivers: Map<string, FrameworkFilter>;
+};
 
 const routeMethods = new Set([
   "all",
@@ -62,8 +76,9 @@ export function createExpressKoaRouteGraph(
   programNode: SyntaxNode,
   nodes: GraphNode[],
   relationships: GraphRelationship[],
+  functionAstPairs: FunctionAstPair[] = [],
 ): { nodes: GraphNode[]; relationships: GraphRelationship[] } {
-  return createHttpRouteGraph(fileNodeId, programNode, nodes, relationships, "express-koa");
+  return createHttpRouteGraph(fileNodeId, programNode, nodes, relationships, functionAstPairs, "express-koa");
 }
 
 export function createFastifyRouteGraph(
@@ -71,8 +86,9 @@ export function createFastifyRouteGraph(
   programNode: SyntaxNode,
   nodes: GraphNode[],
   relationships: GraphRelationship[],
+  functionAstPairs: FunctionAstPair[] = [],
 ): { nodes: GraphNode[]; relationships: GraphRelationship[] } {
-  return createHttpRouteGraph(fileNodeId, programNode, nodes, relationships, "fastify");
+  return createHttpRouteGraph(fileNodeId, programNode, nodes, relationships, functionAstPairs, "fastify");
 }
 
 function createHttpRouteGraph(
@@ -80,6 +96,7 @@ function createHttpRouteGraph(
   programNode: SyntaxNode,
   nodes: GraphNode[],
   relationships: GraphRelationship[],
+  functionAstPairs: FunctionAstPair[],
   frameworkFilter: FrameworkFilter,
 ): { nodes: GraphNode[]; relationships: GraphRelationship[] } {
   const routeNodes: GraphNode[] = [];
@@ -91,8 +108,22 @@ function createHttpRouteGraph(
   const functionIdsByName = functionsByName;
   const importedNames = indexFileNamedImports(fileNodeId, nodes, relationships);
 
-  for (const callExpr of moduleLevelCallExpressions(programNode)) {
-    const routes = createRouteNodes(fileNodeId, callExpr, stringConstantsByName, frameworkFilter);
+  const sites: Array<{ callExpr: SyntaxNode; scope: FunctionRouteScope | null }> = [
+    ...moduleLevelCallExpressions(programNode).map((callExpr) => ({ callExpr, scope: null })),
+  ];
+  const functions = [
+    ...functionAstPairs,
+    ...anonymousExportedFunctions(programNode).map((astNode) => ({ functionNodeId: null, astNode })),
+  ];
+  for (const { functionNodeId, astNode } of functions) {
+    const receivers = functionRouteReceivers(astNode);
+    if (receivers.size === 0) continue;
+    const scope = { functionNodeId, receivers };
+    sites.push(...functionBodyCallExpressions(astNode).map((callExpr) => ({ callExpr, scope })));
+  }
+
+  for (const { callExpr, scope } of sites) {
+    const routes = createRouteNodes(fileNodeId, callExpr, stringConstantsByName, frameworkFilter, scope);
 
     for (const route of routes) {
       routeNodes.push(route.node);
@@ -157,7 +188,17 @@ function createHttpRouteGraph(
       }
     }
 
-    routeRelationships.push(...createMountRelationships(callExpr, variablesByName, functionsByName, stringConstantsByName, frameworkFilter));
+    if (!scope) {
+      routeRelationships.push(...createMountRelationships(
+        fileNodeId,
+        callExpr,
+        variablesByName,
+        functionsByName,
+        functionIdsByPassedToCallId,
+        stringConstantsByName,
+        frameworkFilter,
+      ));
+    }
   }
 
   return { nodes: routeNodes, relationships: routeRelationships };
@@ -230,9 +271,11 @@ export function createNestJsRouteGraph(
 }
 
 function createMountRelationships(
+  fileNodeId: string,
   callExpr: SyntaxNode,
   variablesByName: Map<string, string>,
   functionsByName: Map<string, string>,
+  functionIdsByPassedToCallId: Map<string, string>,
   stringConstantsByName: Map<string, string>,
   frameworkFilter: FrameworkFilter,
 ): GraphRelationship[] {
@@ -262,9 +305,12 @@ function createMountRelationships(
   const line = callExpr.startPosition.row + 1;
 
   return mountedArgs.flatMap((arg) => {
-    if (arg.type !== "identifier") return [];
-
-    const targetId = variablesByName.get(arg.text) ?? functionsByName.get(arg.text);
+    // fastify.register(async (instance) => { … }, { prefix }) mounts the inline plugin.
+    const targetId = arg.type === "identifier"
+      ? variablesByName.get(arg.text) ?? functionsByName.get(arg.text)
+      : isFunctionExpressionNode(arg) && parts.callee === "register"
+        ? functionIdsByPassedToCallId.get(callNodeIdFor(fileNodeId, null, callExpr, parts.expression))
+        : undefined;
     if (!targetId) return [];
 
     return [{
@@ -285,18 +331,20 @@ function createRouteNodes(
   callExpr: SyntaxNode,
   stringConstantsByName: Map<string, string>,
   frameworkFilter: FrameworkFilter,
+  scope: FunctionRouteScope | null,
 ): RouteCandidate[] {
   const parts = analyzeMemberCallExpression(callExpr.childForFieldName("function")?.text);
-  if (!parts || !isRouteReceiver(parts.receiver)) {
+  if (!parts) return [];
+
+  const framework = scope
+    ? scope.receivers.get(routeReceiverName(parts.receiver) ?? "")
+    : isRouteReceiver(parts.receiver) ? routeFramework(parts.receiver) : undefined;
+  if (framework !== frameworkFilter) {
     return [];
   }
 
-  if (!matchesFrameworkFilter(parts.receiver, frameworkFilter)) {
-    return [];
-  }
-
-  if (parts.callee === "route" && isFastifyReceiver(parts.receiver)) {
-    return createFastifyObjectRouteNodes(fileNodeId, callExpr, parts.expression, stringConstantsByName);
+  if (parts.callee === "route" && framework === "fastify") {
+    return createFastifyObjectRouteNodes(fileNodeId, callExpr, parts.expression, stringConstantsByName, scope);
   }
 
   if (!routeMethods.has(parts.callee)) {
@@ -307,6 +355,11 @@ function createRouteNodes(
   const routePathInfo = extractLeadingPath(args, stringConstantsByName);
   const routePath = routePathInfo.value;
   const handlerArgs = argsAfterLeadingPath(args);
+  // Inside a function only a call with a path and a handler is a route, so a
+  // getter like `app.get('env')` is not.
+  if (scope && (routePathInfo.expression === null || handlerArgs.length === 0)) {
+    return [];
+  }
   const referencedHandlerNames = handlerArgs
     .filter((arg) => arg.type === "identifier")
     .map((arg) => arg.text);
@@ -314,14 +367,14 @@ function createRouteNodes(
   const row = callExpr.startPosition.row + 1;
   const column = callExpr.startPosition.column;
   const method = parts.callee.toUpperCase();
-  const callNodeId = `${fileNodeId}:modulecall:${row}:${column}:${parts.expression}`;
+  const callNodeId = callNodeIdFor(fileNodeId, scope, callExpr, parts.expression);
   const lifecycleSteps = createCallLifecycleSteps({
     args,
     handlerArgs,
     expression: parts.expression,
     routePath,
     method,
-    framework: routeFramework(parts.receiver),
+    framework,
     scope: lifecycleScope(parts.receiver, parts.callee),
   });
 
@@ -334,8 +387,9 @@ function createRouteNodes(
       routePath,
       pathExpression: routePathInfo.expression,
       receiverName: routeReceiverName(parts.receiver),
-      framework: routeFramework(parts.receiver),
+      framework,
       handlerName,
+      scopeFunctionId: scope?.functionNodeId ?? null,
     }),
     callNodeId,
     referencedHandlerNames,
@@ -349,6 +403,7 @@ function createFastifyObjectRouteNodes(
   callExpr: SyntaxNode,
   expression: string,
   stringConstantsByName: Map<string, string>,
+  scope: FunctionRouteScope | null,
 ): RouteCandidate[] {
   const args = callExpr.childForFieldName("arguments")?.namedChildren ?? [];
   const config = args.find((arg) => arg.type === "object");
@@ -369,7 +424,7 @@ function createFastifyObjectRouteNodes(
   const lifecycleSteps = createFastifyObjectLifecycleSteps(config, expression, routePath);
   const row = callExpr.startPosition.row + 1;
   const column = callExpr.startPosition.column;
-  const callNodeId = `${fileNodeId}:modulecall:${row}:${column}:${expression}`;
+  const callNodeId = callNodeIdFor(fileNodeId, scope, callExpr, expression);
 
   return methods.map((method) => ({
     node: createRouteNode({
@@ -382,6 +437,7 @@ function createFastifyObjectRouteNodes(
       receiverName: routeReceiverName(expression),
       framework: "fastify",
       handlerName,
+      scopeFunctionId: scope?.functionNodeId ?? null,
     }),
     callNodeId,
     referencedHandlerNames,
@@ -558,6 +614,7 @@ function createRouteNode(input: {
   receiverName: string | null;
   framework: string;
   handlerName: string | null;
+  scopeFunctionId?: string | null;
 }): GraphNode {
   const pathIdPart = input.routePath ?? "<none>";
 
@@ -573,9 +630,56 @@ function createRouteNode(input: {
       line: input.row,
       framework: input.framework,
       handlerName: input.handlerName,
+      ...(input.scopeFunctionId ? { scopeFunctionId: input.scopeFunctionId } : {}),
     },
   };
 }
+
+// The id the language parser gives this call node: module-level calls are
+// `…:modulecall:…`, calls in a function body are `<function>:call:…`.
+function callNodeIdFor(fileNodeId: string, scope: FunctionRouteScope | null, callExpr: SyntaxNode, expression: string): string {
+  const row = callExpr.startPosition.row + 1;
+  const column = callExpr.startPosition.column;
+  if (!scope) return `${fileNodeId}:modulecall:${row}:${column}:${expression}`;
+  return `${scope.functionNodeId ?? fileNodeId}:call:${row}:${column}:${expression}`;
+}
+
+// Receivers that count as an app inside a function:
+// - its first parameter, when the function is a Fastify plugin
+//   (`(instance, opts, done)`, or passed inline to `.register(...)`) or the
+//   parameter has an app name (`function app(fastify, config, done)`);
+// - a local initialized by a call and with an app name
+//   (`const app = fastify(opts)`).
+// Variables of the enclosing module are not included.
+function functionRouteReceivers(functionNode: SyntaxNode): Map<string, FrameworkFilter> {
+  const receivers = new Map<string, FrameworkFilter>();
+  const parameters = functionParameterNames(functionNode);
+  const first = parameters[0];
+  if (first) {
+    if (isFastifyPluginFunction(functionNode, parameters)) receivers.set(first, "fastify");
+    else if (isRouteReceiver(first)) receivers.set(first, routeFramework(first));
+  }
+
+  for (const [name, callee] of functionLocalCallInitializers(functionNode)) {
+    if (receivers.has(name) || !isRouteReceiver(name)) continue;
+    receivers.set(name, isFastifyFactory(callee) ? "fastify" : routeFramework(name));
+  }
+  return receivers;
+}
+
+function isFastifyPluginFunction(functionNode: SyntaxNode, parameters: string[]): boolean {
+  if (parameters.length === 3 && /^(done|next)$/.test(parameters[2]!)) return true;
+
+  const args = functionNode.parent;
+  const callee = args?.type === "arguments" ? args.parent?.childForFieldName("function") : null;
+  return args?.namedChildren[0]?.id === functionNode.id && /\.register$/.test(callee?.text ?? "");
+}
+
+// `fastify(opts)`, `Fastify()`, or the fastify module required and called in one go.
+function isFastifyFactory(callee: string): boolean {
+  return /^(fastify|require\(\s*["']fastify["']\s*\))$/i.test(callee);
+}
+
 
 function extractObjectStringProperty(node: SyntaxNode | undefined, key: string): string | null {
   const value = node ? extractObjectProperty(node, key) : null;
@@ -683,7 +787,7 @@ function isMountCall(parts: { callee: string; receiver: string | null }): boolea
   return parts.callee === "use" || (parts.callee === "register" && isFastifyReceiver(parts.receiver));
 }
 
-function routeFramework(receiver: string | null): string {
+function routeFramework(receiver: string | null): FrameworkFilter {
   return isFastifyReceiver(receiver) ? "fastify" : "express-koa";
 }
 
@@ -704,7 +808,7 @@ function isFastifyReceiver(receiver: string | null): boolean {
 }
 
 function matchesFrameworkFilter(receiver: string | null, filter: FrameworkFilter): boolean {
-  return filter === "fastify" ? isFastifyReceiver(receiver) : !isFastifyReceiver(receiver);
+  return routeFramework(receiver) === filter;
 }
 
 function isRouteReceiver(receiver: string | null): boolean {

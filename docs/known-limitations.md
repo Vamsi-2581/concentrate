@@ -29,10 +29,18 @@ and deeper package graph queries.
   calls it when its argument is a string literal or a visible constant. Its
   `exclude` option and prefixes chosen at runtime are not modelled.
 - Found by the accuracy report ([accuracy.md](accuracy.md)):
-  - Routes are only read from module-level calls, so routes registered
-    inside a function (a Fastify plugin `function plugin(instance, opts,
-    next)`, a `build()` factory) are missed: 11 of 14 labeled Fastify routes.
-    fastify-decorators' `@GET` / `@POST` are not read either.
+  - fastify-decorators' `@GET` / `@POST` are not read.
+  - Inside a function, routes are read only when the receiver is the
+    function's first parameter (a Fastify plugin `(instance, opts, done)`, a
+    function passed inline to `.register(...)`, or a parameter with an app
+    name) or a local created by a call (`const app = fastify(opts)`) with an
+    app name. A module-level app used inside a function is not read there.
+  - Inline handlers of such routes (`app.get('/', async () => …)`) have no
+    Function node, so the route has no `ROUTE_HANDLED_BY` to them; named
+    handlers link.
+  - `register(plugin, { prefix })` applies its prefix only to a plugin defined
+    in the same file; a plugin imported or `require`d from another file, and
+    mounts made inside a function, keep their routes unprefixed.
   - Routes are only read from receivers named `app`, `router`, `fastify` or
     `…Router`; `const apiv1 = express.Router()` and `const main = express()`
     are missed.

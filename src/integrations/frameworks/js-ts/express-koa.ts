@@ -1,6 +1,7 @@
 import type { SyntaxNode } from "../../languages/syntax/tree-sitter.js";
 import type { GraphNode, GraphRelationship } from "../../../core/graph/model.js";
 import { createExpressKoaRouteGraph } from "./route-graph.js";
+import type { FunctionAstPair } from "./file-index.js";
 import { addImportedRouteHandlerRelationships } from "./resolution/route-handlers.js";
 import type { ISemanticContributor } from "../../../core/contracts/semantic-contributor.js";
 
@@ -13,8 +14,9 @@ export function applyExpressKoaParseSemantics(
   programNode: SyntaxNode,
   nodes: GraphNode[],
   relationships: GraphRelationship[],
+  functionAstPairs: FunctionAstPair[] = [],
 ): void {
-  const result = createExpressKoaRouteGraph(fileNodeId, programNode, nodes, relationships);
+  const result = createExpressKoaRouteGraph(fileNodeId, programNode, nodes, relationships, functionAstPairs);
   nodes.push(...result.nodes);
   relationships.push(...result.relationships);
 }

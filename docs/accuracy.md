@@ -64,17 +64,17 @@ Rules:
 - **Data access:** an access matches on file, function, model and operation,
   and on the table when the label names one.
 
-## Results (2026-10-29, schema 40)
+## Results (2026-10-29, schema 41)
 
 ### Routes
 
 | Sample | Labels | TP | FP | FN | Precision | Recall | Full path |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | express | 59 | 53 | 0 | 6 | 100.0% | 89.8% | 100.0% (53/53) |
-| fastify | 14 | 1 | 0 | 13 | 100.0% | 7.1% | 100.0% (1/1) |
+| fastify | 14 | 12 | 0 | 2 | 100.0% | 85.7% | 100.0% (12/12) |
 | internet-node-express-realworld | 20 | 20 | 0 | 0 | 100.0% | 100.0% | 5.0% (1/20) |
 | nestjs-starter | 1 | 1 | 0 | 0 | 100.0% | 100.0% | 100.0% (1/1) |
-| **all** | 94 | 75 | 0 | 19 | **100.0%** | **79.8%** | **74.7% (56/75)** |
+| **all** | 94 | 86 | 0 | 8 | **100.0%** | **91.5%** | **77.9% (67/86)** |
 
 ### Call resolution
 
@@ -105,11 +105,9 @@ states is wrong. (The one wrong call target, a bare `resolve()` bound by `var
 resolve = path.resolve` in express's `lib/view.js`, is left unresolved since
 #48.) Recall is where the gaps are, and they cluster:
 
-- **Routes declared inside functions.** Routes are read from module-level
-  calls only, and a Fastify app registers its routes inside a plugin function
-  (`function plugin(instance, opts, next)`) or a `build()` factory: 11 of
-  fastify's 13 misses. The other 2 are fastify-decorators' `@GET` / `@POST`,
-  which are not read.
+- **Decorator routes outside NestJS.** fastify-decorators' `@GET` / `@POST`
+  are not read: fastify's 2 misses. (Routes registered inside a plugin
+  function or a `build()` factory, 11 misses before, are read since #41.)
 - **Receivers with other names.** Routes are read from receivers named `app`,
   `router`, `fastify` or `…Router`; Express's `multi-router` and `vhost`
   examples use `apiv1 = express.Router()` and `main = express()`: express's
