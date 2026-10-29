@@ -1442,7 +1442,7 @@
           "entrypoints": []
         }
       ],
-      "note": "Tables come from Prisma schema files (models and views, named by @@map) and Knex calls. readBy / writtenBy count distinct routes, entrypoints and functions; each table lists up to 20 routes and entrypoints.",
+      "note": "Tables come from Prisma schema files, TypeORM entities, Mongoose schemas, Drizzle table definitions and Knex calls. readBy / writtenBy count distinct routes, entrypoints and functions; each table lists up to 20 routes and entrypoints.",
       "page": {
         "offset": 0,
         "returned": 5
@@ -1702,7 +1702,7 @@
           "entrypoints": []
         }
       ],
-      "note": "Tables come from Prisma schema files (models and views, named by @@map) and Knex calls. readBy / writtenBy count distinct routes, entrypoints and functions; each table lists up to 20 routes and entrypoints.",
+      "note": "Tables come from Prisma schema files, TypeORM entities, Mongoose schemas, Drizzle table definitions and Knex calls. readBy / writtenBy count distinct routes, entrypoints and functions; each table lists up to 20 routes and entrypoints.",
       "page": {
         "offset": 0,
         "returned": 1

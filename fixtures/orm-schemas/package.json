@@ -1,0 +1,11 @@
+{
+  "name": "orm-schemas-fixture",
+  "private": true,
+  "dependencies": {
+    "@nestjs/mongoose": "^10.0.0",
+    "drizzle-orm": "^0.36.0",
+    "express": "^4.19.0",
+    "mongoose": "^8.0.0",
+    "typeorm": "^0.3.20"
+  }
+}

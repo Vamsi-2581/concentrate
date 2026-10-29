@@ -1,6 +1,7 @@
 import type { GraphNode, GraphRelationship } from "../../../../core/graph/model.js";
 import type { IGraphContributor } from "../../../../core/contracts/graph-contributor.js";
-import { resolvePrismaModel, tableId, type PrismaModelIndex } from "../prisma-schema.js";
+import { nearestPackageDirectory, resolvePrismaModel, tableId, type PrismaModelIndex } from "../prisma-schema.js";
+import type { PendingRelation } from "../data-schemas.js";
 
 type DataAccess = {
   modelName: string;
@@ -58,6 +59,8 @@ export function addDataAccessRelationships(
   const filePaths = new Set(graph.nodes.flatMap((node) => (
     node.label === "File" && typeof node.properties.relativePath === "string" ? [node.properties.relativePath] : []
   )));
+  const declaredModels = new DeclaredModels(graph.nodes, prismaModels.packageDirectories);
+  addDeclaredRelations(graph, declaredModels);
 
   for (const callNode of [...graph.nodes]) {
     if (callNode.label !== "Call") continue;
@@ -65,11 +68,11 @@ export function addDataAccessRelationships(
     const dataAccess = classifyDataAccessCall(callNode, context);
     if (!dataAccess) continue;
 
-    if (dataAccess.library === "prisma") {
-      const file = fileOfNodeId(callNode.id, filePaths);
-      const modelId = file ? resolvePrismaModel(prismaModels, file, dataAccess.modelName) : null;
-      if (modelId) dataAccess.modelId = modelId;
-    }
+    const file = fileOfNodeId(callNode.id, filePaths);
+    const declared = !file ? null : dataAccess.library === "prisma"
+      ? resolvePrismaModel(prismaModels, file, dataAccess.modelName)
+      : declaredModels.resolve(dataAccess.library, file, dataAccess.modelName);
+    if (declared) dataAccess.modelId = declared;
 
     let modelId = dataAccess.modelId;
     if (!modelId) {
@@ -87,6 +90,69 @@ export function addDataAccessRelationships(
 
   propagateDataAccessThroughResolvedCalls(graph, context, directAccesses);
   addTableAccessRelationships(graph);
+}
+
+// Models declared in source (TypeORM entities, Mongoose schemas, Drizzle
+// tables) by library and name. A name resolves to the declaration in the
+// caller's package, else to the repository's only declaration of it.
+class DeclaredModels {
+  private readonly byKey = new Map<string, Array<{ id: string; packageDirectory: string | null }>>();
+
+  constructor(nodes: readonly GraphNode[], private readonly packageDirectories: readonly string[]) {
+    for (const node of nodes) {
+      const { name, library, declaredIn } = node.properties;
+      if (node.label !== "DataModel" || library === "prisma" || typeof name !== "string" || typeof library !== "string" || typeof declaredIn !== "string") continue;
+      const key = `${library}\0${name}`;
+      this.byKey.set(key, [...(this.byKey.get(key) ?? []), { id: node.id, packageDirectory: this.packageOf(declaredIn) }]);
+    }
+  }
+
+  resolve(library: string, file: string, name: string): string | null {
+    const candidates = this.byKey.get(`${library}\0${name}`) ?? [];
+    const packageDirectory = this.packageOf(file);
+    const local = candidates.filter((candidate) => candidate.packageDirectory === packageDirectory);
+    const matches = local.length > 0 ? local : candidates;
+    return matches.length === 1 ? matches[0]!.id : null;
+  }
+
+  private packageOf(file: string): string | null {
+    const directory = file.includes("/") ? file.slice(0, file.lastIndexOf("/")) : ".";
+    return nearestPackageDirectory(directory, this.packageDirectories);
+  }
+}
+
+// RELATES_TO for the relations declarations name by class or variable
+// (`pendingRelations`, set at parse time), then the property is dropped.
+function addDeclaredRelations(graph: IGraphContributor, declaredModels: DeclaredModels): void {
+  for (const node of graph.nodes) {
+    const pending = node.properties.pendingRelations;
+    if (node.label !== "DataModel" || pending === undefined) continue;
+    delete node.properties.pendingRelations;
+    if (typeof pending !== "string" || typeof node.properties.declaredIn !== "string") continue;
+    let relations: PendingRelation[];
+    try {
+      relations = JSON.parse(pending) as PendingRelation[];
+    } catch {
+      continue;
+    }
+    for (const relation of relations) {
+      const target = declaredModels.resolve(String(node.properties.library), node.properties.declaredIn, relation.target);
+      if (!target) continue;
+      graph.addRelationship({
+        from: node.id,
+        to: target,
+        type: "RELATES_TO",
+        properties: {
+          field: relation.field,
+          kind: relation.kind,
+          fields: JSON.stringify(relation.fields),
+          references: JSON.stringify(relation.references),
+          relationName: relation.relationName,
+          onDelete: relation.onDelete,
+        },
+      });
+    }
+  }
 }
 
 // Node ids start with their file's id (`file:<relativePath>:...`).
@@ -274,13 +340,17 @@ function classifyDataAccessCall(
     return null;
   }
 
-  const operation = operationByMethod.get(callee);
+  // `from` only counts in Drizzle's db.select().from(table).
+  const operation = operationByMethod.get(callee) ?? (callee === "from" ? "read" : undefined);
   if (!operation) return null;
 
-  const knexAccess = classifyKnexAccess(expression, operation, callNode);
+  const knexAccess = callee === "from" ? null : classifyKnexAccess(expression, operation, callNode);
   if (knexAccess) return knexAccess;
 
   if (typeof receiver !== "string") {
+    return null;
+  }
+  if (callee === "from" && context.variableLibraryByName.get(receiver.split(".")[0] ?? receiver) !== "drizzle") {
     return null;
   }
 
@@ -340,6 +410,13 @@ function classifyDataAccessCall(
       line: safeLine,
       expression,
     };
+  }
+
+  if (variableLibrary === "drizzle") {
+    const drizzleModel = drizzleModelName(callee, receiverParts, expression, callNode);
+    return drizzleModel
+      ? { modelName: drizzleModel.model, library: "drizzle", operation: drizzleModel.operation, line: safeLine, expression }
+      : null;
   }
 
   if (variableLibrary && variableLibrary !== "prisma") {
@@ -504,6 +581,38 @@ function createDataModelNode(dataAccess: DataAccess): GraphNode {
   };
 }
 
+// Drizzle queries name the table variable: db.select().from(users),
+// db.insert(users), db.update(users), db.delete(users),
+// db.query.users.findMany().
+function drizzleModelName(
+  callee: string,
+  receiverParts: string[],
+  expression: string,
+  callNode: GraphNode,
+): { model: string; operation: string } | null {
+  if (receiverParts[1] === "query" && receiverParts[2]) {
+    const operation = operationByMethod.get(callee);
+    return operation === "read" ? { model: receiverParts[2], operation } : null;
+  }
+  const first = firstIdentifierArg(callNode);
+  if (!first) return null;
+  if (callee === "from" && /\.select(?:Distinct(?:On)?)?\(/u.test(expression)) return { model: first, operation: "read" };
+  if (callee === "insert") return { model: first, operation: "create" };
+  if (callee === "update") return { model: first, operation: "update" };
+  if (callee === "delete") return { model: first, operation: "delete" };
+  return null;
+}
+
+function firstIdentifierArg(callNode: GraphNode): string | null {
+  try {
+    const args = JSON.parse(String(callNode.properties.args ?? "[]")) as unknown[];
+    const first = args[0];
+    return typeof first === "string" && /^[A-Za-z_$][\w$]*$/u.test(first) ? first : null;
+  } catch {
+    return null;
+  }
+}
+
 function stripRepositorySuffix(value: string): string {
   return value.replace(/Repository$|Repo$/u, "") || value;
 }
@@ -568,6 +677,9 @@ function inferLibraryFromImport(source: string, imported: string, kind: string):
   if (source === "typeorm" && ["Repository", "getRepository", "createRepository", "DataSource"].includes(imported)) {
     return "typeorm";
   }
+  if (source.startsWith("drizzle-orm") && imported === "drizzle") {
+    return "drizzle";
+  }
   return null;
 }
 
@@ -605,7 +717,8 @@ function inferModelHintFromField(fieldName: string, typeName: string, prismaClie
     return { library: "prisma", modelName: fieldName };
   }
 
-  const repositoryModel = extractGenericType(typeName, "Repository")
+  // Repository<User>, and TypeORM's MongoRepository<User> / TreeRepository<User>.
+  const repositoryModel = extractGenericType(typeName, "(?:Mongo|Tree)?Repository")
     ?? (normalizedType.endsWith("Repository") || normalizedType.endsWith("Repo")
       ? stripRepositorySuffix(normalizedType)
       : null);
