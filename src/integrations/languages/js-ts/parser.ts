@@ -24,6 +24,7 @@ import {
   createDefaultExportExpressionNode,
   createLocalReExportRelationships,
   extractCjsExportBindings,
+  extractDefaultExportName,
   extractCjsObjectAssignExportBindings,
   extractLocalReExportNames,
   type CjsExportBinding,
@@ -53,6 +54,7 @@ export type WalkState = {
   relationships: GraphRelationship[];
   cjsExportBindings: CjsExportBinding[];
   localReExportNames: string[];
+  defaultExportName: string | null;
   functionAstPairs: Array<{ functionNodeId: string; astNode: SyntaxNode }>;
   variableDeclaratorAstNodes: SyntaxNode[];
 };
@@ -69,6 +71,7 @@ export function walkJsTsNodes(
   const relationships: GraphRelationship[] = [];
   const cjsExportBindings: CjsExportBinding[] = [];
   const localReExportNames: string[] = [];
+  let defaultExportName: string | null = null;
   const functionAstPairs: Array<{ functionNodeId: string; astNode: SyntaxNode }> = [];
   const variableDeclaratorAstNodes: SyntaxNode[] = [];
 
@@ -112,6 +115,7 @@ export function walkJsTsNodes(
 
     if (node.type === "export_statement") {
       localReExportNames.push(...extractLocalReExportNames(node));
+      defaultExportName ??= extractDefaultExportName(node);
 
       const defaultExportNode = createDefaultExportExpressionNode(fileNodeId, node);
       if (defaultExportNode) {
@@ -225,7 +229,7 @@ export function walkJsTsNodes(
     }
   });
 
-  return { nodes, relationships, cjsExportBindings, localReExportNames, functionAstPairs, variableDeclaratorAstNodes };
+  return { nodes, relationships, cjsExportBindings, localReExportNames, defaultExportName, functionAstPairs, variableDeclaratorAstNodes };
 }
 
 // ─── Language-level finalization ─────────────────────────────────────────────
@@ -235,10 +239,12 @@ export function finalizeLanguageLevel(
   tree: SyntaxTree,
   state: WalkState,
 ): ParsedSourceFile {
-  const { nodes, relationships, cjsExportBindings, localReExportNames } = state;
+  const { nodes, relationships, cjsExportBindings, localReExportNames, defaultExportName } = state;
 
   applyCjsExportBindings(fileNodeId, nodes, relationships, cjsExportBindings);
   relationships.push(...createLocalReExportRelationships(fileNodeId, nodes, relationships, localReExportNames));
+  const fileNode = nodes.find((node) => node.id === fileNodeId);
+  if (fileNode && defaultExportName) fileNode.properties.defaultExport = defaultExportName;
 
   const moduleLevelCallNodes = createModuleLevelCallNodes(fileNodeId, tree.rootNode);
   nodes.push(...moduleLevelCallNodes);

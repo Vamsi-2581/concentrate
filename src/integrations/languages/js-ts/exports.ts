@@ -30,6 +30,28 @@ export function createDefaultExportExpressionNode(fileNodeId: string, node: Synt
   };
 }
 
+// The local name an ES module's default export refers to: the declaration in
+// `export default function name()` / `export default class Name`, the
+// identifier in `export default name`, or `name` in `export { name as default }`.
+export function extractDefaultExportName(node: SyntaxNode): string | null {
+  if (node.type !== "export_statement" || extractStringSource(node)) {
+    return null;
+  }
+
+  if (node.children.some((child) => child.type === "default")) {
+    const exported = node.namedChildren[0];
+    if (!exported) return null;
+    if (exported.type === "identifier") return exported.text;
+    return isNamedDefaultDeclaration(exported) ? exported.childForFieldName("name")?.text ?? null : null;
+  }
+
+  const exportClause = node.namedChildren.find((child) => child.type === "export_clause");
+  const specifier = exportClause?.namedChildren.find((child) => (
+    child.type === "export_specifier" && child.childForFieldName("alias")?.text === "default"
+  ));
+  return specifier?.childForFieldName("name")?.text ?? null;
+}
+
 export function extractLocalReExportNames(node: SyntaxNode): string[] {
   if (extractStringSource(node)) {
     return [];

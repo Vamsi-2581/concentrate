@@ -435,6 +435,26 @@
           "symbol": "PhotosService"
         }
       }
+    ],
+    "default-import-calls": [
+      {
+        "tool": "find_callers",
+        "args": {
+          "name": "generateToken"
+        }
+      },
+      {
+        "tool": "find_callers",
+        "args": {
+          "name": "named"
+        }
+      },
+      {
+        "tool": "find_callers",
+        "args": {
+          "name": "aliased"
+        }
+      }
     ]
   }
 }

@@ -1,0 +1,78 @@
+{"kind":"report","status":"success","discoveredFiles":6,"supportedFiles":6,"parsedFiles":6,"failedFiles":[],"warnings":[]}
+{"kind":"node","id":"dir:.","label":"Directory","properties":{"name":"default-import-calls","path":"<root>","relativePath":"."}}
+{"kind":"node","id":"file:alias.ts","label":"File","properties":{"defaultExport":"aliased","isFixture":false,"isGenerated":false,"isSupport":false,"isTest":false,"language":"typescript","path":"<root>/alias.ts","relativePath":"alias.ts","sourceType":"production"}}
+{"kind":"node","id":"file:alias.ts:function:1:aliased","label":"Function","properties":{"className":null,"endLine":1,"isAbstract":false,"isAsync":false,"isExported":false,"kind":"function_declaration","line":1,"methodKind":null,"name":"aliased","parameters":"[]","returnType":"number","visibility":"public"}}
+{"kind":"node","id":"file:barrel.ts","label":"File","properties":{"isFixture":false,"isGenerated":false,"isSupport":false,"isTest":false,"language":"typescript","path":"<root>/barrel.ts","relativePath":"barrel.ts","sourceType":"production"}}
+{"kind":"node","id":"file:barrel.ts:import:1:./token","label":"Import","properties":{"bindings":null,"isCjs":false,"isDynamic":false,"isReExport":true,"isTypeOnly":false,"isWildcard":false,"line":1,"source":"./token","specifier":"export { default as fromBarrel } from './token';"}}
+{"kind":"node","id":"file:barrel.ts:import:2:./named","label":"Import","properties":{"bindings":null,"isCjs":false,"isDynamic":false,"isReExport":true,"isTypeOnly":false,"isWildcard":false,"line":2,"source":"./named","specifier":"export { default } from './named';"}}
+{"kind":"node","id":"file:factory.ts","label":"File","properties":{"defaultExport":"instance","isFixture":false,"isGenerated":false,"isSupport":false,"isTest":false,"language":"typescript","path":"<root>/factory.ts","relativePath":"factory.ts","sourceType":"production"}}
+{"kind":"node","id":"file:factory.ts:function:3:createInstance","label":"Function","properties":{"className":null,"endLine":6,"isAbstract":false,"isAsync":false,"isExported":false,"kind":"arrow_function","line":3,"methodKind":null,"name":"createInstance","parameters":"[]","returnType":null,"visibility":"public"}}
+{"kind":"node","id":"file:factory.ts:function:4:instance","label":"Function","properties":{"className":null,"endLine":4,"isAbstract":false,"isAsync":false,"isExported":false,"kind":"arrow_function","line":4,"methodKind":null,"name":"instance","parameters":"[]","returnType":"number","visibility":"public"}}
+{"kind":"node","id":"file:factory.ts:initializercall:7:17:createInstance","label":"Call","properties":{"args":"[]","callee":"createInstance","columnNumber":17,"expression":"createInstance","line":7,"name":"createInstance","receiver":null}}
+{"kind":"node","id":"file:factory.ts:variable:7:instance","label":"Variable","properties":{"isExported":false,"kind":"const","line":7,"name":"instance","stringValue":null}}
+{"kind":"node","id":"file:factory.ts:variable:8:default","label":"Variable","properties":{"isExported":true,"kind":"export_default","line":8,"name":"default"}}
+{"kind":"node","id":"file:main.ts","label":"File","properties":{"isFixture":false,"isGenerated":false,"isSupport":false,"isTest":false,"language":"typescript","path":"<root>/main.ts","relativePath":"main.ts","sourceType":"production"}}
+{"kind":"node","id":"file:main.ts:function:7:run","label":"Function","properties":{"className":null,"endLine":14,"isAbstract":false,"isAsync":false,"isExported":true,"kind":"function_declaration","line":7,"methodKind":null,"name":"run","parameters":"[]","returnType":null,"visibility":"public"}}
+{"kind":"node","id":"file:main.ts:function:7:run:call:10:2:aliased","label":"Call","properties":{"args":"[]","callee":"aliased","columnNumber":2,"expression":"aliased","line":10,"name":"aliased","receiver":null}}
+{"kind":"node","id":"file:main.ts:function:7:run:call:11:2:fromBarrel","label":"Call","properties":{"args":"[\"2\"]","callee":"fromBarrel","columnNumber":2,"expression":"fromBarrel","line":11,"name":"fromBarrel","receiver":null}}
+{"kind":"node","id":"file:main.ts:function:7:run:call:12:2:viaBarrelDefault","label":"Call","properties":{"args":"[]","callee":"viaBarrelDefault","columnNumber":2,"expression":"viaBarrelDefault","line":12,"name":"viaBarrelDefault","receiver":null}}
+{"kind":"node","id":"file:main.ts:function:7:run:call:13:2:instance","label":"Call","properties":{"args":"[]","callee":"instance","columnNumber":2,"expression":"instance","line":13,"name":"instance","receiver":null}}
+{"kind":"node","id":"file:main.ts:function:7:run:call:8:2:generateToken","label":"Call","properties":{"args":"[\"1\"]","callee":"generateToken","columnNumber":2,"expression":"generateToken","line":8,"name":"generateToken","receiver":null}}
+{"kind":"node","id":"file:main.ts:function:7:run:call:9:2:named","label":"Call","properties":{"args":"[]","callee":"named","columnNumber":2,"expression":"named","line":9,"name":"named","receiver":null}}
+{"kind":"node","id":"file:main.ts:import:1:./token","label":"Import","properties":{"bindings":"[{\"imported\":\"default\",\"local\":\"generateToken\",\"kind\":\"default\"}]","isCjs":false,"isDynamic":false,"isReExport":false,"isTypeOnly":false,"isWildcard":false,"line":1,"source":"./token","specifier":"import generateToken from './token';"}}
+{"kind":"node","id":"file:main.ts:import:2:./named","label":"Import","properties":{"bindings":"[{\"imported\":\"default\",\"local\":\"named\",\"kind\":\"default\"}]","isCjs":false,"isDynamic":false,"isReExport":false,"isTypeOnly":false,"isWildcard":false,"line":2,"source":"./named","specifier":"import named from './named';"}}
+{"kind":"node","id":"file:main.ts:import:3:./alias","label":"Import","properties":{"bindings":"[{\"imported\":\"default\",\"local\":\"aliased\",\"kind\":\"default\"}]","isCjs":false,"isDynamic":false,"isReExport":false,"isTypeOnly":false,"isWildcard":false,"line":3,"source":"./alias","specifier":"import aliased from './alias';"}}
+{"kind":"node","id":"file:main.ts:import:4:./barrel","label":"Import","properties":{"bindings":"[{\"imported\":\"fromBarrel\",\"local\":\"fromBarrel\",\"kind\":\"named\"}]","isCjs":false,"isDynamic":false,"isReExport":false,"isTypeOnly":false,"isWildcard":false,"line":4,"source":"./barrel","specifier":"import { fromBarrel } from './barrel';"}}
+{"kind":"node","id":"file:main.ts:import:5:./barrel","label":"Import","properties":{"bindings":"[{\"imported\":\"default\",\"local\":\"viaBarrelDefault\",\"kind\":\"default\"}]","isCjs":false,"isDynamic":false,"isReExport":false,"isTypeOnly":false,"isWildcard":false,"line":5,"source":"./barrel","specifier":"import viaBarrelDefault from './barrel';"}}
+{"kind":"node","id":"file:main.ts:import:6:./factory","label":"Import","properties":{"bindings":"[{\"imported\":\"default\",\"local\":\"instance\",\"kind\":\"default\"}]","isCjs":false,"isDynamic":false,"isReExport":false,"isTypeOnly":false,"isWildcard":false,"line":6,"source":"./factory","specifier":"import instance from './factory';"}}
+{"kind":"node","id":"file:named.ts","label":"File","properties":{"defaultExport":"named","isFixture":false,"isGenerated":false,"isSupport":false,"isTest":false,"language":"typescript","path":"<root>/named.ts","relativePath":"named.ts","sourceType":"production"}}
+{"kind":"node","id":"file:named.ts:function:1:named","label":"Function","properties":{"className":null,"endLine":1,"isAbstract":false,"isAsync":false,"isExported":true,"kind":"function_declaration","line":1,"methodKind":null,"name":"named","parameters":"[]","returnType":"number","visibility":"public"}}
+{"kind":"node","id":"file:token.ts","label":"File","properties":{"defaultExport":"generateToken","isFixture":false,"isGenerated":false,"isSupport":false,"isTest":false,"language":"typescript","path":"<root>/token.ts","relativePath":"token.ts","sourceType":"production"}}
+{"kind":"node","id":"file:token.ts:function:1:generateToken","label":"Function","properties":{"className":null,"endLine":1,"isAbstract":false,"isAsync":false,"isExported":false,"kind":"arrow_function","line":1,"methodKind":null,"name":"generateToken","parameters":"[{\"name\":\"id\",\"type\":\"number\"}]","returnType":"string","visibility":"public"}}
+{"kind":"node","id":"file:token.ts:variable:2:default","label":"Variable","properties":{"isExported":true,"kind":"export_default","line":2,"name":"default"}}
+{"kind":"node","id":"repo:<root>","label":"Repo","properties":{"name":"default-import-calls","path":"<root>"}}
+{"kind":"rel","from":"dir:.","type":"CONTAINS_FILE","to":"file:alias.ts","properties":{}}
+{"kind":"rel","from":"dir:.","type":"CONTAINS_FILE","to":"file:barrel.ts","properties":{}}
+{"kind":"rel","from":"dir:.","type":"CONTAINS_FILE","to":"file:factory.ts","properties":{}}
+{"kind":"rel","from":"dir:.","type":"CONTAINS_FILE","to":"file:main.ts","properties":{}}
+{"kind":"rel","from":"dir:.","type":"CONTAINS_FILE","to":"file:named.ts","properties":{}}
+{"kind":"rel","from":"dir:.","type":"CONTAINS_FILE","to":"file:token.ts","properties":{}}
+{"kind":"rel","from":"file:alias.ts","type":"DEFINES_FUNCTION","to":"file:alias.ts:function:1:aliased","properties":{}}
+{"kind":"rel","from":"file:alias.ts","type":"RE_EXPORTS","to":"file:alias.ts:function:1:aliased","properties":{}}
+{"kind":"rel","from":"file:barrel.ts","type":"IMPORTS","to":"file:barrel.ts:import:1:./token","properties":{}}
+{"kind":"rel","from":"file:barrel.ts","type":"IMPORTS","to":"file:barrel.ts:import:2:./named","properties":{}}
+{"kind":"rel","from":"file:barrel.ts:import:1:./token","type":"RESOLVES_TO","to":"file:token.ts","properties":{}}
+{"kind":"rel","from":"file:barrel.ts:import:2:./named","type":"RESOLVES_TO","to":"file:named.ts","properties":{}}
+{"kind":"rel","from":"file:factory.ts","type":"DEFINES_FUNCTION","to":"file:factory.ts:function:3:createInstance","properties":{}}
+{"kind":"rel","from":"file:factory.ts","type":"DEFINES_FUNCTION","to":"file:factory.ts:function:4:instance","properties":{}}
+{"kind":"rel","from":"file:factory.ts","type":"DEFINES_VARIABLE","to":"file:factory.ts:variable:7:instance","properties":{}}
+{"kind":"rel","from":"file:factory.ts","type":"DEFINES_VARIABLE","to":"file:factory.ts:variable:8:default","properties":{}}
+{"kind":"rel","from":"file:factory.ts:variable:7:instance","type":"INITIALIZED_BY","to":"file:factory.ts:initializercall:7:17:createInstance","properties":{}}
+{"kind":"rel","from":"file:main.ts","type":"DEFINES_FUNCTION","to":"file:main.ts:function:7:run","properties":{}}
+{"kind":"rel","from":"file:main.ts","type":"IMPORTS","to":"file:main.ts:import:1:./token","properties":{}}
+{"kind":"rel","from":"file:main.ts","type":"IMPORTS","to":"file:main.ts:import:2:./named","properties":{}}
+{"kind":"rel","from":"file:main.ts","type":"IMPORTS","to":"file:main.ts:import:3:./alias","properties":{}}
+{"kind":"rel","from":"file:main.ts","type":"IMPORTS","to":"file:main.ts:import:4:./barrel","properties":{}}
+{"kind":"rel","from":"file:main.ts","type":"IMPORTS","to":"file:main.ts:import:5:./barrel","properties":{}}
+{"kind":"rel","from":"file:main.ts","type":"IMPORTS","to":"file:main.ts:import:6:./factory","properties":{}}
+{"kind":"rel","from":"file:main.ts:function:7:run","type":"CALLS","to":"file:main.ts:function:7:run:call:10:2:aliased","properties":{}}
+{"kind":"rel","from":"file:main.ts:function:7:run","type":"CALLS","to":"file:main.ts:function:7:run:call:11:2:fromBarrel","properties":{}}
+{"kind":"rel","from":"file:main.ts:function:7:run","type":"CALLS","to":"file:main.ts:function:7:run:call:12:2:viaBarrelDefault","properties":{}}
+{"kind":"rel","from":"file:main.ts:function:7:run","type":"CALLS","to":"file:main.ts:function:7:run:call:13:2:instance","properties":{}}
+{"kind":"rel","from":"file:main.ts:function:7:run","type":"CALLS","to":"file:main.ts:function:7:run:call:8:2:generateToken","properties":{}}
+{"kind":"rel","from":"file:main.ts:function:7:run","type":"CALLS","to":"file:main.ts:function:7:run:call:9:2:named","properties":{}}
+{"kind":"rel","from":"file:main.ts:function:7:run:call:10:2:aliased","type":"CALL_RESOLVES_TO","to":"file:alias.ts:function:1:aliased","properties":{}}
+{"kind":"rel","from":"file:main.ts:function:7:run:call:11:2:fromBarrel","type":"CALL_RESOLVES_TO","to":"file:token.ts:function:1:generateToken","properties":{}}
+{"kind":"rel","from":"file:main.ts:function:7:run:call:12:2:viaBarrelDefault","type":"CALL_RESOLVES_TO","to":"file:named.ts:function:1:named","properties":{}}
+{"kind":"rel","from":"file:main.ts:function:7:run:call:8:2:generateToken","type":"CALL_RESOLVES_TO","to":"file:token.ts:function:1:generateToken","properties":{}}
+{"kind":"rel","from":"file:main.ts:function:7:run:call:9:2:named","type":"CALL_RESOLVES_TO","to":"file:named.ts:function:1:named","properties":{}}
+{"kind":"rel","from":"file:main.ts:import:1:./token","type":"RESOLVES_TO","to":"file:token.ts","properties":{}}
+{"kind":"rel","from":"file:main.ts:import:2:./named","type":"RESOLVES_TO","to":"file:named.ts","properties":{}}
+{"kind":"rel","from":"file:main.ts:import:3:./alias","type":"RESOLVES_TO","to":"file:alias.ts","properties":{}}
+{"kind":"rel","from":"file:main.ts:import:4:./barrel","type":"RESOLVES_TO","to":"file:barrel.ts","properties":{}}
+{"kind":"rel","from":"file:main.ts:import:5:./barrel","type":"RESOLVES_TO","to":"file:barrel.ts","properties":{}}
+{"kind":"rel","from":"file:main.ts:import:6:./factory","type":"RESOLVES_TO","to":"file:factory.ts","properties":{}}
+{"kind":"rel","from":"file:named.ts","type":"DEFINES_FUNCTION","to":"file:named.ts:function:1:named","properties":{}}
+{"kind":"rel","from":"file:token.ts","type":"DEFINES_FUNCTION","to":"file:token.ts:function:1:generateToken","properties":{}}
+{"kind":"rel","from":"file:token.ts","type":"DEFINES_VARIABLE","to":"file:token.ts:variable:2:default","properties":{}}
+{"kind":"rel","from":"repo:<root>","type":"CONTAINS_ROOT","to":"dir:.","properties":{}}

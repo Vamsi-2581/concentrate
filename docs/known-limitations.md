@@ -58,9 +58,6 @@ tools.
   parameters without an access modifier are not modelled. Every typed field
   still resolves `this.field.method()` calls.
 - Found by the accuracy report ([accuracy.md](accuracy.md)), unresolved today:
-  - calls of a default-imported function (`import generateToken from
-    './token.utils'` where the module ends with `export default
-    generateToken`);
   - `new X()` (neither the class nor its constructor);
   - static methods (`Ky.create(...)`);
   - a module-level call of a function declared in the same file

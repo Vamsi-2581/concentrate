@@ -36,7 +36,7 @@ function resolveImportedFreeCall(
       continue;
     }
 
-    const binding = bindings.find((b) => b.kind === "named" && b.local === callee);
+    const binding = bindings.find((b) => (b.kind === "named" || b.kind === "default") && b.local === callee);
     if (!binding) continue;
     const found = lookupExportedFunction(binding.imported, targetFileId, functionsByFileAndName, importNodesByFile, resolvedFileByImportId);
     if (found) return found;
