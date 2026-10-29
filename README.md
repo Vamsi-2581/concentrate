@@ -39,13 +39,13 @@ Languages: TypeScript and JavaScript (JSX/TSX included), Python, Go and Rust. Fr
 
 ```mermaid
 flowchart LR
-  A[Source files] --> B["Parse<br/>tree-sitter · WebAssembly<br/>cached, multi-threaded"]
-  B --> C["Extract<br/>language + framework<br/>contributors"]
-  C --> D["Resolve<br/>imports · calls · inheritance<br/>across the repository"]
-  D --> E[("Graph store<br/>atomic snapshots")]
-  E --> F["MCP server<br/>20 tools"]
-  E --> G["Cypher<br/>read-only subset"]
-  E --> H["CLI · JSONL export"]
+  A[Source] --> B[Parse<br/>tree-sitter WASM]
+  B --> C[Extract<br/>languages + frameworks]
+  C --> D[Resolve<br/>across files]
+  D --> E[(Graph<br/>snapshot)]
+  E --> F[MCP · 20 tools]
+  E --> G[Cypher]
+  E --> H[CLI · export]
 ```
 
 The tools answer whole questions, not single lookups:
@@ -57,6 +57,8 @@ The tools answer whole questions, not single lookups:
 - `get_symbol_source`: just the code that matters.
 
 Lower-level tools and a Cypher subset are there for everything else.
+
+Parsing is cached per file and runs on worker threads for large repositories.
 
 **Design principles**
 
