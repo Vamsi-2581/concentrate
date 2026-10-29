@@ -18,6 +18,20 @@ export function resolveCall(
   return resolveReceiverCall(callee, receiver, callerFileId, functionsByFileAndName, importNodesByFile, resolvedFileByImportId);
 }
 
+// A declaration called `name` as seen from `fileId`: defined there, or
+// imported by name or as the default export, through barrels. Works for any
+// by-file-and-name index (functions, classes).
+export function resolveDeclaration(
+  name: string,
+  fileId: string,
+  declarationsByFileAndName: Map<string, Map<string, string[]>>,
+  importNodesByFile: Map<string, GraphNode[]>,
+  resolvedFileByImportId: Map<string, string>,
+): string | null {
+  return lookupFunctionInFile(name, fileId, declarationsByFileAndName)
+    ?? resolveImportedFreeCall(name, fileId, declarationsByFileAndName, importNodesByFile, resolvedFileByImportId);
+}
+
 function resolveImportedFreeCall(
   callee: string,
   callerFileId: string,
@@ -87,7 +101,8 @@ function lookupFunctionInFile(
   return functionsByFileAndName.get(fileId)?.get(name)?.[0] ?? null;
 }
 
-// Results of lookupExportedFunction per graph scan, keyed by file and name.
+// Results of lookupExportedFunction per declaration index (one per graph
+// scan and declaration kind), keyed by file and name.
 const exportedFunctionCache = new WeakMap<object, Map<string, string | null>>();
 
 // A function `name` that `fileId` exports: defined in the file itself, or
@@ -100,10 +115,10 @@ function lookupExportedFunction(
   importNodesByFile: Map<string, GraphNode[]>,
   resolvedFileByImportId: Map<string, string>,
 ): string | null {
-  let cache = exportedFunctionCache.get(importNodesByFile);
+  let cache = exportedFunctionCache.get(functionsByFileAndName);
   if (!cache) {
     cache = new Map();
-    exportedFunctionCache.set(importNodesByFile, cache);
+    exportedFunctionCache.set(functionsByFileAndName, cache);
   }
   const key = `${fileId}\0${name}`;
   if (cache.has(key)) return cache.get(key)!;

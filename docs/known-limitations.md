@@ -58,8 +58,8 @@ tools.
   parameters without an access modifier are not modelled. Every typed field
   still resolves `this.field.method()` calls.
 - Found by the accuracy report ([accuracy.md](accuracy.md)), unresolved today:
-  - `new X()` (neither the class nor its constructor);
-  - static methods (`Ky.create(...)`);
+  - `new X()` of a class with no constructor in its chain (calls resolve to
+    functions, so there is nothing to point at);
   - a module-level call of a function declared in the same file
     (`const ky = createInstance()`) while the same call inside a function
     resolves;

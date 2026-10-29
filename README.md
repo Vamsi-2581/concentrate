@@ -71,10 +71,10 @@ Lower-level tools and a Cypher subset are there for everything else.
 
 Every number below comes from pinned open-source repositories and can be reproduced with one command. Each caption links to the full report, including the weaker numbers.
 
-<p align="center"><img src="docs/assets/precision.svg" alt="Precision by relation type: HTTP routes 100%, call targets 97.4%, data access 100%" width="640"></p>
+<p align="center"><img src="docs/assets/precision.svg" alt="Precision by relation type: HTTP routes 100%, call targets 98.0%, data access 100%" width="640"></p>
 
 **The graph is trustworthy.**
-- Against hand-written labels, 100% of reported routes, 97.4% of call targets and 100% of database accesses are correct.
+- Against hand-written labels, 100% of reported routes, 98.0% of call targets and 100% of database accesses are correct.
 - Data-access recall is 93%.
 - Call and route recall are still growing; see [accuracy.md](docs/accuracy.md) and the [open issues](https://github.com/fatihserhatturan/concentrate/issues).
 
