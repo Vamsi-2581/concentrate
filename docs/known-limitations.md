@@ -139,6 +139,13 @@ audits.
 Blocks or informs: deeper ORM-specific long-term work and MCP data lineage
 queries.
 
+## MCP Tools
+
+- `find_import_cycles` lists 30 members of each cycle and counts the rest
+  (`moreMembers`), with no way to filter by path. In the agent benchmark the
+  agent could not name every `packages/core/injector` file of a 52-file cycle
+  in `nestjs/nest` ([agent-benchmark.md](agent-benchmark.md#harder-questions)).
+
 ## Workspace and Package Graph
 
 - Workspace detection supports package manager metadata and common folder

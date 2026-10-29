@@ -1,0 +1,206 @@
+{
+  "$comment": "Agent benchmark questions. Expected answers were written by reading each pinned sample's source (scripts/samples.json), not from Concentrate output. An answer scores when it contains every mustInclude string and at least one string of each anyOf group (case-insensitive). cwd (optional) is relative to the sample directory.",
+  "questions": [
+    {
+      "id": "rw-token-callers",
+      "sample": "internet-node-express-realworld",
+      "category": "callers",
+      "question": "Which functions call `generateToken`? Name each function and its file.",
+      "expected": {
+        "mustInclude": [
+          "createUser",
+          "login",
+          "getCurrentUser",
+          "updateUser",
+          "auth.service.ts"
+        ]
+      }
+    },
+    {
+      "id": "rw-profile-mapper-impact",
+      "sample": "internet-node-express-realworld",
+      "category": "impact",
+      "question": "If `profileMapper` changes, which HTTP routes are affected? Give method and full path.",
+      "expected": {
+        "mustInclude": [
+          "/api/profiles/:username",
+          "/api/profiles/:username/follow",
+          "/api/articles/:slug/favorite"
+        ]
+      }
+    },
+    {
+      "id": "rw-delete-comment-tables",
+      "sample": "internet-node-express-realworld",
+      "category": "data",
+      "question": "Which database tables does `DELETE /api/articles/:slug/comments/:id` read or write, and with which operations?",
+      "expected": {
+        "mustInclude": [
+          "Comment"
+        ],
+        "anyOf": [
+          [
+            "findFirst",
+            "read"
+          ],
+          [
+            "delete"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "rw-env",
+      "sample": "internet-node-express-realworld",
+      "category": "env",
+      "question": "Which environment variables does this app read?",
+      "expected": {
+        "mustInclude": [
+          "PORT",
+          "JWT_SECRET",
+          "NODE_ENV"
+        ]
+      }
+    },
+    {
+      "id": "rw-http-exception",
+      "sample": "internet-node-express-realworld",
+      "category": "callers",
+      "question": "Which files create `HttpException` errors?",
+      "expected": {
+        "mustInclude": [
+          "auth.service.ts",
+          "article.service.ts",
+          "profile.service.ts"
+        ]
+      }
+    },
+    {
+      "id": "fastify-postgres-routes",
+      "sample": "fastify",
+      "category": "routes",
+      "question": "List every HTTP route in the fastify-postgres example with its method and path.",
+      "expected": {
+        "mustInclude": [
+          "GET",
+          "POST",
+          "PATCH",
+          "DELETE",
+          "/:id"
+        ]
+      }
+    },
+    {
+      "id": "fastify-env",
+      "sample": "fastify",
+      "category": "env",
+      "question": "Which environment variables do the examples in this repository read, and in which files?",
+      "expected": {
+        "mustInclude": [
+          "DATABASE_URL",
+          "MONGO_URI",
+          "fastify-postgres/server.js",
+          "tests/server.js"
+        ]
+      }
+    },
+    {
+      "id": "express-user-routes",
+      "sample": "express",
+      "category": "routes",
+      "question": "Which routes in examples/route-separation are handled by functions exported from user.js? Give method and path.",
+      "expected": {
+        "mustInclude": [
+          "/users",
+          "/user/:id",
+          "/user/:id/view",
+          "/user/:id/edit"
+        ],
+        "anyOf": [
+          [
+            "PUT"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "express-trystat",
+      "sample": "express",
+      "category": "callers",
+      "question": "Where is `tryStat` called in lib/view.js, and from which function?",
+      "expected": {
+        "mustInclude": [
+          "resolve"
+        ],
+        "anyOf": [
+          [
+            "174",
+            "182"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "ky-validate-and-merge",
+      "sample": "ky",
+      "category": "callers",
+      "question": "Which code calls `validateAndMerge`? Name the file and the enclosing function.",
+      "expected": {
+        "mustInclude": [
+          "source/index.ts",
+          "createInstance"
+        ]
+      }
+    },
+    {
+      "id": "nest-typeorm-user-writes",
+      "sample": "internet-nest",
+      "category": "data",
+      "question": "In sample/05-sql-typeorm, which UsersService methods write to the user table, and which HTTP routes call them?",
+      "expected": {
+        "mustInclude": [
+          "create",
+          "remove",
+          "/users"
+        ],
+        "anyOf": [
+          [
+            "DELETE"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "nest-mongoose-cat-writes",
+      "sample": "internet-nest",
+      "category": "data",
+      "question": "In sample/06-mongoose, which HTTP routes modify the cats collection? Give method and full path.",
+      "expected": {
+        "mustInclude": [
+          "/cats/:id"
+        ],
+        "anyOf": [
+          [
+            "POST /cats"
+          ],
+          [
+            "DELETE"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "nest-repl-cycle",
+      "sample": "internet-nest",
+      "category": "cycles",
+      "question": "Is there an import cycle inside packages/core/repl? If so, which files take part in it?",
+      "expected": {
+        "mustInclude": [
+          "repl-context.ts",
+          "repl-function.ts",
+          "native-functions"
+        ]
+      }
+    }
+  ]
+}

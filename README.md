@@ -2,6 +2,37 @@
 
 Scans a codebase, extracts a structural code graph, and stores it in a built-in graph store (`.concentrate/graph/`) that you can query with a read-only Cypher subset.
 
+## Numbers
+
+Measured on pinned open-source samples (`scripts/samples.json`); reproduce
+with the scripts named below.
+
+**Accuracy** against hand-written labels ([docs/accuracy.md](docs/accuracy.md), `npm run bench:accuracy`):
+
+| | Precision | Recall |
+| --- | ---: | ---: |
+| HTTP routes | 100% | 80% (75% with the full path right) |
+| Call targets | 97% | 40% |
+| Data access | 100% | 93% |
+
+When the graph states a route, call target or data access, it is almost
+always right; what it misses is listed in the report.
+
+**Performance**, Apple M4, Node 24 ([docs/benchmarks.md](docs/benchmarks.md#release-report), `npm run bench:release`):
+
+| Sample | Files | Cold scan | Peak memory | Tool latency, p50 |
+| --- | ---: | ---: | ---: | ---: |
+| express | 141 | 0.37 s | 276 MB | 0.1–23 ms |
+| nestjs/nest | 1,714 | 1.7 s | 541 MB | 0.4–123 ms |
+
+**Agent benchmark**: Claude Code (sonnet) answering 13 questions with and
+without the MCP server ([docs/agent-benchmark.md](docs/agent-benchmark.md), `npm run bench:agent`).
+On 13 narrow questions over small repositories the two are even: 13/13
+correct either way, median input tokens 95k → 97k, median tool calls 3 → 3.
+On 6 harder questions over all of nestjs/nest (import cycles, importers,
+repository-wide listings): 4/6 → 5/6 correct, median input tokens −23%,
+median tool calls −43%.
+
 ## Supported Languages
 
 JavaScript / TypeScript · Python · Go · Rust
