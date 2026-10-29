@@ -54,6 +54,18 @@ export function createResolutionRelationshipIndex(
     }
   }
 
+  // A call initializing a file-level variable (`const ky = createInstance()`)
+  // is made by the file's top-level code too.
+  const fileByVariableId = new Map<string, string>();
+  for (const rel of relationships) {
+    if (rel.type === "DEFINES_VARIABLE") fileByVariableId.set(rel.to, rel.from);
+  }
+  for (const rel of relationships) {
+    if (rel.type !== "INITIALIZED_BY") continue;
+    const fileId = fileByVariableId.get(rel.from);
+    if (fileId && !index.callerFunctionByCallId.has(rel.to)) index.callerFileByModuleCallId.set(rel.to, fileId);
+  }
+
   for (const rel of relationships) {
     if (rel.type !== "DEFINES_METHOD") {
       continue;

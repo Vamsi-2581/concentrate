@@ -71,10 +71,10 @@ Lower-level tools and a Cypher subset are there for everything else.
 
 Every number below comes from pinned open-source repositories and can be reproduced with one command. Each caption links to the full report, including the weaker numbers.
 
-<p align="center"><img src="docs/assets/precision.svg" alt="Precision by relation type: HTTP routes 100%, call targets 98.0%, data access 100%" width="640"></p>
+<p align="center"><img src="docs/assets/precision.svg" alt="Precision by relation type: HTTP routes 100%, call targets 98.1%, data access 100%" width="640"></p>
 
 **The graph is trustworthy.**
-- Against hand-written labels, 100% of reported routes, 98.0% of call targets and 100% of database accesses are correct.
+- Against hand-written labels, 100% of reported routes, 98.1% of call targets and 100% of database accesses are correct.
 - Data-access recall is 93%.
 - Call and route recall are still growing; see [accuracy.md](docs/accuracy.md) and the [open issues](https://github.com/fatihserhatturan/concentrate/issues).
 
@@ -107,7 +107,7 @@ The goal is a code graph an agent can rely on as much as on the source itself. T
 - easy installation in any MCP client.
 
 Next up:
-- **Call and route recall:** default imports, constructors, static methods, and routes registered inside functions ([#41](https://github.com/fatihserhatturan/concentrate/issues/41)–[#49](https://github.com/fatihserhatturan/concentrate/issues/49)).
+- **Route recall:** routes registered inside functions, routers recognized by how they were created, and mount prefixes through chained routers ([#41](https://github.com/fatihserhatturan/concentrate/issues/41)–[#44](https://github.com/fatihserhatturan/concentrate/issues/44)). Call recall on the labels went from 40% to 73% with [#45](https://github.com/fatihserhatturan/concentrate/issues/45)–[#47](https://github.com/fatihserhatturan/concentrate/issues/47).
 - **Distribution** (Phase 9): npm publishing, an `init` command and CI ([#16](https://github.com/fatihserhatturan/concentrate/issues/16)).
 
 The full plan is in [docs/ROADMAP.md](docs/ROADMAP.md).

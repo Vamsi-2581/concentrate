@@ -469,6 +469,32 @@
           "name": "create"
         }
       }
+    ],
+    "module-level-calls": [
+      {
+        "tool": "find_callers",
+        "args": {
+          "name": "build"
+        }
+      },
+      {
+        "tool": "find_callers",
+        "args": {
+          "name": "makeApp"
+        }
+      },
+      {
+        "tool": "find_callers",
+        "args": {
+          "name": "createInstance"
+        }
+      },
+      {
+        "tool": "find_callers",
+        "args": {
+          "name": "createApplication"
+        }
+      }
     ]
   }
 }

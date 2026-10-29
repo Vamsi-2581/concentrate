@@ -5,7 +5,7 @@
     "calls": [
       {
         "method": "schemaVersion",
-        "result": 39
+        "result": 40
       },
       {
         "method": "stats",
@@ -95,7 +95,7 @@
       }
     ],
     "output": {
-      "schemaVersion": 39,
+      "schemaVersion": 40,
       "stats": [
         {
           "table": "Repo",
@@ -1012,7 +1012,7 @@
     "calls": [
       {
         "method": "schemaVersion",
-        "result": 39
+        "result": 40
       },
       {
         "method": "stats",
@@ -1048,7 +1048,7 @@
       }
     ],
     "output": {
-      "schemaVersion": 39,
+      "schemaVersion": 40,
       "packageName": "config-env-fixture",
       "stats": [
         {
