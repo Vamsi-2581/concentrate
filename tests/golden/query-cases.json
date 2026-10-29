@@ -455,6 +455,20 @@
           "name": "aliased"
         }
       }
+    ],
+    "class-calls": [
+      {
+        "tool": "find_callers",
+        "args": {
+          "name": "constructor"
+        }
+      },
+      {
+        "tool": "find_callers",
+        "args": {
+          "name": "create"
+        }
+      }
     ]
   }
 }

@@ -82,10 +82,10 @@ Rules:
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
 | express | 28 | 5 | 1 | 23 | 83.3% | 17.9% |
 | fastify | 6 | 5 | 0 | 1 | 100.0% | 83.3% |
-| internet-node-express-realworld | 24 | 16 | 0 | 8 | 100.0% | 66.7% |
-| ky | 13 | 9 | 0 | 4 | 100.0% | 69.2% |
+| internet-node-express-realworld | 24 | 24 | 0 | 0 | 100.0% | 100.0% |
+| ky | 13 | 12 | 0 | 1 | 100.0% | 92.3% |
 | nestjs-starter | 2 | 2 | 0 | 0 | 100.0% | 100.0% |
-| **all** | 73 | 37 | 1 | 36 | **97.4%** | **50.7%** |
+| **all** | 73 | 48 | 1 | 25 | **98.0%** | **65.8%** |
 
 Labels counts calls with a project target. Another 310 call sites are labeled
 `null`, and 35 are `dynamic`.
@@ -117,10 +117,11 @@ path.resolve` called bare in `lib/view.js` links to the same-named
 - **Mount prefixes through chained routers.** realworld mounts every
   controller with `export default Router().use('/api', api)`, where
   `api = Router().use(...)`; the routes are found without `/api`.
-- **Constructors and static methods.** `new HttpException(...)`,
-  `new TimeoutError(...)` and `Ky.create(...)` are not resolved. The
-  constructors are all 8 of realworld's remaining call misses. (Calls of
-  default-imported functions, previously 8 of its 16, resolve since #45.)
+- **Module-level calls and called requires.** ky's last miss is a
+  module-level call of a same-file function (`const ky = createInstance()`)
+  and fastify's is `require('./server')(...)`. (Default imports, #45, and
+  constructors and static methods, #46, were realworld's 16 and three of
+  ky's misses; they resolve now.)
 - **Objects assembled at runtime.** Express's `app` gets its methods from
   `lib/application.js` through `merge-descriptors`; the 20 `app.set` /
   `app.use` / `app.listen` labels in the examples point there. They are left
