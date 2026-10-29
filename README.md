@@ -48,6 +48,8 @@ flowchart LR
   E --> H[CLI · export]
 ```
 
+Parsing is cached per file and runs on worker threads for large repositories. Resolution always runs over the whole graph, so an incremental scan gives the same result as a full one.
+
 The tools answer whole questions, not single lookups:
 
 - `impact_of`: what a change to a symbol reaches.
@@ -57,8 +59,6 @@ The tools answer whole questions, not single lookups:
 - `get_symbol_source`: just the code that matters.
 
 Lower-level tools and a Cypher subset are there for everything else.
-
-Parsing is cached per file and runs on worker threads for large repositories.
 
 **Design principles**
 
