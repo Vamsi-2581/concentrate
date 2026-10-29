@@ -27,10 +27,11 @@ always right; what it misses is listed in the report.
 
 **Agent benchmark**: Claude Code (sonnet) answering 13 questions with and
 without the MCP server ([docs/agent-benchmark.md](docs/agent-benchmark.md), `npm run bench:agent`).
-On these narrow questions over small repositories the two are even: 13/13
+On 13 narrow questions over small repositories the two are even: 13/13
 correct either way, median input tokens 95k → 97k, median tool calls 3 → 3.
-The graph helped where text search cannot answer directly (an import cycle:
-5 → 2 tool calls).
+On 6 harder questions over all of nestjs/nest (import cycles, importers,
+repository-wide listings): 4/6 → 5/6 correct, median input tokens −23%,
+median tool calls −43%.
 
 ## Supported Languages
 

@@ -29,7 +29,8 @@ subscription's usage limits, or API billing when `ANTHROPIC_API_KEY` is set.
 ## Questions
 
 [`bench/agent/questions.json`](../bench/agent/questions.json) holds 13
-questions over five samples, in six categories:
+questions over five samples, in six categories (the harder set is under
+[Harder questions](#harder-questions)):
 
 | Category | Questions | Example |
 | --- | ---: | --- |
@@ -123,6 +124,47 @@ put the routes in a Markdown table (`| POST | /cats |`). The scorer now
 reads table bars as spaces, and `npm run bench:agent -- --rescore <file>`
 re-scored the saved answers without new runs.
 
-Next steps for a benchmark that can show a difference: questions that need
-the whole graph (impact across many files, every route touching a table in
-`internet-nest`), and the `--max-turns` limit as a cost ceiling.
+### Harder questions
+
+[`bench/agent/questions-hard.json`](../bench/agent/questions-hard.json) has six
+questions over all of `internet-nest` (1,714 files) that need many files or
+the import graph: the files in two runtime import cycles, the direct
+importers of `instance-wrapper.ts`, and the models, DELETE routes and env
+variables across `sample/`. Expected answers were computed from the source
+(import statements, decorators, `process.env` reads).
+
+```bash
+npm run bench:agent -- --questions bench/agent/questions-hard.json --runs 1 --model sonnet --max-turns 25
+```
+
+Recorded 2026-10-29, same CLI and model, one run each, `--max-turns 25`
+([`bench/results/agent-hard-2026-10-29.json`](../bench/results/agent-hard-2026-10-29.json)):
+
+| Question | Category | Correct (base / conc.) | Input tokens | Output tokens | Tool calls | Cost USD |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| nest-injector-cycles | cycles | 0/1 / 0/1 | 257.3k → 101.5k | 4.6k → 1.0k | 7 → 2 | 0.1561 → 0.0768 |
+| nest-instance-wrapper-importers | impact | 1/1 / 1/1 | 63.9k → 65.1k | 1.6k → 1.3k | 1 → 1 | 0.0623 → 0.0595 |
+| nest-microservices-client-cycle | cycles | 0/1 / 1/1 | 255.4k → 101.5k | 2.1k → 0.6k | 5 → 2 | 0.12 → 0.0721 |
+| nest-sample-models | data | 1/1 / 1/1 | 131.4k → 100.3k | 1.5k → 1.2k | 4 → 4 | 0.0705 → 0.0711 |
+| nest-sample-delete-routes | routes | 1/1 / 1/1 | 95.7k → 100.0k | 0.8k → 1.1k | 2 → 4 | 0.0572 → 0.066 |
+| nest-sample-env | env | 1/1 / 1/1 | 127.6k → 64.2k | 1.0k → 0.6k | 3 → 1 | 0.0617 → 0.0485 |
+
+| | Baseline | Concentrate |
+| --- | ---: | ---: |
+| Correct | 4/6 | 5/6 |
+| Median input tokens | 129.5k | 100.2k (−23%) |
+| Median tool calls | 3.5 | 2 (−43%) |
+
+- **Import cycles are where the graph pays off.** Grep cannot see a cycle;
+  the baseline traced imports by hand, read about 2.5× the tokens and still
+  listed only part of each cycle. With `find_import_cycles` the agent named
+  the whole `packages/microservices/client` cycle in two calls.
+- **The injector question failed in both modes.** Concentrate found the
+  right 52-file cycle, but `find_import_cycles` lists 30 members of a cycle
+  and counts the rest (`moreMembers`), and the agent said its list was
+  incomplete instead of looking further. A way to list one directory's
+  members of a large cycle would answer it.
+- **Repository-wide listings get cheaper:** the env question took one call
+  instead of three, at half the tokens. For models and DELETE routes the
+  agent used grep in both modes and costs were close.
+- The same caveat as above: one run per question.

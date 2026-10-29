@@ -105,9 +105,9 @@ describe("agent benchmark: summaries", () => {
   });
 });
 
-it("question file entries are complete and unique", () => {
-  const { questions } = JSON.parse(readFileSync(path.join(import.meta.dirname, "../bench/agent/questions.json"), "utf8")) as { questions: Question[] };
-  assert.ok(questions.length >= 12);
+for (const file of ["questions.json", "questions-hard.json"]) it(`${file} entries are complete and unique`, () => {
+  const { questions } = JSON.parse(readFileSync(path.join(import.meta.dirname, "../bench/agent", file), "utf8")) as { questions: Question[] };
+  assert.ok(questions.length >= 6);
   assert.equal(new Set(questions.map((question) => question.id)).size, questions.length);
   const samples = (JSON.parse(readFileSync(path.join(import.meta.dirname, "../scripts/samples.json"), "utf8")) as { samples: Array<{ name: string }> }).samples.map((sample) => sample.name);
   for (const question of questions) {

@@ -1,0 +1,106 @@
+{
+  "$comment": "Harder agent benchmark questions: each needs many files of internet-nest or an import-graph analysis. Expected answers were computed from the pinned source (import statements, decorators, process.env reads), not from Concentrate output; cycles count runtime imports only. Scoring as in questions.json.",
+  "questions": [
+    {
+      "id": "nest-injector-cycles",
+      "sample": "internet-nest",
+      "category": "cycles",
+      "question": "Which files in packages/core/injector take part in a runtime import cycle (type-only imports excluded)?",
+      "expected": {
+        "mustInclude": [
+          "container.ts",
+          "injector.ts",
+          "instance-loader.ts",
+          "instance-wrapper.ts",
+          "module-ref.ts",
+          "modules-container.ts"
+        ]
+      }
+    },
+    {
+      "id": "nest-instance-wrapper-importers",
+      "sample": "internet-nest",
+      "category": "impact",
+      "question": "If packages/core/injector/instance-wrapper.ts changes, which files in packages/core outside the injector directory import it directly? List them.",
+      "expected": {
+        "mustInclude": [
+          "discovery-service.ts",
+          "guards-context-creator.ts",
+          "on-module-init.hook.ts",
+          "graph-inspector.ts",
+          "middleware-module.ts",
+          "pipes-context-creator.ts",
+          "routes-resolver.ts",
+          "scanner.ts"
+        ]
+      }
+    },
+    {
+      "id": "nest-microservices-client-cycle",
+      "sample": "internet-nest",
+      "category": "cycles",
+      "question": "Which client implementations in packages/microservices/client are part of a runtime import cycle?",
+      "expected": {
+        "mustInclude": [
+          "client-grpc.ts",
+          "client-kafka.ts",
+          "client-mqtt.ts",
+          "client-nats.ts",
+          "client-redis.ts",
+          "client-rmq.ts",
+          "client-tcp.ts",
+          "client-proxy.ts"
+        ]
+      }
+    },
+    {
+      "id": "nest-sample-models",
+      "sample": "internet-nest",
+      "category": "data",
+      "question": "Which database models or entities are declared across the samples in sample/, with their sample and ORM?",
+      "expected": {
+        "mustInclude": [
+          "05-sql-typeorm",
+          "06-mongoose",
+          "13-mongo-typeorm",
+          "14-mongoose-base",
+          "22-graphql-prisma",
+          "Photo",
+          "Post"
+        ]
+      }
+    },
+    {
+      "id": "nest-sample-delete-routes",
+      "sample": "internet-nest",
+      "category": "routes",
+      "question": "Which HTTP routes under sample/ handle DELETE requests? Give the sample and the full path.",
+      "expected": {
+        "mustInclude": [
+          "05-sql-typeorm",
+          "06-mongoose",
+          "07-sequelize",
+          "/users/:id",
+          "/cats/:id"
+        ]
+      }
+    },
+    {
+      "id": "nest-sample-env",
+      "sample": "internet-nest",
+      "category": "env",
+      "question": "Which environment variables are read through process.env anywhere under sample/, and in which samples?",
+      "expected": {
+        "mustInclude": [
+          "REDIS_HOST",
+          "REDIS_PORT",
+          "NODE_ENV",
+          "PORT",
+          "26-queues",
+          "25-dynamic-modules",
+          "36-hmr-esm"
+        ]
+      }
+    }
+  ]
+}

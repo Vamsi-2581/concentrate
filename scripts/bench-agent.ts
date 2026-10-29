@@ -5,13 +5,14 @@
  *
  *   npm run bench:agent -- [--runs 3] [--model name] [--question id]
  *     [--sample name] [--max-turns 30] [--out file.json] [--dry-run]
- *     [--claude path] [--rescore results.json]
+ *     [--claude path] [--rescore results.json] [--questions file.json]
  *
  * `npm run bench:agent` builds first. Each sample is scanned with the built
  * CLI into .concentrate/agent-bench/<sample>/; every question then runs
  * `runs` times per mode with the sample (or the question's cwd) as working
  * directory, and the medians are reported. Questions and expected answers are
- * in bench/agent/questions.json; see docs/agent-benchmark.md.
+ * in bench/agent/questions.json (--questions picks another set, such as
+ * bench/agent/questions-hard.json); see docs/agent-benchmark.md.
  *
  * --dry-run prints the commands and writes the MCP configs without scanning
  * or calling claude. --claude names the CLI when it is not `claude` on PATH
@@ -50,6 +51,7 @@ const { values } = parseArgs({
     "dry-run": { type: "boolean", default: false },
     claude: { type: "string", default: process.env.CLAUDE_BIN ?? "claude" },
     rescore: { type: "string" },
+    questions: { type: "string" },
   },
 });
 const runs = Number.parseInt(values.runs!, 10);
@@ -60,7 +62,8 @@ const claude = values.claude!;
 const root = fileURLToPath(new URL("..", import.meta.url));
 const cli = path.join(root, "dist/index.js");
 const workRoot = path.join(root, ".concentrate/agent-bench");
-const { questions: allQuestions } = JSON.parse(await readFile(path.join(root, "bench/agent/questions.json"), "utf8")) as { questions: Question[] };
+const questionsPath = values.questions ?? path.join(root, "bench/agent/questions.json");
+const { questions: allQuestions } = JSON.parse(await readFile(questionsPath, "utf8")) as { questions: Question[] };
 const questions = allQuestions.filter((question) => (
   (!values.question || values.question.includes(question.id)) && (!values.sample || question.sample === values.sample)
 ));
@@ -81,7 +84,7 @@ if (values.rescore) {
   const report = JSON.parse(await readFile(values.rescore, "utf8")) as AgentReport;
   for (const result of report.results) {
     const question = allQuestions.find((entry) => entry.id === result.id);
-    if (!question) throw new Error(`${result.id} is not in bench/agent/questions.json`);
+    if (!question) throw new Error(`${result.id} is not in ${questionsPath}`);
     for (const mode of modes) {
       const rescored = result.modes[mode].runs.map((run) => scoreRun(run, question));
       result.modes[mode] = { summary: summarize(rescored), runs: rescored };
