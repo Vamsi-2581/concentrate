@@ -1,6 +1,31 @@
 {
   "name": "concentrate",
   "version": "0.1.0",
+  "description": "Turns a codebase into a queryable code graph (routes, calls, DI, env, data access) and serves it to AI agents over MCP.",
+  "keywords": [
+    "code-graph",
+    "static-analysis",
+    "mcp",
+    "model-context-protocol",
+    "tree-sitter",
+    "cypher",
+    "code-intelligence",
+    "ai-agents",
+    "llm",
+    "typescript",
+    "nestjs",
+    "express",
+    "fastify"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fatihserhatturan/concentrate.git"
+  },
+  "homepage": "https://github.com/fatihserhatturan/concentrate#readme",
+  "bugs": {
+    "url": "https://github.com/fatihserhatturan/concentrate/issues"
+  },
   "private": true,
   "type": "module",
   "bin": {

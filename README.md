@@ -1,150 +1,132 @@
-# Concentrate
+<h1 align="center">Concentrate</h1>
 
-Scans a codebase, extracts a structural code graph, and stores it in a built-in graph store (`.concentrate/graph/`) that you can query with a read-only Cypher subset.
+<p align="center">
+  <b>A code graph for AI agents.</b><br>
+  Concentrate reads a codebase once and turns it into a queryable graph of files, functions, calls, HTTP routes, dependency injection, environment variables and database access. It then serves that graph to agents over MCP.
+</p>
 
-## Numbers
+<p align="center">
+  <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
+  <img alt="Node.js 22+" src="https://img.shields.io/badge/node-%E2%89%A522-339933.svg">
+  <img alt="Runtime dependencies: 1" src="https://img.shields.io/badge/runtime%20deps-1-brightgreen.svg">
+  <img alt="MCP: 20 tools" src="https://img.shields.io/badge/MCP-20%20tools-6f42c1.svg">
+  <img alt="Languages" src="https://img.shields.io/badge/languages-TS%20%7C%20JS%20%7C%20Python%20%7C%20Go%20%7C%20Rust-informational.svg">
+</p>
 
-Measured on pinned open-source samples (`scripts/samples.json`); reproduce
-with the scripts named below.
+---
 
-**Accuracy** against hand-written labels ([docs/accuracy.md](docs/accuracy.md), `npm run bench:accuracy`):
+## Why
 
-| | Precision | Recall |
-| --- | ---: | ---: |
-| HTTP routes | 100% | 80% (75% with the full path right) |
-| Call targets | 97% | 40% |
-| Data access | 100% | 93% |
+Ask a coding agent *"which tables does `DELETE /articles/:slug` write to?"* or *"what breaks if I change `UsersService`?"* and it starts grepping. It opens files, follows imports by hand and reads far more code than the answer needs. Some questions grep cannot answer at all, such as *"which files import each other in a loop?"*: no single file contains the answer.
 
-When the graph states a route, call target or data access, it is almost
-always right; what it misses is listed in the report.
+Concentrate does that reading ahead of time. It parses the whole repository and resolves names across files. It also understands the frameworks a backend is built on and records the result as a graph. An agent then asks the graph instead of the file system, and a question about the whole repository becomes one tool call.
 
-**Performance**, Apple M4, Node 24 ([docs/benchmarks.md](docs/benchmarks.md#release-report), `npm run bench:release`):
+## What it sees
 
-| Sample | Files | Cold scan | Peak memory | Tool latency, p50 |
-| --- | ---: | ---: | ---: | ---: |
-| express | 141 | 0.37 s | 276 MB | 0.1–23 ms |
-| nestjs/nest | 1,714 | 1.7 s | 541 MB | 0.4–123 ms |
+| | |
+| --- | --- |
+| **Structure** | files, functions, classes, methods, variables, decorators, imports, exports, entrypoints |
+| **Calls** | call sites resolved to their target declaration across files, barrels and re-exports |
+| **HTTP routes** | Express, Koa, Fastify and NestJS, with the full path composed through mounts, prefixes and controllers |
+| **Dependency injection** | NestJS constructor and property injection chains |
+| **Configuration** | `process.env.*` reads, linked to the functions and routes that use them |
+| **Data access** | Prisma, TypeORM, Sequelize, Knex, Mongoose and Drizzle: models, tables, and read and write operations |
+| **Workspaces** | packages and the dependencies between them, both declared and used in source |
 
-**Agent benchmark**: Claude Code (sonnet) answering 13 questions with and
-without the MCP server ([docs/agent-benchmark.md](docs/agent-benchmark.md), `npm run bench:agent`).
-On 13 narrow questions over small repositories the two are even: 13/13
-correct either way, median input tokens 95k → 97k, median tool calls 3 → 3.
-On 6 harder questions over all of nestjs/nest (import cycles, importers,
-repository-wide listings): 4/6 → 5/6 correct, median input tokens −23%,
-median tool calls −43%.
+Languages: TypeScript and JavaScript (JSX/TSX included), Python, Go and Rust. Framework semantics are currently strongest for Node.js and TypeScript backends.
 
-## Supported Languages
+## How it works
 
-JavaScript / TypeScript · Python · Go · Rust
-
-## What It Extracts
-
-- **Structural nodes** — File, Function, Class, Import, Variable, Decorator, Entrypoint
-- **HTTP routes** — Express, Koa, Fastify, NestJS (with full composed path resolution)
-- **Dependency injection** — NestJS constructor injection chains
-- **Environment usage** — `process.env.*` accesses linked to routes and functions
-- **Data access** — Prisma, TypeORM, Sequelize, Knex, Mongoose ORM call detection
-- **Import resolution** — relative, tsconfig path aliases, Go module paths, Rust crate paths
-
-## Usage
-
-```bash
-npm install
-
-# Scan a project into the graph store (.concentrate/graph)
-npm run dev -- scan ./path/to/project
-
-# Show graph statistics
-npm run dev -- stats
-
-# Run a Cypher query (subset: docs/cypher.md); $name placeholders come from --param
-npm run dev -- query "MATCH (f:File)-[:DEFINES_FUNCTION]->(fn:Function) RETURN f.relativePath, fn.name LIMIT 10"
-npm run dev -- query "MATCH (fn:Function) WHERE fn.name = \$name RETURN fn.line" --param name=main
-
-# Keep the graph current: rescan on every file change (uses the parse cache)
-npm run dev -- watch ./path/to/project
-
-# Export graph as JSONL
-npm run dev -- export ./path/to/project --output .concentrate/export
-
-# Start MCP server (for AI tool integration)
-npm run dev -- mcp
+```mermaid
+flowchart LR
+  A[Source] --> B[Parse<br/>tree-sitter WASM]
+  B --> C[Extract<br/>languages + frameworks]
+  C --> D[Resolve<br/>across files]
+  D --> E[(Graph<br/>snapshot)]
+  E --> F[MCP · 20 tools]
+  E --> G[Cypher]
+  E --> H[CLI · export]
 ```
 
-Repeated scans reuse per-file parse results from `.concentrate/cache/`, so only changed files are
-parsed again; cross-file resolution always runs over the whole graph, so the result is the same as
-a full scan. A code or grammar change invalidates the cache automatically; `--no-cache` skips it.
+Parsing is cached per file and runs on worker threads for large repositories. Resolution always runs over the whole graph, so an incremental scan gives the same result as a full one.
 
-When 100 or more files need parsing, they are parsed on up to 4 worker threads (`--workers <n>` sets
-the count, `--workers 0` keeps parsing on the main thread); the graph is the same either way.
+The tools answer whole questions, not single lookups:
 
-Scans and the MCP server can run at the same time: a scan takes a writer lock and
-commits a new snapshot atomically, readers never lock, and a running MCP server
-picks up the new snapshot on its next tool call. A second scan waits for the
-first (`--no-retry-lock` makes it fail instead).
+- `impact_of`: what a change to a symbol reaches.
+- `route_details`: a route's handlers, middleware, downstream call chain, tables and env vars.
+- `detect_changes`: the impact of a git diff.
+- `find_import_cycles`, `find_unused_exports` and `architecture_overview`: repository-wide analysis.
+- `get_symbol_source`: just the code that matters.
 
-## MCP Tools
+Lower-level tools and a Cypher subset are there for everything else.
 
-`npm run dev -- mcp` starts a stdio MCP server exposing: `graph_stats`,
-`find_definitions`, `find_callers`, `list_exports`, `trace_import_chain`,
-`list_routes`, `list_entrypoints`, `list_env_config`, `list_data_access`, and
-the agent tools `impact_of`, `detect_changes`, `route_details`,
-`get_symbol_source`, `get_file_outline` that answer a whole question in one call,
-the search and analysis tools `search_symbols`, `find_references`,
-`find_import_cycles`, `find_unused_exports`, `architecture_overview`, plus a `concentrate://graph/summary` resource. It speaks MCP 2026-07-28 and the
-legacy `initialize` versions; list results are paged with cursors and return
-`structuredContent`. See [docs/mcp-server.md](docs/mcp-server.md).
+**Design principles**
 
-## Architecture
+- **Precision first.** A wrong fact costs an agent more than a missing one, so the extractors only state what they can resolve.
+- **Local and deterministic.** No service, no model in the loop, no network. The same input always gives the same graph.
+- **One runtime dependency.** Only `web-tree-sitter` ships, as plain JS and WebAssembly. The graph store, the Cypher engine, file discovery and the CLI are built in, so `npm install` never compiles native code.
+- **Always current.** Per-file parse caching and `watch` mode keep the graph in step with the code. Readers never block a running scan.
 
-```
-src/
-  index.ts          — CLI binary entry point
-  program.ts        — Command, argument and flag definitions
-  adapters/
-    cli/            — Command adapters (scan, stats, query, export, smoke, mcp) and the parseArgs router
-    store/          — Graph store: in-memory graph, snapshots, writer lock, schema
-      cypher/       — Read-only Cypher subset: lexer, parser, binder, planner, executor
-    mcp/            — MCP server adapter
-  commands/         — CLI command entry points
-  composition/      — Default registry + orchestrator wiring (core ← integrations)
-  core/
-    contracts/      — Language-agnostic interfaces
-    graph/          — Graph model (GraphNode, GraphRelationship, GraphBuilder)
-    integrations/   — Default parser + contributor registry
-    scan/           — Orchestration, file discovery, manifest, report
-      resolution/   — Language-agnostic call/inheritance/import resolution
-  integrations/
-    frameworks/js-ts/   — Express, Fastify, NestJS, env-config, data-access semantics
-    languages/          — Go, Python, Rust, JS/TS parsers and resolution
-      syntax/           — tree-sitter on WebAssembly (the only web-tree-sitter importer)
-vendor/grammars/    — Prebuilt tree-sitter grammars (.wasm) and their manifest
-```
+## Results
 
-## Roadmap
+Every number below comes from pinned open-source repositories and can be reproduced with one command. Each caption links to the full report, including the weaker numbers.
 
-Concentrate has a single runtime dependency, `web-tree-sitter` (plain JS and WebAssembly, no
-install scripts), so `npm install` never compiles native code. The graph store, Cypher engine,
-CLI and file discovery are built in. See
-[docs/ROADMAP.md](docs/ROADMAP.md) and the tracking issue [#1](https://github.com/fatihserhatturan/concentrate/issues/1).
+<p align="center"><img src="docs/assets/precision.svg" alt="Precision by relation type: HTTP routes 100%, call targets 96.7%, data access 100%" width="640"></p>
 
-## Development
+**The graph is trustworthy.**
+- Against hand-written labels, 100% of reported routes, 96.7% of call targets and 100% of database accesses are correct.
+- Data-access recall is 93%.
+- Call and route recall are still growing; see [accuracy.md](docs/accuracy.md) and the [open issues](https://github.com/fatihserhatturan/concentrate/issues).
 
-```bash
-npm test                  # unit tests
-npm run typecheck         # TypeScript check
-npm run build             # compile to dist/
-npm run verify:rc         # typecheck + tests + build + standing smoke
-npm run samples:fetch     # fetch pinned sample repos into .concentrate/samples
-npm run test:samples      # golden graph + query tests on the samples (required, not skipped)
-npm run golden:update     # rewrite golden files after an intended behavior change
-npm run grammars:build    # rebuild vendor/grammars/*.wasm from the pinned grammar versions
-```
+<p align="center"><img src="docs/assets/agent-hard.svg" alt="Agent benchmark on nestjs/nest: input tokens −23%, tool calls −43%, turns −33%, wall time −27%; import-cycle questions use about 2.5 times fewer tokens" width="860"></p>
 
-Grammars are built from pinned npm versions with the pinned `tree-sitter-cli` and committed with
-a sha256 manifest (`vendor/grammars/manifest.json`, checked by `tests/grammars.test.ts`). To
-upgrade one, change its version in `scripts/build-grammars.mjs`, run `npm run grammars:build`, and
-review the golden diffs.
+**Agents do less work on whole-repository questions.** Claude Code answered six questions about [nestjs/nest](https://github.com/nestjs/nest) (1,714 files), with and without Concentrate. With it:
+- the median answer used 23% fewer input tokens and 43% fewer tool calls;
+- one more question was answered correctly;
+- on import-cycle questions it read about 2.5× fewer tokens.
 
-Golden tests (`tests/golden*.test.ts`) pin graph output and MCP query results;
-see [tests/golden/README.md](tests/golden/README.md).
+This set ran once per question. On narrow questions over small repositories both setups do equally well; the full method and results are in [agent-benchmark.md](docs/agent-benchmark.md).
+
+<p align="center"><img src="docs/assets/scan-scaling.svg" alt="Cold scan time grows linearly with graph size: nestjs/nest, 52.7k nodes, in 1.7 s and 541 MB" width="820"></p>
+
+**Scans are fast and scale linearly.**
+- A cold scan of all of nestjs/nest builds 52.7k nodes and 69.5k relationships in 1.7 s, at a peak of 541 MB.
+- Small projects take about 0.1 s.
+
+See [benchmarks.md](docs/benchmarks.md#release-report).
+
+<p align="center"><img src="docs/assets/tool-latency.svg" alt="MCP tool latency on nestjs/nest: p50 between 0.4 ms and 123 ms" width="640"></p>
+
+**Answers come back in milliseconds.** On the nestjs/nest graph, the median latency of all 20 MCP tools is between 0.4 ms and 123 ms.
+
+## Where it is going
+
+The goal is a code graph an agent can rely on as much as on the source itself. That means three things:
+- recall as high as precision;
+- the backend semantics agents ask about most;
+- easy installation in any MCP client.
+
+Next up:
+- **Call and route recall:** default imports, constructors, static methods, and routes registered inside functions ([#41](https://github.com/fatihserhatturan/concentrate/issues/41)–[#49](https://github.com/fatihserhatturan/concentrate/issues/49)).
+- **Distribution** (Phase 9): npm publishing, an `init` command and CI ([#16](https://github.com/fatihserhatturan/concentrate/issues/16)).
+
+The full plan is in [docs/ROADMAP.md](docs/ROADMAP.md).
+
+## Documentation
+
+| | |
+| --- | --- |
+| [Getting started](docs/getting-started.md) | install, scan, query, watch, and connect an agent |
+| [MCP server](docs/mcp-server.md) | client setup and the reference for all 20 tools |
+| [Cypher subset](docs/cypher.md) | querying the graph directly |
+| [Architecture](docs/architecture.md) | the scan pipeline and source layout |
+| [Accuracy](docs/accuracy.md) · [Benchmarks](docs/benchmarks.md) · [Agent benchmark](docs/agent-benchmark.md) | how the numbers above are measured |
+| [Known limitations](docs/known-limitations.md) | what the graph does not see yet |
+| [Roadmap](docs/ROADMAP.md) | phases and status |
+| [Contributing](CONTRIBUTING.md) | development setup, tests and ground rules |
+
+All documents are indexed in [docs/README.md](docs/README.md).
+
+## License
+
+[MIT](LICENSE)
