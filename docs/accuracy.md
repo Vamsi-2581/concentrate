@@ -64,7 +64,7 @@ Rules:
 - **Data access:** an access matches on file, function, model and operation,
   and on the table when the label names one.
 
-## Results (2026-10-29, schema 38)
+## Results (2026-10-29, schema 39)
 
 ### Routes
 
@@ -82,10 +82,10 @@ Rules:
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
 | express | 28 | 5 | 1 | 23 | 83.3% | 17.9% |
 | fastify | 6 | 5 | 0 | 1 | 100.0% | 83.3% |
-| internet-node-express-realworld | 24 | 8 | 0 | 16 | 100.0% | 33.3% |
+| internet-node-express-realworld | 24 | 16 | 0 | 8 | 100.0% | 66.7% |
 | ky | 13 | 9 | 0 | 4 | 100.0% | 69.2% |
 | nestjs-starter | 2 | 2 | 0 | 0 | 100.0% | 100.0% |
-| **all** | 73 | 29 | 1 | 44 | **96.7%** | **39.7%** |
+| **all** | 73 | 37 | 1 | 36 | **97.4%** | **50.7%** |
 
 Labels counts calls with a project target. Another 310 call sites are labeled
 `null`, and 35 are `dynamic`.
@@ -117,11 +117,10 @@ path.resolve` called bare in `lib/view.js` links to the same-named
 - **Mount prefixes through chained routers.** realworld mounts every
   controller with `export default Router().use('/api', api)`, where
   `api = Router().use(...)`; the routes are found without `/api`.
-- **Default imports.** `import generateToken from './token.utils'` (a module
-  ending in `export default generateToken`) is not followed: 11 of
-  realworld's 16 missed calls, with `getTags` and `profileMapper`.
 - **Constructors and static methods.** `new HttpException(...)`,
-  `new TimeoutError(...)` and `Ky.create(...)` are not resolved.
+  `new TimeoutError(...)` and `Ky.create(...)` are not resolved. The
+  constructors are all 8 of realworld's remaining call misses. (Calls of
+  default-imported functions, previously 8 of its 16, resolve since #45.)
 - **Objects assembled at runtime.** Express's `app` gets its methods from
   `lib/application.js` through `merge-descriptors`; the 20 `app.set` /
   `app.use` / `app.listen` labels in the examples point there. They are left

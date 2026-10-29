@@ -17,6 +17,7 @@ export function addCallResolutionRelationships(graph: IGraphContributor): {
     "Function",
   );
   const importNodesByFile = indexImportNodesByFile(graph.nodes, relationshipIndex.fileByImportId);
+  indexDefaultExports(graph, functionsByFileAndName);
 
   let resolved = 0;
   let unresolved = 0;
@@ -65,4 +66,36 @@ export function addCallResolutionRelationships(graph: IGraphContributor): {
   }
 
   return { resolved, unresolved };
+}
+
+// A file whose default export is one of its functions also lists that
+// function under the name "default", so default imports and
+// `export { default } from` re-exports resolve like named ones. When the
+// exported name is a module-level variable (`const ky = createInstance()`),
+// a same-named function counts only if that variable declares it, so a
+// nested function of the same name is never picked.
+function indexDefaultExports(graph: IGraphContributor, functionsByFileAndName: Map<string, Map<string, string[]>>): void {
+  const defaults = new Map<string, string>();
+  for (const node of graph.nodes) {
+    if (node.label === "File" && typeof node.properties.defaultExport === "string") defaults.set(node.id, node.properties.defaultExport);
+  }
+  if (defaults.size === 0) return;
+
+  const nodesById = new Map(graph.nodes.map((node) => [node.id, node]));
+  const variableLines = new Map<string, number[]>();
+  for (const relationship of graph.relationships) {
+    if (relationship.type !== "DEFINES_VARIABLE") continue;
+    const variable = nodesById.get(relationship.to);
+    if (variable?.properties.name !== defaults.get(relationship.from)) continue;
+    const key = `${relationship.from}\0${variable!.properties.name}`;
+    variableLines.set(key, [...variableLines.get(key) ?? [], Number(variable!.properties.line)]);
+  }
+
+  for (const [fileId, name] of defaults) {
+    const functions = functionsByFileAndName.get(fileId);
+    if (!functions || functions.has("default")) continue;
+    const lines = variableLines.get(`${fileId}\0${name}`);
+    const targets = (functions.get(name) ?? []).filter((id) => !lines || lines.includes(Number(nodesById.get(id)?.properties.line)));
+    if (targets.length > 0) functions.set("default", targets);
+  }
 }
