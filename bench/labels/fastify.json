@@ -1,0 +1,748 @@
+{
+  "sample": "fastify",
+  "$comment": "Hand-labeled from the pinned sample source (scripts/samples.json), not from Concentrate output. Routes: every route in the non-test source files; plugins are registered without a prefix. fastify-decorators routes carry the @Controller route prefix. Calls: every call site in the listed files; all fastify, pg, session and logger APIs are packages and labeled unresolved.",
+  "routes": {
+    "scope": [
+      "fastify-postgres/index.js",
+      "fastify-postgres/server.js",
+      "fastify-session-authentication/authentication.js",
+      "fastify-session-authentication/html.js",
+      "tests/app.js",
+      "tests/server.js",
+      "typescript-decorators/src/",
+      "validation-messages/custom-errors-messages.js",
+      "winston-logger/winston-logger.js"
+    ],
+    "items": [
+      {
+        "method": "GET",
+        "path": "/",
+        "file": "fastify-postgres/server.js",
+        "line": 14
+      },
+      {
+        "method": "POST",
+        "path": "/",
+        "file": "fastify-postgres/server.js",
+        "line": 21
+      },
+      {
+        "method": "GET",
+        "path": "/:id",
+        "file": "fastify-postgres/server.js",
+        "line": 32
+      },
+      {
+        "method": "PATCH",
+        "path": "/:id",
+        "file": "fastify-postgres/server.js",
+        "line": 42
+      },
+      {
+        "method": "DELETE",
+        "path": "/:id",
+        "file": "fastify-postgres/server.js",
+        "line": 56
+      },
+      {
+        "method": "GET",
+        "path": "/login",
+        "file": "fastify-session-authentication/authentication.js",
+        "line": 20
+      },
+      {
+        "method": "POST",
+        "path": "/login",
+        "file": "fastify-session-authentication/authentication.js",
+        "line": 26
+      },
+      {
+        "method": "GET",
+        "path": "/",
+        "file": "fastify-session-authentication/authentication.js",
+        "line": 38
+      },
+      {
+        "method": "GET",
+        "path": "/logout",
+        "file": "fastify-session-authentication/authentication.js",
+        "line": 44
+      },
+      {
+        "method": "GET",
+        "path": "/",
+        "file": "tests/app.js",
+        "line": 7
+      },
+      {
+        "method": "GET",
+        "path": "/main",
+        "file": "typescript-decorators/src/controllers/main.controller.ts",
+        "line": 19
+      },
+      {
+        "method": "POST",
+        "path": "/main",
+        "file": "typescript-decorators/src/controllers/main.controller.ts",
+        "line": 29
+      },
+      {
+        "method": "GET",
+        "path": "/",
+        "file": "validation-messages/custom-errors-messages.js",
+        "line": 25
+      },
+      {
+        "method": "GET",
+        "path": "/hello",
+        "file": "winston-logger/winston-logger.js",
+        "line": 30
+      }
+    ]
+  },
+  "calls": {
+    "files": [
+      "fastify-postgres/index.js",
+      "fastify-postgres/server.js",
+      "fastify-session-authentication/authentication.js",
+      "fastify-session-authentication/html.js",
+      "tests/app.js",
+      "tests/server.js",
+      "typescript-decorators/src/controllers/main.controller.ts",
+      "typescript-decorators/src/services/message.service.ts",
+      "winston-logger/winston-logger.js"
+    ],
+    "items": [
+      {
+        "file": "fastify-postgres/index.js",
+        "line": 3,
+        "callee": "require(\"./server\")",
+        "target": {
+          "file": "fastify-postgres/server.js",
+          "name": "build"
+        }
+      },
+      {
+        "file": "fastify-postgres/index.js",
+        "line": 3,
+        "callee": "require",
+        "target": null
+      },
+      {
+        "file": "fastify-postgres/index.js",
+        "line": 7,
+        "callee": "listen",
+        "target": null
+      },
+      {
+        "file": "fastify-postgres/index.js",
+        "line": 9,
+        "callee": "error",
+        "target": null
+      },
+      {
+        "file": "fastify-postgres/index.js",
+        "line": 10,
+        "callee": "exit",
+        "target": null
+      },
+      {
+        "file": "fastify-postgres/index.js",
+        "line": 14,
+        "callee": "start",
+        "target": {
+          "file": "fastify-postgres/index.js",
+          "name": "start"
+        }
+      },
+      {
+        "file": "fastify-postgres/server.js",
+        "line": 3,
+        "callee": "require",
+        "target": null
+      },
+      {
+        "file": "fastify-postgres/server.js",
+        "line": 10,
+        "callee": "fastify",
+        "target": null
+      },
+      {
+        "file": "fastify-postgres/server.js",
+        "line": 12,
+        "callee": "register",
+        "target": null
+      },
+      {
+        "file": "fastify-postgres/server.js",
+        "line": 12,
+        "callee": "require",
+        "target": null
+      },
+      {
+        "file": "fastify-postgres/server.js",
+        "line": 14,
+        "callee": "get",
+        "target": null
+      },
+      {
+        "file": "fastify-postgres/server.js",
+        "line": 15,
+        "callee": "connect",
+        "target": null
+      },
+      {
+        "file": "fastify-postgres/server.js",
+        "line": 16,
+        "callee": "query",
+        "target": null
+      },
+      {
+        "file": "fastify-postgres/server.js",
+        "line": 17,
+        "callee": "release",
+        "target": null
+      },
+      {
+        "file": "fastify-postgres/server.js",
+        "line": 21,
+        "callee": "post",
+        "target": null
+      },
+      {
+        "file": "fastify-postgres/server.js",
+        "line": 23,
+        "callee": "connect",
+        "target": null
+      },
+      {
+        "file": "fastify-postgres/server.js",
+        "line": 24,
+        "callee": "query",
+        "target": null
+      },
+      {
+        "file": "fastify-postgres/server.js",
+        "line": 28,
+        "callee": "release",
+        "target": null
+      },
+      {
+        "file": "fastify-postgres/server.js",
+        "line": 32,
+        "callee": "get",
+        "target": null
+      },
+      {
+        "file": "fastify-postgres/server.js",
+        "line": 34,
+        "callee": "connect",
+        "target": null
+      },
+      {
+        "file": "fastify-postgres/server.js",
+        "line": 35,
+        "callee": "query",
+        "target": null
+      },
+      {
+        "file": "fastify-postgres/server.js",
+        "line": 38,
+        "callee": "release",
+        "target": null
+      },
+      {
+        "file": "fastify-postgres/server.js",
+        "line": 42,
+        "callee": "patch",
+        "target": null
+      },
+      {
+        "file": "fastify-postgres/server.js",
+        "line": 44,
+        "callee": "transact",
+        "target": null
+      },
+      {
+        "file": "fastify-postgres/server.js",
+        "line": 45,
+        "callee": "query",
+        "target": null
+      },
+      {
+        "file": "fastify-postgres/server.js",
+        "line": 49,
+        "callee": "query",
+        "target": null
+      },
+      {
+        "file": "fastify-postgres/server.js",
+        "line": 56,
+        "callee": "delete",
+        "target": null
+      },
+      {
+        "file": "fastify-postgres/server.js",
+        "line": 58,
+        "callee": "connect",
+        "target": null
+      },
+      {
+        "file": "fastify-postgres/server.js",
+        "line": 59,
+        "callee": "query",
+        "target": null
+      },
+      {
+        "file": "fastify-postgres/server.js",
+        "line": 62,
+        "callee": "release",
+        "target": null
+      },
+      {
+        "file": "fastify-session-authentication/authentication.js",
+        "line": 3,
+        "callee": "require",
+        "target": null
+      },
+      {
+        "file": "fastify-session-authentication/authentication.js",
+        "line": 4,
+        "callee": "require",
+        "target": null
+      },
+      {
+        "file": "fastify-session-authentication/authentication.js",
+        "line": 5,
+        "callee": "require",
+        "target": null
+      },
+      {
+        "file": "fastify-session-authentication/authentication.js",
+        "line": 7,
+        "callee": "require",
+        "target": null
+      },
+      {
+        "file": "fastify-session-authentication/authentication.js",
+        "line": 11,
+        "callee": "register",
+        "target": null
+      },
+      {
+        "file": "fastify-session-authentication/authentication.js",
+        "line": 12,
+        "callee": "register",
+        "target": null
+      },
+      {
+        "file": "fastify-session-authentication/authentication.js",
+        "line": 13,
+        "callee": "register",
+        "target": null
+      },
+      {
+        "file": "fastify-session-authentication/authentication.js",
+        "line": 20,
+        "callee": "get",
+        "target": null
+      },
+      {
+        "file": "fastify-session-authentication/authentication.js",
+        "line": 21,
+        "callee": "type",
+        "target": null
+      },
+      {
+        "file": "fastify-session-authentication/authentication.js",
+        "line": 22,
+        "callee": "send",
+        "target": null
+      },
+      {
+        "file": "fastify-session-authentication/authentication.js",
+        "line": 22,
+        "callee": "loginPage",
+        "target": {
+          "file": "fastify-session-authentication/html.js",
+          "name": "loginPage"
+        }
+      },
+      {
+        "file": "fastify-session-authentication/authentication.js",
+        "line": 26,
+        "callee": "post",
+        "target": null
+      },
+      {
+        "file": "fastify-session-authentication/authentication.js",
+        "line": 31,
+        "callee": "type",
+        "target": null
+      },
+      {
+        "file": "fastify-session-authentication/authentication.js",
+        "line": 32,
+        "callee": "send",
+        "target": null
+      },
+      {
+        "file": "fastify-session-authentication/authentication.js",
+        "line": 32,
+        "callee": "defaultPage",
+        "target": {
+          "file": "fastify-session-authentication/html.js",
+          "name": "defaultPage"
+        }
+      },
+      {
+        "file": "fastify-session-authentication/authentication.js",
+        "line": 34,
+        "callee": "redirect",
+        "target": null
+      },
+      {
+        "file": "fastify-session-authentication/authentication.js",
+        "line": 38,
+        "callee": "get",
+        "target": null
+      },
+      {
+        "file": "fastify-session-authentication/authentication.js",
+        "line": 39,
+        "callee": "type",
+        "target": null
+      },
+      {
+        "file": "fastify-session-authentication/authentication.js",
+        "line": 40,
+        "callee": "send",
+        "target": null
+      },
+      {
+        "file": "fastify-session-authentication/authentication.js",
+        "line": 40,
+        "callee": "defaultPage",
+        "target": {
+          "file": "fastify-session-authentication/html.js",
+          "name": "defaultPage"
+        }
+      },
+      {
+        "file": "fastify-session-authentication/authentication.js",
+        "line": 44,
+        "callee": "get",
+        "target": null
+      },
+      {
+        "file": "fastify-session-authentication/authentication.js",
+        "line": 46,
+        "callee": "destroy",
+        "target": null
+      },
+      {
+        "file": "fastify-session-authentication/authentication.js",
+        "line": 48,
+        "callee": "status",
+        "target": null
+      },
+      {
+        "file": "fastify-session-authentication/authentication.js",
+        "line": 49,
+        "callee": "send",
+        "target": null
+      },
+      {
+        "file": "fastify-session-authentication/authentication.js",
+        "line": 51,
+        "callee": "redirect",
+        "target": null
+      },
+      {
+        "file": "fastify-session-authentication/authentication.js",
+        "line": 55,
+        "callee": "redirect",
+        "target": null
+      },
+      {
+        "file": "fastify-session-authentication/authentication.js",
+        "line": 59,
+        "callee": "next",
+        "target": null
+      },
+      {
+        "file": "tests/app.js",
+        "line": 3,
+        "callee": "require",
+        "target": null
+      },
+      {
+        "file": "tests/app.js",
+        "line": 6,
+        "callee": "register",
+        "target": null
+      },
+      {
+        "file": "tests/app.js",
+        "line": 7,
+        "callee": "get",
+        "target": null
+      },
+      {
+        "file": "tests/app.js",
+        "line": 8,
+        "callee": "db",
+        "target": null
+      },
+      {
+        "file": "tests/app.js",
+        "line": 9,
+        "callee": "find",
+        "target": null
+      },
+      {
+        "file": "tests/app.js",
+        "line": 9,
+        "callee": "collection",
+        "target": null
+      },
+      {
+        "file": "tests/app.js",
+        "line": 10,
+        "callee": "send",
+        "target": null
+      },
+      {
+        "file": "tests/app.js",
+        "line": 13,
+        "callee": "done",
+        "target": null
+      },
+      {
+        "file": "tests/server.js",
+        "line": 3,
+        "callee": "require",
+        "target": null
+      },
+      {
+        "file": "tests/server.js",
+        "line": 4,
+        "callee": "require",
+        "target": null
+      },
+      {
+        "file": "tests/server.js",
+        "line": 5,
+        "callee": "require",
+        "target": null
+      },
+      {
+        "file": "tests/server.js",
+        "line": 8,
+        "callee": "Fastify",
+        "target": null
+      },
+      {
+        "file": "tests/server.js",
+        "line": 10,
+        "callee": "register",
+        "target": null
+      },
+      {
+        "file": "tests/server.js",
+        "line": 11,
+        "callee": "fp",
+        "target": null
+      },
+      {
+        "file": "tests/server.js",
+        "line": 19,
+        "callee": "listen",
+        "target": null
+      },
+      {
+        "file": "tests/server.js",
+        "line": 22,
+        "callee": "server",
+        "target": {
+          "file": "tests/server.js",
+          "name": "server"
+        }
+      },
+      {
+        "file": "typescript-decorators/src/controllers/main.controller.ts",
+        "line": 7,
+        "callee": "Controller",
+        "target": null
+      },
+      {
+        "file": "typescript-decorators/src/controllers/main.controller.ts",
+        "line": 12,
+        "callee": "Inject",
+        "target": null
+      },
+      {
+        "file": "typescript-decorators/src/controllers/main.controller.ts",
+        "line": 19,
+        "callee": "GET",
+        "target": null
+      },
+      {
+        "file": "typescript-decorators/src/controllers/main.controller.ts",
+        "line": 29,
+        "callee": "POST",
+        "target": null
+      },
+      {
+        "file": "typescript-decorators/src/controllers/main.controller.ts",
+        "line": 37,
+        "callee": "info",
+        "target": null
+      },
+      {
+        "file": "typescript-decorators/src/controllers/main.controller.ts",
+        "line": 47,
+        "callee": "Hook",
+        "target": null
+      },
+      {
+        "file": "typescript-decorators/src/controllers/main.controller.ts",
+        "line": 53,
+        "callee": "header",
+        "target": null
+      },
+      {
+        "file": "typescript-decorators/src/services/message.service.ts",
+        "line": 3,
+        "callee": "Service",
+        "target": null
+      },
+      {
+        "file": "winston-logger/winston-logger.js",
+        "line": 3,
+        "callee": "require",
+        "target": null
+      },
+      {
+        "file": "winston-logger/winston-logger.js",
+        "line": 6,
+        "callee": "createLogger",
+        "target": null
+      },
+      {
+        "file": "winston-logger/winston-logger.js",
+        "line": 19,
+        "callee": "json",
+        "target": null
+      },
+      {
+        "file": "winston-logger/winston-logger.js",
+        "line": 22,
+        "callee": "File",
+        "target": null
+      },
+      {
+        "file": "winston-logger/winston-logger.js",
+        "line": 23,
+        "callee": "File",
+        "target": null
+      },
+      {
+        "file": "winston-logger/winston-logger.js",
+        "line": 28,
+        "callee": "require('fastify')",
+        "target": null
+      },
+      {
+        "file": "winston-logger/winston-logger.js",
+        "line": 28,
+        "callee": "require",
+        "target": null
+      },
+      {
+        "file": "winston-logger/winston-logger.js",
+        "line": 30,
+        "callee": "get",
+        "target": null
+      },
+      {
+        "file": "winston-logger/winston-logger.js",
+        "line": 31,
+        "callee": "info",
+        "target": null
+      },
+      {
+        "file": "winston-logger/winston-logger.js",
+        "line": 33,
+        "callee": "send",
+        "target": null
+      },
+      {
+        "file": "winston-logger/winston-logger.js",
+        "line": 36,
+        "callee": "setNotFoundHandler",
+        "target": null
+      },
+      {
+        "file": "winston-logger/winston-logger.js",
+        "line": 37,
+        "callee": "debug",
+        "target": null
+      },
+      {
+        "file": "winston-logger/winston-logger.js",
+        "line": 39,
+        "callee": "send",
+        "target": null
+      },
+      {
+        "file": "winston-logger/winston-logger.js",
+        "line": 39,
+        "callee": "status",
+        "target": null
+      },
+      {
+        "file": "winston-logger/winston-logger.js",
+        "line": 42,
+        "callee": "setErrorHandler",
+        "target": null
+      },
+      {
+        "file": "winston-logger/winston-logger.js",
+        "line": 43,
+        "callee": "debug",
+        "target": null
+      },
+      {
+        "file": "winston-logger/winston-logger.js",
+        "line": 44,
+        "callee": "debug",
+        "target": null
+      },
+      {
+        "file": "winston-logger/winston-logger.js",
+        "line": 45,
+        "callee": "error",
+        "target": null
+      },
+      {
+        "file": "winston-logger/winston-logger.js",
+        "line": 47,
+        "callee": "send",
+        "target": null
+      },
+      {
+        "file": "winston-logger/winston-logger.js",
+        "line": 47,
+        "callee": "status",
+        "target": null
+      },
+      {
+        "file": "winston-logger/winston-logger.js",
+        "line": 50,
+        "callee": "listen",
+        "target": null
+      }
+    ]
+  }
+}

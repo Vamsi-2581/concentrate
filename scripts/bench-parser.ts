@@ -22,11 +22,9 @@
  * small sample is not a regression). Record the baseline on the same machine just before changing
  * grammars (see docs/benchmarks.md, "Grammar upgrades").
  */
-import { existsSync } from "node:fs";
 import { readFile, writeFile } from "node:fs/promises";
-import path from "node:path";
 import { parseArgs } from "node:util";
-import { readSampleManifest, samplesDirectory } from "../src/adapters/cli/smoke.js";
+import { availableSamples, checkRegression, median as medianOf, parseSuite } from "./bench-common.js";
 
 const { values } = parseArgs({
   options: {
@@ -52,7 +50,7 @@ const { parseSyntaxTree } = await import(`${code}/integrations/languages/syntax/
 const runs = Number.parseInt(values.runs!, 10);
 const tolerance = Number.parseFloat(values.tolerance!);
 const minDelta = Number.parseFloat(values["min-delta"]!);
-if (!["standing", "internet", "all"].includes(values.suite!)) throw new Error(`Unknown suite: ${values.suite}`);
+const suite = parseSuite(values.suite);
 
 type SampleResult = {
   sample: string;
@@ -67,17 +65,7 @@ type SampleResult = {
 };
 type BenchReport = { code: string; node: string; platform: string; grammars: Record<string, string>; runs: number; results: SampleResult[] };
 
-async function median(action: () => Promise<unknown>): Promise<number> {
-  await action(); // warm-up: grammar loading, JIT, file cache
-  const times: number[] = [];
-  for (let run = 0; run < runs; run += 1) {
-    const start = process.hrtime.bigint();
-    await action();
-    times.push(Number(process.hrtime.bigint() - start) / 1e6);
-  }
-  times.sort((a, b) => a - b);
-  return Math.round(times[Math.floor(times.length / 2)]!);
-}
+const median = (action: () => Promise<unknown>) => medianOf(action, runs);
 
 const grammarManifest = JSON.parse(await readFile(new URL("../vendor/grammars/manifest.json", import.meta.url), "utf8")) as {
   cli: string;
@@ -88,12 +76,8 @@ const grammars = Object.fromEntries(
 );
 
 const results: SampleResult[] = [];
-for (const sample of (await readSampleManifest()).filter((item) => values.suite === "all" || item.suite === values.suite)) {
-  const projectPath = path.join(samplesDirectory(), sample.name);
-  if (!existsSync(projectPath)) {
-    console.error(`skip ${sample.name}: missing at ${projectPath} (npm run samples:fetch)`);
-    continue;
-  }
+for (const sample of await availableSamples(suite)) {
+  const { projectPath } = sample;
   const files = filterSupportedSourceFiles(await discoverFiles(projectPath, { exclude: sample.exclude }), undefined);
   const sources = await Promise.all(files.map(async (file) => ({ ...file, source: await readFile(file.filePath, "utf8") })));
 
@@ -168,11 +152,7 @@ if (values.baseline) {
     if (!before) continue;
     for (const metric of ["parseMs", "scanMainThreadMs", "scanMs"] as const) {
       if (before[metric] === undefined) continue;
-      const ratio = result[metric] / Math.max(before[metric], 1);
-      const regressed = ratio > tolerance && result[metric] - before[metric] >= minDelta;
-      const flag = regressed ? "REGRESSION" : "ok";
-      if (regressed) regressions += 1;
-      console.log(`${flag.padEnd(10)} ${result.sample} ${metric}: ${before[metric]} → ${result[metric]} ms (${ratio.toFixed(2)}×)`);
+      if (checkRegression(`${result.sample} ${metric}`, before[metric], result[metric], { tolerance, minDelta, unit: "ms" })) regressions += 1;
     }
   }
   if (regressions > 0) process.exitCode = 1;

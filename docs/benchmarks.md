@@ -162,3 +162,78 @@ The comparison lists the grammars that changed and exits with 1 when a
 sample's parse or scan median is more than 1.15× the baseline and at least
 20 ms slower (`--tolerance`, `--min-delta`), so the small samples' 1–2 ms
 jitter does not count.
+
+## Release report
+
+`npm run bench:release` (Phase 8) builds, then measures the built CLI the way
+a user runs it, on every sample:
+
+- **Cold scan:** `concentrate scan --no-cache` in a child process, the median
+  of 3 runs (`--runs`), with the process's peak RSS. `scripts/scan-probe.mjs`
+  is preloaded with `--import` and records `process.resourceUsage().maxRSS`
+  on exit, so no outside tool is needed.
+- **Warm scan:** the same after a run that filled the parse cache.
+- **Tool latency:** p50 / p95 of every MCP tool over 20 calls after a
+  warm-up (`--tool-runs`), on the graph the scan wrote. Arguments come from
+  the graph: the most-called function, its file, the first route and the
+  first resolved import. `route_details` has no case on ky, which has no
+  routes.
+
+Each run writes `bench/results/<version>-<date>.json`; `--baseline` compares
+against an earlier one like `bench:parser` does (scan times and memory at
+1.15× and +20 ms / MB, tool p50s at +2 ms) and exits with 1 on a regression:
+
+```bash
+npm run bench:release -- --baseline bench/results/0.1.0-2026-10-29.json
+```
+
+Recorded 2026-10-29 for 0.1.0 on an Apple M4 (10 CPUs), Node v24.13.0
+([`bench/results/0.1.0-2026-10-29.json`](../bench/results/0.1.0-2026-10-29.json)).
+Wall times include Node startup, parsing, resolution and the store write.
+
+| Sample | Nodes | Rels | Cold scan ms | Cold peak RSS MB | Warm scan ms | Warm peak RSS MB |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| express | 12879 | 14064 | 368 | 276 | 238 | 173 |
+| fastify | 398 | 456 | 101 | 118 | 80 | 73 |
+| nestjs-starter | 85 | 113 | 85 | 120 | 78 | 70 |
+| ky | 7013 | 8581 | 368 | 210 | 180 | 135 |
+| internet-node-express-firebase-mongodb | 515 | 642 | 114 | 137 | 82 | 74 |
+| internet-node-express-realworld | 696 | 1203 | 124 | 123 | 91 | 78 |
+| internet-nest | 52733 | 69503 | 1680 | 541 | 1278 | 625 |
+
+- A cold scan of `internet-nest` (1,714 files) takes 1.7 s and peaks at
+  541 MB; the small samples have a floor of about 0.1 s.
+- The warm scan of `internet-nest` is 1.3× faster but peaks higher than the
+  cold one (625 MB); the cause is not investigated yet.
+
+Tool latency, p50 / p95 ms:
+
+| Tool | express | fastify | nestjs-starter | ky | internet-node-express-firebase-mongodb | internet-node-express-realworld | internet-nest |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| graph_stats | 5.77 / 6.44 | 0.33 / 0.4 | 0.21 / 0.3 | 2.82 / 3.56 | 0.4 / 0.58 | 0.43 / 1.67 | 21.81 / 23.81 |
+| find_definitions | 1.14 / 1.68 | 0.33 / 1.52 | 0.26 / 1.82 | 0.61 / 0.71 | 0.38 / 1.44 | 0.33 / 0.43 | 5.08 / 7.86 |
+| find_callers | 3.37 / 7.07 | 0.42 / 0.49 | 0.26 / 0.28 | 5.52 / 9.47 | 0.49 / 0.56 | 0.58 / 2.03 | 25.4 / 30.57 |
+| list_exports | 1.61 / 4.18 | 0.51 / 2.13 | 0.38 / 0.45 | 1.03 / 2.93 | 0.63 / 2.28 | 0.6 / 0.7 | 17.2 / 20.46 |
+| trace_import_chain | 0.6 / 3.37 | 0.12 / 0.13 | 0.09 / 0.11 | 0.36 / 2.05 | 0.14 / 0.15 | 0.21 / 3.7 | 13.37 / 19.63 |
+| list_routes | 0.47 / 0.56 | 0.09 / 0.11 | 0.08 / 0.09 | 0.08 / 0.1 | 0.12 / 0.13 | 0.22 / 0.26 | 1.6 / 2.79 |
+| list_entrypoints | 0.11 / 0.14 | 0.08 / 0.09 | 0.07 / 0.1 | 0.08 / 0.09 | 0.08 / 0.1 | 0.09 / 0.1 | 0.44 / 0.48 |
+| list_env_config | 0.35 / 2.15 | 0.23 / 0.27 | 0.21 / 0.23 | 0.25 / 0.29 | 0.26 / 0.3 | 0.27 / 0.35 | 2.34 / 4.21 |
+| list_data_access | 0.34 / 0.41 | 0.24 / 0.35 | 0.21 / 1.46 | 0.24 / 0.29 | 0.28 / 0.33 | 0.81 / 1.85 | 1.78 / 3.32 |
+| list_tables | 0.37 / 0.41 | 0.25 / 0.27 | 0.22 / 0.24 | 0.25 / 1.59 | 0.26 / 1.93 | 0.5 / 0.56 | 2.45 / 3.99 |
+| impact_of | 13.45 / 21.74 | 0.74 / 2.59 | 0.48 / 0.51 | 7.44 / 13.44 | 0.77 / 0.89 | 1.16 / 3.16 | 54.89 / 63.38 |
+| detect_changes | 22.67 / 25.38 | 21.88 / 23.97 | 22.38 / 23.3 | 22.12 / 22.82 | 21.88 / 23.94 | 22.15 / 22.8 | 48.42 / 52.59 |
+| route_details | 13.63 / 22.3 | 0.86 / 0.99 | 0.64 / 0.88 | – | 0.88 / 2.73 | 1.23 / 3.81 | 63.26 / 85.11 |
+| get_symbol_source | 0.88 / 0.97 | 0.39 / 2.34 | 0.38 / 0.45 | 0.37 / 0.45 | 0.34 / 0.4 | 0.35 / 0.4 | 2.73 / 4.96 |
+| get_file_outline | 0.94 / 4.21 | 0.52 / 0.59 | 0.48 / 1.6 | 0.72 / 1.69 | 0.52 / 0.58 | 0.61 / 0.75 | 15.89 / 27.03 |
+| search_symbols | 1.8 / 3.14 | 0.45 / 2.18 | 0.36 / 0.41 | 1.37 / 2.9 | 0.5 / 1.9 | 0.53 / 2.28 | 23.63 / 24.58 |
+| find_references | 15.39 / 24.55 | 1.2 / 2.56 | 0.78 / 2.23 | 12.82 / 17.38 | 1.27 / 2.76 | 1.62 / 3.86 | 102.35 / 123 |
+| find_import_cycles | 1.34 / 3.5 | 0.21 / 0.24 | 0.14 / 0.17 | 0.76 / 3.74 | 0.24 / 2 | 0.35 / 0.42 | 25.18 / 39.49 |
+| find_unused_exports | 17.53 / 21.63 | 1.47 / 3.88 | 0.85 / 2.86 | 13.44 / 15.92 | 1.49 / 3.47 | 2.32 / 4.33 | 123.42 / 161.66 |
+| architecture_overview | 2.44 / 4.78 | 0.57 / 0.69 | 0.45 / 0.59 | 1.62 / 4.26 | 0.62 / 2.36 | 0.95 / 2.96 | 46.4 / 65.03 |
+
+- Every tool answers in under 25 ms on the standing samples. On
+  `internet-nest` (52,733 nodes) the listing tools stay under 25 ms and the
+  traversals (`impact_of`, `route_details`, `find_references`,
+  `find_unused_exports`) take 50–125 ms.
+- `detect_changes` runs `git`: about 22 ms on the small graphs, 48 ms on
+  `internet-nest`.

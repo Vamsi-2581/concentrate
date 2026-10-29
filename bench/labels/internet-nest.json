@@ -1,0 +1,134 @@
+{
+  "sample": "internet-nest",
+  "$comment": "Hand-labeled from the pinned sample source (scripts/samples.json), not from Concentrate output. Data access: one label per (function, model, operation) in the service of five data samples. Operations use the category vocabulary (save -> create, findOneBy / findByIdAndUpdate / findByIdAndDelete -> read / update / delete). Tables: TypeORM's default snake_case entity name, Mongoose's lowercase plural collection, the Prisma model name without @@map.",
+  "dataAccess": {
+    "scope": [
+      "sample/05-sql-typeorm/src/",
+      "sample/06-mongoose/src/",
+      "sample/13-mongo-typeorm/src/",
+      "sample/14-mongoose-base/src/",
+      "sample/22-graphql-prisma/src/"
+    ],
+    "items": [
+      {
+        "file": "sample/05-sql-typeorm/src/users/users.service.ts",
+        "function": "create",
+        "model": "User",
+        "operation": "create",
+        "table": "user"
+      },
+      {
+        "file": "sample/05-sql-typeorm/src/users/users.service.ts",
+        "function": "findAll",
+        "model": "User",
+        "operation": "read",
+        "table": "user"
+      },
+      {
+        "file": "sample/05-sql-typeorm/src/users/users.service.ts",
+        "function": "findOne",
+        "model": "User",
+        "operation": "read",
+        "table": "user"
+      },
+      {
+        "file": "sample/05-sql-typeorm/src/users/users.service.ts",
+        "function": "remove",
+        "model": "User",
+        "operation": "delete",
+        "table": "user"
+      },
+      {
+        "file": "sample/06-mongoose/src/cats/cats.service.ts",
+        "function": "create",
+        "model": "Cat",
+        "operation": "create",
+        "table": "cats"
+      },
+      {
+        "file": "sample/06-mongoose/src/cats/cats.service.ts",
+        "function": "findAll",
+        "model": "Cat",
+        "operation": "read",
+        "table": "cats"
+      },
+      {
+        "file": "sample/06-mongoose/src/cats/cats.service.ts",
+        "function": "findOne",
+        "model": "Cat",
+        "operation": "read",
+        "table": "cats"
+      },
+      {
+        "file": "sample/06-mongoose/src/cats/cats.service.ts",
+        "function": "update",
+        "model": "Cat",
+        "operation": "update",
+        "table": "cats"
+      },
+      {
+        "file": "sample/06-mongoose/src/cats/cats.service.ts",
+        "function": "delete",
+        "model": "Cat",
+        "operation": "delete",
+        "table": "cats"
+      },
+      {
+        "file": "sample/13-mongo-typeorm/src/photo/photo.service.ts",
+        "function": "findAll",
+        "model": "Photo",
+        "operation": "read",
+        "table": "photo"
+      },
+      {
+        "file": "sample/14-mongoose-base/src/cats/cats.service.ts",
+        "function": "create",
+        "model": "Cat",
+        "operation": "create",
+        "table": "cats"
+      },
+      {
+        "file": "sample/14-mongoose-base/src/cats/cats.service.ts",
+        "function": "findAll",
+        "model": "Cat",
+        "operation": "read",
+        "table": "cats"
+      },
+      {
+        "file": "sample/22-graphql-prisma/src/posts/posts.service.ts",
+        "function": "findOne",
+        "model": "Post",
+        "operation": "read",
+        "table": "Post"
+      },
+      {
+        "file": "sample/22-graphql-prisma/src/posts/posts.service.ts",
+        "function": "findAll",
+        "model": "Post",
+        "operation": "read",
+        "table": "Post"
+      },
+      {
+        "file": "sample/22-graphql-prisma/src/posts/posts.service.ts",
+        "function": "create",
+        "model": "Post",
+        "operation": "create",
+        "table": "Post"
+      },
+      {
+        "file": "sample/22-graphql-prisma/src/posts/posts.service.ts",
+        "function": "update",
+        "model": "Post",
+        "operation": "update",
+        "table": "Post"
+      },
+      {
+        "file": "sample/22-graphql-prisma/src/posts/posts.service.ts",
+        "function": "delete",
+        "model": "Post",
+        "operation": "delete",
+        "table": "Post"
+      }
+    ]
+  }
+}

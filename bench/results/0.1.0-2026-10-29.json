@@ -1,0 +1,672 @@
+{
+  "version": "0.1.0",
+  "recordedAt": "2026-10-29T07:17:42.315Z",
+  "node": "v24.13.0",
+  "platform": "darwin-arm64",
+  "cpus": 10,
+  "runs": 3,
+  "toolRuns": 20,
+  "results": [
+    {
+      "sample": "express",
+      "nodes": 12879,
+      "relationships": 14064,
+      "scanCold": {
+        "ms": 368,
+        "maxRssMb": 276
+      },
+      "scanWarm": {
+        "ms": 238,
+        "maxRssMb": 173
+      },
+      "tools": {
+        "graph_stats": {
+          "p50": 5.77,
+          "p95": 6.44
+        },
+        "find_definitions": {
+          "p50": 1.14,
+          "p95": 1.68
+        },
+        "find_callers": {
+          "p50": 3.37,
+          "p95": 7.07
+        },
+        "list_exports": {
+          "p50": 1.61,
+          "p95": 4.18
+        },
+        "trace_import_chain": {
+          "p50": 0.6,
+          "p95": 3.37
+        },
+        "list_routes": {
+          "p50": 0.47,
+          "p95": 0.56
+        },
+        "list_entrypoints": {
+          "p50": 0.11,
+          "p95": 0.14
+        },
+        "list_env_config": {
+          "p50": 0.35,
+          "p95": 2.15
+        },
+        "list_data_access": {
+          "p50": 0.34,
+          "p95": 0.41
+        },
+        "list_tables": {
+          "p50": 0.37,
+          "p95": 0.41
+        },
+        "impact_of": {
+          "p50": 13.45,
+          "p95": 21.74
+        },
+        "detect_changes": {
+          "p50": 22.67,
+          "p95": 25.38
+        },
+        "route_details": {
+          "p50": 13.63,
+          "p95": 22.3
+        },
+        "get_symbol_source": {
+          "p50": 0.88,
+          "p95": 0.97
+        },
+        "get_file_outline": {
+          "p50": 0.94,
+          "p95": 4.21
+        },
+        "search_symbols": {
+          "p50": 1.8,
+          "p95": 3.14
+        },
+        "find_references": {
+          "p50": 15.39,
+          "p95": 24.55
+        },
+        "find_import_cycles": {
+          "p50": 1.34,
+          "p95": 3.5
+        },
+        "find_unused_exports": {
+          "p50": 17.53,
+          "p95": 21.63
+        },
+        "architecture_overview": {
+          "p50": 2.44,
+          "p95": 4.78
+        }
+      }
+    },
+    {
+      "sample": "fastify",
+      "nodes": 398,
+      "relationships": 456,
+      "scanCold": {
+        "ms": 101,
+        "maxRssMb": 118
+      },
+      "scanWarm": {
+        "ms": 80,
+        "maxRssMb": 73
+      },
+      "tools": {
+        "graph_stats": {
+          "p50": 0.33,
+          "p95": 0.4
+        },
+        "find_definitions": {
+          "p50": 0.33,
+          "p95": 1.52
+        },
+        "find_callers": {
+          "p50": 0.42,
+          "p95": 0.49
+        },
+        "list_exports": {
+          "p50": 0.51,
+          "p95": 2.13
+        },
+        "trace_import_chain": {
+          "p50": 0.12,
+          "p95": 0.13
+        },
+        "list_routes": {
+          "p50": 0.09,
+          "p95": 0.11
+        },
+        "list_entrypoints": {
+          "p50": 0.08,
+          "p95": 0.09
+        },
+        "list_env_config": {
+          "p50": 0.23,
+          "p95": 0.27
+        },
+        "list_data_access": {
+          "p50": 0.24,
+          "p95": 0.35
+        },
+        "list_tables": {
+          "p50": 0.25,
+          "p95": 0.27
+        },
+        "impact_of": {
+          "p50": 0.74,
+          "p95": 2.59
+        },
+        "detect_changes": {
+          "p50": 21.88,
+          "p95": 23.97
+        },
+        "route_details": {
+          "p50": 0.86,
+          "p95": 0.99
+        },
+        "get_symbol_source": {
+          "p50": 0.39,
+          "p95": 2.34
+        },
+        "get_file_outline": {
+          "p50": 0.52,
+          "p95": 0.59
+        },
+        "search_symbols": {
+          "p50": 0.45,
+          "p95": 2.18
+        },
+        "find_references": {
+          "p50": 1.2,
+          "p95": 2.56
+        },
+        "find_import_cycles": {
+          "p50": 0.21,
+          "p95": 0.24
+        },
+        "find_unused_exports": {
+          "p50": 1.47,
+          "p95": 3.88
+        },
+        "architecture_overview": {
+          "p50": 0.57,
+          "p95": 0.69
+        }
+      }
+    },
+    {
+      "sample": "nestjs-starter",
+      "nodes": 85,
+      "relationships": 113,
+      "scanCold": {
+        "ms": 85,
+        "maxRssMb": 120
+      },
+      "scanWarm": {
+        "ms": 78,
+        "maxRssMb": 70
+      },
+      "tools": {
+        "graph_stats": {
+          "p50": 0.21,
+          "p95": 0.3
+        },
+        "find_definitions": {
+          "p50": 0.26,
+          "p95": 1.82
+        },
+        "find_callers": {
+          "p50": 0.26,
+          "p95": 0.28
+        },
+        "list_exports": {
+          "p50": 0.38,
+          "p95": 0.45
+        },
+        "trace_import_chain": {
+          "p50": 0.09,
+          "p95": 0.11
+        },
+        "list_routes": {
+          "p50": 0.08,
+          "p95": 0.09
+        },
+        "list_entrypoints": {
+          "p50": 0.07,
+          "p95": 0.1
+        },
+        "list_env_config": {
+          "p50": 0.21,
+          "p95": 0.23
+        },
+        "list_data_access": {
+          "p50": 0.21,
+          "p95": 1.46
+        },
+        "list_tables": {
+          "p50": 0.22,
+          "p95": 0.24
+        },
+        "impact_of": {
+          "p50": 0.48,
+          "p95": 0.51
+        },
+        "detect_changes": {
+          "p50": 22.38,
+          "p95": 23.3
+        },
+        "route_details": {
+          "p50": 0.64,
+          "p95": 0.88
+        },
+        "get_symbol_source": {
+          "p50": 0.38,
+          "p95": 0.45
+        },
+        "get_file_outline": {
+          "p50": 0.48,
+          "p95": 1.6
+        },
+        "search_symbols": {
+          "p50": 0.36,
+          "p95": 0.41
+        },
+        "find_references": {
+          "p50": 0.78,
+          "p95": 2.23
+        },
+        "find_import_cycles": {
+          "p50": 0.14,
+          "p95": 0.17
+        },
+        "find_unused_exports": {
+          "p50": 0.85,
+          "p95": 2.86
+        },
+        "architecture_overview": {
+          "p50": 0.45,
+          "p95": 0.59
+        }
+      }
+    },
+    {
+      "sample": "ky",
+      "nodes": 7013,
+      "relationships": 8581,
+      "scanCold": {
+        "ms": 368,
+        "maxRssMb": 210
+      },
+      "scanWarm": {
+        "ms": 180,
+        "maxRssMb": 135
+      },
+      "tools": {
+        "graph_stats": {
+          "p50": 2.82,
+          "p95": 3.56
+        },
+        "find_definitions": {
+          "p50": 0.61,
+          "p95": 0.71
+        },
+        "find_callers": {
+          "p50": 5.52,
+          "p95": 9.47
+        },
+        "list_exports": {
+          "p50": 1.03,
+          "p95": 2.93
+        },
+        "trace_import_chain": {
+          "p50": 0.36,
+          "p95": 2.05
+        },
+        "list_routes": {
+          "p50": 0.08,
+          "p95": 0.1
+        },
+        "list_entrypoints": {
+          "p50": 0.08,
+          "p95": 0.09
+        },
+        "list_env_config": {
+          "p50": 0.25,
+          "p95": 0.29
+        },
+        "list_data_access": {
+          "p50": 0.24,
+          "p95": 0.29
+        },
+        "list_tables": {
+          "p50": 0.25,
+          "p95": 1.59
+        },
+        "impact_of": {
+          "p50": 7.44,
+          "p95": 13.44
+        },
+        "detect_changes": {
+          "p50": 22.12,
+          "p95": 22.82
+        },
+        "get_symbol_source": {
+          "p50": 0.37,
+          "p95": 0.45
+        },
+        "get_file_outline": {
+          "p50": 0.72,
+          "p95": 1.69
+        },
+        "search_symbols": {
+          "p50": 1.37,
+          "p95": 2.9
+        },
+        "find_references": {
+          "p50": 12.82,
+          "p95": 17.38
+        },
+        "find_import_cycles": {
+          "p50": 0.76,
+          "p95": 3.74
+        },
+        "find_unused_exports": {
+          "p50": 13.44,
+          "p95": 15.92
+        },
+        "architecture_overview": {
+          "p50": 1.62,
+          "p95": 4.26
+        }
+      }
+    },
+    {
+      "sample": "internet-node-express-firebase-mongodb",
+      "nodes": 515,
+      "relationships": 642,
+      "scanCold": {
+        "ms": 114,
+        "maxRssMb": 137
+      },
+      "scanWarm": {
+        "ms": 82,
+        "maxRssMb": 74
+      },
+      "tools": {
+        "graph_stats": {
+          "p50": 0.4,
+          "p95": 0.58
+        },
+        "find_definitions": {
+          "p50": 0.38,
+          "p95": 1.44
+        },
+        "find_callers": {
+          "p50": 0.49,
+          "p95": 0.56
+        },
+        "list_exports": {
+          "p50": 0.63,
+          "p95": 2.28
+        },
+        "trace_import_chain": {
+          "p50": 0.14,
+          "p95": 0.15
+        },
+        "list_routes": {
+          "p50": 0.12,
+          "p95": 0.13
+        },
+        "list_entrypoints": {
+          "p50": 0.08,
+          "p95": 0.1
+        },
+        "list_env_config": {
+          "p50": 0.26,
+          "p95": 0.3
+        },
+        "list_data_access": {
+          "p50": 0.28,
+          "p95": 0.33
+        },
+        "list_tables": {
+          "p50": 0.26,
+          "p95": 1.93
+        },
+        "impact_of": {
+          "p50": 0.77,
+          "p95": 0.89
+        },
+        "detect_changes": {
+          "p50": 21.88,
+          "p95": 23.94
+        },
+        "route_details": {
+          "p50": 0.88,
+          "p95": 2.73
+        },
+        "get_symbol_source": {
+          "p50": 0.34,
+          "p95": 0.4
+        },
+        "get_file_outline": {
+          "p50": 0.52,
+          "p95": 0.58
+        },
+        "search_symbols": {
+          "p50": 0.5,
+          "p95": 1.9
+        },
+        "find_references": {
+          "p50": 1.27,
+          "p95": 2.76
+        },
+        "find_import_cycles": {
+          "p50": 0.24,
+          "p95": 2
+        },
+        "find_unused_exports": {
+          "p50": 1.49,
+          "p95": 3.47
+        },
+        "architecture_overview": {
+          "p50": 0.62,
+          "p95": 2.36
+        }
+      }
+    },
+    {
+      "sample": "internet-node-express-realworld",
+      "nodes": 696,
+      "relationships": 1203,
+      "scanCold": {
+        "ms": 124,
+        "maxRssMb": 123
+      },
+      "scanWarm": {
+        "ms": 91,
+        "maxRssMb": 78
+      },
+      "tools": {
+        "graph_stats": {
+          "p50": 0.43,
+          "p95": 1.67
+        },
+        "find_definitions": {
+          "p50": 0.33,
+          "p95": 0.43
+        },
+        "find_callers": {
+          "p50": 0.58,
+          "p95": 2.03
+        },
+        "list_exports": {
+          "p50": 0.6,
+          "p95": 0.7
+        },
+        "trace_import_chain": {
+          "p50": 0.21,
+          "p95": 3.7
+        },
+        "list_routes": {
+          "p50": 0.22,
+          "p95": 0.26
+        },
+        "list_entrypoints": {
+          "p50": 0.09,
+          "p95": 0.1
+        },
+        "list_env_config": {
+          "p50": 0.27,
+          "p95": 0.35
+        },
+        "list_data_access": {
+          "p50": 0.81,
+          "p95": 1.85
+        },
+        "list_tables": {
+          "p50": 0.5,
+          "p95": 0.56
+        },
+        "impact_of": {
+          "p50": 1.16,
+          "p95": 3.16
+        },
+        "detect_changes": {
+          "p50": 22.15,
+          "p95": 22.8
+        },
+        "route_details": {
+          "p50": 1.23,
+          "p95": 3.81
+        },
+        "get_symbol_source": {
+          "p50": 0.35,
+          "p95": 0.4
+        },
+        "get_file_outline": {
+          "p50": 0.61,
+          "p95": 0.75
+        },
+        "search_symbols": {
+          "p50": 0.53,
+          "p95": 2.28
+        },
+        "find_references": {
+          "p50": 1.62,
+          "p95": 3.86
+        },
+        "find_import_cycles": {
+          "p50": 0.35,
+          "p95": 0.42
+        },
+        "find_unused_exports": {
+          "p50": 2.32,
+          "p95": 4.33
+        },
+        "architecture_overview": {
+          "p50": 0.95,
+          "p95": 2.96
+        }
+      }
+    },
+    {
+      "sample": "internet-nest",
+      "nodes": 52733,
+      "relationships": 69503,
+      "scanCold": {
+        "ms": 1680,
+        "maxRssMb": 541
+      },
+      "scanWarm": {
+        "ms": 1278,
+        "maxRssMb": 625
+      },
+      "tools": {
+        "graph_stats": {
+          "p50": 21.81,
+          "p95": 23.81
+        },
+        "find_definitions": {
+          "p50": 5.08,
+          "p95": 7.86
+        },
+        "find_callers": {
+          "p50": 25.4,
+          "p95": 30.57
+        },
+        "list_exports": {
+          "p50": 17.2,
+          "p95": 20.46
+        },
+        "trace_import_chain": {
+          "p50": 13.37,
+          "p95": 19.63
+        },
+        "list_routes": {
+          "p50": 1.6,
+          "p95": 2.79
+        },
+        "list_entrypoints": {
+          "p50": 0.44,
+          "p95": 0.48
+        },
+        "list_env_config": {
+          "p50": 2.34,
+          "p95": 4.21
+        },
+        "list_data_access": {
+          "p50": 1.78,
+          "p95": 3.32
+        },
+        "list_tables": {
+          "p50": 2.45,
+          "p95": 3.99
+        },
+        "impact_of": {
+          "p50": 54.89,
+          "p95": 63.38
+        },
+        "detect_changes": {
+          "p50": 48.42,
+          "p95": 52.59
+        },
+        "route_details": {
+          "p50": 63.26,
+          "p95": 85.11
+        },
+        "get_symbol_source": {
+          "p50": 2.73,
+          "p95": 4.96
+        },
+        "get_file_outline": {
+          "p50": 15.89,
+          "p95": 27.03
+        },
+        "search_symbols": {
+          "p50": 23.63,
+          "p95": 24.58
+        },
+        "find_references": {
+          "p50": 102.35,
+          "p95": 123
+        },
+        "find_import_cycles": {
+          "p50": 25.18,
+          "p95": 39.49
+        },
+        "find_unused_exports": {
+          "p50": 123.42,
+          "p95": 161.66
+        },
+        "architecture_overview": {
+          "p50": 46.4,
+          "p95": 65.03
+        }
+      }
+    }
+  ]
+}

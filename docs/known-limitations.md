@@ -28,6 +28,17 @@ and deeper package graph queries.
 - NestJS `app.setGlobalPrefix()` is applied to the routes of the package that
   calls it when its argument is a string literal or a visible constant. Its
   `exclude` option and prefixes chosen at runtime are not modelled.
+- Found by the accuracy report ([accuracy.md](accuracy.md)):
+  - Routes are only read from module-level calls, so routes registered
+    inside a function (a Fastify plugin `function plugin(instance, opts,
+    next)`, a `build()` factory) are missed: 11 of 14 labeled Fastify routes.
+    fastify-decorators' `@GET` / `@POST` are not read either.
+  - Routes are only read from receivers named `app`, `router`, `fastify` or
+    `…Router`; `const apiv1 = express.Router()` and `const main = express()`
+    are missed.
+  - A mount prefix applied through a chained, default-exported router
+    (`export default Router().use('/api', api)` with `api = Router().use(…)`)
+    is lost, so the realworld routes are found without `/api`.
 
 Blocks or informs: semantic sample review reports and MCP route inspection
 tools.
@@ -46,6 +57,20 @@ tools.
   decorated with `@Inject...()`, recorded as `Field.isInjected`. Constructor
   parameters without an access modifier are not modelled. Every typed field
   still resolves `this.field.method()` calls.
+- Found by the accuracy report ([accuracy.md](accuracy.md)), unresolved today:
+  - calls of a default-imported function (`import generateToken from
+    './token.utils'` where the module ends with `export default
+    generateToken`);
+  - `new X()` (neither the class nor its constructor);
+  - static methods (`Ky.create(...)`);
+  - a module-level call of a function declared in the same file
+    (`const ky = createInstance()`) while the same call inside a function
+    resolves;
+  - an immediately called `require('./server')(...)`;
+  - methods of objects assembled at runtime (Express's `app`, mixed in from
+    `lib/application.js`).
+  - One wrong target: a bare `resolve()` bound by `var resolve =
+    path.resolve` links to the same-named `View.prototype.resolve` method.
 
 Blocks or informs: MCP `find_callers` and dependency impact analysis.
 
@@ -107,6 +132,9 @@ audits.
 - Current false-positive guards avoid broad framework factories, but review
   findings from `semanticSamples.dataAccess` should be fed back into resolver
   rules.
+- Found by the accuracy report ([accuracy.md](accuracy.md)): TypeORM
+  `findOneBy` and Mongoose `findByIdAndUpdate` / `findByIdAndDelete` are not
+  recognized as data access.
 
 Blocks or informs: deeper ORM-specific long-term work and MCP data lineage
 queries.
