@@ -459,12 +459,12 @@ Builds on the existing `--semantic-samples` infrastructure in the smoke command.
 
 ### Accuracy
 
-- [ ] Hand-label routes, calls and data-access edges on the standing samples
-- [ ] Report precision and recall per relationship type
+- [x] Hand-label routes, calls and data-access edges on the standing samples ([accuracy.md](accuracy.md))
+- [x] Report precision and recall per relationship type (`npm run bench:accuracy`)
 
 ### Performance
 
-- [ ] Report scan time, peak memory and query latency per release
+- [x] Report scan time, peak memory and query latency per release (`npm run bench:release`)
 
 ### Agent benchmark
 

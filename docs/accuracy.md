@@ -1,0 +1,142 @@
+# Accuracy report
+
+How often the graph is right about routes, call targets and data access,
+measured against hand-written labels on the pinned sample repositories
+(`scripts/samples.json`).
+
+```bash
+npm run samples:fetch
+npm run bench:accuracy -- [--sample name] [--details] [--json out.json]
+```
+
+`--details` lists every false positive (FP), false negative (FN) and wrong
+route path. The latest run is in
+[`bench/results/accuracy-0.1.0-2026-10-29.json`](../bench/results/accuracy-0.1.0-2026-10-29.json).
+
+## Labels
+
+The labels are in [`bench/labels/<sample>.json`](../bench/labels). They were
+written by reading each sample's source, not derived from Concentrate's
+output, so the tool is not graded against itself. Call sites were listed from
+the bare tree-sitter syntax tree (every call and `new` expression in the
+chosen files); every target was decided by reading the code.
+
+| Kind | Samples | Scope |
+| --- | --- | --- |
+| Routes | express, fastify, nestjs-starter, internet-node-express-realworld | every route declared with a literal path in the scoped files; tests excluded |
+| Calls | express, fastify, nestjs-starter, ky, internet-node-express-realworld | every call site in 4–9 chosen files per sample |
+| Data access | internet-node-express-realworld, internet-nest (05-sql-typeorm, 06-mongoose, 13-mongo-typeorm, 14-mongoose-base, 22-graphql-prisma) | the services; the standing samples have no data layer |
+
+Rules:
+
+- **Routes.** `{ method, path, file, line }` with the full path, mount
+  prefixes included. Middleware mounts (`app.use`) are not routes. Express
+  examples that build paths at runtime (`examples/resource`,
+  `examples/route-map`, `examples/mvc`) are listed under `routes.computed` in
+  the label file and not scored.
+- **Calls.** `{ file, line, callee, target }`, where `callee` is the called
+  name (the last member, or the class of `new X`). `target` is the project
+  declaration the call runs (`{ file, name, className? }`; `new X` targets X's
+  `constructor`, and the class node also counts) or `null` when it runs
+  package or built-in code or a callback parameter. Call sites whose target
+  is only known at runtime are marked `dynamic` and not scored: Express's
+  `app.get` / `app.post` (generated in a `methods.forEach` loop) and
+  `req` / `res` methods (prototypes the framework sets per request).
+- **Data access.** `{ file, function, model, operation, table }` once per
+  function, model and operation, for calls in the function's own body
+  (callers that reach the access through a call are not labeled). Operations
+  use the graph's categories (`save` is a create, `findOneBy` a read). Tables
+  follow each library's default naming. Nested Prisma relation writes
+  (`connectOrCreate` inside an `article.create`) are not labeled.
+
+## Scoring
+
+- **Routes:** a route is detected when method, file and line (±1) match.
+  Detection gives precision and recall; *full path* is the share of detected
+  routes whose full path also matches, so a lost mount prefix does not count
+  as a missed route.
+- **Calls:** a labeled call is a TP when it resolves to the labeled target.
+  It is an FN when the labeled target is missed (unresolved, wrong, or no call
+  node). An FP is a resolution that should not be there: a wrong target, a
+  target for a call labeled `null`, or a resolved call at a site the labels
+  do not have. Unresolved calls labeled `null` count for neither, so recall
+  is over calls with a project target.
+- **Data access:** an access matches on file, function, model and operation,
+  and on the table when the label names one.
+
+## Results (2026-10-29, schema 38)
+
+### Routes
+
+| Sample | Labels | TP | FP | FN | Precision | Recall | Full path |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| express | 59 | 53 | 0 | 6 | 100.0% | 89.8% | 100.0% (53/53) |
+| fastify | 14 | 1 | 0 | 13 | 100.0% | 7.1% | 100.0% (1/1) |
+| internet-node-express-realworld | 20 | 20 | 0 | 0 | 100.0% | 100.0% | 5.0% (1/20) |
+| nestjs-starter | 1 | 1 | 0 | 0 | 100.0% | 100.0% | 100.0% (1/1) |
+| **all** | 94 | 75 | 0 | 19 | **100.0%** | **79.8%** | **74.7% (56/75)** |
+
+### Call resolution
+
+| Sample | Labels | TP | FP | FN | Precision | Recall |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| express | 28 | 5 | 1 | 23 | 83.3% | 17.9% |
+| fastify | 6 | 5 | 0 | 1 | 100.0% | 83.3% |
+| internet-node-express-realworld | 24 | 8 | 0 | 16 | 100.0% | 33.3% |
+| ky | 13 | 9 | 0 | 4 | 100.0% | 69.2% |
+| nestjs-starter | 2 | 2 | 0 | 0 | 100.0% | 100.0% |
+| **all** | 73 | 29 | 1 | 44 | **96.7%** | **39.7%** |
+
+Labels counts calls with a project target. Another 310 call sites are labeled
+`null`, and 35 are `dynamic`.
+
+### Data access
+
+| Sample | Labels | TP | FP | FN | Precision | Recall |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| internet-nest | 17 | 14 | 0 | 3 | 100.0% | 82.4% |
+| internet-node-express-realworld | 26 | 26 | 0 | 0 | 100.0% | 100.0% |
+| **all** | 43 | 40 | 0 | 3 | **100.0%** | **93.0%** |
+
+## What the misses are
+
+Precision is high everywhere: when the graph states something it is almost
+always right. The single wrong call target is a shadowing case: `var resolve =
+path.resolve` called bare in `lib/view.js` links to the same-named
+`View.prototype.resolve`. Recall is where the gaps are, and they cluster:
+
+- **Routes declared inside functions.** Routes are read from module-level
+  calls only, and a Fastify app registers its routes inside a plugin function
+  (`function plugin(instance, opts, next)`) or a `build()` factory: 11 of
+  fastify's 13 misses. The other 2 are fastify-decorators' `@GET` / `@POST`,
+  which are not read.
+- **Receivers with other names.** Routes are read from receivers named `app`,
+  `router`, `fastify` or `…Router`; Express's `multi-router` and `vhost`
+  examples use `apiv1 = express.Router()` and `main = express()`: express's
+  6 misses.
+- **Mount prefixes through chained routers.** realworld mounts every
+  controller with `export default Router().use('/api', api)`, where
+  `api = Router().use(...)`; the routes are found without `/api`.
+- **Default imports.** `import generateToken from './token.utils'` (a module
+  ending in `export default generateToken`) is not followed: 11 of
+  realworld's 16 missed calls, with `getTags` and `profileMapper`.
+- **Constructors and static methods.** `new HttpException(...)`,
+  `new TimeoutError(...)` and `Ky.create(...)` are not resolved.
+- **Objects assembled at runtime.** Express's `app` gets its methods from
+  `lib/application.js` through `merge-descriptors`; the 20 `app.set` /
+  `app.use` / `app.listen` labels in the examples point there. They are left
+  in the labels as the ground truth a reader would expect, and are the bulk
+  of express's call misses.
+- **Data-access vocabulary.** TypeORM `findOneBy` and Mongoose
+  `findByIdAndUpdate` / `findByIdAndDelete` are not recognized.
+
+The same list, by area, is in [known-limitations.md](known-limitations.md).
+
+## Adding labels
+
+Add a sample's file to `bench/labels/` named after the sample in
+`scripts/samples.json`. Label from the source, keep each `scope` (routes,
+data access) or `files` list (calls) complete (every route, call or access in
+it labeled), and run `npm test`: `tests/bench-accuracy.test.ts` checks that
+the entries are complete and, when the samples are fetched, that every named
+file exists.

@@ -1,0 +1,143 @@
+{
+  "recordedAt": "2026-10-29T07:17:52.066Z",
+  "samples": [
+    {
+      "sample": "express",
+      "routes": {
+        "tp": 53,
+        "fp": 0,
+        "fn": 6,
+        "precision": 1,
+        "recall": 0.8983050847457628,
+        "fullPath": {
+          "correct": 53,
+          "total": 53
+        }
+      },
+      "calls": {
+        "tp": 5,
+        "fp": 1,
+        "fn": 23,
+        "precision": 0.8333333333333334,
+        "recall": 0.17857142857142858
+      }
+    },
+    {
+      "sample": "fastify",
+      "routes": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 13,
+        "precision": 1,
+        "recall": 0.07142857142857142,
+        "fullPath": {
+          "correct": 1,
+          "total": 1
+        }
+      },
+      "calls": {
+        "tp": 5,
+        "fp": 0,
+        "fn": 1,
+        "precision": 1,
+        "recall": 0.8333333333333334
+      }
+    },
+    {
+      "sample": "internet-nest",
+      "dataAccess": {
+        "tp": 14,
+        "fp": 0,
+        "fn": 3,
+        "precision": 1,
+        "recall": 0.8235294117647058
+      }
+    },
+    {
+      "sample": "internet-node-express-realworld",
+      "routes": {
+        "tp": 20,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1,
+        "recall": 1,
+        "fullPath": {
+          "correct": 1,
+          "total": 20
+        }
+      },
+      "calls": {
+        "tp": 8,
+        "fp": 0,
+        "fn": 16,
+        "precision": 1,
+        "recall": 0.3333333333333333
+      },
+      "dataAccess": {
+        "tp": 26,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1,
+        "recall": 1
+      }
+    },
+    {
+      "sample": "ky",
+      "calls": {
+        "tp": 9,
+        "fp": 0,
+        "fn": 4,
+        "precision": 1,
+        "recall": 0.6923076923076923
+      }
+    },
+    {
+      "sample": "nestjs-starter",
+      "routes": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1,
+        "recall": 1,
+        "fullPath": {
+          "correct": 1,
+          "total": 1
+        }
+      },
+      "calls": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1,
+        "recall": 1
+      }
+    }
+  ],
+  "totals": {
+    "routes": {
+      "tp": 75,
+      "fp": 0,
+      "fn": 19,
+      "precision": 1,
+      "recall": 0.7978723404255319,
+      "fullPath": {
+        "correct": 56,
+        "total": 75
+      }
+    },
+    "calls": {
+      "tp": 29,
+      "fp": 1,
+      "fn": 44,
+      "precision": 0.9666666666666667,
+      "recall": 0.3972602739726027
+    },
+    "dataAccess": {
+      "tp": 40,
+      "fp": 0,
+      "fn": 3,
+      "precision": 1,
+      "recall": 0.9302325581395349
+    }
+  }
+}

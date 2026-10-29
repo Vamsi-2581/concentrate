@@ -1,0 +1,493 @@
+{
+  "sample": "ky",
+  "$comment": "Hand-labeled from the pinned sample source (scripts/samples.json), not from Concentrate output. Calls: every call site in the listed files; super() into KyError (no constructor) reaches the built-in Error and is labeled unresolved.",
+  "calls": {
+    "files": [
+      "source/index.ts",
+      "source/utils/delay.ts",
+      "source/utils/timeout.ts",
+      "source/utils/normalize.ts",
+      "source/utils/options.ts",
+      "source/utils/body.ts",
+      "source/errors/HTTPError.ts",
+      "source/errors/TimeoutError.ts",
+      "source/errors/NetworkError.ts"
+    ],
+    "items": [
+      {
+        "file": "source/index.ts",
+        "line": 12,
+        "callee": "create",
+        "target": {
+          "file": "source/core/Ky.ts",
+          "name": "create",
+          "className": "Ky"
+        }
+      },
+      {
+        "file": "source/index.ts",
+        "line": 12,
+        "callee": "validateAndMerge",
+        "target": {
+          "file": "source/utils/merge.ts",
+          "name": "validateAndMerge"
+        }
+      },
+      {
+        "file": "source/index.ts",
+        "line": 16,
+        "callee": "create",
+        "target": {
+          "file": "source/core/Ky.ts",
+          "name": "create",
+          "className": "Ky"
+        }
+      },
+      {
+        "file": "source/index.ts",
+        "line": 16,
+        "callee": "validateAndMerge",
+        "target": {
+          "file": "source/utils/merge.ts",
+          "name": "validateAndMerge"
+        }
+      },
+      {
+        "file": "source/index.ts",
+        "line": 19,
+        "callee": "createInstance",
+        "target": {
+          "file": "source/index.ts",
+          "name": "createInstance"
+        }
+      },
+      {
+        "file": "source/index.ts",
+        "line": 19,
+        "callee": "validateAndMerge",
+        "target": {
+          "file": "source/utils/merge.ts",
+          "name": "validateAndMerge"
+        }
+      },
+      {
+        "file": "source/index.ts",
+        "line": 22,
+        "callee": "newDefaults",
+        "target": null
+      },
+      {
+        "file": "source/index.ts",
+        "line": 25,
+        "callee": "createInstance",
+        "target": {
+          "file": "source/index.ts",
+          "name": "createInstance"
+        }
+      },
+      {
+        "file": "source/index.ts",
+        "line": 25,
+        "callee": "validateAndMerge",
+        "target": {
+          "file": "source/utils/merge.ts",
+          "name": "validateAndMerge"
+        }
+      },
+      {
+        "file": "source/index.ts",
+        "line": 34,
+        "callee": "createInstance",
+        "target": {
+          "file": "source/index.ts",
+          "name": "createInstance"
+        }
+      },
+      {
+        "file": "source/utils/delay.ts",
+        "line": 13,
+        "callee": "Promise",
+        "target": null
+      },
+      {
+        "file": "source/utils/delay.ts",
+        "line": 15,
+        "callee": "throwIfAborted",
+        "target": null
+      },
+      {
+        "file": "source/utils/delay.ts",
+        "line": 16,
+        "callee": "addEventListener",
+        "target": null
+      },
+      {
+        "file": "source/utils/delay.ts",
+        "line": 20,
+        "callee": "clearTimeout",
+        "target": null
+      },
+      {
+        "file": "source/utils/delay.ts",
+        "line": 21,
+        "callee": "reject",
+        "target": null
+      },
+      {
+        "file": "source/utils/delay.ts",
+        "line": 24,
+        "callee": "setTimeout",
+        "target": null
+      },
+      {
+        "file": "source/utils/delay.ts",
+        "line": 25,
+        "callee": "removeEventListener",
+        "target": null
+      },
+      {
+        "file": "source/utils/delay.ts",
+        "line": 26,
+        "callee": "resolve",
+        "target": null
+      },
+      {
+        "file": "source/utils/timeout.ts",
+        "line": 15,
+        "callee": "Promise",
+        "target": null
+      },
+      {
+        "file": "source/utils/timeout.ts",
+        "line": 16,
+        "callee": "setTimeout",
+        "target": null
+      },
+      {
+        "file": "source/utils/timeout.ts",
+        "line": 18,
+        "callee": "abort",
+        "target": null
+      },
+      {
+        "file": "source/utils/timeout.ts",
+        "line": 21,
+        "callee": "reject",
+        "target": null
+      },
+      {
+        "file": "source/utils/timeout.ts",
+        "line": 24,
+        "callee": "then",
+        "target": null
+      },
+      {
+        "file": "source/utils/timeout.ts",
+        "line": 24,
+        "callee": "catch",
+        "target": null
+      },
+      {
+        "file": "source/utils/timeout.ts",
+        "line": 24,
+        "callee": "then",
+        "target": null
+      },
+      {
+        "file": "source/utils/timeout.ts",
+        "line": 24,
+        "callee": "fetch",
+        "target": null
+      },
+      {
+        "file": "source/utils/timeout.ts",
+        "line": 29,
+        "callee": "clearTimeout",
+        "target": null
+      },
+      {
+        "file": "source/utils/timeout.ts",
+        "line": 21,
+        "callee": "TimeoutError",
+        "target": {
+          "file": "source/errors/TimeoutError.ts",
+          "name": "constructor",
+          "className": "TimeoutError"
+        }
+      },
+      {
+        "file": "source/utils/normalize.ts",
+        "line": 6,
+        "callee": "includes",
+        "target": null
+      },
+      {
+        "file": "source/utils/normalize.ts",
+        "line": 6,
+        "callee": "toUpperCase",
+        "target": null
+      },
+      {
+        "file": "source/utils/normalize.ts",
+        "line": 36,
+        "callee": "isArray",
+        "target": null
+      },
+      {
+        "file": "source/utils/normalize.ts",
+        "line": 37,
+        "callee": "Error",
+        "target": null
+      },
+      {
+        "file": "source/utils/normalize.ts",
+        "line": 40,
+        "callee": "isArray",
+        "target": null
+      },
+      {
+        "file": "source/utils/normalize.ts",
+        "line": 41,
+        "callee": "Error",
+        "target": null
+      },
+      {
+        "file": "source/utils/normalize.ts",
+        "line": 44,
+        "callee": "fromEntries",
+        "target": null
+      },
+      {
+        "file": "source/utils/normalize.ts",
+        "line": 44,
+        "callee": "filter",
+        "target": null
+      },
+      {
+        "file": "source/utils/normalize.ts",
+        "line": 44,
+        "callee": "entries",
+        "target": null
+      },
+      {
+        "file": "source/utils/normalize.ts",
+        "line": 46,
+        "callee": "map",
+        "target": null
+      },
+      {
+        "file": "source/utils/normalize.ts",
+        "line": 46,
+        "callee": "toLowerCase",
+        "target": null
+      },
+      {
+        "file": "source/utils/options.ts",
+        "line": 12,
+        "callee": "hasOwn",
+        "target": null
+      },
+      {
+        "file": "source/utils/options.ts",
+        "line": 35,
+        "callee": "isArray",
+        "target": null
+      },
+      {
+        "file": "source/utils/options.ts",
+        "line": 40,
+        "callee": "Boolean",
+        "target": null
+      },
+      {
+        "file": "source/utils/options.ts",
+        "line": 45,
+        "callee": "keys",
+        "target": null
+      },
+      {
+        "file": "source/utils/options.ts",
+        "line": 49,
+        "callee": "trim",
+        "target": null
+      },
+      {
+        "file": "source/utils/options.ts",
+        "line": 52,
+        "callee": "Boolean",
+        "target": null
+      },
+      {
+        "file": "source/utils/body.ts",
+        "line": 4,
+        "callee": "TextEncoder",
+        "target": null
+      },
+      {
+        "file": "source/utils/body.ts",
+        "line": 18,
+        "callee": "encode",
+        "target": null
+      },
+      {
+        "file": "source/utils/body.ts",
+        "line": 20,
+        "callee": "encode",
+        "target": null
+      },
+      {
+        "file": "source/utils/body.ts",
+        "line": 31,
+        "callee": "isView",
+        "target": null
+      },
+      {
+        "file": "source/utils/body.ts",
+        "line": 36,
+        "callee": "encode",
+        "target": null
+      },
+      {
+        "file": "source/utils/body.ts",
+        "line": 40,
+        "callee": "encode",
+        "target": null
+      },
+      {
+        "file": "source/utils/body.ts",
+        "line": 40,
+        "callee": "toString",
+        "target": null
+      },
+      {
+        "file": "source/utils/body.ts",
+        "line": 50,
+        "callee": "pipeThrough",
+        "target": null
+      },
+      {
+        "file": "source/utils/body.ts",
+        "line": 50,
+        "callee": "TransformStream",
+        "target": null
+      },
+      {
+        "file": "source/utils/body.ts",
+        "line": 52,
+        "callee": "enqueue",
+        "target": null
+      },
+      {
+        "file": "source/utils/body.ts",
+        "line": 65,
+        "callee": "onProgress",
+        "target": null
+      },
+      {
+        "file": "source/utils/body.ts",
+        "line": 65,
+        "callee": "max",
+        "target": null
+      },
+      {
+        "file": "source/utils/body.ts",
+        "line": 73,
+        "callee": "onProgress",
+        "target": null
+      },
+      {
+        "file": "source/utils/body.ts",
+        "line": 73,
+        "callee": "max",
+        "target": null
+      },
+      {
+        "file": "source/utils/body.ts",
+        "line": 91,
+        "callee": "Response",
+        "target": null
+      },
+      {
+        "file": "source/utils/body.ts",
+        "line": 94,
+        "callee": "max",
+        "target": null
+      },
+      {
+        "file": "source/utils/body.ts",
+        "line": 94,
+        "callee": "Number",
+        "target": null
+      },
+      {
+        "file": "source/utils/body.ts",
+        "line": 94,
+        "callee": "get",
+        "target": null
+      },
+      {
+        "file": "source/utils/body.ts",
+        "line": 95,
+        "callee": "Response",
+        "target": null
+      },
+      {
+        "file": "source/utils/body.ts",
+        "line": 107,
+        "callee": "Request",
+        "target": null
+      },
+      {
+        "file": "source/utils/body.ts",
+        "line": 95,
+        "callee": "withProgress",
+        "target": {
+          "file": "source/utils/body.ts",
+          "name": "withProgress"
+        }
+      },
+      {
+        "file": "source/utils/body.ts",
+        "line": 110,
+        "callee": "withProgress",
+        "target": {
+          "file": "source/utils/body.ts",
+          "name": "withProgress"
+        }
+      },
+      {
+        "file": "source/utils/body.ts",
+        "line": 105,
+        "callee": "getBodySize",
+        "target": {
+          "file": "source/utils/body.ts",
+          "name": "getBodySize"
+        }
+      },
+      {
+        "file": "source/errors/HTTPError.ts",
+        "line": 25,
+        "callee": "trim",
+        "target": null
+      },
+      {
+        "file": "source/errors/HTTPError.ts",
+        "line": 28,
+        "callee": "super",
+        "target": null
+      },
+      {
+        "file": "source/errors/TimeoutError.ts",
+        "line": 12,
+        "callee": "super",
+        "target": null
+      },
+      {
+        "file": "source/errors/NetworkError.ts",
+        "line": 16,
+        "callee": "super",
+        "target": null
+      }
+    ]
+  }
+}
