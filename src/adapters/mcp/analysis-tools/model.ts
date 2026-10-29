@@ -1,4 +1,5 @@
 import type { IQueryEngine } from "../../../core/contracts/query-engine.js";
+import { parseNamespaceReExport, parseReExportNames } from "../../../core/graph/re-exports.js";
 
 // Graph reads shared by the analysis tools: every declaration, every file and
 // the file-to-file import graph, plus an index that follows an imported name
@@ -167,7 +168,7 @@ export async function loadImports(engine: IQueryEngine): Promise<ImportEdge[]> {
       isTypeOnly: row.isTypeOnly === true || /^\s*(?:import|export)\s+type\b/.test(specifier),
       bindings: parseBindings(row.bindings),
       reExports: isReExport ? parseReExportNames(specifier) : [],
-      namespaceExport: isReExport ? /\*\s*as\s+([\w$]+)/.exec(specifier)?.[1] ?? null : null,
+      namespaceExport: isReExport ? parseNamespaceReExport(specifier) : null,
     });
   }
   return [...edges.values()].sort(byFileAndLine);
@@ -188,16 +189,6 @@ function parseBindings(value: unknown): ImportBinding[] {
   } catch {
     return [];
   }
-}
-
-// `export { a, b as c, type D } from './x'` -> a→a, b→c, D→D.
-export function parseReExportNames(specifier: string): Array<{ imported: string; exported: string }> {
-  const list = /\{([^}]*)\}/.exec(specifier)?.[1];
-  if (!list) return [];
-  return list.split(",").flatMap((part) => {
-    const match = /^\s*(?:type\s+)?([\w$]+)(?:\s+as\s+([\w$]+))?\s*$/.exec(part);
-    return match ? [{ imported: match[1]!, exported: match[2] ?? match[1]! }] : [];
-  });
 }
 
 // How an imported name reaches declarations: through the target file's own

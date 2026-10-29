@@ -1,4 +1,5 @@
 import type { GraphNode, ImportBinding } from "../../graph/model.js";
+import { parseNamespaceReExport, parseReExportNames } from "../../graph/re-exports.js";
 
 export function resolveCall(
   callee: string,
@@ -30,14 +31,14 @@ function resolveImportedFreeCall(
 
     const bindings = parseBindings(importNode);
     if (!bindings) {
-      const found = lookupFunctionInFile(callee, targetFileId, functionsByFileAndName);
+      const found = lookupExportedFunction(callee, targetFileId, functionsByFileAndName, importNodesByFile, resolvedFileByImportId);
       if (found) return found;
       continue;
     }
 
     const binding = bindings.find((b) => b.kind === "named" && b.local === callee);
     if (!binding) continue;
-    const found = lookupFunctionInFile(binding.imported, targetFileId, functionsByFileAndName);
+    const found = lookupExportedFunction(binding.imported, targetFileId, functionsByFileAndName, importNodesByFile, resolvedFileByImportId);
     if (found) return found;
   }
 
@@ -56,7 +57,7 @@ function resolveReceiverCall(
     const targetFileId = resolvedFileByImportId.get(importNode.id);
     if (!targetFileId || !importMatchesReceiver(importNode, receiver)) continue;
 
-    const found = lookupFunctionInFile(callee, targetFileId, functionsByFileAndName);
+    const found = lookupExportedFunction(callee, targetFileId, functionsByFileAndName, importNodesByFile, resolvedFileByImportId);
     if (found) return found;
   }
 
@@ -84,6 +85,64 @@ function lookupFunctionInFile(
   functionsByFileAndName: Map<string, Map<string, string[]>>,
 ): string | null {
   return functionsByFileAndName.get(fileId)?.get(name)?.[0] ?? null;
+}
+
+// Results of lookupExportedFunction per graph scan, keyed by file and name.
+const exportedFunctionCache = new WeakMap<object, Map<string, string | null>>();
+
+// A function `name` that `fileId` exports: defined in the file itself, or
+// reached through its `export * from` and `export { a as name } from`
+// re-exports (barrels), followed across files and packages.
+function lookupExportedFunction(
+  name: string,
+  fileId: string,
+  functionsByFileAndName: Map<string, Map<string, string[]>>,
+  importNodesByFile: Map<string, GraphNode[]>,
+  resolvedFileByImportId: Map<string, string>,
+): string | null {
+  let cache = exportedFunctionCache.get(importNodesByFile);
+  if (!cache) {
+    cache = new Map();
+    exportedFunctionCache.set(importNodesByFile, cache);
+  }
+  const key = `${fileId}\0${name}`;
+  if (cache.has(key)) return cache.get(key)!;
+  const found = followReExports(name, fileId, functionsByFileAndName, importNodesByFile, resolvedFileByImportId, new Set());
+  cache.set(key, found);
+  return found;
+}
+
+function followReExports(
+  name: string,
+  fileId: string,
+  functionsByFileAndName: Map<string, Map<string, string[]>>,
+  importNodesByFile: Map<string, GraphNode[]>,
+  resolvedFileByImportId: Map<string, string>,
+  visited: Set<string>,
+): string | null {
+  const key = `${fileId}\0${name}`;
+  if (visited.has(key)) return null; // export * cycles
+  visited.add(key);
+
+  const own = lookupFunctionInFile(name, fileId, functionsByFileAndName);
+  if (own) return own;
+
+  for (const importNode of importNodesByFile.get(fileId) ?? []) {
+    if (importNode.properties.isReExport !== true) continue;
+    const targetFileId = resolvedFileByImportId.get(importNode.id);
+    if (!targetFileId) continue;
+
+    const specifier = String(importNode.properties.specifier ?? "");
+    const forwarded = importNode.properties.isWildcard === true
+      ? parseNamespaceReExport(specifier) === null && name !== "default" ? name : null
+      : parseReExportNames(specifier).find((entry) => entry.exported === name)?.imported ?? null;
+    if (forwarded === null) continue;
+
+    const found = followReExports(forwarded, targetFileId, functionsByFileAndName, importNodesByFile, resolvedFileByImportId, visited);
+    if (found) return found;
+  }
+
+  return null;
 }
 
 function extractImportAlias(specifierText: string): string | null {
