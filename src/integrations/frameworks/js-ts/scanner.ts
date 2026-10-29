@@ -23,8 +23,8 @@ export const jsTsFrameworkPlugins: readonly JsTsFrameworkPlugin[] = [
   },
   {
     name: "express-koa",
-    onFile: ({ fileNodeId, rootNode, parsed }) =>
-      applyExpressKoaParseSemantics(fileNodeId, rootNode, parsed.nodes, parsed.relationships),
+    onFile: ({ fileNodeId, rootNode, parsed, state }) =>
+      applyExpressKoaParseSemantics(fileNodeId, rootNode, parsed.nodes, parsed.relationships, state.functionAstPairs),
   },
   {
     name: "fastify",
@@ -41,8 +41,8 @@ export const jsTsFrameworkPlugins: readonly JsTsFrameworkPlugin[] = [
       "onTimeout",
       "onError",
     ],
-    onFile: ({ fileNodeId, rootNode, parsed }) =>
-      applyFastifyParseSemantics(fileNodeId, rootNode, parsed.nodes, parsed.relationships),
+    onFile: ({ fileNodeId, rootNode, parsed, state }) =>
+      applyFastifyParseSemantics(fileNodeId, rootNode, parsed.nodes, parsed.relationships, state.functionAstPairs),
   },
   {
     name: "nestjs",

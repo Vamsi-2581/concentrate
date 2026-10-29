@@ -25,9 +25,14 @@ export function resolveRouteFullPaths(graph: IGraphContributor): void {
     route.properties.path = rawPath;
 
     const receiverName = route.properties.receiverName;
-    const receiverId = typeof receiverName === "string"
-      ? context.variableIdByFileAndName.get(key(fileId, receiverName))
-      : undefined;
+    // A route declared in a function (a Fastify plugin) takes the prefixes of
+    // the mounts of that function: `fastify.register(plugin, { prefix })`.
+    const scopeFunctionId = route.properties.scopeFunctionId;
+    const receiverId = typeof scopeFunctionId === "string"
+      ? scopeFunctionId
+      : typeof receiverName === "string"
+        ? context.variableIdByFileAndName.get(key(fileId, receiverName))
+        : undefined;
     const prefixes = receiverId ? resolveMountPrefixes(receiverId, context, new Set()) : [""];
     route.properties.fullPath = chooseBestFullPath(prefixes, rawPath);
   }
