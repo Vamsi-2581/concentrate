@@ -378,6 +378,37 @@
           "symbol": "renameUser"
         }
       }
+    ],
+    "orm-schemas": [
+      {
+        "tool": "list_tables",
+        "args": {}
+      },
+      {
+        "tool": "list_tables",
+        "args": {
+          "library": "mongoose"
+        }
+      },
+      {
+        "tool": "list_data_access",
+        "args": {
+          "library": "drizzle"
+        }
+      },
+      {
+        "tool": "route_details",
+        "args": {
+          "method": "POST",
+          "path": "/sessions"
+        }
+      },
+      {
+        "tool": "impact_of",
+        "args": {
+          "symbol": "PhotosService"
+        }
+      }
     ]
   }
 }

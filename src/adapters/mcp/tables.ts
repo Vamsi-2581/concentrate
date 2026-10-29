@@ -9,8 +9,8 @@ const USERS_PER_TABLE = 20;
 
 const str = (value: unknown): string | null => (typeof value === "string" ? value : null);
 
-// list_tables: database tables and collections (from Prisma schemas and Knex
-// calls) with their columns, the models that map to them, those models'
+// list_tables: database tables and collections (from Prisma schemas, TypeORM
+// entities, Mongoose schemas, Drizzle tables and Knex calls) with their columns, the models that map to them, those models'
 // relations, and the routes and entrypoints that read or write them.
 export async function listTables(engine: IQueryEngine, args: Record<string, unknown>, window: PageWindow) {
   const name = optionalString(args.name);
@@ -114,7 +114,7 @@ export async function listTables(engine: IQueryEngine, args: Record<string, unkn
     query: { name, library },
     totalTables: result.length,
     tables: window.take(result),
-    note: `Tables come from Prisma schema files (models and views, named by @@map) and Knex calls. readBy / writtenBy count distinct routes, entrypoints and functions; each table lists up to ${USERS_PER_TABLE} routes and entrypoints.`,
+    note: `Tables come from Prisma schema files, TypeORM entities, Mongoose schemas, Drizzle table definitions and Knex calls. readBy / writtenBy count distinct routes, entrypoints and functions; each table lists up to ${USERS_PER_TABLE} routes and entrypoints.`,
   };
 }
 

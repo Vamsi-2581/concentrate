@@ -110,7 +110,8 @@ even for large repositories; read it first to decide which tools to call.
 - `list_data_access`: lists data-access operations by source, model, library,
   and operation. Each row has the model's `table` when one is known.
 - `list_tables({ name?, library?, limit = 20 })`: database tables, views and
-  collections from Prisma schema files and Knex calls. Each table has its
+  collections from Prisma schema files, TypeORM entities, Mongoose schemas,
+  Drizzle table definitions and Knex calls. Each table has its
   `columns` (with the database `column` name when `@map` renames it, and
   `isId` / `isUnique` / `optional` / `list` flags), the `models` that map to it
   with their `relations` (`field`, `kind` one or many, target `model`,

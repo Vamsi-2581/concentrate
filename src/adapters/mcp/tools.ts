@@ -247,10 +247,10 @@ export const mcpToolDefinitions: McpToolDefinition[] = [
   },
   {
     name: "list_tables",
-    description: "Database tables, views and collections (from Prisma schema files and Knex calls) with their columns, the ORM models that map to them and those models' relations, and the routes and entrypoints that read or write each table. Answers \"which endpoints write the users table?\".",
+    description: "Database tables, views and collections (from Prisma schema files, TypeORM entities, Mongoose schemas, Drizzle table definitions and Knex calls) with their columns, the ORM models that map to them and those models' relations, and the routes and entrypoints that read or write each table. Answers \"which endpoints write the users table?\".",
     inputSchema: objectSchema({
       name: { type: "string", description: "Optional table name substring." },
-      library: { type: "string", description: "Optional library filter: prisma or knex." },
+      library: { type: "string", description: "Optional library filter: prisma, typeorm, mongoose, drizzle or knex." },
       limit: { type: "number", description: "Page size. Defaults to 20, at most 200." },
     }),
   },
