@@ -142,9 +142,9 @@ queries.
 ## MCP Tools
 
 - `find_import_cycles` lists 30 members of each cycle and counts the rest
-  (`moreMembers`), with no way to filter by path. In the agent benchmark the
-  agent could not name every `packages/core/injector` file of a 52-file cycle
-  in `nestjs/nest` ([agent-benchmark.md](agent-benchmark.md#harder-questions)).
+  (`moreMembers`). For a large cycle, pass `path` to list the members in one
+  directory; without it an agent may stop at the first 30
+  ([agent-benchmark.md](agent-benchmark.md#harder-questions)).
 
 ## Workspace and Package Graph
 

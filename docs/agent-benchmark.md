@@ -162,8 +162,9 @@ Recorded 2026-10-29, same CLI and model, one run each, `--max-turns 25`
 - **The injector question failed in both modes.** Concentrate found the
   right 52-file cycle, but `find_import_cycles` lists 30 members of a cycle
   and counts the rest (`moreMembers`), and the agent said its list was
-  incomplete instead of looking further. A way to list one directory's
-  members of a large cycle would answer it.
+  incomplete instead of looking further. After this run the tool gained a
+  `path` filter: `{ path: "packages/core/injector" }` lists exactly the 14
+  injector files of that cycle. The results above predate it.
 - **Repository-wide listings get cheaper:** the env question took one call
   instead of three, at half the tokens. For models and DELETE routes the
   agent used grep in both modes and costs were close.
