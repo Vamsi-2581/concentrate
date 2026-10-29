@@ -191,13 +191,19 @@ Example:
   - `extends`, `implements` and `injects` for classes and interfaces.
   `Class.method` selects one class's method (calls only). `counts` sums the
   references by kind.
-- `find_import_cycles({ scope = "file", limit = 20 })`: strongly connected
+- `find_import_cycles({ scope = "file", path?, limit = 20 })`: strongly connected
   components of the resolved file import graph (`scope: "package"`: of the
   workspace package dependency graph), largest first. Each has `size`, its
   `members` (the first 30), and `cycle`, one shortest loop through its first
   member. File cycles whose every loop passes a type-only import
   (`import type`) are `typeOnly: true`; `runtimeCycles` counts the others.
   Package cycles list the `dependencyTypes` on the example loop.
+  `path` (a file, a directory anywhere in the path, or a path suffix; a
+  package name with `scope: "package"`) keeps only the cycles with a matching
+  member: `members` then lists just those (up to 30, `moreMembers` for the
+  rest), `matchingMembers` counts them, `size` stays the whole group, and
+  `cycle` runs through the first of them. Use it to see which files of one
+  directory are in a large cycle.
 - `find_unused_exports({ file?, includeTests = false, limit = 50 })`:
   candidate dead code in JavaScript and TypeScript files.
   - `unusedExports`: exported declarations that no other file imports by name

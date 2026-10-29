@@ -38,6 +38,7 @@ export const analysisToolDefinitions = [
     description: "Import cycles: groups of files (or workspace packages) that import each other, largest first, each with one shortest example cycle. File cycles that only exist through type-only imports are marked typeOnly.",
     inputSchema: objectSchema({
       scope: { type: "string", description: "file (default) or package." },
+      path: { type: "string", description: "Optional file, directory or path suffix (a package name with scope package); keeps only cycles that pass through it and lists just its members." },
       limit: limit(20),
     }),
   },
