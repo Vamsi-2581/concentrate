@@ -157,6 +157,20 @@ describe("analysis MCP tools", () => {
     assert.deepEqual(types.members, ["packages/app/src/types-a.ts", "packages/app/src/types-b.ts"]);
     assert.equal(types.typeOnly, true);
 
+    const scoped = await tool("find_import_cycles", { path: "src/cycle-b.ts" });
+    assert.equal(scoped.total, 1);
+    assert.equal(scoped.path, "src/cycle-b.ts");
+    assert.equal(scoped.cycles[0].size, 3);
+    assert.equal(scoped.cycles[0].matchingMembers, 1);
+    assert.deepEqual(scoped.cycles[0].members, ["packages/app/src/cycle-b.ts"]);
+    assert.equal(scoped.cycles[0].cycle[0], "packages/app/src/cycle-b.ts");
+    const directory = await tool("find_import_cycles", { path: "packages/app/src/" });
+    assert.equal(directory.total, 2);
+    assert.equal(directory.cycles[0].matchingMembers, 3);
+    assert.equal((await tool("find_import_cycles", { path: "app/src" })).total, 2, "directory in the middle of the path");
+    assert.equal((await tool("find_import_cycles", { path: "packages/core" })).total, 0);
+    assert.equal((await tool("find_import_cycles", { path: "cycle" })).total, 0, "no partial name matches");
+
     const packages = await tool("find_import_cycles", { scope: "package" });
     assert.equal(packages.total, 0);
     const invalid = await callMcpTool(project.store, "find_import_cycles", { scope: "galaxy" }).catch((error: Error) => error);

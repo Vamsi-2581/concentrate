@@ -14,39 +14,55 @@ const MAX_LISTED_MEMBERS = 30;
 
 // find_import_cycles: strongly connected components of the file import graph
 // (or of the package dependency graph), largest first, each with one shortest
-// cycle through its first member.
+// cycle through its first member. With path, only groups that contain a
+// matching member are kept, and members lists just the matching ones.
 export async function findImportCycles(engine: IQueryEngine, args: Record<string, unknown>, window: PageWindow) {
   const scope = optionalString(args.scope) ?? "file";
   if (scope !== "file" && scope !== "package") throw new Error(`Unknown scope ${JSON.stringify(scope)}; expected file or package`);
+  const wanted = optionalString(args.path);
   const graph = scope === "file" ? await fileGraph(engine) : await packageGraph(engine);
 
-  const components = stronglyConnected(graph).map((members) => {
+  const components = stronglyConnected(graph).flatMap((members) => {
+    const listed = wanted ? members.filter((member) => matchesPath(member, wanted)) : members;
+    if (listed.length === 0) return [];
     const inside = new Set(members);
-    const start = members[0]!;
+    const start = listed[0]!;
     const runtimeCycle = shortestCycle(graph, start, inside, true);
     const cycle = runtimeCycle ?? shortestCycle(graph, start, inside, false)!;
     const types = new Set<string>();
     for (let index = 0; index + 1 < cycle.length; index++) {
       for (const type of graph.get(cycle[index]!)!.get(cycle[index + 1]!)!.types) types.add(type);
     }
-    return {
+    return [{
       size: members.length,
-      members: members.slice(0, MAX_LISTED_MEMBERS),
-      ...(members.length > MAX_LISTED_MEMBERS ? { moreMembers: members.length - MAX_LISTED_MEMBERS } : {}),
+      ...(wanted ? { matchingMembers: listed.length } : {}),
+      members: listed.slice(0, MAX_LISTED_MEMBERS),
+      ...(listed.length > MAX_LISTED_MEMBERS ? { moreMembers: listed.length - MAX_LISTED_MEMBERS } : {}),
       cycle,
       ...(scope === "file" ? { typeOnly: runtimeCycle === null } : { dependencyTypes: [...types].sort() }),
-    };
+    }];
   }).sort((a, b) => b.size - a.size || a.cycle[0]!.localeCompare(b.cycle[0]!));
 
   return {
     scope,
+    ...(wanted ? { path: wanted } : {}),
     total: components.length,
     ...(scope === "file" ? { runtimeCycles: components.filter((component) => "typeOnly" in component && !component.typeOnly).length } : {}),
     cycles: window.take(components),
     note: scope === "file"
       ? "Each entry is a group of files that import each other directly or indirectly; cycle is one shortest loop through the group. typeOnly: true means every loop goes through a type-only import, which usually disappears at runtime."
       : "Each entry is a group of workspace packages that depend on each other; dependencyTypes lists the dependency kinds on the example cycle (internalImport means a source import without a manifest entry).",
+    ...(wanted ? { pathNote: "Only groups with a member matching path are listed; members holds just those matching members (matchingMembers counts them, size is the whole group) and cycle runs through the first of them." } : {}),
   };
+}
+
+// A path argument matches a file path or package name exactly, as a path
+// suffix, or as a directory anywhere in it ("core/injector" matches
+// "packages/core/injector/module.ts").
+function matchesPath(member: string, path: string): boolean {
+  const wanted = path.replace(/\\/g, "/").replace(/^\.\//, "").replace(/\/+$/, "");
+  if (!wanted) return true;
+  return member === wanted || member.endsWith(`/${wanted}`) || member.startsWith(`${wanted}/`) || member.includes(`/${wanted}/`);
 }
 
 async function fileGraph(engine: IQueryEngine): Promise<Graph> {
