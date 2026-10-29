@@ -27,6 +27,7 @@ export function addCallResolutionRelationships(graph: IGraphContributor): {
     importNodesByFile,
     resolvedFileByImportId: relationshipIndex.resolvedFileByImportId,
   };
+  const scopes = indexScopes(graph, functionsByFileAndName, importNodesByFile);
 
   let resolved = 0;
   let unresolved = 0;
@@ -63,6 +64,11 @@ export function addCallResolutionRelationships(graph: IGraphContributor): {
       continue;
     }
 
+    if (!receiver && isShadowed(callee, callerFunctionId, callerFileId, scopes)) {
+      unresolved++;
+      continue;
+    }
+
     const targetFunctionId = resolveCall(
       callee,
       receiver,
@@ -87,6 +93,80 @@ export function addCallResolutionRelationships(graph: IGraphContributor): {
   }
 
   return { resolved, unresolved };
+}
+
+type ScopeIndex = {
+  functionsByFileAndName: Map<string, Map<string, string[]>>;
+  parametersByFunction: Map<string, Set<string>>;
+  variableLinesByFileAndName: Map<string, number[]>;
+  importedNamesByFile: Map<string, Set<string>>;
+  lineByFunction: Map<string, number>;
+};
+
+// A bare call `f()` whose name another binding in scope takes: a parameter
+// of the calling function (`function run(f) { f() }`), or a file-level
+// variable that does not itself declare the function (`var resolve =
+// path.resolve`, which hides a `function resolve()` expression assigned to a
+// property elsewhere in the file). A variable that an import also binds
+// (`const build = require("./x")`) is left to the import lookup.
+function isShadowed(callee: string, callerFunctionId: string | undefined, fileId: string, scopes: ScopeIndex): boolean {
+  if (callerFunctionId && scopes.parametersByFunction.get(callerFunctionId)?.has(callee)) return true;
+  const lines = scopes.variableLinesByFileAndName.get(`${fileId}\0${callee}`);
+  if (!lines || scopes.importedNamesByFile.get(fileId)?.has(callee)) return false;
+  const functions = scopes.functionsByFileAndName.get(fileId)?.get(callee) ?? [];
+  return !functions.some((id) => lines.includes(scopes.lineByFunction.get(id) ?? -1));
+}
+
+function indexScopes(
+  graph: IGraphContributor,
+  functionsByFileAndName: Map<string, Map<string, string[]>>,
+  importNodesByFile: Map<string, GraphNode[]>,
+): ScopeIndex {
+  const parametersByFunction = new Map<string, Set<string>>();
+  const lineByFunction = new Map<string, number>();
+  const variables = new Map<string, GraphNode>();
+  for (const node of graph.nodes) {
+    if (node.label === "Variable") variables.set(node.id, node);
+    if (node.label !== "Function") continue;
+    lineByFunction.set(node.id, Number(node.properties.line));
+    const names = parameterNames(node.properties.parameters);
+    if (names.size > 0) parametersByFunction.set(node.id, names);
+  }
+
+  const variableLinesByFileAndName = new Map<string, number[]>();
+  for (const relationship of graph.relationships) {
+    if (relationship.type !== "DEFINES_VARIABLE") continue;
+    const variable = variables.get(relationship.to);
+    const name = variable?.properties.name;
+    if (typeof name !== "string" || variable!.properties.kind === "export_default") continue;
+    const key = `${relationship.from}\0${name}`;
+    variableLinesByFileAndName.set(key, [...variableLinesByFileAndName.get(key) ?? [], Number(variable!.properties.line)]);
+  }
+
+  const importedNamesByFile = new Map<string, Set<string>>();
+  for (const [fileId, imports] of importNodesByFile) {
+    const names = new Set<string>();
+    for (const importNode of imports) {
+      const raw = importNode.properties.bindings;
+      if (typeof raw !== "string") continue;
+      for (const binding of JSON.parse(raw) as Array<{ local?: unknown }>) {
+        if (typeof binding.local === "string") names.add(binding.local);
+      }
+    }
+    if (names.size > 0) importedNamesByFile.set(fileId, names);
+  }
+
+  return { functionsByFileAndName, parametersByFunction, variableLinesByFileAndName, importedNamesByFile, lineByFunction };
+}
+
+function parameterNames(raw: unknown): Set<string> {
+  if (typeof raw !== "string") return new Set();
+  try {
+    const parameters = JSON.parse(raw) as Array<{ name?: unknown }>;
+    return new Set(parameters.flatMap((parameter) => typeof parameter.name === "string" ? [parameter.name] : []));
+  } catch {
+    return new Set();
+  }
 }
 
 // `require("./x")(...)`: the function the required file exports as a whole

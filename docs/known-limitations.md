@@ -62,8 +62,11 @@ tools.
     functions, so there is nothing to point at);
   - methods of objects assembled at runtime (Express's `app`, mixed in from
     `lib/application.js`).
-  - One wrong target: a bare `resolve()` bound by `var resolve =
-    path.resolve` links to the same-named `View.prototype.resolve` method.
+- A bare call is left unresolved when a parameter of the calling function or a
+  file-level `var` / `let` / `const` binds the same name (`var resolve =
+  path.resolve`), unless that binding is an import. Variables declared inside
+  a function are not in the graph, so a local binding that shadows a
+  same-named function still links to it.
 
 Blocks or informs: MCP `find_callers` and dependency impact analysis.
 
