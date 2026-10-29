@@ -18,10 +18,11 @@ export type Question = {
 export type Mode = "baseline" | "concentrate";
 export const modes: readonly Mode[] = ["baseline", "concentrate"];
 
-// Lowercased, without Markdown code and emphasis marks or quotes, whitespace
-// collapsed: "POST `/cats`" and "**post /cats**" read the same.
+// Lowercased, without Markdown code and emphasis marks, quotes and table
+// bars, whitespace collapsed: "POST `/cats`", "**post /cats**" and the table
+// row "| POST | `/cats` |" read the same.
 export function normalizeText(text: string): string {
-  return text.toLowerCase().replace(/[`*_"']/g, "").replace(/\s+/g, " ");
+  return text.toLowerCase().replace(/[`*_"']/g, "").replace(/\|/g, " ").replace(/\s+/g, " ");
 }
 
 export type AnswerScore = { correct: boolean; missing: string[] };

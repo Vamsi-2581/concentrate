@@ -5,6 +5,7 @@
  *
  *   npm run bench:agent -- [--runs 3] [--model name] [--question id]
  *     [--sample name] [--max-turns 30] [--out file.json] [--dry-run]
+ *     [--claude path] [--rescore results.json]
  *
  * `npm run bench:agent` builds first. Each sample is scanned with the built
  * CLI into .concentrate/agent-bench/<sample>/; every question then runs
@@ -13,8 +14,11 @@
  * in bench/agent/questions.json; see docs/agent-benchmark.md.
  *
  * --dry-run prints the commands and writes the MCP configs without scanning
- * or calling claude. Runs cost API usage on the account claude is signed in
- * with.
+ * or calling claude. --claude names the CLI when it is not `claude` on PATH
+ * (or set CLAUDE_BIN). Runs use the account claude is signed in with: a
+ * subscription's usage limits, or API billing with ANTHROPIC_API_KEY.
+ * --rescore scores the answers in an earlier results file again with the
+ * current questions and scorer, without calling claude, and rewrites it.
  */
 import { spawn, spawnSync } from "node:child_process";
 import { existsSync } from "node:fs";
@@ -44,11 +48,14 @@ const { values } = parseArgs({
     "max-turns": { type: "string", default: "30" },
     out: { type: "string" },
     "dry-run": { type: "boolean", default: false },
+    claude: { type: "string", default: process.env.CLAUDE_BIN ?? "claude" },
+    rescore: { type: "string" },
   },
 });
 const runs = Number.parseInt(values.runs!, 10);
 const maxTurns = Number.parseInt(values["max-turns"]!, 10);
 const dryRun = values["dry-run"]!;
+const claude = values.claude!;
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 const cli = path.join(root, "dist/index.js");
@@ -59,13 +66,40 @@ const questions = allQuestions.filter((question) => (
 ));
 if (questions.length === 0) throw new Error("No questions match --question / --sample");
 
+type Run = RunMetrics & { correct: boolean; missing: string[] };
+type QuestionResult = { id: string; sample: string; category: string; modes: Record<Mode, { summary: ReturnType<typeof summarize>; runs: Run[] }> };
+type AgentReport = { recordedAt: string; model: string; runs: number; maxTurns: number; totals: Record<string, ReturnType<typeof summarize>>; results: QuestionResult[] };
+
+const scoreRun = (metrics: RunMetrics, question: Question): Run => {
+  const score = scoreAnswer(metrics.answer, question.expected);
+  return { ...metrics, correct: score.correct && !metrics.isError, missing: score.missing };
+};
+const totalsOf = (results: readonly QuestionResult[]) =>
+  Object.fromEntries(modes.map((mode) => [mode, summarize(results.flatMap((result) => result.modes[mode].runs))]));
+
+if (values.rescore) {
+  const report = JSON.parse(await readFile(values.rescore, "utf8")) as AgentReport;
+  for (const result of report.results) {
+    const question = allQuestions.find((entry) => entry.id === result.id);
+    if (!question) throw new Error(`${result.id} is not in bench/agent/questions.json`);
+    for (const mode of modes) {
+      const rescored = result.modes[mode].runs.map((run) => scoreRun(run, question));
+      result.modes[mode] = { summary: summarize(rescored), runs: rescored };
+    }
+  }
+  report.totals = totalsOf(report.results);
+  await writeFile(values.out ?? values.rescore, `${JSON.stringify(report, null, 2)}\n`);
+  printReport(report);
+  process.exit(0);
+}
+
 if (!dryRun) {
-  const probe = spawnSync("claude", ["--version"], { encoding: "utf8" });
+  const probe = spawnSync(claude, ["--version"], { encoding: "utf8" });
   if (probe.error || probe.status !== 0) {
-    console.error("The Claude Code CLI (`claude`) was not found on PATH. Install it and sign in, or use --dry-run.");
+    console.error(`The Claude Code CLI (${claude}) was not found. Install it and sign in, pass --claude <path>, or use --dry-run.`);
     process.exit(1);
   }
-  console.error(`claude ${probe.stdout.trim()}`);
+  console.error(`${claude} ${probe.stdout.trim()}`);
   if (!existsSync(cli)) throw new Error(`${cli} is missing; run npm run build`);
 }
 
@@ -104,7 +138,7 @@ for (const sample of samples) {
 function runClaude(args: string[], cwd: string): Promise<string> {
   return new Promise((resolve, reject) => {
     // stdin closed: claude -p reads piped stdin as extra prompt otherwise.
-    const child = spawn("claude", args, { cwd, stdio: ["ignore", "pipe", "pipe"] });
+    const child = spawn(claude, args, { cwd, stdio: ["ignore", "pipe", "pipe"] });
     let stdout = "";
     let stderr = "";
     child.stdout.on("data", (chunk: Buffer) => { stdout += chunk.toString(); });
@@ -114,8 +148,6 @@ function runClaude(args: string[], cwd: string): Promise<string> {
   });
 }
 
-type Run = RunMetrics & { correct: boolean; missing: string[] };
-type QuestionResult = { id: string; sample: string; category: string; modes: Record<Mode, { summary: ReturnType<typeof summarize>; runs: Run[] }> };
 const results: QuestionResult[] = [];
 
 for (const question of questions) {
@@ -129,10 +161,9 @@ for (const question of questions) {
     }
     const modeRuns: Run[] = [];
     for (let run = 0; run < runs; run += 1) {
-      const metrics = parseStreamJson(await runClaude(args, cwd));
-      const score = scoreAnswer(metrics.answer, question.expected);
-      modeRuns.push({ ...metrics, correct: score.correct && !metrics.isError, missing: score.missing });
-      console.error(`${question.id} [${mode}] run ${run + 1}: ${score.correct ? "correct" : `missing ${score.missing.join(", ")}`}, ${metrics.toolCalls} tool calls`);
+      const scored = scoreRun(parseStreamJson(await runClaude(args, cwd)), question);
+      modeRuns.push(scored);
+      console.error(`${question.id} [${mode}] run ${run + 1}: ${scored.correct ? "correct" : `missing ${scored.missing.join(", ")}`}, ${scored.toolCalls} tool calls`);
     }
     perMode[mode] = { summary: summarize(modeRuns), runs: modeRuns };
   }
@@ -143,18 +174,21 @@ if (dryRun) process.exit(0);
 const recordedAt = new Date().toISOString();
 const outPath = values.out ?? path.join(root, "bench/results", `agent-${recordedAt.slice(0, 10)}.json`);
 await mkdir(path.dirname(outPath), { recursive: true });
-const totals = Object.fromEntries(modes.map((mode) => [mode, summarize(results.flatMap((result) => result.modes[mode].runs))]));
-await writeFile(outPath, `${JSON.stringify({ recordedAt, model: values.model ?? "default", runs, maxTurns, totals, results }, null, 2)}\n`);
+const report: AgentReport = { recordedAt, model: values.model ?? "default", runs, maxTurns, totals: totalsOf(results), results };
+await writeFile(outPath, `${JSON.stringify(report, null, 2)}\n`);
 console.error(`wrote ${outPath}`);
+printReport(report);
 
-const k = (tokens: number) => `${(tokens / 1000).toFixed(1)}k`;
-console.log(`### Agent benchmark (${values.model ?? "default model"}, ${runs} runs per question and mode; medians)\n`);
-console.log("| Question | Category | Correct (base / conc.) | Input tokens | Output tokens | Tool calls | Cost USD |");
-console.log("| --- | --- | ---: | ---: | ---: | ---: | ---: |");
-for (const result of results) {
-  const [base, conc] = modes.map((mode) => result.modes[mode].summary);
-  console.log(`| ${result.id} | ${result.category} | ${base!.correct}/${base!.runs} / ${conc!.correct}/${conc!.runs} | ${k(base!.medianInputTokens)} → ${k(conc!.medianInputTokens)} | ${k(base!.medianOutputTokens)} → ${k(conc!.medianOutputTokens)} | ${base!.medianToolCalls} → ${conc!.medianToolCalls} | ${base!.medianCostUsd} → ${conc!.medianCostUsd} |`);
+function printReport({ model, runs: runCount, totals, results: rows }: AgentReport) {
+  const k = (tokens: number) => `${(tokens / 1000).toFixed(1)}k`;
+  console.log(`### Agent benchmark (${model}, ${runCount} runs per question and mode; medians)\n`);
+  console.log("| Question | Category | Correct (base / conc.) | Input tokens | Output tokens | Tool calls | Cost USD |");
+  console.log("| --- | --- | ---: | ---: | ---: | ---: | ---: |");
+  for (const result of rows) {
+    const [base, conc] = modes.map((mode) => result.modes[mode].summary);
+    console.log(`| ${result.id} | ${result.category} | ${base!.correct}/${base!.runs} / ${conc!.correct}/${conc!.runs} | ${k(base!.medianInputTokens)} → ${k(conc!.medianInputTokens)} | ${k(base!.medianOutputTokens)} → ${k(conc!.medianOutputTokens)} | ${base!.medianToolCalls} → ${conc!.medianToolCalls} | ${base!.medianCostUsd} → ${conc!.medianCostUsd} |`);
+  }
+  const [base, conc] = modes.map((mode) => totals[mode]!);
+  const change = (before: number, after: number) => (before === 0 ? "–" : `${Math.round(((after - before) / before) * 100)}%`);
+  console.log(`\nAll runs: correct ${base!.correct}/${base!.runs} → ${conc!.correct}/${conc!.runs}; median input tokens ${k(base!.medianInputTokens)} → ${k(conc!.medianInputTokens)} (${change(base!.medianInputTokens, conc!.medianInputTokens)}); median tool calls ${base!.medianToolCalls} → ${conc!.medianToolCalls} (${change(base!.medianToolCalls, conc!.medianToolCalls)}).`);
 }
-const [base, conc] = modes.map((mode) => totals[mode]!);
-const change = (before: number, after: number) => (before === 0 ? "–" : `${Math.round(((after - before) / before) * 100)}%`);
-console.log(`\nAll runs: correct ${base!.correct}/${base!.runs} → ${conc!.correct}/${conc!.runs}; median input tokens ${k(base!.medianInputTokens)} → ${k(conc!.medianInputTokens)} (${change(base!.medianInputTokens, conc!.medianInputTokens)}); median tool calls ${base!.medianToolCalls} → ${conc!.medianToolCalls} (${change(base!.medianToolCalls, conc!.medianToolCalls)}).`);

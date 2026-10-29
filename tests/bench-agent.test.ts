@@ -21,6 +21,10 @@ describe("agent benchmark: scoring", () => {
     assert.deepEqual(scoreAnswer("nothing", { mustInclude: ["createUser", "login"] }), { correct: false, missing: ["createUser", "login"] });
   });
 
+  it("reads a Markdown table row as text", () => {
+    assert.equal(scoreAnswer("| Method | Path |\n|---|---|\n| POST | `/cats` |", { mustInclude: ["POST /cats"] }).correct, true);
+  });
+
   it("ignores case, quotes and line breaks", () => {
     assert.equal(scoreAnswer("The `JWT_SECRET`\nand \"node_env\"", { mustInclude: ["jwt_secret", "NODE_ENV"] }).correct, true);
   });

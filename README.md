@@ -25,9 +25,12 @@ always right; what it misses is listed in the report.
 | express | 141 | 0.37 s | 276 MB | 0.1–23 ms |
 | nestjs/nest | 1,714 | 1.7 s | 541 MB | 0.4–123 ms |
 
-**Agent benchmark** (Claude Code with and without the MCP server,
-[docs/agent-benchmark.md](docs/agent-benchmark.md)): not recorded yet; run
-`npm run bench:agent`.
+**Agent benchmark**: Claude Code (sonnet) answering 13 questions with and
+without the MCP server ([docs/agent-benchmark.md](docs/agent-benchmark.md), `npm run bench:agent`).
+On these narrow questions over small repositories the two are even: 13/13
+correct either way, median input tokens 95k → 97k, median tool calls 3 → 3.
+The graph helped where text search cannot answer directly (an import cycle:
+5 → 2 tool calls).
 
 ## Supported Languages
 
