@@ -24,6 +24,7 @@ import {
   createDefaultExportExpressionNode,
   createLocalReExportRelationships,
   extractCjsExportBindings,
+  extractCjsDefaultExport,
   extractDefaultExportName,
   extractCjsObjectAssignExportBindings,
   extractLocalReExportNames,
@@ -55,6 +56,8 @@ export type WalkState = {
   cjsExportBindings: CjsExportBinding[];
   localReExportNames: string[];
   defaultExportName: string | null;
+  // `module.exports = require("./x")`: the default export is that module's.
+  defaultExportFrom: string | null;
   functionAstPairs: Array<{ functionNodeId: string; astNode: SyntaxNode }>;
   variableDeclaratorAstNodes: SyntaxNode[];
 };
@@ -72,6 +75,7 @@ export function walkJsTsNodes(
   const cjsExportBindings: CjsExportBinding[] = [];
   const localReExportNames: string[] = [];
   let defaultExportName: string | null = null;
+  let defaultExportFrom: string | null = null;
   const functionAstPairs: Array<{ functionNodeId: string; astNode: SyntaxNode }> = [];
   const variableDeclaratorAstNodes: SyntaxNode[] = [];
 
@@ -135,6 +139,9 @@ export function walkJsTsNodes(
 
     if (node.type === "assignment_expression") {
       cjsExportBindings.push(...extractCjsExportBindings(node));
+      const cjsDefault = defaultExportName || defaultExportFrom ? null : extractCjsDefaultExport(node);
+      if (cjsDefault && "name" in cjsDefault) defaultExportName = cjsDefault.name;
+      if (cjsDefault && "from" in cjsDefault) defaultExportFrom = cjsDefault.from;
     }
 
     if (node.type === "call_expression") {
@@ -198,8 +205,11 @@ export function walkJsTsNodes(
           nodes.push(variableNode);
           relationships.push({ from: fileNodeId, to: variableNode.id, type: "DEFINES_VARIABLE", properties: {} });
 
-          if (valueChild?.type === "call_expression" || valueChild?.type === "new_expression") {
-            const callNode = createInitializerCallNode(fileNodeId, valueChild);
+          // `var app = module.exports = createApp()` is initialized by the call.
+          let initializer = valueChild;
+          while (initializer?.type === "assignment_expression") initializer = initializer.childForFieldName("right");
+          if (initializer?.type === "call_expression" || initializer?.type === "new_expression") {
+            const callNode = createInitializerCallNode(fileNodeId, initializer);
             if (callNode) {
               nodes.push(callNode);
               relationships.push({ from: variableNode.id, to: callNode.id, type: "INITIALIZED_BY", properties: {} });
@@ -229,7 +239,7 @@ export function walkJsTsNodes(
     }
   });
 
-  return { nodes, relationships, cjsExportBindings, localReExportNames, defaultExportName, functionAstPairs, variableDeclaratorAstNodes };
+  return { nodes, relationships, cjsExportBindings, localReExportNames, defaultExportName, defaultExportFrom, functionAstPairs, variableDeclaratorAstNodes };
 }
 
 // ─── Language-level finalization ─────────────────────────────────────────────
@@ -239,12 +249,13 @@ export function finalizeLanguageLevel(
   tree: SyntaxTree,
   state: WalkState,
 ): ParsedSourceFile {
-  const { nodes, relationships, cjsExportBindings, localReExportNames, defaultExportName } = state;
+  const { nodes, relationships, cjsExportBindings, localReExportNames, defaultExportName, defaultExportFrom } = state;
 
   applyCjsExportBindings(fileNodeId, nodes, relationships, cjsExportBindings);
   relationships.push(...createLocalReExportRelationships(fileNodeId, nodes, relationships, localReExportNames));
   const fileNode = nodes.find((node) => node.id === fileNodeId);
   if (fileNode && defaultExportName) fileNode.properties.defaultExport = defaultExportName;
+  if (fileNode && defaultExportFrom) fileNode.properties.defaultExportFrom = defaultExportFrom;
 
   const moduleLevelCallNodes = createModuleLevelCallNodes(fileNodeId, tree.rootNode);
   nodes.push(...moduleLevelCallNodes);

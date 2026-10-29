@@ -52,6 +52,31 @@ export function extractDefaultExportName(node: SyntaxNode): string | null {
   return specifier?.childForFieldName("name")?.text ?? null;
 }
 
+// The CommonJS counterpart of a default export, for a top-level
+// `module.exports = …` (also chained, `exports = module.exports = …`):
+// `name` for `= name` or `= function name() {}`, or `from` for a module
+// re-exported whole, `= require("./x")`.
+export function extractCjsDefaultExport(node: SyntaxNode): { name: string } | { from: string } | null {
+  let statement = node.parent;
+  while (statement?.type === "assignment_expression") statement = statement.parent;
+  if (statement?.type !== "expression_statement" || statement.parent?.type !== "program") return null;
+
+  const left = node.childForFieldName("left");
+  let right = node.childForFieldName("right");
+  if (!left || !right || !isModuleExportsMember(left)) return null;
+  while (right?.type === "assignment_expression") right = right.childForFieldName("right");
+  if (!right) return null;
+  if (right.type === "identifier") return { name: right.text };
+  if (right.type === "function_expression" || right.type === "class") {
+    const name = right.childForFieldName("name")?.text;
+    return name ? { name } : null;
+  }
+  const source = right.type === "call_expression" && right.childForFieldName("function")?.text === "require"
+    ? right.childForFieldName("arguments")?.namedChildren[0]
+    : null;
+  return source?.type === "string" ? { from: source.text.slice(1, -1) } : null;
+}
+
 export function extractLocalReExportNames(node: SyntaxNode): string[] {
   if (extractStringSource(node)) {
     return [];

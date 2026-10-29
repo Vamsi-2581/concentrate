@@ -60,10 +60,6 @@ tools.
 - Found by the accuracy report ([accuracy.md](accuracy.md)), unresolved today:
   - `new X()` of a class with no constructor in its chain (calls resolve to
     functions, so there is nothing to point at);
-  - a module-level call of a function declared in the same file
-    (`const ky = createInstance()`) while the same call inside a function
-    resolves;
-  - an immediately called `require('./server')(...)`;
   - methods of objects assembled at runtime (Express's `app`, mixed in from
     `lib/application.js`).
   - One wrong target: a bare `resolve()` bound by `var resolve =

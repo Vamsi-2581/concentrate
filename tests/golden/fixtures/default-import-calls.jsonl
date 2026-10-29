@@ -47,6 +47,7 @@
 {"kind":"rel","from":"file:factory.ts","type":"DEFINES_FUNCTION","to":"file:factory.ts:function:4:instance","properties":{}}
 {"kind":"rel","from":"file:factory.ts","type":"DEFINES_VARIABLE","to":"file:factory.ts:variable:7:instance","properties":{}}
 {"kind":"rel","from":"file:factory.ts","type":"DEFINES_VARIABLE","to":"file:factory.ts:variable:8:default","properties":{}}
+{"kind":"rel","from":"file:factory.ts:initializercall:7:17:createInstance","type":"CALL_RESOLVES_TO","to":"file:factory.ts:function:3:createInstance","properties":{}}
 {"kind":"rel","from":"file:factory.ts:variable:7:instance","type":"INITIALIZED_BY","to":"file:factory.ts:initializercall:7:17:createInstance","properties":{}}
 {"kind":"rel","from":"file:main.ts","type":"DEFINES_FUNCTION","to":"file:main.ts:function:7:run","properties":{}}
 {"kind":"rel","from":"file:main.ts","type":"IMPORTS","to":"file:main.ts:import:1:./token","properties":{}}

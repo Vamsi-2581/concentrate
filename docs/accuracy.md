@@ -80,12 +80,12 @@ Rules:
 
 | Sample | Labels | TP | FP | FN | Precision | Recall |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| express | 28 | 5 | 1 | 23 | 83.3% | 17.9% |
-| fastify | 6 | 5 | 0 | 1 | 100.0% | 83.3% |
+| express | 28 | 8 | 1 | 20 | 88.9% | 28.6% |
+| fastify | 6 | 6 | 0 | 0 | 100.0% | 100.0% |
 | internet-node-express-realworld | 24 | 24 | 0 | 0 | 100.0% | 100.0% |
-| ky | 13 | 12 | 0 | 1 | 100.0% | 92.3% |
+| ky | 13 | 13 | 0 | 0 | 100.0% | 100.0% |
 | nestjs-starter | 2 | 2 | 0 | 0 | 100.0% | 100.0% |
-| **all** | 73 | 48 | 1 | 25 | **98.0%** | **65.8%** |
+| **all** | 73 | 53 | 1 | 20 | **98.1%** | **72.6%** |
 
 Labels counts calls with a project target. Another 310 call sites are labeled
 `null`, and 35 are `dynamic`.
@@ -117,16 +117,14 @@ path.resolve` called bare in `lib/view.js` links to the same-named
 - **Mount prefixes through chained routers.** realworld mounts every
   controller with `export default Router().use('/api', api)`, where
   `api = Router().use(...)`; the routes are found without `/api`.
-- **Module-level calls and called requires.** ky's last miss is a
-  module-level call of a same-file function (`const ky = createInstance()`)
-  and fastify's is `require('./server')(...)`. (Default imports, #45, and
-  constructors and static methods, #46, were realworld's 16 and three of
-  ky's misses; they resolve now.)
 - **Objects assembled at runtime.** Express's `app` gets its methods from
   `lib/application.js` through `merge-descriptors`; the 20 `app.set` /
   `app.use` / `app.listen` labels in the examples point there. They are left
-  in the labels as the ground truth a reader would expect, and are the bulk
-  of express's call misses.
+  in the labels as the ground truth a reader would expect, and are all of
+  express's remaining call misses, and so all misses left in the call labels.
+  (Default imports, #45; constructors and static methods, #46; and
+  module-level calls, `require('./x')(...)` and `module.exports = …`
+  defaults, #47, resolve now.)
 - **Data-access vocabulary.** TypeORM `findOneBy` and Mongoose
   `findByIdAndUpdate` / `findByIdAndDelete` are not recognized.
 

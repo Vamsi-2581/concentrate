@@ -18,9 +18,9 @@ export function addCallResolutionRelationships(graph: IGraphContributor): {
     "Function",
   );
   const importNodesByFile = indexImportNodesByFile(graph.nodes, relationshipIndex.fileByImportId);
-  indexDefaultExports(graph, functionsByFileAndName);
+  indexDefaultExports(graph, functionsByFileAndName, importNodesByFile, relationshipIndex.resolvedFileByImportId);
   const classesByFileAndName = indexNodesByFileAndName(graph.nodes, relationshipIndex.fileByClassId, "Class");
-  indexDefaultExports(graph, classesByFileAndName);
+  indexDefaultExports(graph, classesByFileAndName, importNodesByFile, relationshipIndex.resolvedFileByImportId);
   const classes: ClassIndex = {
     byFileAndName: classesByFileAndName,
     ...indexClassMembers(graph),
@@ -36,7 +36,8 @@ export function addCallResolutionRelationships(graph: IGraphContributor): {
 
     const callee = node.properties.callee as string | null;
     const receiver = node.properties.receiver as string | null;
-    if (!callee) {
+    const requireSource = node.properties.requireSource;
+    if (!callee && typeof requireSource !== "string") {
       unresolved++;
       continue;
     }
@@ -48,6 +49,17 @@ export function addCallResolutionRelationships(graph: IGraphContributor): {
       : relationshipIndex.callerFileByModuleCallId.get(node.id);
     if (!callerFileId) {
       unresolved++;
+      continue;
+    }
+
+    if (typeof requireSource === "string" || !callee) {
+      const targetFunctionId = typeof requireSource !== "string" ? null : resolveRequiredModuleCall(requireSource, callerFileId, functionsByFileAndName, importNodesByFile, relationshipIndex.resolvedFileByImportId);
+      if (targetFunctionId) {
+        graph.addRelationship({ from: node.id, to: targetFunctionId, type: "CALL_RESOLVES_TO", properties: {} });
+        resolved++;
+      } else {
+        unresolved++;
+      }
       continue;
     }
 
@@ -75,6 +87,25 @@ export function addCallResolutionRelationships(graph: IGraphContributor): {
   }
 
   return { resolved, unresolved };
+}
+
+// `require("./x")(...)`: the function the required file exports as a whole
+// (`module.exports = fn`), found through the file's import of that module.
+function resolveRequiredModuleCall(
+  source: string,
+  fileId: string,
+  functionsByFileAndName: Map<string, Map<string, string[]>>,
+  importNodesByFile: Map<string, GraphNode[]>,
+  resolvedFileByImportId: Map<string, string>,
+): string | null {
+  for (const importNode of importNodesByFile.get(fileId) ?? []) {
+    if (importNode.properties.isCjs !== true || importNode.properties.source !== source) continue;
+    const targetFileId = resolvedFileByImportId.get(importNode.id);
+    if (!targetFileId) continue;
+    const found = resolveDeclaration("default", targetFileId, functionsByFileAndName, importNodesByFile, resolvedFileByImportId);
+    if (found) return found;
+  }
+  return null;
 }
 
 type ClassIndex = {
@@ -138,11 +169,43 @@ function indexClassMembers(graph: IGraphContributor): Pick<ClassIndex, "methodsB
 // exported name is a module-level variable (`const ky = createInstance()`),
 // a same-named function counts only if that variable declares it, so a
 // nested function of the same name is never picked.
-function indexDefaultExports(graph: IGraphContributor, declarationsByFileAndName: Map<string, Map<string, string[]>>): void {
+function indexDefaultExports(
+  graph: IGraphContributor,
+  declarationsByFileAndName: Map<string, Map<string, string[]>>,
+  importNodesByFile: Map<string, GraphNode[]>,
+  resolvedFileByImportId: Map<string, string>,
+): void {
   const defaults = new Map<string, string>();
+  const forwards = new Map<string, string>();
   for (const node of graph.nodes) {
-    if (node.label === "File" && typeof node.properties.defaultExport === "string") defaults.set(node.id, node.properties.defaultExport);
+    if (node.label !== "File") continue;
+    if (typeof node.properties.defaultExport === "string") defaults.set(node.id, node.properties.defaultExport);
+    if (typeof node.properties.defaultExportFrom === "string") forwards.set(node.id, node.properties.defaultExportFrom);
   }
+  indexOwnDefaults(graph, declarationsByFileAndName, defaults);
+
+  // `module.exports = require("./x")` exports x's default, through chains.
+  for (let changed = forwards.size > 0; changed;) {
+    changed = false;
+    for (const [fileId, source] of forwards) {
+      if (declarationsByFileAndName.get(fileId)?.has("default")) continue;
+      const importNode = importNodesByFile.get(fileId)?.find((node) => node.properties.isCjs === true && node.properties.source === source);
+      const targetFileId = importNode ? resolvedFileByImportId.get(importNode.id) : undefined;
+      const target = targetFileId ? declarationsByFileAndName.get(targetFileId)?.get("default") : undefined;
+      if (!target) continue;
+      let declarations = declarationsByFileAndName.get(fileId);
+      if (!declarations) declarationsByFileAndName.set(fileId, declarations = new Map());
+      declarations.set("default", target);
+      changed = true;
+    }
+  }
+}
+
+function indexOwnDefaults(
+  graph: IGraphContributor,
+  declarationsByFileAndName: Map<string, Map<string, string[]>>,
+  defaults: Map<string, string>,
+): void {
   if (defaults.size === 0) return;
 
   const nodesById = new Map(graph.nodes.map((node) => [node.id, node]));

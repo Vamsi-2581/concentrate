@@ -3,6 +3,7 @@ import type { GraphNode } from "../../../core/graph/model.js";
 import {
   analyzeMemberCallExpression,
   walkScoped,
+  type CallExpressionParts,
 } from "../tree-sitter-utils.js";
 import {
   extractName,
@@ -16,6 +17,25 @@ import {
   extractFunctionParameters,
   extractReturnType,
 } from "./function-signature.js";
+
+type CallParts = Omit<CallExpressionParts, "callee"> & { callee: string | null; requireSource?: string };
+
+// `require("./x")(...)` calls whatever the required module exports: record
+// the module instead of splitting the string on its dots.
+function analyzeCallFunction(functionNode: SyntaxNode | null): CallParts | null {
+  const source = functionNode ? requiredModuleSource(functionNode) : null;
+  if (functionNode && source !== null) {
+    return { expression: functionNode.text, callee: null, receiver: null, requireSource: source };
+  }
+  return analyzeMemberCallExpression(functionNode?.text);
+}
+
+function requiredModuleSource(node: SyntaxNode): string | null {
+  if (node.type !== "call_expression" || node.childForFieldName("function")?.text !== "require") return null;
+  const args = node.childForFieldName("arguments")?.namedChildren ?? [];
+  if (args.length !== 1 || args[0]!.type !== "string") return null;
+  return args[0]!.text.slice(1, -1);
+}
 
 export function isInlineHandlerArgument(node: SyntaxNode): boolean {
   if (node.type !== "arrow_function" && node.type !== "function_expression") return false;
@@ -218,7 +238,7 @@ export function createModuleLevelCallNodes(fileNodeId: string, programNode: Synt
     if (!expr) continue;
 
     if (expr.type === "call_expression") {
-      const parts = analyzeMemberCallExpression(expr.childForFieldName("function")?.text);
+      const parts = analyzeCallFunction(expr.childForFieldName("function"));
       if (!parts) continue;
 
       calls.push({
@@ -232,6 +252,7 @@ export function createModuleLevelCallNodes(fileNodeId: string, programNode: Synt
           line: expr.startPosition.row + 1,
           columnNumber: expr.startPosition.column,
           args: extractCallArgs(expr),
+          ...(parts.requireSource ? { requireSource: parts.requireSource } : {}),
         },
       });
     } else if (expr.type === "new_expression") {
@@ -260,7 +281,7 @@ export function createModuleLevelCallNodes(fileNodeId: string, programNode: Synt
 
 export function createInitializerCallNode(fileNodeId: string, valueNode: SyntaxNode): GraphNode | null {
   if (valueNode.type === "call_expression") {
-    const parts = analyzeMemberCallExpression(valueNode.childForFieldName("function")?.text);
+    const parts = analyzeCallFunction(valueNode.childForFieldName("function"));
     if (!parts) return null;
 
     return {
@@ -274,6 +295,7 @@ export function createInitializerCallNode(fileNodeId: string, valueNode: SyntaxN
         line: valueNode.startPosition.row + 1,
         columnNumber: valueNode.startPosition.column,
         args: extractCallArgs(valueNode),
+        ...(parts.requireSource ? { requireSource: parts.requireSource } : {}),
       },
     };
   }
@@ -310,7 +332,7 @@ export function createCallNodes(
 
   walkScoped(node, (child) => {
     if (child.type === "call_expression") {
-      const parts = analyzeMemberCallExpression(child.childForFieldName("function")?.text);
+      const parts = analyzeCallFunction(child.childForFieldName("function"));
       if (!parts) return;
 
       calls.push({
@@ -324,6 +346,7 @@ export function createCallNodes(
           line: child.startPosition.row + 1,
           columnNumber: child.startPosition.column,
           args: extractCallArgs(child),
+          ...(parts.requireSource ? { requireSource: parts.requireSource } : {}),
         },
       });
     } else if (child.type === "new_expression") {
